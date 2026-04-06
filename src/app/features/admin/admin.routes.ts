@@ -2,6 +2,14 @@ import { Routes } from '@angular/router';
 import { roleGuard } from '../../core/auth/role.guard';
 
 export const adminRoutes: Routes = [
+  // Solicitudes de registro
+  {
+    path: 'solicitudes',
+    canActivate: [roleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./solicitudes/lista-solicitudes.component').then(m => m.ListaSolicitudesComponent),
+  },
   // Socios
   {
     path: 'socios',
