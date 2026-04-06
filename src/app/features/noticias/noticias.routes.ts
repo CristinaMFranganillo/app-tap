@@ -1,9 +1,14 @@
 import { Routes } from '@angular/router';
-import { Component } from '@angular/core';
-
-@Component({ standalone: true, template: '<p class="p-4 text-sm">Noticias — próximamente</p>' })
-class NoticiasPlaceholderComponent {}
 
 export const noticiasRoutes: Routes = [
-  { path: '', component: NoticiasPlaceholderComponent },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./lista/lista-noticias.component').then(m => m.ListaNoticiasComponent),
+  },
+  {
+    path: ':id',
+    loadComponent: () =>
+      import('./detalle/detalle-noticia.component').then(m => m.DetalleNoticiaComponent),
+  },
 ];
