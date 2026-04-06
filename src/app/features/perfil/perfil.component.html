@@ -7,10 +7,10 @@
       [avatarUrl]="user()?.avatarUrl"
       [size]="64"
     />
-    <h2 class="text-white font-extrabold text-[13px] mt-2">
+    <h2 class="text-white font-extrabold text-[16px] mt-2">
       {{ user()?.nombre }} {{ user()?.apellidos }}
     </h2>
-    <p class="text-brand-yellow font-bold text-[8px] uppercase tracking-wider">
+    <p class="text-brand-yellow font-bold text-[11px] uppercase tracking-wider">
       {{ user()?.rol }} · #{{ user()?.numeroSocio }}
     </p>
   </div>
@@ -18,22 +18,22 @@
   <!-- Stats -->
   <div class="flex mx-3 -mt-4 bg-white rounded-[14px] shadow-sm overflow-hidden">
     <div class="flex-1 flex flex-col items-center py-3 border-r border-gray-100">
-      <p class="text-[17px] font-black text-brand-dark">{{ totalCompeticiones() }}</p>
-      <p class="text-[7px] font-bold text-gray-300 uppercase tracking-wide">Competiciones</p>
+      <p class="text-[22px] font-black text-brand-dark">{{ totalCompeticiones() }}</p>
+      <p class="text-[10px] font-bold text-gray-300 uppercase tracking-wide">Competiciones</p>
     </div>
     <div class="flex-1 flex flex-col items-center py-3 border-r border-gray-100">
-      <p class="text-[17px] font-black text-brand-dark">{{ mediaPlatos() }}</p>
-      <p class="text-[7px] font-bold text-gray-300 uppercase tracking-wide">Media platos</p>
+      <p class="text-[22px] font-black text-brand-dark">{{ mediaPlatos() }}</p>
+      <p class="text-[10px] font-bold text-gray-300 uppercase tracking-wide">Media platos</p>
     </div>
     <div class="flex-1 flex flex-col items-center py-3">
-      <p class="text-[17px] font-black text-brand-dark">{{ podios() }}</p>
-      <p class="text-[7px] font-bold text-gray-300 uppercase tracking-wide">Podios</p>
+      <p class="text-[22px] font-black text-brand-dark">{{ podios() }}</p>
+      <p class="text-[10px] font-bold text-gray-300 uppercase tracking-wide">Podios</p>
     </div>
   </div>
 
   <!-- Historial -->
   <div class="p-3 mt-2">
-    <h3 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2">Mis Resultados</h3>
+    <h3 class="text-[13px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2">Mis Resultados</h3>
 
     @if (scores().length === 0) {
       <app-empty-state icon="bi-trophy" mensaje="Sin resultados registrados" />
@@ -41,12 +41,12 @@
       @for (score of scores(); track score.id) {
         <div class="bg-white rounded-[12px] px-3 py-2.5 mb-2 shadow-sm flex items-center gap-3">
           <div class="flex-1 min-w-0">
-            <p class="text-[9.5px] font-bold text-brand-dark truncate">{{ getCompeticionNombre(score.competicionId) }}</p>
-            <p class="text-[7.5px] text-gray-300 font-medium">{{ score.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
+            <p class="text-[14px] font-bold text-brand-dark truncate">{{ getCompeticionNombre(score.competicionId) }}</p>
+            <p class="text-[11px] text-gray-300 font-medium">{{ score.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
           </div>
           <div class="text-right">
-            <p class="text-[13px] font-black text-brand-dark">
-              {{ score.platosRotos }}<span class="text-[8px] text-gray-300 font-semibold">/{{ getCompeticionTotal(score.competicionId) }}</span>
+            <p class="text-[16px] font-black text-brand-dark">
+              {{ score.platosRotos }}<span class="text-[11px] text-gray-300 font-semibold">/{{ getCompeticionTotal(score.competicionId) }}</span>
             </p>
           </div>
         </div>
@@ -58,7 +58,7 @@
   <div class="px-3 pb-4">
     <button
       (click)="logout()"
-      class="w-full py-2.5 rounded-[12px] border border-danger text-danger text-[9px] font-extrabold"
+      class="w-full py-2.5 rounded-[12px] border border-danger text-danger text-[13px] font-extrabold"
     >
       <i class="bi bi-box-arrow-right mr-1"></i>
       Cerrar sesión

@@ -1,13 +1,13 @@
 <div class="p-3">
-  <h3 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2">
+  <h3 class="text-[13px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2">
     Publicadas ({{ publicadas().length }})
   </h3>
 
   @for (n of publicadas(); track n.id) {
     <div class="flex items-center gap-2 bg-white rounded-[12px] px-3 py-2 mb-2 shadow-sm">
       <div class="flex-1 min-w-0">
-        <p class="text-[9.5px] font-bold text-brand-dark truncate">{{ n.titulo }}</p>
-        <p class="text-[7.5px] text-gray-400 font-medium">{{ n.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
+        <p class="text-[14px] font-bold text-brand-dark truncate">{{ n.titulo }}</p>
+        <p class="text-[11px] text-gray-400 font-medium">{{ n.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
       </div>
       <div class="flex items-center gap-2">
         @if (canEdit(n)) {
@@ -26,18 +26,18 @@
   }
 
   @if (publicadas().length === 0) {
-    <p class="text-[9px] text-gray-300 font-medium mb-4">No hay noticias publicadas.</p>
+    <p class="text-[13px] text-gray-300 font-medium mb-4">No hay noticias publicadas.</p>
   }
 
-  <h3 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2 mt-4">
+  <h3 class="text-[13px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2 mt-4">
     Borradores ({{ borradores().length }})
   </h3>
 
   @for (n of borradores(); track n.id) {
     <div class="flex items-center gap-2 bg-white rounded-[12px] px-3 py-2 mb-2 shadow-sm opacity-70">
       <div class="flex-1 min-w-0">
-        <p class="text-[9.5px] font-bold text-brand-dark truncate">{{ n.titulo }}</p>
-        <p class="text-[7.5px] text-gray-400 font-medium">{{ n.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
+        <p class="text-[14px] font-bold text-brand-dark truncate">{{ n.titulo }}</p>
+        <p class="text-[11px] text-gray-400 font-medium">{{ n.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
       </div>
       <div class="flex items-center gap-2">
         @if (canEdit(n)) {
@@ -56,7 +56,7 @@
   }
 
   @if (borradores().length === 0) {
-    <p class="text-[9px] text-gray-300 font-medium">No hay borradores.</p>
+    <p class="text-[13px] text-gray-300 font-medium">No hay borradores.</p>
   }
 </div>
 

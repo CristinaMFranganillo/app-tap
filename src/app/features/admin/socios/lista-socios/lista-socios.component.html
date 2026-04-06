@@ -1,13 +1,13 @@
 <div class="p-3">
   <!-- Buscador -->
   <div class="flex items-center gap-2 bg-white rounded-[10px] px-3 py-2 mb-3 shadow-sm">
-    <i class="bi bi-search text-gray-300 text-[13px]"></i>
+    <i class="bi bi-search text-gray-300 text-[16px]"></i>
     <input
       [ngModel]="searchTerm()"
       (ngModelChange)="searchTerm.set($event)"
       aria-label="Buscar socio"
       placeholder="Buscar socio..."
-      class="flex-1 bg-transparent text-[9px] font-medium text-brand-dark outline-none placeholder-gray-300"
+      class="flex-1 bg-transparent text-[13px] font-medium text-brand-dark outline-none placeholder-gray-300"
     />
   </div>
 
@@ -17,8 +17,8 @@
     <div class="flex items-center gap-2 bg-white rounded-[12px] px-3 py-2 mb-2 shadow-sm">
       <app-avatar [nombre]="socio.nombre" [apellidos]="socio.apellidos" [avatarUrl]="socio.avatarUrl" [size]="34" />
       <div class="flex-1 min-w-0">
-        <p class="text-[9.5px] font-bold text-brand-dark truncate">{{ socio.nombre }} {{ socio.apellidos }}</p>
-        <p class="text-[8px] text-gray-400 font-medium truncate">{{ socio.email }} · {{ socio.rol | titlecase }}</p>
+        <p class="text-[14px] font-bold text-brand-dark truncate">{{ socio.nombre }} {{ socio.apellidos }}</p>
+        <p class="text-[11px] text-gray-400 font-medium truncate">{{ socio.email }} · {{ socio.rol | titlecase }}</p>
       </div>
       <div class="flex items-center gap-2 ml-1">
         <button (click)="toggleActivo(socio.id)"
@@ -26,19 +26,19 @@
           [class]="socio.activo ? 'bg-success' : 'bg-gray-200'"
           [title]="socio.activo ? 'Desactivar' : 'Activar'">
         </button>
-        <span class="text-[7.5px] text-gray-300 font-semibold">#{{ socio.numeroSocio }}</span>
+        <span class="text-[11px] text-gray-300 font-semibold">#{{ socio.numeroSocio }}</span>
         <button (click)="goToEdit(socio.id)" class="text-gray-400">
-          <i class="bi bi-pencil-fill text-[13px]"></i>
+          <i class="bi bi-pencil-fill text-[16px]"></i>
         </button>
         <button (click)="eliminar(socio.id)" class="text-danger">
-          <i class="bi bi-trash-fill text-[13px]"></i>
+          <i class="bi bi-trash-fill text-[16px]"></i>
         </button>
       </div>
     </div>
   }
 
   @if (filteredSocios().length === 0) {
-    <p class="text-center text-[9px] text-gray-400 mt-6">No se encontraron socios.</p>
+    <p class="text-center text-[13px] text-gray-400 mt-6">No se encontraron socios.</p>
   }
 </div>
 

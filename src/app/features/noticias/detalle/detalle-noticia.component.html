@@ -1,7 +1,7 @@
 @if (noticia()) {
   <div class="p-3">
-    <button (click)="goBack()" class="flex items-center gap-1 text-[8px] font-bold text-gray-400 mb-3">
-      <i class="bi bi-chevron-left text-[11px]"></i>
+    <button (click)="goBack()" class="flex items-center gap-1 text-[18px] font-bold text-gray-400 mb-3">
+      <i class="bi bi-chevron-left text-[18px]"></i>
       Volver
     </button>
 
@@ -11,10 +11,10 @@
       <div class="w-full h-[4px] bg-brand-yellow rounded-full mb-3"></div>
     }
 
-    <p class="text-[7.5px] font-bold text-brand-dark uppercase tracking-wider mb-1">
+    <p class="text-[18px] font-bold text-brand-dark uppercase tracking-wider mb-1">
       {{ noticia()!.fecha | date:'d MMMM yyyy' : '' : 'es' }}
     </p>
-    <h1 class="text-[13px] font-black text-brand-dark leading-tight mb-3">{{ noticia()!.titulo }}</h1>
-    <p class="text-[9.5px] text-gray-500 font-medium leading-relaxed">{{ noticia()!.contenido }}</p>
+    <h1 class="text-[16px] font-black text-brand-dark leading-tight mb-3">{{ noticia()!.titulo }}</h1>
+    <p class="text-[14px] text-gray-500 font-medium leading-relaxed">{{ noticia()!.contenido }}</p>
   </div>
 }

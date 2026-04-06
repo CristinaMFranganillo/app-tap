@@ -1,12 +1,12 @@
 <div class="p-3">
-  <h2 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-3">Ranking</h2>
+  <h2 class="text-[16px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-3">Ranking</h2>
 
   <!-- Selector de competición -->
   <div class="flex gap-2 overflow-x-auto pb-1 mb-4">
     @for (c of competiciones(); track c.id) {
       <button
         (click)="selectCompeticion(c.id)"
-        class="flex-shrink-0 px-3 py-1.5 rounded-full text-[8px] font-bold transition-colors"
+        class="flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition-colors"
         [class]="c.id === selectedId()
           ? 'bg-brand-dark text-white'
           : 'bg-white text-gray-400 shadow-sm'"
@@ -20,7 +20,7 @@
   @if (ranking().length === 0) {
     <div class="flex flex-col items-center justify-center py-10 text-center">
       <i class="bi bi-trophy text-[36px] text-gray-200 mb-2"></i>
-      <p class="text-[9px] font-bold text-gray-300 uppercase tracking-wider">Sin resultados</p>
+      <p class="text-[16px] font-bold text-gray-300 uppercase tracking-wider">Sin resultados</p>
     </div>
   } @else {
     @for (entry of ranking(); track entry.userId; let posicion = $index) {
@@ -33,11 +33,11 @@
           [size]="32"
         />
         <div class="flex-1 min-w-0">
-          <p class="text-[9.5px] font-bold text-brand-dark truncate">{{ getUserNombre(entry.userId) }}</p>
+          <p class="text-[14px] font-bold text-brand-dark truncate">{{ getUserNombre(entry.userId) }}</p>
         </div>
         <div class="text-right">
-          <p class="text-[13px] font-black text-brand-dark">{{ entry.totalRotos }}<span class="text-[9px] text-gray-300 font-semibold">/{{ (competicionActual()?.platosPorSerie ?? 25) * (competicionActual()?.numSeries ?? 1) }}</span></p>
-          <p class="text-[7px] font-bold text-gray-300 uppercase tracking-wide">platos</p>
+          <p class="text-[16px] font-black text-brand-dark">{{ entry.totalRotos }}<span class="text-[16px] text-gray-300 font-semibold">/{{ (competicionActual()?.platosPorSerie ?? 25) * (competicionActual()?.numSeries ?? 1) }}</span></p>
+          <p class="text-[10px] font-bold text-gray-300 uppercase tracking-wide">platos</p>
         </div>
       </div>
     }

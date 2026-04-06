@@ -1,11 +1,11 @@
 <div class="p-3">
-  <h2 class="text-[11px] font-extrabold text-brand-dark mb-4">Registrar resultados</h2>
+  <h2 class="text-[18px] font-extrabold text-brand-dark mb-4">Registrar resultados</h2>
 
-  <label class="block text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-1">Competición</label>
+  <label class="block text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-1">Competición</label>
   <select
     [value]="competicionId()"
     (change)="competicionId.set($any($event.target).value)"
-    class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm mb-3"
+    class="w-full bg-white rounded-[10px] px-3 py-2 text-[14px] font-medium text-brand-dark outline-none shadow-sm mb-3"
   >
     <option value="">Selecciona</option>
     @for (c of competiciones(); track c.id) {
@@ -14,11 +14,11 @@
   </select>
 
   @if (competicionId()) {
-    <label class="block text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-1">Escuadra</label>
+    <label class="block text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-1">Escuadra</label>
     <select
       [value]="escuadraId()"
       (change)="escuadraId.set($any($event.target).value)"
-      class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm mb-3"
+      class="w-full bg-white rounded-[10px] px-3 py-2 text-[14px] font-medium text-brand-dark outline-none shadow-sm mb-3"
     >
       <option value="">Selecciona escuadra</option>
       @for (e of escuadras(); track e.id) {
@@ -30,18 +30,18 @@
   @if (escuadraId()) {
     <div class="flex gap-3 mb-4">
       <div class="flex-1 bg-surface rounded-[10px] px-3 py-2 text-center">
-        <p class="text-[7px] text-gray-300 font-bold uppercase tracking-wide">Serie</p>
+        <p class="text-[14px] text-gray-300 font-bold uppercase tracking-wide">Serie</p>
         <div class="flex items-center justify-center gap-2 mt-1">
           <button (click)="decrementSerie()" class="text-gray-300 font-bold text-[14px] leading-none">−</button>
-          <span class="text-[16px] font-black text-brand-dark">{{ serieActual() }}</span>
+          <span class="text-[20px] font-black text-brand-dark">{{ serieActual() }}</span>
           <button (click)="incrementSerie()" class="text-gray-300 font-bold text-[14px] leading-none">+</button>
         </div>
       </div>
       <div class="flex-1 bg-surface rounded-[10px] px-3 py-2 text-center">
-        <p class="text-[7px] text-gray-300 font-bold uppercase tracking-wide">Plato</p>
+        <p class="text-[14px] text-gray-300 font-bold uppercase tracking-wide">Plato</p>
         <div class="flex items-center justify-center gap-2 mt-1">
           <button (click)="decrementPlato()" class="text-gray-300 font-bold text-[14px] leading-none">−</button>
-          <span class="text-[16px] font-black text-brand-dark">{{ platoActual() }}</span>
+          <span class="text-[20px] font-black text-brand-dark">{{ platoActual() }}</span>
           <button (click)="incrementPlato()" class="text-gray-300 font-bold text-[14px] leading-none">+</button>
         </div>
       </div>
@@ -50,21 +50,21 @@
     @for (t of tiradores(); track t.id) {
       <div class="flex items-center justify-between bg-white rounded-[12px] px-3 py-2 mb-2 shadow-sm">
         <div>
-          <p class="text-[9.5px] font-bold text-brand-dark">{{ getUserNombre(t.userId) }}</p>
-          <p class="text-[7.5px] text-gray-300 font-medium">Puesto {{ t.puesto }}</p>
+          <p class="text-[14px] font-bold text-brand-dark">{{ getUserNombre(t.userId) }}</p>
+          <p class="text-[11px] text-gray-300 font-medium">Puesto {{ t.puesto }}</p>
         </div>
         <div class="flex gap-2">
           <button
             (click)="registrar(t.userId, 1)"
             [disabled]="saving()"
-            class="px-3 py-1.5 rounded-[8px] bg-success text-white text-[9px] font-extrabold disabled:opacity-50"
+            class="px-3 py-1.5 rounded-[8px] bg-success text-white text-[13px] font-extrabold disabled:opacity-50"
           >
             ROTO
           </button>
           <button
             (click)="registrar(t.userId, 0)"
             [disabled]="saving()"
-            class="px-3 py-1.5 rounded-[8px] bg-danger text-white text-[9px] font-extrabold disabled:opacity-50"
+            class="px-3 py-1.5 rounded-[8px] bg-danger text-white text-[13px] font-extrabold disabled:opacity-50"
           >
             FALLO
           </button>
