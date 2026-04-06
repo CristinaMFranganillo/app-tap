@@ -25,6 +25,9 @@ export class RegistrarResultadoComponent {
 
   competiciones = toSignal(this.competicionService.getAll(), { initialValue: [] as Competicion[] });
 
+  // Asegurar que el cache de socios está cargado
+  private _socios = toSignal(this.userService.getAll(), { initialValue: [] });
+
   competicionId = signal('');
   serieActual = signal(1);
   platoActual = signal(1);

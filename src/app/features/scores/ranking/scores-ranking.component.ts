@@ -22,6 +22,9 @@ export class ScoresRankingComponent {
   competiciones = toSignal(this.competicionService.getAll(), { initialValue: [] as Competicion[] });
   selectedId = signal<string>('');
 
+  // Asegurar que el cache de socios está cargado
+  private _socios = toSignal(this.userService.getAll(), { initialValue: [] });
+
   competicionActual = computed(() => this.competiciones().find(c => c.id === this.selectedId()));
 
   ranking = toSignal(

@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
 import { EscuadraService } from '../../../scores/escuadra.service';
 import { CompeticionService } from '../../../scores/competicion.service';
 import { UserService } from '../../socios/user.service';
@@ -25,7 +26,7 @@ export class FormEscuadraComponent {
   socios = toSignal(this.userService.getAll(), { initialValue: [] as User[] });
 
   competicionId = '';
-  puestos: (string | null)[] = [null, null, null, null, null];
+  puestos: (string | null)[] = [null, null, null, null, null, null];
   loading = false;
   error = '';
 
@@ -36,7 +37,7 @@ export class FormEscuadraComponent {
     this.loading = true;
     this.error = '';
     try {
-      const escuadras = await this.escuadraService.getByCompeticion(this.competicionId).toPromise() ?? [];
+      const escuadras = await firstValueFrom(this.escuadraService.getByCompeticion(this.competicionId));
       const siguienteNumero = escuadras.length + 1;
       const escuadraId = await this.escuadraService.createEscuadra(this.competicionId, siguienteNumero);
       for (let i = 0; i < this.puestos.length; i++) {
