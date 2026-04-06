@@ -6,17 +6,6 @@
     <h2 class="text-[11px] font-extrabold text-brand-dark">Nueva Escuadra</h2>
   </div>
 
-  <label class="block text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-1">Competición</label>
-  <select
-    [(ngModel)]="competicionId"
-    class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm mb-4"
-  >
-    <option value="">Selecciona una competición</option>
-    @for (c of competiciones(); track c.id) {
-      <option [value]="c.id">{{ c.nombre }}</option>
-    }
-  </select>
-
   <p class="text-[8px] font-bold text-gray-300 uppercase tracking-wide mb-2">Tiradores por puesto</p>
 
   @for (puesto of puestos; track $index) {

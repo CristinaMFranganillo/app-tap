@@ -22,10 +22,11 @@ function toEscuadraTirador(row: Record<string, unknown>): EscuadraTirador {
 
 @Injectable({ providedIn: 'root' })
 export class EscuadraService {
-  getByCompeticion(competicionId: string): Observable<Escuadra[]> {
-    return from(
-      supabase.from('escuadras').select('*').eq('competicion_id', competicionId).order('numero')
-    ).pipe(map(({ data }) => (data ?? []).map(toEscuadra)));
+  getByCompeticion(competicionId: string | null): Observable<Escuadra[]> {
+    const query = competicionId === null
+      ? supabase.from('escuadras').select('*').is('competicion_id', null).order('numero')
+      : supabase.from('escuadras').select('*').eq('competicion_id', competicionId).order('numero');
+    return from(query).pipe(map(({ data }) => (data ?? []).map(toEscuadra)));
   }
 
   getTiradoresByEscuadra(escuadraId: string): Observable<EscuadraTirador[]> {
@@ -34,7 +35,7 @@ export class EscuadraService {
     ).pipe(map(({ data }) => (data ?? []).map(toEscuadraTirador)));
   }
 
-  async createEscuadra(competicionId: string, numero: number): Promise<string> {
+  async createEscuadra(competicionId: string | null, numero: number): Promise<string> {
     const { data, error } = await supabase
       .from('escuadras')
       .insert({ competicion_id: competicionId, numero })
