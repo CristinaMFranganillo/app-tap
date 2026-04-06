@@ -1,5 +1,4 @@
-<nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white border-t border-gray-200"
-     style="padding: 7px 0 5px">
+<nav class="app-bottom-nav fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white border-t border-gray-200">
   @for (item of navItems; track item.route) {
     <a
       [routerLink]="item.route"
@@ -13,11 +12,3 @@
   }
 </nav>
 
-<style>
-  .active-nav {
-    color: #1A1A1A !important;
-  }
-  .active-nav i {
-    color: #D4E600 !important;
-  }
-</style>
