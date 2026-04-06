@@ -45,4 +45,14 @@ export class ListaSociosComponent {
   goToCreate(): void {
     this.router.navigate(['/admin/socios/nuevo']);
   }
+
+  goToEdit(id: string): void {
+    this.router.navigate(['/admin/socios', id]);
+  }
+
+  async eliminar(id: string): Promise<void> {
+    if (!confirm('¿Eliminar este socio? Esta acción no se puede deshacer.')) return;
+    await this.userService.eliminar(id);
+    this.refresh$.next();
+  }
 }
