@@ -28,11 +28,11 @@ export class ListaNoticiasAdminComponent {
     this.router.navigate(['/admin/noticias/nueva']);
   }
 
-  eliminar(id: string): void {
-    this.newsService.delete(id);
+  async eliminar(id: string): Promise<void> {
+    await this.newsService.delete(id);
   }
 
-  togglePublicada(noticia: News): void {
-    this.newsService.update(noticia.id, { publicada: !noticia.publicada });
+  async togglePublicada(noticia: News): Promise<void> {
+    await this.newsService.update(noticia.id, { publicada: !noticia.publicada });
   }
 }

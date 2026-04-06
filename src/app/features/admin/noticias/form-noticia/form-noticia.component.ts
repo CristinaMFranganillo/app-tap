@@ -26,10 +26,10 @@ export class FormNoticiaComponent implements OnInit {
     publicada: [false],
   });
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      const noticia = this.newsService.getById(id);
+      const noticia = await this.newsService.getById(id);
       if (noticia) {
         this.isEdit = true;
         this.editId = id;
@@ -38,19 +38,19 @@ export class FormNoticiaComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
     const val = this.form.value;
     const autorId = this.authService.currentUser?.id ?? '1';
 
     if (this.isEdit && this.editId) {
-      this.newsService.update(this.editId, {
+      await this.newsService.update(this.editId, {
         titulo: val.titulo!,
         contenido: val.contenido!,
         publicada: val.publicada ?? false,
       });
     } else {
-      this.newsService.create({
+      await this.newsService.create({
         titulo: val.titulo!,
         contenido: val.contenido!,
         publicada: val.publicada ?? false,

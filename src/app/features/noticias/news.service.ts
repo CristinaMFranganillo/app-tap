@@ -1,77 +1,61 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { from, Observable, map } from 'rxjs';
 import { News } from '../../core/models/news.model';
+import { supabase } from '../../core/supabase/supabase.client';
 
-const MOCK_NEWS: News[] = [
-  {
-    id: '1',
-    titulo: 'Campeonato Provincial de Foso Olímpico 2026',
-    contenido: 'El próximo 15 de mayo celebramos el Campeonato Provincial de Foso Olímpico. La inscripción estará abierta hasta el 30 de abril. No te quedes sin tu plaza, el aforo es limitado. Este año contaremos con la participación de clubes de toda la provincia y esperamos batir el récord de participantes del año pasado.',
-    autorId: '1',
-    fecha: new Date('2026-04-01'),
-    imagenUrl: undefined,
-    publicada: true,
-  },
-  {
-    id: '2',
-    titulo: 'Nuevas instalaciones en el campo de tiro',
-    contenido: 'Hemos renovado las instalaciones del campo con nuevas torres de lanzamiento y sistemas de control automático. Las mejoras estarán disponibles a partir del próximo mes para todos los socios.',
-    autorId: '2',
-    fecha: new Date('2026-03-20'),
-    imagenUrl: undefined,
-    publicada: true,
-  },
-  {
-    id: '3',
-    titulo: 'Taller de iniciación al tiro deportivo',
-    contenido: 'Organizamos un taller de iniciación para socios nuevos y familiares. El taller incluye teoría básica, normas de seguridad y práctica guiada. Plazas limitadas.',
-    autorId: '2',
-    fecha: new Date('2026-03-10'),
-    imagenUrl: undefined,
-    publicada: true,
-  },
-  {
-    id: '4',
-    titulo: 'Borrador: Actualización reglamento interno',
-    contenido: 'Revisión del reglamento interno del club para adaptarlo a la nueva normativa autonómica.',
-    autorId: '1',
-    fecha: new Date('2026-04-05'),
-    imagenUrl: undefined,
-    publicada: false,
-  },
-];
+function toNews(row: Record<string, unknown>): News {
+  return {
+    id: row['id'] as string,
+    titulo: row['titulo'] as string,
+    contenido: row['contenido'] as string,
+    autorId: row['autor_id'] as string,
+    fecha: new Date(row['fecha'] as string),
+    imagenUrl: (row['imagen_url'] as string) ?? undefined,
+    publicada: row['publicada'] as boolean,
+  };
+}
 
 @Injectable({ providedIn: 'root' })
 export class NewsService {
-  private newsSubject = new BehaviorSubject<News[]>(MOCK_NEWS);
-  readonly news$ = this.newsSubject.asObservable();
 
   getAll(): Observable<News[]> {
-    return this.news$;
+    return from(
+      supabase.from('noticias').select('*').order('fecha', { ascending: false })
+    ).pipe(map(({ data }) => (data ?? []).map(toNews)));
   }
 
   getPublicadas(): Observable<News[]> {
-    return this.news$.pipe(
-      map(news => news.filter(n => n.publicada).sort((a, b) => +b.fecha - +a.fecha))
-    );
+    return from(
+      supabase.from('noticias').select('*').eq('publicada', true).order('fecha', { ascending: false })
+    ).pipe(map(({ data }) => (data ?? []).map(toNews)));
   }
 
-  getById(id: string): News | undefined {
-    return this.newsSubject.getValue().find(n => n.id === id);
+  async getById(id: string): Promise<News | null> {
+    const { data } = await supabase.from('noticias').select('*').eq('id', id).single();
+    return data ? toNews(data as Record<string, unknown>) : null;
   }
 
-  create(data: Omit<News, 'id'>): void {
-    const current = this.newsSubject.getValue();
-    const newItem: News = { ...data, id: Date.now().toString() };
-    this.newsSubject.next([newItem, ...current]);
+  async create(data: Omit<News, 'id'>): Promise<void> {
+    await supabase.from('noticias').insert({
+      titulo: data.titulo,
+      contenido: data.contenido,
+      autor_id: data.autorId,
+      fecha: data.fecha.toISOString(),
+      imagen_url: data.imagenUrl ?? null,
+      publicada: data.publicada,
+    });
   }
 
-  update(id: string, data: Partial<News>): void {
-    const current = this.newsSubject.getValue();
-    this.newsSubject.next(current.map(n => n.id === id ? { ...n, ...data } : n));
+  async update(id: string, data: Partial<News>): Promise<void> {
+    const payload: Record<string, unknown> = {};
+    if (data.titulo !== undefined) payload['titulo'] = data.titulo;
+    if (data.contenido !== undefined) payload['contenido'] = data.contenido;
+    if (data.publicada !== undefined) payload['publicada'] = data.publicada;
+    if (data.imagenUrl !== undefined) payload['imagen_url'] = data.imagenUrl;
+    await supabase.from('noticias').update(payload).eq('id', id);
   }
 
-  delete(id: string): void {
-    this.newsSubject.next(this.newsSubject.getValue().filter(n => n.id !== id));
+  async delete(id: string): Promise<void> {
+    await supabase.from('noticias').delete().eq('id', id);
   }
 }

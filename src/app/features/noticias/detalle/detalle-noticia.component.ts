@@ -17,10 +17,11 @@ export class DetalleNoticiaComponent implements OnInit {
 
   noticia = signal<News | null>(null);
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.noticia.set(this.newsService.getById(id) ?? null);
+      const noticia = await this.newsService.getById(id);
+      this.noticia.set(noticia);
     }
     if (!this.noticia()) {
       this.router.navigate(['/noticias']);
