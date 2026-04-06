@@ -1,7 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(mkdir -p \"C:/Users/cristina.mf/Desktop/tap/appTap/src/app/shared/pipes\")",
+      "Bash(mkdir -p \"C:/Users/cristina.mf/Desktop/tap/appTap/src/app/shared/components/avatar\")",
+      "Bash(npx ng:*)",
+      "Bash(npm run:*)",
+      "Bash(npm test:*)",
+      "Bash(npx ts-node:*)",
+      "Bash(npx tsc:*)",
+      "Bash(find /c/Users/cristina.mf/Desktop/tap/appTap/node_modules/@angular/router -name \"*.d.ts\" -exec grep -l \"CanActivateFn\" {} \\\\;)",
+      "Bash(xargs cat:*)"
     ]
   }
 }
