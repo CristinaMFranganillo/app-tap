@@ -1,0 +1,71 @@
+<h2>¿Qué estilo de navegación principal prefieres?</h2>
+<p class="subtitle">Para una app mobile-first con socios, noticias y puntuaciones</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="bottom-nav" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f9fa; padding:16px; font-family:sans-serif;">
+      <div style="border:2px solid #ddd; border-radius:12px; overflow:hidden; max-width:220px; margin:0 auto; background:#fff;">
+        <div style="height:140px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:12px;">Contenido de la pantalla</div>
+        <div style="display:flex; justify-content:space-around; padding:10px 0; border-top:2px solid #eee; background:#fff;">
+          <div style="text-align:center;">
+            <div style="font-size:18px;">🏠</div>
+            <div style="font-size:9px; color:#666;">Inicio</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:18px;">📰</div>
+            <div style="font-size:9px; color:#666;">Noticias</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:18px;">🏆</div>
+            <div style="font-size:9px; color:#666;">Scores</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:18px;">👤</div>
+            <div style="font-size:9px; color:#666;">Perfil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Barra inferior (Bottom Nav)</h3>
+      <p>Navegación fija en la parte de abajo. Estilo app móvil nativa (como Instagram, WhatsApp). Muy accesible con el pulgar.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="side-drawer" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f9fa; padding:16px; font-family:sans-serif;">
+      <div style="border:2px solid #ddd; border-radius:12px; overflow:hidden; max-width:220px; margin:0 auto; background:#fff;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:#002F86; color:#fff;">
+          <span style="font-size:12px; font-weight:bold;">☰ AppTap</span>
+          <span style="font-size:16px;">👤</span>
+        </div>
+        <div style="height:130px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:12px;">Contenido de la pantalla</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Menú lateral (Drawer)</h3>
+      <p>Hamburguesa en el header que abre un panel lateral. Más opciones visibles, ideal cuando hay muchas secciones.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="top-tabs" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f8f9fa; padding:16px; font-family:sans-serif;">
+      <div style="border:2px solid #ddd; border-radius:12px; overflow:hidden; max-width:220px; margin:0 auto; background:#fff;">
+        <div style="padding:10px 12px; background:#002F86; color:#fff; font-size:12px; font-weight:bold;">AppTap</div>
+        <div style="display:flex; border-bottom:2px solid #eee;">
+          <div style="flex:1; text-align:center; padding:8px; font-size:10px; color:#002F86; border-bottom:2px solid #002F86; font-weight:bold;">Inicio</div>
+          <div style="flex:1; text-align:center; padding:8px; font-size:10px; color:#aaa;">Noticias</div>
+          <div style="flex:1; text-align:center; padding:8px; font-size:10px; color:#aaa;">Scores</div>
+          <div style="flex:1; text-align:center; padding:8px; font-size:10px; color:#aaa;">Perfil</div>
+        </div>
+        <div style="height:110px; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#aaa; font-size:12px;">Contenido</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Pestañas superiores (Top Tabs)</h3>
+      <p>Tabs bajo el header. Común en apps Android. Permite deslizar entre secciones.</p>
+    </div>
+  </div>
+
+</div>

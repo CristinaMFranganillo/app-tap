@@ -1,0 +1,99 @@
+<h2>Arquitectura de carpetas propuesta</h2>
+<p class="subtitle">Standalone Components + lazy loading por ruta — Angular 19</p>
+
+<div class="section">
+<pre style="background:#1e1e2e;color:#cdd6f4;padding:20px;border-radius:10px;font-size:13px;line-height:1.7;overflow-x:auto;">
+src/
+├── app/
+│   ├── <span style="color:#89b4fa">core/</span>                        <span style="color:#6c7086"># Servicios singleton, guards, interceptors</span>
+│   │   ├── auth/
+│   │   │   ├── auth.service.ts
+│   │   │   ├── auth.guard.ts          <span style="color:#6c7086"># Protege rutas autenticadas</span>
+│   │   │   └── role.guard.ts          <span style="color:#6c7086"># Protege rutas por rol (admin/mod)</span>
+│   │   ├── interceptors/
+│   │   │   └── auth.interceptor.ts    <span style="color:#6c7086"># Añade token JWT a requests</span>
+│   │   └── models/                    <span style="color:#6c7086"># Interfaces TypeScript compartidas</span>
+│   │       ├── user.model.ts
+│   │       ├── news.model.ts
+│   │       └── score.model.ts
+│   │
+│   ├── <span style="color:#a6e3a1">features/</span>                    <span style="color:#6c7086"># Un directorio por feature (lazy)</span>
+│   │   ├── auth/
+│   │   │   ├── login/
+│   │   │   │   ├── login.component.ts
+│   │   │   │   └── login.component.html
+│   │   │   └── auth.routes.ts
+│   │   │
+│   │   ├── home/
+│   │   │   ├── home.component.ts
+│   │   │   └── home.component.html
+│   │   │
+│   │   ├── noticias/
+│   │   │   ├── lista/
+│   │   │   ├── detalle/
+│   │   │   └── noticias.routes.ts
+│   │   │
+│   │   ├── scores/
+│   │   │   ├── ranking/
+│   │   │   ├── historial/
+│   │   │   └── scores.routes.ts
+│   │   │
+│   │   ├── perfil/
+│   │   │   ├── perfil.component.ts
+│   │   │   └── perfil.component.html
+│   │   │
+│   │   └── admin/                     <span style="color:#f38ba8"># Solo accesible con rol admin/mod</span>
+│   │       ├── socios/
+│   │       │   ├── lista-socios/
+│   │       │   ├── detalle-socio/
+│   │       │   └── form-socio/
+│   │       ├── noticias/
+│   │       │   ├── lista-noticias/
+│   │       │   └── form-noticia/
+│   │       ├── scores/
+│   │       │   └── form-score/
+│   │       └── admin.routes.ts
+│   │
+│   ├── <span style="color:#fab387">shared/</span>                      <span style="color:#6c7086"># Componentes reutilizables</span>
+│   │   ├── components/
+│   │   │   ├── bottom-nav/
+│   │   │   ├── header/
+│   │   │   ├── card-noticia/
+│   │   │   ├── card-score/
+│   │   │   └── avatar/
+│   │   └── pipes/
+│   │
+│   ├── app.component.ts
+│   ├── app.config.ts
+│   └── app.routes.ts                  <span style="color:#6c7086"># Rutas raíz con lazy loading</span>
+│
+├── styles.scss                        <span style="color:#6c7086"># Tailwind imports + variables globales</span>
+└── tailwind.config.js
+</pre>
+</div>
+
+<div class="section">
+  <h3>Paleta de colores (Tailwind)</h3>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;">
+    <div style="text-align:center;">
+      <div style="width:64px;height:64px;border-radius:10px;background:#002F86;margin:0 auto;"></div>
+      <div style="font-size:11px;margin-top:4px;font-family:monospace;">primary<br>#002F86</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="width:64px;height:64px;border-radius:10px;background:#FFAE00;margin:0 auto;"></div>
+      <div style="font-size:11px;margin-top:4px;font-family:monospace;">accent<br>#FFAE00</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="width:64px;height:64px;border-radius:10px;background:#10B981;margin:0 auto;"></div>
+      <div style="font-size:11px;margin-top:4px;font-family:monospace;">success<br>#10B981</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="width:64px;height:64px;border-radius:10px;background:#EF4444;margin:0 auto;"></div>
+      <div style="font-size:11px;margin-top:4px;font-family:monospace;">danger<br>#EF4444</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="width:64px;height:64px;border-radius:10px;background:#F3F4F6;border:1px solid #ddd;margin:0 auto;"></div>
+      <div style="font-size:11px;margin-top:4px;font-family:monospace;">surface<br>#F3F4F6</div>
+    </div>
+  </div>
+</div>

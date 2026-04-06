@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  background-color: #F5F5F5;
+  margin: 0;
+  padding: 0;
+}
