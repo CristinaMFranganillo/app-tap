@@ -3,34 +3,34 @@
 
   <div class="bg-white rounded-[12px] p-3 shadow-sm">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <label class="form-label">Nombre</label>
+      <label class="form-label" for="nombre">Nombre</label>
       <div class="form-field">
         <i class="bi bi-person"></i>
-        <input formControlName="nombre" placeholder="Nombre" class="form-input" />
+        <input id="nombre" formControlName="nombre" placeholder="Nombre" class="form-input" />
       </div>
 
-      <label class="form-label">Apellidos</label>
+      <label class="form-label" for="apellidos">Apellidos</label>
       <div class="form-field">
         <i class="bi bi-person"></i>
-        <input formControlName="apellidos" placeholder="Apellidos" class="form-input" />
+        <input id="apellidos" formControlName="apellidos" placeholder="Apellidos" class="form-input" />
       </div>
 
-      <label class="form-label">Email</label>
+      <label class="form-label" for="email">Email</label>
       <div class="form-field">
         <i class="bi bi-envelope"></i>
-        <input formControlName="email" type="email" placeholder="email@ejemplo.es" class="form-input" autocomplete="email" />
+        <input id="email" formControlName="email" type="email" placeholder="email@ejemplo.es" class="form-input" autocomplete="email" />
       </div>
 
-      <label class="form-label">Nº Socio</label>
+      <label class="form-label" for="numeroSocio">Nº Socio</label>
       <div class="form-field">
         <i class="bi bi-hash"></i>
-        <input formControlName="numeroSocio" placeholder="0001" class="form-input" />
+        <input id="numeroSocio" formControlName="numeroSocio" placeholder="0001" class="form-input" />
       </div>
 
-      <label class="form-label">Rol</label>
+      <label class="form-label" for="rol">Rol</label>
       <div class="form-field">
         <i class="bi bi-shield"></i>
-        <select formControlName="rol" class="form-input">
+        <select id="rol" formControlName="rol" class="form-input">
           <option value="socio">Socio</option>
           <option value="moderador">Moderador</option>
           <option value="admin">Admin</option>

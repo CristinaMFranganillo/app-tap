@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User, UserRole } from '../../../core/models/user.model';
+import { User } from '../../../core/models/user.model';
 
 const MOCK_SOCIOS: User[] = [
   { id: '1', nombre: 'Juan', apellidos: 'García', email: 'admin@test.es', numeroSocio: '0001', rol: 'admin', fechaAlta: new Date('2023-01-15'), activo: true },

@@ -3,7 +3,9 @@
   <div class="flex items-center gap-2 bg-white rounded-[10px] px-3 py-2 mb-3 shadow-sm">
     <i class="bi bi-search text-gray-300 text-[13px]"></i>
     <input
-      [(ngModel)]="searchTerm"
+      [ngModel]="searchTerm()"
+      (ngModelChange)="searchTerm.set($event)"
+      aria-label="Buscar socio"
       placeholder="Buscar socio..."
       class="flex-1 bg-transparent text-[9px] font-medium text-brand-dark outline-none placeholder-gray-300"
     />

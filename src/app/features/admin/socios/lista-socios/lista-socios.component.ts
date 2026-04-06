@@ -1,4 +1,4 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
@@ -17,11 +17,11 @@ export class ListaSociosComponent {
   private userService = inject(UserService);
   private router = inject(Router);
 
-  searchTerm = '';
+  searchTerm = signal('');
   private socios = toSignal(this.userService.getAll(), { initialValue: [] as User[] });
 
   filteredSocios = computed(() => {
-    const term = this.searchTerm.toLowerCase();
+    const term = this.searchTerm().toLowerCase();
     if (!term) return this.socios();
     return this.socios().filter(s =>
       s.nombre.toLowerCase().includes(term) ||
