@@ -118,3 +118,34 @@ CREATE POLICY "scores_insert" ON scores FOR INSERT TO authenticated
 -- UPDATE profiles
 -- SET nombre = 'Admin', apellidos = 'San Isidro', numero_socio = '0001', rol = 'admin'
 -- WHERE id = '<UUID_ADMIN>';
+
+-- ============================================================
+-- Tabla: solicitudes_registro
+-- ============================================================
+CREATE TABLE solicitudes_registro (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  nombre          text NOT NULL,
+  apellidos       text NOT NULL,
+  email           text NOT NULL UNIQUE,
+  mensaje         text,
+  estado          text NOT NULL DEFAULT 'pendiente'
+                  CHECK (estado IN ('pendiente', 'aceptada', 'rechazada')),
+  fecha           timestamptz NOT NULL DEFAULT now(),
+  revisada_por    uuid REFERENCES profiles(id),
+  fecha_revision  timestamptz,
+  motivo_rechazo  text
+);
+
+ALTER TABLE solicitudes_registro ENABLE ROW LEVEL SECURITY;
+
+-- Cualquier usuario (incluso no autenticado) puede insertar una solicitud
+CREATE POLICY "solicitudes_insert_public" ON solicitudes_registro
+  FOR INSERT TO anon, authenticated WITH CHECK (true);
+
+-- Solo admins pueden leer solicitudes
+CREATE POLICY "solicitudes_select_admin" ON solicitudes_registro
+  FOR SELECT TO authenticated USING (get_my_rol() = 'admin');
+
+-- Solo admins pueden actualizar solicitudes
+CREATE POLICY "solicitudes_update_admin" ON solicitudes_registro
+  FOR UPDATE TO authenticated USING (get_my_rol() = 'admin');
