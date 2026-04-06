@@ -12,7 +12,12 @@ export class AuthService {
 
   private loadUser(): User | null {
     const raw = localStorage.getItem(this.USER_KEY);
-    return raw ? JSON.parse(raw) : null;
+    try {
+      return raw ? (JSON.parse(raw) as User) : null;
+    } catch {
+      localStorage.removeItem(this.USER_KEY);
+      return null;
+    }
   }
 
   login(user: User, token: string): void {
