@@ -1,0 +1,20 @@
+<div class="bg-white rounded-[14px] shadow-sm overflow-hidden mb-3">
+  @if (noticia.imagenUrl) {
+    <img [src]="noticia.imagenUrl" [alt]="noticia.titulo" class="w-full h-[80px] object-cover" />
+  } @else {
+    <div class="w-full h-[6px] bg-brand-yellow"></div>
+  }
+
+  <div class="px-3 py-2.5">
+    <div class="flex items-center justify-between mb-1">
+      <span class="text-[7px] font-bold uppercase tracking-[1.5px] text-gray-300">
+        {{ noticia.fecha | date:'d MMM yyyy' : '' : 'es' }}
+      </span>
+      @if (isReciente(noticia.fecha)) {
+        <span class="bg-brand-yellow text-brand-dark text-[6.5px] font-extrabold uppercase tracking-wide px-1.5 py-0.5 rounded-full">Nuevo</span>
+      }
+    </div>
+    <h3 class="text-[10px] font-extrabold text-brand-dark leading-tight line-clamp-2">{{ noticia.titulo }}</h3>
+    <p class="text-[8.5px] text-gray-400 font-medium mt-1 line-clamp-2 leading-relaxed">{{ noticia.contenido }}</p>
+  </div>
+</div>
