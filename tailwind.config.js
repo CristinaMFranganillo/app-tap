@@ -16,6 +16,9 @@ module.exports = {
         surface: '#F5F5F5',
         success: '#22C55E',
         danger:  '#EF4444',
+        gray: {
+          300: '#9CA3AF',
+        },
       },
     },
   },
