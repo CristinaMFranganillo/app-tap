@@ -1,0 +1,54 @@
+<div class="flex flex-col min-h-screen bg-brand-dark">
+  <!-- Hero -->
+  <div class="flex flex-col items-center gap-2 pt-10 pb-5 px-4">
+    <div class="w-[72px] h-[72px] rounded-full bg-white border-[3px] border-gray-800 overflow-hidden">
+      <img src="assets/logo.png" alt="Logo" class="w-full h-full object-cover" />
+    </div>
+    <h1 class="text-white font-black text-[14px] tracking-wide">Campo de Tiro</h1>
+    <p class="text-brand-yellow font-bold text-[8px] uppercase tracking-[2px]">San Isidro</p>
+  </div>
+
+  <!-- Card form -->
+  <div class="flex-1 bg-white rounded-t-[22px] px-4 pt-5 pb-6">
+    <h2 class="text-brand-dark font-black text-[14px] mb-4">Acceder</h2>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <label class="block text-[8px] font-bold text-gray-300 uppercase tracking-wide mb-1">Email</label>
+      <div class="flex items-center gap-2 bg-surface rounded-[10px] px-3 py-2 mb-3">
+        <i class="bi bi-envelope-fill text-gray-300 text-[13px]"></i>
+        <input
+          formControlName="email"
+          type="email"
+          placeholder="socio@sanisidro.es"
+          class="flex-1 bg-transparent text-[10px] font-medium text-brand-dark outline-none placeholder-gray-300"
+        />
+      </div>
+
+      <label class="block text-[8px] font-bold text-gray-300 uppercase tracking-wide mb-1">Contraseña</label>
+      <div class="flex items-center gap-2 bg-surface rounded-[10px] px-3 py-2 mb-4">
+        <i class="bi bi-lock-fill text-gray-300 text-[13px]"></i>
+        <input
+          formControlName="password"
+          type="password"
+          placeholder="••••••••"
+          class="flex-1 bg-transparent text-[10px] font-medium text-brand-dark outline-none placeholder-gray-300"
+        />
+      </div>
+
+      @if (error) {
+        <p class="text-danger text-[9px] font-semibold mb-3">{{ error }}</p>
+      }
+
+      <button
+        type="submit"
+        [disabled]="form.invalid || loading"
+        class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-extrabold text-[11px] tracking-wide rounded-[12px] py-3 disabled:opacity-50"
+      >
+        <i class="bi bi-box-arrow-in-right"></i>
+        {{ loading ? 'Entrando...' : 'Entrar' }}
+      </button>
+    </form>
+
+    <p class="text-center mt-3 text-[8.5px] text-gray-300 font-semibold">¿Olvidaste tu contraseña?</p>
+  </div>
+</div>
