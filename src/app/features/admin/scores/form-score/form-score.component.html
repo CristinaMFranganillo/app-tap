@@ -1,0 +1,66 @@
+<div class="p-3">
+  <div class="flex items-center gap-2 mb-4">
+    <button (click)="cancel()" class="text-gray-400">
+      <i class="bi bi-chevron-left text-[15px]"></i>
+    </button>
+    <h2 class="text-[11px] font-extrabold text-brand-dark">Registrar Score</h2>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
+    <div>
+      <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Competición</label>
+      <select
+        formControlName="competicionId"
+        class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm"
+      >
+        <option value="">Selecciona una competición</option>
+        @for (c of competiciones(); track c.id) {
+          <option [value]="c.id">{{ c.nombre }} — {{ c.modalidad }}</option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Socio</label>
+      <select
+        formControlName="userId"
+        class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm"
+      >
+        <option value="">Selecciona un socio</option>
+        @for (s of socios(); track s.id) {
+          <option [value]="s.id">{{ s.nombre }} {{ s.apellidos }} (#{{ s.numeroSocio }})</option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">
+        Platos rotos (máx. {{ maxPlatos() }})
+      </label>
+      <input
+        formControlName="platosRotos"
+        type="number"
+        [max]="maxPlatos()"
+        min="0"
+        class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm"
+      />
+    </div>
+
+    <div class="flex gap-2 pt-1">
+      <button
+        type="button"
+        (click)="cancel()"
+        class="flex-1 py-2.5 rounded-[12px] border border-gray-200 text-[9px] font-bold text-gray-400"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        [disabled]="form.invalid"
+        class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+      >
+        Registrar
+      </button>
+    </div>
+  </form>
+</div>

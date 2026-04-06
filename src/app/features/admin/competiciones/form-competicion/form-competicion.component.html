@@ -1,0 +1,71 @@
+<div class="p-3">
+  <div class="flex items-center gap-2 mb-4">
+    <button (click)="cancel()" class="text-gray-400">
+      <i class="bi bi-chevron-left text-[15px]"></i>
+    </button>
+    <h2 class="text-[11px] font-extrabold text-brand-dark">Nueva Competición</h2>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
+    <div>
+      <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Nombre</label>
+      <input
+        formControlName="nombre"
+        type="text"
+        placeholder="Campeonato Provincial 2026"
+        class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm placeholder-gray-300"
+      />
+    </div>
+
+    <div>
+      <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Modalidad</label>
+      <input
+        formControlName="modalidad"
+        type="text"
+        placeholder="Foso Olímpico, Skeet, Foso Universal..."
+        class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm placeholder-gray-300"
+      />
+    </div>
+
+    <div>
+      <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Total de platos</label>
+      <input
+        formControlName="totalPlatos"
+        type="number"
+        min="1"
+        class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm"
+      />
+    </div>
+
+    <div>
+      <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Fecha</label>
+      <input
+        formControlName="fecha"
+        type="date"
+        class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm"
+      />
+    </div>
+
+    <label class="flex items-center gap-2 cursor-pointer">
+      <input type="checkbox" formControlName="activa" class="accent-brand-yellow w-3.5 h-3.5" />
+      <span class="text-[9px] font-semibold text-brand-dark">Marcar como competición activa</span>
+    </label>
+
+    <div class="flex gap-2 pt-1">
+      <button
+        type="button"
+        (click)="cancel()"
+        class="flex-1 py-2.5 rounded-[12px] border border-gray-200 text-[9px] font-bold text-gray-400"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        [disabled]="form.invalid"
+        class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+      >
+        Crear competición
+      </button>
+    </div>
+  </form>
+</div>
