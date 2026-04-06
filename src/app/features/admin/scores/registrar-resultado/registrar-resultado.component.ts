@@ -59,6 +59,11 @@ export class RegistrarResultadoComponent {
     return u ? `${u.nombre} ${u.apellidos}` : userId;
   }
 
+  incrementSerie(): void { this.serieActual.update(s => s + 1); }
+  decrementSerie(): void { this.serieActual.update(s => Math.max(1, s - 1)); }
+  incrementPlato(): void { this.platoActual.update(p => p + 1); }
+  decrementPlato(): void { this.platoActual.update(p => Math.max(1, p - 1)); }
+
   async registrar(userId: string, resultado: 0 | 1): Promise<void> {
     const adminId = this.auth.currentUser?.id ?? '';
     this.saving.set(true);

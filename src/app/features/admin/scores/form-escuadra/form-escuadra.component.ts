@@ -8,12 +8,10 @@ import { CompeticionService } from '../../../scores/competicion.service';
 import { UserService } from '../../socios/user.service';
 import { Competicion } from '../../../../core/models/competicion.model';
 import { User } from '../../../../core/models/user.model';
-import { DatePipe } from '@angular/common';
-
 @Component({
   selector: 'app-form-escuadra',
   standalone: true,
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule],
   templateUrl: './form-escuadra.component.html',
 })
 export class FormEscuadraComponent {

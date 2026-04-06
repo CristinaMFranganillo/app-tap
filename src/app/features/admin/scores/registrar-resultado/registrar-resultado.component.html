@@ -32,17 +32,17 @@
       <div class="flex-1 bg-surface rounded-[10px] px-3 py-2 text-center">
         <p class="text-[7px] text-gray-300 font-bold uppercase tracking-wide">Serie</p>
         <div class="flex items-center justify-center gap-2 mt-1">
-          <button (click)="serieActual.update(s => Math.max(1, s-1))" class="text-gray-300 font-bold text-[14px] leading-none">−</button>
+          <button (click)="decrementSerie()" class="text-gray-300 font-bold text-[14px] leading-none">−</button>
           <span class="text-[16px] font-black text-brand-dark">{{ serieActual() }}</span>
-          <button (click)="serieActual.update(s => s+1)" class="text-gray-300 font-bold text-[14px] leading-none">+</button>
+          <button (click)="incrementSerie()" class="text-gray-300 font-bold text-[14px] leading-none">+</button>
         </div>
       </div>
       <div class="flex-1 bg-surface rounded-[10px] px-3 py-2 text-center">
         <p class="text-[7px] text-gray-300 font-bold uppercase tracking-wide">Plato</p>
         <div class="flex items-center justify-center gap-2 mt-1">
-          <button (click)="platoActual.update(p => Math.max(1, p-1))" class="text-gray-300 font-bold text-[14px] leading-none">−</button>
+          <button (click)="decrementPlato()" class="text-gray-300 font-bold text-[14px] leading-none">−</button>
           <span class="text-[16px] font-black text-brand-dark">{{ platoActual() }}</span>
-          <button (click)="platoActual.update(p => p+1)" class="text-gray-300 font-bold text-[14px] leading-none">+</button>
+          <button (click)="incrementPlato()" class="text-gray-300 font-bold text-[14px] leading-none">+</button>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject, switchMap, startWith } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { NewsService } from '../../../noticias/news.service';
+import { AuthService } from '../../../../core/auth/auth.service';
 import { News } from '../../../../core/models/news.model';
 
 @Component({
@@ -14,8 +15,16 @@ import { News } from '../../../../core/models/news.model';
 })
 export class ListaNoticiasAdminComponent {
   private newsService = inject(NewsService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private refresh$ = new Subject<void>();
+
+  currentUserId = this.authService.currentUser?.id;
+  isAdmin = this.authService.hasRole(['admin']);
+
+  canEdit(noticia: News): boolean {
+    return this.isAdmin || noticia.autorId === this.currentUserId;
+  }
 
   noticias = toSignal(
     this.refresh$.pipe(

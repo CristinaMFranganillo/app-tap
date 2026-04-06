@@ -10,7 +10,16 @@
       "Bash(npx ts-node:*)",
       "Bash(npx tsc:*)",
       "Bash(find /c/Users/cristina.mf/Desktop/tap/appTap/node_modules/@angular/router -name \"*.d.ts\" -exec grep -l \"CanActivateFn\" {} \\\\;)",
-      "Bash(xargs cat:*)"
+      "Bash(xargs cat:*)",
+      "mcp__supabase__execute_sql",
+      "mcp__supabase__list_tables",
+      "mcp__supabase__list_migrations",
+      "mcp__supabase__list_edge_functions",
+      "mcp__supabase__deploy_edge_function"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "supabase"
+  ]
 }

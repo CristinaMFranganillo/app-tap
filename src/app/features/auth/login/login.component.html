@@ -1,16 +1,14 @@
-<div class="flex flex-col min-h-screen bg-brand-dark">
+<div class="flex flex-col min-h-screen bg-white">
   <!-- Hero -->
-  <div class="flex flex-col items-center gap-2 pt-10 pb-5 px-4">
-    <div class="w-[72px] h-[72px] rounded-full bg-white border-[3px] border-gray-800 overflow-hidden">
-      <img src="logo.png" alt="Logo" class="w-full h-full object-cover" />
+  <div class="flex flex-col items-center justify-center pt-14 pb-8 px-4 bg-white">
+    <div class="w-[160px] h-[160px]">
+      <img src="logo.png" alt="Logo" class="w-full h-full object-contain" />
     </div>
-    <h1 class="text-white font-black text-[14px] tracking-wide">Campo de Tiro</h1>
-    <p class="text-brand-yellow font-bold text-[8px] uppercase tracking-[2px]">San Isidro</p>
   </div>
 
   <!-- Card form -->
-  <div class="flex-1 bg-white rounded-t-[22px] px-4 pt-5 pb-6">
-    <h2 class="text-brand-dark font-black text-[14px] mb-4">Acceder</h2>
+  <div class="flex-1 bg-white px-5 pt-6 pb-6">
+    <h2 class="text-brand-dark font-semibold text-[16px] mb-5">Acceder</h2>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <label class="block text-[8px] font-bold text-gray-300 uppercase tracking-wide mb-1">Email</label>
@@ -53,17 +51,5 @@
 
     <p class="text-center mt-3 text-[8.5px] text-gray-300 font-semibold">¿Olvidaste tu contraseña?</p>
 
-    <div class="flex items-center gap-2 mt-4">
-      <div class="flex-1 h-px bg-gray-100"></div>
-      <span class="text-[7.5px] text-gray-200 font-medium">o</span>
-      <div class="flex-1 h-px bg-gray-100"></div>
-    </div>
-
-    <a
-      routerLink="/registro"
-      class="block w-full text-center mt-3 text-[8.5px] text-brand-dark font-bold"
-    >
-      ¿Quieres ser socio? <span class="text-brand-yellow">Solicita el acceso →</span>
-    </a>
   </div>
 </div>

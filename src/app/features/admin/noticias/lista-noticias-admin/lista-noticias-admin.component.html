@@ -10,15 +10,17 @@
         <p class="text-[7.5px] text-gray-400 font-medium">{{ n.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
       </div>
       <div class="flex items-center gap-2">
-        <button (click)="togglePublicada(n)" title="Despublicar" class="text-success">
-          <i class="bi bi-eye-fill text-[14px]"></i>
-        </button>
-        <button (click)="editar(n.id)" class="text-gray-400">
-          <i class="bi bi-pencil-fill text-[14px]"></i>
-        </button>
-        <button (click)="eliminar(n.id)" class="text-danger">
-          <i class="bi bi-trash-fill text-[14px]"></i>
-        </button>
+        @if (canEdit(n)) {
+          <button (click)="togglePublicada(n)" title="Despublicar" class="text-success">
+            <i class="bi bi-eye-fill text-[14px]"></i>
+          </button>
+          <button (click)="editar(n.id)" class="text-gray-400">
+            <i class="bi bi-pencil-fill text-[14px]"></i>
+          </button>
+          <button (click)="eliminar(n.id)" class="text-danger">
+            <i class="bi bi-trash-fill text-[14px]"></i>
+          </button>
+        }
       </div>
     </div>
   }
@@ -38,15 +40,17 @@
         <p class="text-[7.5px] text-gray-400 font-medium">{{ n.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
       </div>
       <div class="flex items-center gap-2">
-        <button (click)="togglePublicada(n)" title="Publicar" class="text-gray-300">
-          <i class="bi bi-eye-slash-fill text-[14px]"></i>
-        </button>
-        <button (click)="editar(n.id)" class="text-gray-400">
-          <i class="bi bi-pencil-fill text-[14px]"></i>
-        </button>
-        <button (click)="eliminar(n.id)" class="text-danger">
-          <i class="bi bi-trash-fill text-[14px]"></i>
-        </button>
+        @if (canEdit(n)) {
+          <button (click)="togglePublicada(n)" title="Publicar" class="text-gray-300">
+            <i class="bi bi-eye-slash-fill text-[14px]"></i>
+          </button>
+          <button (click)="editar(n.id)" class="text-gray-400">
+            <i class="bi bi-pencil-fill text-[14px]"></i>
+          </button>
+          <button (click)="eliminar(n.id)" class="text-danger">
+            <i class="bi bi-trash-fill text-[14px]"></i>
+          </button>
+        }
       </div>
     </div>
   }

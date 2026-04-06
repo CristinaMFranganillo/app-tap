@@ -12,6 +12,38 @@ serve(async (req: Request) => {
   }
 
   try {
+    // Verificar que el llamante es un admin
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'No autorizado' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    )
+
+    // Verificar que el token pertenece a un admin o moderador
+    const token = authHeader.replace('Bearer ', '')
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token)
+    if (authError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Token inválido' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const { data: profile } = await supabaseAdmin.from('profiles').select('rol').eq('id', user.id).single()
+    if (!profile || !['admin', 'moderador'].includes(profile.rol)) {
+      return new Response(
+        JSON.stringify({ error: 'Sin permisos' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
     const { nombre, apellidos, email, rol } = await req.json()
 
     if (!nombre || !apellidos || !email || !rol) {
@@ -20,11 +52,6 @@ serve(async (req: Request) => {
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
-
-    const supabaseAdmin = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    )
 
     // Contraseña provisional = prefijo del email
     const password = email.split('@')[0]
