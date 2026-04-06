@@ -1,9 +1,14 @@
 import { Routes } from '@angular/router';
-import { Component } from '@angular/core';
-
-@Component({ standalone: true, template: '<p class="p-4 text-sm">Scores — próximamente</p>' })
-class ScoresPlaceholderComponent {}
 
 export const scoresRoutes: Routes = [
-  { path: '', component: ScoresPlaceholderComponent },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./ranking/scores-ranking.component').then(m => m.ScoresRankingComponent),
+  },
+  {
+    path: 'historial',
+    loadComponent: () =>
+      import('./historial/scores-historial.component').then(m => m.ScoresHistorialComponent),
+  },
 ];
