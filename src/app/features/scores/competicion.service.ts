@@ -1,40 +1,61 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { from, Observable, map, tap, BehaviorSubject } from 'rxjs';
 import { Competicion } from '../../core/models/competicion.model';
+import { supabase } from '../../core/supabase/supabase.client';
 
-const MOCK_COMPETICIONES: Competicion[] = [
-  { id: '1', nombre: 'Campeonato Provincial 2026', modalidad: 'Foso Olímpico', totalPlatos: 25, fecha: new Date('2026-05-15'), activa: true, creadaPor: '1' },
-  { id: '2', nombre: 'Copa Primavera 2026', modalidad: 'Skeet', totalPlatos: 25, fecha: new Date('2026-03-01'), activa: false, creadaPor: '1' },
-  { id: '3', nombre: 'Entrenamiento Marzo', modalidad: 'Foso Universal', totalPlatos: 15, fecha: new Date('2026-03-15'), activa: false, creadaPor: '2' },
-];
+function toCompeticion(row: Record<string, unknown>): Competicion {
+  return {
+    id: row['id'] as string,
+    nombre: row['nombre'] as string,
+    modalidad: row['modalidad'] as string,
+    totalPlatos: row['total_platos'] as number,
+    fecha: new Date(row['fecha'] as string),
+    activa: row['activa'] as boolean,
+    creadaPor: row['creada_por'] as string,
+  };
+}
 
 @Injectable({ providedIn: 'root' })
 export class CompeticionService {
-  private subject = new BehaviorSubject<Competicion[]>(MOCK_COMPETICIONES);
-  readonly competiciones$ = this.subject.asObservable();
+  private cache = new BehaviorSubject<Competicion[]>([]);
 
   getAll(): Observable<Competicion[]> {
-    return this.competiciones$;
-  }
-
-  getActiva(): Observable<Competicion | undefined> {
-    return this.competiciones$.pipe(
-      map(list => list.find(c => c.activa))
+    return from(
+      supabase.from('competiciones').select('*').order('fecha', { ascending: false })
+    ).pipe(
+      map(({ data }) => (data ?? []).map(toCompeticion)),
+      tap(items => this.cache.next(items))
     );
   }
 
+  getActiva(): Observable<Competicion | undefined> {
+    return from(
+      supabase.from('competiciones').select('*').eq('activa', true).limit(1)
+    ).pipe(map(({ data }) => data && data.length > 0 ? toCompeticion(data[0] as Record<string, unknown>) : undefined));
+  }
+
   getById(id: string): Competicion | undefined {
-    return this.subject.getValue().find(c => c.id === id);
+    return this.cache.getValue().find(c => c.id === id);
   }
 
-  create(data: Omit<Competicion, 'id'>): void {
-    const current = this.subject.getValue();
-    const newItem: Competicion = { ...data, id: Date.now().toString() };
-    this.subject.next([...current, newItem]);
+  async create(data: Omit<Competicion, 'id'>): Promise<void> {
+    await supabase.from('competiciones').insert({
+      nombre: data.nombre,
+      modalidad: data.modalidad,
+      total_platos: data.totalPlatos,
+      fecha: data.fecha.toISOString(),
+      activa: data.activa,
+      creada_por: data.creadaPor,
+    });
   }
 
-  update(id: string, data: Partial<Competicion>): void {
-    const current = this.subject.getValue();
-    this.subject.next(current.map(c => c.id === id ? { ...c, ...data } : c));
+  async update(id: string, data: Partial<Competicion>): Promise<void> {
+    const payload: Record<string, unknown> = {};
+    if (data.nombre !== undefined) payload['nombre'] = data.nombre;
+    if (data.modalidad !== undefined) payload['modalidad'] = data.modalidad;
+    if (data.totalPlatos !== undefined) payload['total_platos'] = data.totalPlatos;
+    if (data.fecha !== undefined) payload['fecha'] = data.fecha.toISOString();
+    if (data.activa !== undefined) payload['activa'] = data.activa;
+    await supabase.from('competiciones').update(payload).eq('id', id);
   }
 }
