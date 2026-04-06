@@ -1,0 +1,23 @@
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white border-t border-gray-200"
+     style="padding: 7px 0 5px">
+  @for (item of navItems; track item.route) {
+    <a
+      [routerLink]="item.route"
+      routerLinkActive="active-nav"
+      [routerLinkActiveOptions]="{exact: item.route === '/'}"
+      class="flex flex-col items-center gap-0.5 text-[7px] font-bold uppercase tracking-wide text-gray-300 no-underline"
+    >
+      <i class="bi text-[17px]" [class]="item.icon"></i>
+      {{ item.label }}
+    </a>
+  }
+</nav>
+
+<style>
+  .active-nav {
+    color: #1A1A1A !important;
+  }
+  .active-nav i {
+    color: #D4E600 !important;
+  }
+</style>
