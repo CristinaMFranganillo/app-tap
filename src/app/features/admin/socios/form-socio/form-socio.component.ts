@@ -39,11 +39,11 @@ export class FormSocioComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
     const val = this.form.value;
     if (this.isEdit && this.editId) {
-      this.userService.update(this.editId, {
+      await this.userService.update(this.editId, {
         nombre: val.nombre!,
         apellidos: val.apellidos!,
         email: val.email!,
@@ -51,7 +51,7 @@ export class FormSocioComponent implements OnInit {
         rol: val.rol as UserRole,
       });
     } else {
-      this.userService.create({
+      await this.userService.create({
         nombre: val.nombre!,
         apellidos: val.apellidos!,
         email: val.email!,

@@ -1,40 +1,75 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../../../core/models/user.model';
+import { from, Observable, map, tap, BehaviorSubject } from 'rxjs';
+import { User, UserRole } from '../../../core/models/user.model';
+import { supabase } from '../../../core/supabase/supabase.client';
 
-const MOCK_SOCIOS: User[] = [
-  { id: '1', nombre: 'Juan', apellidos: 'García', email: 'admin@test.es', numeroSocio: '0001', rol: 'admin', fechaAlta: new Date('2023-01-15'), activo: true },
-  { id: '2', nombre: 'María', apellidos: 'López', email: 'mod@test.es', numeroSocio: '0002', rol: 'moderador', fechaAlta: new Date('2023-03-10'), activo: true },
-  { id: '3', nombre: 'Carlos', apellidos: 'Ruiz', email: 'socio@test.es', numeroSocio: '0003', rol: 'socio', fechaAlta: new Date('2024-06-01'), activo: false },
-  { id: '4', nombre: 'Ana', apellidos: 'Martínez', email: 'ana@test.es', numeroSocio: '0004', rol: 'socio', fechaAlta: new Date('2024-09-20'), activo: true },
-];
+function toUser(row: Record<string, unknown>): User {
+  return {
+    id: row['id'] as string,
+    nombre: row['nombre'] as string,
+    apellidos: row['apellidos'] as string,
+    email: '',
+    numeroSocio: row['numero_socio'] as string,
+    avatarUrl: (row['avatar_url'] as string) ?? undefined,
+    rol: row['rol'] as UserRole,
+    fechaAlta: new Date(row['fecha_alta'] as string),
+    activo: row['activo'] as boolean,
+  };
+}
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private sociosSubject = new BehaviorSubject<User[]>(MOCK_SOCIOS);
-  readonly socios$ = this.sociosSubject.asObservable();
+  private cache = new BehaviorSubject<User[]>([]);
 
   getAll(): Observable<User[]> {
-    return this.socios$;
+    return from(
+      supabase.from('profiles').select('*').order('fecha_alta', { ascending: true })
+    ).pipe(
+      map(({ data }) => (data ?? []).map(toUser)),
+      tap(users => this.cache.next(users))
+    );
   }
 
   getById(id: string): User | undefined {
-    return this.sociosSubject.getValue().find(u => u.id === id);
+    return this.cache.getValue().find(u => u.id === id);
   }
 
-  create(data: Omit<User, 'id'>): void {
-    const current = this.sociosSubject.getValue();
-    const newUser: User = { ...data, id: Date.now().toString() };
-    this.sociosSubject.next([...current, newUser]);
+  async create(data: Omit<User, 'id'>): Promise<void> {
+    const payload: Record<string, unknown> = {
+      nombre: data.nombre,
+      apellidos: data.apellidos,
+      numero_socio: data.numeroSocio,
+      rol: data.rol,
+      fecha_alta: data.fechaAlta.toISOString(),
+      activo: data.activo,
+    };
+    if (data.avatarUrl !== undefined) payload['avatar_url'] = data.avatarUrl;
+    const { data: created } = await supabase.from('profiles').insert([payload]).select();
+    if (created && created.length > 0) {
+      const newUser = toUser(created[0]);
+      const current = this.cache.getValue();
+      this.cache.next([...current, newUser]);
+    }
   }
 
-  update(id: string, data: Partial<User>): void {
-    const current = this.sociosSubject.getValue();
-    this.sociosSubject.next(current.map(u => u.id === id ? { ...u, ...data } : u));
+  async update(id: string, data: Partial<User>): Promise<void> {
+    const payload: Record<string, unknown> = {};
+    if (data.nombre !== undefined) payload['nombre'] = data.nombre;
+    if (data.apellidos !== undefined) payload['apellidos'] = data.apellidos;
+    if (data.numeroSocio !== undefined) payload['numero_socio'] = data.numeroSocio;
+    if (data.rol !== undefined) payload['rol'] = data.rol;
+    if (data.avatarUrl !== undefined) payload['avatar_url'] = data.avatarUrl;
+    if (data.activo !== undefined) payload['activo'] = data.activo;
+    await supabase.from('profiles').update(payload).eq('id', id);
+    // Actualizar cache local
+    const current = this.cache.getValue();
+    this.cache.next(current.map(u => u.id === id ? { ...u, ...data } : u));
   }
 
-  toggleActivo(id: string): void {
-    const current = this.sociosSubject.getValue();
-    this.sociosSubject.next(current.map(u => u.id === id ? { ...u, activo: !u.activo } : u));
+  async toggleActivo(id: string): Promise<void> {
+    const user = this.getById(id);
+    if (user) {
+      await this.update(id, { activo: !user.activo });
+    }
   }
 }
