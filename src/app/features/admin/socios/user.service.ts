@@ -14,6 +14,7 @@ function toUser(row: Record<string, unknown>): User {
     rol: row['rol'] as UserRole,
     fechaAlta: new Date(row['fecha_alta'] as string),
     activo: row['activo'] as boolean,
+    firstLogin: (row['first_login'] as boolean) ?? true,
   };
 }
 
@@ -32,24 +33,6 @@ export class UserService {
 
   getById(id: string): User | undefined {
     return this.cache.getValue().find(u => u.id === id);
-  }
-
-  async create(data: Omit<User, 'id'>): Promise<void> {
-    const payload: Record<string, unknown> = {
-      nombre: data.nombre,
-      apellidos: data.apellidos,
-      numero_socio: data.numeroSocio,
-      rol: data.rol,
-      fecha_alta: data.fechaAlta.toISOString(),
-      activo: data.activo,
-    };
-    if (data.avatarUrl !== undefined) payload['avatar_url'] = data.avatarUrl;
-    const { data: created } = await supabase.from('profiles').insert([payload]).select();
-    if (created && created.length > 0) {
-      const newUser = toUser(created[0]);
-      const current = this.cache.getValue();
-      this.cache.next([...current, newUser]);
-    }
   }
 
   async update(id: string, data: Partial<User>): Promise<void> {
@@ -71,5 +54,21 @@ export class UserService {
     if (user) {
       await this.update(id, { activo: !user.activo });
     }
+  }
+
+  async crearEnAuth(data: { nombre: string; apellidos: string; email: string; rol: string }): Promise<void> {
+    const { error } = await supabase.functions.invoke('crear-usuario', { body: data });
+    if (error) throw new Error('Error al crear el usuario.');
+  }
+
+  async eliminar(id: string): Promise<void> {
+    const { error } = await supabase.functions.invoke('eliminar-usuario', { body: { userId: id } });
+    if (error) throw new Error('Error al eliminar el usuario.');
+    const current = this.cache.getValue();
+    this.cache.next(current.filter(u => u.id !== id));
+  }
+
+  async setFirstLoginDone(id: string): Promise<void> {
+    await supabase.from('profiles').update({ first_login: false }).eq('id', id);
   }
 }

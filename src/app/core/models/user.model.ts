@@ -10,4 +10,5 @@ export interface User {
   rol: UserRole;
   fechaAlta: Date;
   activo: boolean;
+  firstLogin: boolean;
 }
