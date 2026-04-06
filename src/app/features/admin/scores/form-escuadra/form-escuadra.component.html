@@ -1,0 +1,53 @@
+<div class="p-3">
+  <div class="flex items-center gap-2 mb-4">
+    <button (click)="cancel()" class="text-gray-400">
+      <i class="bi bi-chevron-left text-[15px]"></i>
+    </button>
+    <h2 class="text-[11px] font-extrabold text-brand-dark">Nueva Escuadra</h2>
+  </div>
+
+  <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Competición</label>
+  <select
+    [(ngModel)]="competicionId"
+    class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm mb-4"
+  >
+    <option value="">Selecciona una competición</option>
+    @for (c of competiciones(); track c.id) {
+      <option [value]="c.id">{{ c.nombre }}</option>
+    }
+  </select>
+
+  <p class="text-[8px] font-bold text-gray-300 uppercase tracking-wide mb-2">Tiradores por puesto</p>
+
+  @for (puesto of puestos; track $index) {
+    <div class="mb-2">
+      <label class="block text-[7.5px] text-gray-300 font-medium mb-1">Puesto {{ $index + 1 }}</label>
+      <select
+        [(ngModel)]="puestos[$index]"
+        class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm"
+      >
+        <option [value]="null">— Sin asignar —</option>
+        @for (s of socios(); track s.id) {
+          <option [value]="s.id">{{ s.nombre }} {{ s.apellidos }} (#{{ s.numeroSocio }})</option>
+        }
+      </select>
+    </div>
+  }
+
+  @if (error) {
+    <p class="text-danger text-[9px] font-semibold mt-3">{{ error }}</p>
+  }
+
+  <div class="flex gap-2 mt-4">
+    <button (click)="cancel()" class="flex-1 py-2.5 rounded-[12px] border border-gray-200 text-[9px] font-bold text-gray-400">
+      Cancelar
+    </button>
+    <button
+      (click)="onSubmit()"
+      [disabled]="loading"
+      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+    >
+      {{ loading ? 'Guardando...' : 'Crear escuadra' }}
+    </button>
+  </div>
+</div>

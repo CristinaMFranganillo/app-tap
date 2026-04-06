@@ -70,4 +70,20 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./competiciones/form-competicion/form-competicion.component').then(m => m.FormCompeticionComponent),
   },
+  // Escuadras
+  {
+    path: 'scores/escuadra/nueva',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./scores/form-escuadra/form-escuadra.component').then(m => m.FormEscuadraComponent),
+  },
+  // Registrar resultados
+  {
+    path: 'scores/resultados',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./scores/registrar-resultado/registrar-resultado.component').then(m => m.RegistrarResultadoComponent),
+  },
 ];
