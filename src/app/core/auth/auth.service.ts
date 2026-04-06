@@ -46,6 +46,7 @@ export class AuthService {
         rol: data['rol'] as UserRole,
         fechaAlta: new Date(data['fecha_alta']),
         activo: data['activo'],
+        firstLogin: data['first_login'] ?? true,
       };
       this.userSubject.next(user);
     }
