@@ -17,11 +17,13 @@ export class FormCompeticionComponent {
   private router = inject(Router);
 
   form = this.fb.group({
-    nombre:      ['', Validators.required],
-    modalidad:   ['', Validators.required],
-    totalPlatos: [25, [Validators.required, Validators.min(1)]],
-    fecha:       ['', Validators.required],
-    activa:      [false],
+    nombre:        ['', Validators.required],
+    modalidad:     ['', Validators.required],
+    platosPorSerie:[25, [Validators.required, Validators.min(1)]],
+    numSeries:     [1,  [Validators.required, Validators.min(1)]],
+    lugar:         [''],
+    fecha:         ['', Validators.required],
+    activa:        [false],
   });
 
   async onSubmit(): Promise<void> {
@@ -30,7 +32,9 @@ export class FormCompeticionComponent {
     await this.competicionService.create({
       nombre: val.nombre!,
       modalidad: val.modalidad!,
-      totalPlatos: Number(val.totalPlatos),
+      platosPorSerie: Number(val.platosPorSerie),
+      numSeries: Number(val.numSeries),
+      lugar: val.lugar || undefined,
       fecha: new Date(val.fecha!),
       activa: val.activa ?? false,
       creadaPor: this.authService.currentUser?.id ?? '1',

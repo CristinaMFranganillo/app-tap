@@ -34,7 +34,8 @@ export class FormScoreComponent {
 
   maxPlatos(): number {
     const id = this.form.value.competicionId;
-    return this.competicionService.getById(id ?? '')?.totalPlatos ?? 25;
+    const c = this.competicionService.getById(id ?? '');
+    return c ? c.platosPorSerie * c.numSeries : 25;
   }
 
   async onSubmit(): Promise<void> {

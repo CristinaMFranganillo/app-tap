@@ -49,7 +49,8 @@ export class PerfilComponent {
   }
 
   getCompeticionTotal(competicionId: string): number {
-    return this.competicionService.getById(competicionId)?.totalPlatos ?? 25;
+    const c = this.competicionService.getById(competicionId);
+    return c ? c.platosPorSerie * c.numSeries : 25;
   }
 
   logout(): void {

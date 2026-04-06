@@ -8,7 +8,9 @@ function toCompeticion(row: Record<string, unknown>): Competicion {
     id: row['id'] as string,
     nombre: row['nombre'] as string,
     modalidad: row['modalidad'] as string,
-    totalPlatos: row['total_platos'] as number,
+    platosPorSerie: (row['platos_por_serie'] as number) ?? 25,
+    numSeries: (row['num_series'] as number) ?? 1,
+    lugar: (row['lugar'] as string) ?? undefined,
     fecha: new Date(row['fecha'] as string),
     activa: row['activa'] as boolean,
     creadaPor: row['creada_por'] as string,
@@ -31,7 +33,11 @@ export class CompeticionService {
   getActiva(): Observable<Competicion | undefined> {
     return from(
       supabase.from('competiciones').select('*').eq('activa', true).limit(1)
-    ).pipe(map(({ data }) => data && data.length > 0 ? toCompeticion(data[0] as Record<string, unknown>) : undefined));
+    ).pipe(
+      map(({ data }) =>
+        data && data.length > 0 ? toCompeticion(data[0] as Record<string, unknown>) : undefined
+      )
+    );
   }
 
   getById(id: string): Competicion | undefined {
@@ -42,7 +48,9 @@ export class CompeticionService {
     await supabase.from('competiciones').insert({
       nombre: data.nombre,
       modalidad: data.modalidad,
-      total_platos: data.totalPlatos,
+      platos_por_serie: data.platosPorSerie,
+      num_series: data.numSeries,
+      lugar: data.lugar ?? null,
       fecha: data.fecha.toISOString(),
       activa: data.activa,
       creada_por: data.creadaPor,
@@ -53,7 +61,9 @@ export class CompeticionService {
     const payload: Record<string, unknown> = {};
     if (data.nombre !== undefined) payload['nombre'] = data.nombre;
     if (data.modalidad !== undefined) payload['modalidad'] = data.modalidad;
-    if (data.totalPlatos !== undefined) payload['total_platos'] = data.totalPlatos;
+    if (data.platosPorSerie !== undefined) payload['platos_por_serie'] = data.platosPorSerie;
+    if (data.numSeries !== undefined) payload['num_series'] = data.numSeries;
+    if (data.lugar !== undefined) payload['lugar'] = data.lugar;
     if (data.fecha !== undefined) payload['fecha'] = data.fecha.toISOString();
     if (data.activa !== undefined) payload['activa'] = data.activa;
     await supabase.from('competiciones').update(payload).eq('id', id);
