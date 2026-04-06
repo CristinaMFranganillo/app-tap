@@ -1,0 +1,54 @@
+<div class="p-3">
+  <div class="flex items-center gap-2 mb-4">
+    <button (click)="cancel()" class="text-gray-400">
+      <i class="bi bi-chevron-left text-[15px]"></i>
+    </button>
+    <h2 class="text-[11px] font-extrabold text-brand-dark">
+      {{ isEdit ? 'Editar noticia' : 'Nueva noticia' }}
+    </h2>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
+    <div>
+      <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Título</label>
+      <input
+        formControlName="titulo"
+        type="text"
+        placeholder="Título de la noticia"
+        class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm placeholder-gray-300"
+      />
+    </div>
+
+    <div>
+      <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Contenido</label>
+      <textarea
+        formControlName="contenido"
+        rows="6"
+        placeholder="Escribe el contenido de la noticia..."
+        class="w-full bg-white rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none shadow-sm placeholder-gray-300 resize-none"
+      ></textarea>
+    </div>
+
+    <label class="flex items-center gap-2 cursor-pointer">
+      <input type="checkbox" formControlName="publicada" class="accent-brand-yellow w-3.5 h-3.5" />
+      <span class="text-[9px] font-semibold text-brand-dark">Publicar inmediatamente</span>
+    </label>
+
+    <div class="flex gap-2 pt-1">
+      <button
+        type="button"
+        (click)="cancel()"
+        class="flex-1 py-2.5 rounded-[12px] border border-gray-200 text-[9px] font-bold text-gray-400"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        [disabled]="form.invalid"
+        class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+      >
+        {{ isEdit ? 'Guardar cambios' : 'Crear noticia' }}
+      </button>
+    </div>
+  </form>
+</div>

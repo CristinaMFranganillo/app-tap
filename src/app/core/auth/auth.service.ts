@@ -44,4 +44,8 @@ export class AuthService {
   isAuthenticated(): boolean {
     return !!this.getToken() && !!this.userSubject.getValue();
   }
+
+  get currentUser(): User | null {
+    return this.userSubject.getValue();
+  }
 }
