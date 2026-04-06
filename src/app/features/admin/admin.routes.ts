@@ -2,14 +2,6 @@ import { Routes } from '@angular/router';
 import { roleGuard } from '../../core/auth/role.guard';
 
 export const adminRoutes: Routes = [
-  // Solicitudes de registro
-  {
-    path: 'solicitudes',
-    canActivate: [roleGuard],
-    data: { roles: ['admin'] },
-    loadComponent: () =>
-      import('./solicitudes/lista-solicitudes.component').then(m => m.ListaSolicitudesComponent),
-  },
   // Socios
   {
     path: 'socios',
@@ -54,7 +46,15 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./noticias/form-noticia/form-noticia.component').then(m => m.FormNoticiaComponent),
   },
-  // Scores
+  // Scores — panel principal
+  {
+    path: 'scores',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./scores/admin-scores/admin-scores.component').then(m => m.AdminScoresComponent),
+  },
+  // Scores — legacy form
   {
     path: 'scores/nuevo',
     canActivate: [roleGuard],

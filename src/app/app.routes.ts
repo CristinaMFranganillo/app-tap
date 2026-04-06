@@ -8,16 +8,6 @@ export const routes: Routes = [
       import('./features/auth/login/login.component').then(m => m.LoginComponent),
   },
   {
-    path: 'registro',
-    loadComponent: () =>
-      import('./features/registro/registro.component').then(m => m.RegistroComponent),
-  },
-  {
-    path: 'registro/confirmacion',
-    loadComponent: () =>
-      import('./features/registro/registro-confirmacion.component').then(m => m.RegistroConfirmacionComponent),
-  },
-  {
     path: '',
     loadComponent: () =>
       import('./features/shell/shell.component').then(m => m.ShellComponent),
