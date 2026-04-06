@@ -2,6 +2,7 @@ import { Component, inject, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TitleCasePipe } from '@angular/common';
+import { Subject, switchMap, startWith } from 'rxjs';
 import { UserService } from '../user.service';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
 import { User } from '../../../../core/models/user.model';
@@ -18,7 +19,12 @@ export class ListaSociosComponent {
   private router = inject(Router);
 
   searchTerm = signal('');
-  private socios = toSignal(this.userService.getAll(), { initialValue: [] as User[] });
+  private refresh$ = new Subject<void>();
+
+  private socios = toSignal(
+    this.refresh$.pipe(startWith(null), switchMap(() => this.userService.getAll())),
+    { initialValue: [] as User[] }
+  );
 
   filteredSocios = computed(() => {
     const term = this.searchTerm().toLowerCase();
@@ -30,6 +36,11 @@ export class ListaSociosComponent {
       s.numeroSocio.includes(term)
     );
   });
+
+  async toggleActivo(id: string): Promise<void> {
+    await this.userService.toggleActivo(id);
+    this.refresh$.next();
+  }
 
   goToCreate(): void {
     this.router.navigate(['/admin/socios/nuevo']);

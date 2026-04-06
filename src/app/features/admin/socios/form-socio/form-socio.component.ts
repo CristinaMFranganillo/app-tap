@@ -40,27 +40,15 @@ export class FormSocioComponent implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    if (this.form.invalid) return;
+    if (this.form.invalid || !this.editId) return;
     const val = this.form.value;
-    if (this.isEdit && this.editId) {
-      await this.userService.update(this.editId, {
-        nombre: val.nombre!,
-        apellidos: val.apellidos!,
-        email: val.email!,
-        numeroSocio: val.numeroSocio!,
-        rol: val.rol as UserRole,
-      });
-    } else {
-      await this.userService.create({
-        nombre: val.nombre!,
-        apellidos: val.apellidos!,
-        email: val.email!,
-        numeroSocio: val.numeroSocio!,
-        rol: val.rol as UserRole,
-        fechaAlta: new Date(),
-        activo: true,
-      });
-    }
+    await this.userService.update(this.editId, {
+      nombre: val.nombre!,
+      apellidos: val.apellidos!,
+      email: val.email!,
+      numeroSocio: val.numeroSocio!,
+      rol: val.rol as UserRole,
+    });
     this.router.navigate(['/admin/socios']);
   }
 

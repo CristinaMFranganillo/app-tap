@@ -37,10 +37,10 @@ export class FormScoreComponent {
     return this.competicionService.getById(id ?? '')?.totalPlatos ?? 25;
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
     const val = this.form.value;
-    this.scoreService.create({
+    await this.scoreService.create({
       competicionId: val.competicionId!,
       userId: val.userId!,
       platosRotos: Number(val.platosRotos),

@@ -24,10 +24,10 @@ export class FormCompeticionComponent {
     activa:      [false],
   });
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
     const val = this.form.value;
-    this.competicionService.create({
+    await this.competicionService.create({
       nombre: val.nombre!,
       modalidad: val.modalidad!,
       totalPlatos: Number(val.totalPlatos),
