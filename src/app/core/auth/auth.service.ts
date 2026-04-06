@@ -1,48 +1,78 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { User, UserRole } from '../models/user.model';
+import { supabase } from '../supabase/supabase.client';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly TOKEN_KEY = 'auth_token';
-  private readonly USER_KEY = 'auth_user';
-
-  private userSubject = new BehaviorSubject<User | null>(this.loadUser());
+  private userSubject = new BehaviorSubject<User | null>(null);
   readonly currentUser$ = this.userSubject.asObservable();
 
-  private loadUser(): User | null {
-    const raw = localStorage.getItem(this.USER_KEY);
-    try {
-      return raw ? (JSON.parse(raw) as User) : null;
-    } catch {
-      localStorage.removeItem(this.USER_KEY);
-      return null;
+  constructor() {
+    // Restaurar sesión al iniciar la app
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        this.loadProfile(data.session.user.id);
+      }
+    });
+
+    // Escuchar cambios de sesión (login/logout)
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        this.loadProfile(session.user.id);
+      } else {
+        this.userSubject.next(null);
+      }
+    });
+  }
+
+  private async loadProfile(userId: string): Promise<void> {
+    const { data } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (data) {
+      const { data: authUser } = await supabase.auth.getUser();
+      const user: User = {
+        id: data['id'],
+        nombre: data['nombre'],
+        apellidos: data['apellidos'],
+        email: authUser.user?.email ?? '',
+        numeroSocio: data['numero_socio'],
+        avatarUrl: data['avatar_url'] ?? undefined,
+        rol: data['rol'] as UserRole,
+        fechaAlta: new Date(data['fecha_alta']),
+        activo: data['activo'],
+      };
+      this.userSubject.next(user);
     }
   }
 
-  login(user: User, token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
-    localStorage.setItem(this.USER_KEY, JSON.stringify(user));
-    this.userSubject.next(user);
+  login(email: string, password: string): Observable<{ error: string | null }> {
+    return from(
+      supabase.auth.signInWithPassword({ email, password })
+    ).pipe(
+      map(({ error }) => ({
+        error: error ? 'Email o contraseña incorrectos.' : null,
+      }))
+    );
   }
 
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.USER_KEY);
+    supabase.auth.signOut();
     this.userSubject.next(null);
   }
 
-  getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+  isAuthenticated(): boolean {
+    return !!this.userSubject.getValue();
   }
 
   hasRole(roles: UserRole[]): boolean {
     const user = this.userSubject.getValue();
     return user ? roles.includes(user.rol) : false;
-  }
-
-  isAuthenticated(): boolean {
-    return !!this.getToken() && !!this.userSubject.getValue();
   }
 
   get currentUser(): User | null {
