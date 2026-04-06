@@ -13,27 +13,27 @@
   <div class="bg-white rounded-[12px] p-3 shadow-sm">
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
       <div>
-        <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Nombre</label>
+        <label class="block text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-1">Nombre</label>
         <input formControlName="nombre" placeholder="Nombre"
           class="w-full bg-surface rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none" />
       </div>
 
       <div>
-        <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Apellidos</label>
+        <label class="block text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-1">Apellidos</label>
         <input formControlName="apellidos" placeholder="Apellidos"
           class="w-full bg-surface rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none" />
       </div>
 
       @if (!isEdit) {
         <div>
-          <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Email</label>
+          <label class="block text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-1">Email</label>
           <input formControlName="email" type="email" placeholder="email@ejemplo.es"
             class="w-full bg-surface rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none" />
         </div>
       }
 
       <div>
-        <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Rol</label>
+        <label class="block text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-1">Rol</label>
         <select formControlName="rol"
           class="w-full bg-surface rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none">
           <option value="socio">Socio</option>

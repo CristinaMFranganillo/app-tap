@@ -1,7 +1,7 @@
 <div class="p-3">
   <h2 class="text-[11px] font-extrabold text-brand-dark mb-4">Registrar resultados</h2>
 
-  <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Competición</label>
+  <label class="block text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-1">Competición</label>
   <select
     [value]="competicionId()"
     (change)="competicionId.set($any($event.target).value)"
@@ -14,7 +14,7 @@
   </select>
 
   @if (competicionId()) {
-    <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Escuadra</label>
+    <label class="block text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-1">Escuadra</label>
     <select
       [value]="escuadraId()"
       (change)="escuadraId.set($any($event.target).value)"
