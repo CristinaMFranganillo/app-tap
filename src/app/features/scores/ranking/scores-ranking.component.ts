@@ -1,10 +1,11 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
-import { ScoreService, RankingEntry } from '../score.service';
+import { ResultadoService } from '../resultado.service';
 import { CompeticionService } from '../competicion.service';
 import { UserService } from '../../admin/socios/user.service';
 import { Competicion } from '../../../core/models/competicion.model';
+import { ResumenTirador } from '../../../core/models/resultado.model';
 import { AvatarComponent } from '../../../shared/components/avatar/avatar.component';
 
 @Component({
@@ -13,27 +14,26 @@ import { AvatarComponent } from '../../../shared/components/avatar/avatar.compon
   imports: [AvatarComponent],
   templateUrl: './scores-ranking.component.html',
 })
-export class ScoresRankingComponent implements OnInit {
+export class ScoresRankingComponent {
   private competicionService = inject(CompeticionService);
-  private scoreService = inject(ScoreService);
+  private resultadoService = inject(ResultadoService);
   private userService = inject(UserService);
 
   competiciones = toSignal(this.competicionService.getAll(), { initialValue: [] as Competicion[] });
   selectedId = signal<string>('');
 
+  competicionActual = computed(() => this.competiciones().find(c => c.id === this.selectedId()));
+
   ranking = toSignal(
     toObservable(this.selectedId).pipe(
-      switchMap(id => this.scoreService.getRanking(id))
+      switchMap(id => {
+        const comp = this.competicionService.getById(id);
+        const total = comp ? comp.platosPorSerie * comp.numSeries : 25;
+        return this.resultadoService.getRanking(id, total);
+      })
     ),
-    { initialValue: [] as RankingEntry[] }
+    { initialValue: [] as ResumenTirador[] }
   );
-
-  ngOnInit(): void {
-    const comps = this.competiciones();
-    if (comps.length > 0) {
-      this.selectedId.set(comps[0].id);
-    }
-  }
 
   selectCompeticion(id: string): void {
     this.selectedId.set(id);

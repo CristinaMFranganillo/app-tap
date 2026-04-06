@@ -1,11 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { switchMap } from 'rxjs';
 import { DatePipe } from '@angular/common';
-import { ScoreService } from '../score.service';
+import { ResultadoService } from '../resultado.service';
 import { CompeticionService } from '../competicion.service';
 import { AuthService } from '../../../core/auth/auth.service';
-import { Score } from '../../../core/models/score.model';
+import { Resultado } from '../../../core/models/resultado.model';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 
 @Component({
@@ -15,28 +15,35 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
   templateUrl: './scores-historial.component.html',
 })
 export class ScoresHistorialComponent {
-  private authService = inject(AuthService);
-  private scoreService = inject(ScoreService);
+  private auth = inject(AuthService);
+  private resultadoService = inject(ResultadoService);
   private competicionService = inject(CompeticionService);
 
-  scores = toSignal(
-    this.authService.currentUser$.pipe(
-      switchMap(user => this.scoreService.getByUser(user?.id ?? ''))
+  resultados = toSignal(
+    this.auth.currentUser$.pipe(
+      switchMap(user => this.resultadoService.getByUser(user?.id ?? ''))
     ),
-    { initialValue: [] as Score[] }
+    { initialValue: [] as Resultado[] }
   );
+
+  resumenPorCompeticion = computed(() => {
+    const map = new Map<string, { rotos: number; total: number; fecha: Date }>();
+    for (const r of this.resultados()) {
+      const comp = this.competicionService.getById(r.competicionId);
+      const total = comp ? comp.platosPorSerie * comp.numSeries : 25;
+      if (!map.has(r.competicionId)) {
+        map.set(r.competicionId, { rotos: 0, total, fecha: r.fecha });
+      }
+      map.get(r.competicionId)!.rotos += r.resultado;
+    }
+    return Array.from(map.entries()).map(([competicionId, v]) => ({ competicionId, ...v }));
+  });
 
   getCompeticionNombre(competicionId: string): string {
     return this.competicionService.getById(competicionId)?.nombre ?? 'Competición';
   }
 
-  getCompeticionTotal(competicionId: string): number {
-    const c = this.competicionService.getById(competicionId);
-    return c ? c.platosPorSerie * c.numSeries : 25;
-  }
-
-  getPorcentaje(platosRotos: number, competicionId: string): number {
-    const total = this.getCompeticionTotal(competicionId);
-    return total > 0 ? Math.round((platosRotos / total) * 100) : 0;
+  getPorcentaje(rotos: number, total: number): number {
+    return total > 0 ? Math.round((rotos / total) * 100) : 0;
   }
 }
