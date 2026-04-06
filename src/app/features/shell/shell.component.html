@@ -3,3 +3,7 @@
   <router-outlet />
 </main>
 <app-bottom-nav />
+
+@if (mostrarCambioPassword()) {
+  <app-cambiar-password (cerrar)="onPasswordCerrado()" />
+}
