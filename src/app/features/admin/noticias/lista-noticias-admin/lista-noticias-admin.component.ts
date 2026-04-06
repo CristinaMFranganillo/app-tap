@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Subject, switchMap, startWith } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { NewsService } from '../../../noticias/news.service';
 import { News } from '../../../../core/models/news.model';
@@ -14,8 +15,15 @@ import { News } from '../../../../core/models/news.model';
 export class ListaNoticiasAdminComponent {
   private newsService = inject(NewsService);
   private router = inject(Router);
+  private refresh$ = new Subject<void>();
 
-  noticias = toSignal(this.newsService.getAll(), { initialValue: [] as News[] });
+  noticias = toSignal(
+    this.refresh$.pipe(
+      startWith(null),
+      switchMap(() => this.newsService.getAll())
+    ),
+    { initialValue: [] as News[] }
+  );
 
   publicadas = () => this.noticias().filter(n => n.publicada);
   borradores = () => this.noticias().filter(n => !n.publicada);
@@ -30,9 +38,11 @@ export class ListaNoticiasAdminComponent {
 
   async eliminar(id: string): Promise<void> {
     await this.newsService.delete(id);
+    this.refresh$.next();
   }
 
   async togglePublicada(noticia: News): Promise<void> {
     await this.newsService.update(noticia.id, { publicada: !noticia.publicada });
+    this.refresh$.next();
   }
 }
