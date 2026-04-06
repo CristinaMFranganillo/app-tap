@@ -89,10 +89,11 @@ serve(async (req: Request) => {
     }).eq('id', solicitudId)
 
     // 5. Generar magic link para que el usuario establezca su contraseña
-    await supabaseAdmin.auth.admin.generateLink({
+    const { data: linkData } = await supabaseAdmin.auth.admin.generateLink({
       type: 'magiclink',
       email: solicitud.email,
     })
+    const magicLinkUrl = linkData?.properties?.action_link ?? ''
 
     // 6. Enviar email de bienvenida con Resend
     const resendApiKey = Deno.env.get('RESEND_API_KEY')
@@ -112,7 +113,9 @@ serve(async (req: Request) => {
               <h2 style="color: #1A1A1A;">¡Bienvenido/a, ${solicitud.nombre}!</h2>
               <p>Tu solicitud de acceso a <strong>Campo de Tiro San Isidro</strong> ha sido <strong>aprobada</strong>.</p>
               <p>Tu número de socio es: <strong>#${numeroSocio}</strong></p>
-              <p>En breve recibirás otro email para establecer tu contraseña y acceder a la aplicación.</p>
+              <p>Para acceder a la aplicación, haz clic en el siguiente enlace y establece tu contraseña:</p>
+              ${magicLinkUrl ? `<p><a href="${magicLinkUrl}" style="background: #D4E600; color: #1A1A1A; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold;">Acceder a la aplicación</a></p>` : ''}
+              <p>Si el enlace no funciona, cópialo en tu navegador: ${magicLinkUrl}</p>
               <p style="color: #666; font-size: 12px;">Campo de Tiro San Isidro</p>
             </div>
           `,

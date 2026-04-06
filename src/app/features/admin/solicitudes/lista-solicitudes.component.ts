@@ -3,7 +3,7 @@ import { Subject, switchMap, startWith } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SolicitudService } from '../../../features/registro/solicitud.service';
+import { SolicitudService } from '../../registro/solicitud.service';
 import { SolicitudRegistro } from '../../../core/models/solicitud.model';
 
 type Tab = 'pendientes' | 'aceptadas' | 'rechazadas';
