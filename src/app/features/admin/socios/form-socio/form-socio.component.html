@@ -1,0 +1,58 @@
+<div class="p-3">
+  <h3 class="section-title">{{ isEdit ? 'Editar Socio' : 'Nuevo Socio' }}</h3>
+
+  <div class="bg-white rounded-[12px] p-3 shadow-sm">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <label class="form-label">Nombre</label>
+      <div class="form-field">
+        <i class="bi bi-person"></i>
+        <input formControlName="nombre" placeholder="Nombre" class="form-input" />
+      </div>
+
+      <label class="form-label">Apellidos</label>
+      <div class="form-field">
+        <i class="bi bi-person"></i>
+        <input formControlName="apellidos" placeholder="Apellidos" class="form-input" />
+      </div>
+
+      <label class="form-label">Email</label>
+      <div class="form-field">
+        <i class="bi bi-envelope"></i>
+        <input formControlName="email" type="email" placeholder="email@ejemplo.es" class="form-input" autocomplete="email" />
+      </div>
+
+      <label class="form-label">Nº Socio</label>
+      <div class="form-field">
+        <i class="bi bi-hash"></i>
+        <input formControlName="numeroSocio" placeholder="0001" class="form-input" />
+      </div>
+
+      <label class="form-label">Rol</label>
+      <div class="form-field">
+        <i class="bi bi-shield"></i>
+        <select formControlName="rol" class="form-input">
+          <option value="socio">Socio</option>
+          <option value="moderador">Moderador</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="form.invalid"
+        class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-extrabold text-[10px] tracking-wide rounded-[10px] py-2.5 mt-2 disabled:opacity-50"
+      >
+        <i class="bi bi-person-plus-fill"></i>
+        {{ isEdit ? 'Guardar cambios' : 'Crear socio' }}
+      </button>
+
+      <button
+        type="button"
+        (click)="cancel()"
+        class="w-full flex items-center justify-center gap-2 border border-gray-200 text-gray-400 font-bold text-[10px] rounded-[10px] py-2.5 mt-2"
+      >
+        <i class="bi bi-x"></i> Cancelar
+      </button>
+    </form>
+  </div>
+</div>

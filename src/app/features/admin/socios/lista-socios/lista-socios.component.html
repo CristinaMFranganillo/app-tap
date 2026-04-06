@@ -1,0 +1,39 @@
+<div class="p-3">
+  <!-- Buscador -->
+  <div class="flex items-center gap-2 bg-white rounded-[10px] px-3 py-2 mb-3 shadow-sm">
+    <i class="bi bi-search text-gray-300 text-[13px]"></i>
+    <input
+      [(ngModel)]="searchTerm"
+      placeholder="Buscar socio..."
+      class="flex-1 bg-transparent text-[9px] font-medium text-brand-dark outline-none placeholder-gray-300"
+    />
+  </div>
+
+  <h3 class="section-title">Socios ({{ filteredSocios().length }})</h3>
+
+  @for (socio of filteredSocios(); track socio.id) {
+    <div class="flex items-center gap-2 bg-white rounded-[12px] px-3 py-2 mb-2 shadow-sm">
+      <app-avatar [nombre]="socio.nombre" [apellidos]="socio.apellidos" [avatarUrl]="socio.avatarUrl" [size]="34" />
+      <div class="flex-1 min-w-0">
+        <p class="text-[9.5px] font-bold text-brand-dark truncate">{{ socio.nombre }} {{ socio.apellidos }}</p>
+        <p class="text-[8px] text-gray-400 font-medium truncate">{{ socio.email }} · {{ socio.rol | titlecase }}</p>
+      </div>
+      <div class="flex flex-col items-end gap-1">
+        <div class="w-2 h-2 rounded-full" [class]="socio.activo ? 'bg-success' : 'bg-gray-200'"></div>
+        <span class="text-[7.5px] text-gray-300 font-semibold">#{{ socio.numeroSocio }}</span>
+      </div>
+    </div>
+  }
+
+  @if (filteredSocios().length === 0) {
+    <p class="text-center text-[9px] text-gray-400 mt-6">No se encontraron socios.</p>
+  }
+</div>
+
+<!-- FAB -->
+<button
+  (click)="goToCreate()"
+  class="fixed bottom-[60px] right-4 w-[42px] h-[42px] rounded-full bg-brand-yellow text-brand-dark flex items-center justify-center shadow-lg z-40"
+>
+  <i class="bi bi-plus-lg text-[18px] font-black"></i>
+</button>

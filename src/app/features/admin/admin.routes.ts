@@ -1,9 +1,26 @@
 import { Routes } from '@angular/router';
-import { Component } from '@angular/core';
-
-@Component({ standalone: true, template: '<p class="p-4 text-sm">Admin — próximamente</p>' })
-class AdminPlaceholderComponent {}
+import { roleGuard } from '../../core/auth/role.guard';
 
 export const adminRoutes: Routes = [
-  { path: '', component: AdminPlaceholderComponent },
+  {
+    path: 'socios',
+    canActivate: [roleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./socios/lista-socios/lista-socios.component').then(m => m.ListaSociosComponent),
+  },
+  {
+    path: 'socios/nuevo',
+    canActivate: [roleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./socios/form-socio/form-socio.component').then(m => m.FormSocioComponent),
+  },
+  {
+    path: 'socios/:id',
+    canActivate: [roleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./socios/form-socio/form-socio.component').then(m => m.FormSocioComponent),
+  },
 ];

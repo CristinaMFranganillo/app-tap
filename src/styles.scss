@@ -15,3 +15,23 @@ body {
   margin: 0;
   padding: 0;
 }
+
+@layer components {
+  .section-title {
+    @apply text-[9px] font-extrabold text-brand-dark uppercase tracking-[.8px] mb-2.5 flex items-center gap-1.5;
+    &::after {
+      content: '';
+      @apply flex-1 h-px bg-gray-200;
+    }
+  }
+  .form-label {
+    @apply block text-[8px] font-bold text-gray-300 uppercase tracking-wide mb-1;
+  }
+  .form-field {
+    @apply flex items-center gap-2 bg-surface rounded-[10px] px-3 py-2 mb-2.5;
+    i { @apply text-gray-300 text-[13px]; }
+  }
+  .form-input {
+    @apply flex-1 bg-transparent text-[10px] font-medium text-brand-dark outline-none placeholder-gray-300;
+  }
+}
