@@ -1,0 +1,18 @@
+<div [style.width.px]="size" [style.height.px]="size">
+  @if (avatarUrl) {
+    <img
+      [src]="avatarUrl"
+      [alt]="nombre + ' ' + apellidos"
+      class="w-full h-full object-cover rounded-full"
+    />
+  } @else {
+    <div
+      class="w-full h-full rounded-full bg-brand-dark flex items-center justify-center"
+      [style.fontSize.px]="size * 0.35"
+    >
+      <span class="font-black text-brand-yellow leading-none">
+        {{ nombre | iniciales: apellidos }}
+      </span>
+    </div>
+  }
+</div>
