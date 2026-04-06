@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
@@ -18,13 +18,14 @@ export class FormSocioComponent implements OnInit {
 
   isEdit = false;
   private editId?: string;
+  saving = signal(false);
+  error = signal('');
 
   form = this.fb.group({
-    nombre:      ['', Validators.required],
-    apellidos:   ['', Validators.required],
-    email:       ['', [Validators.required, Validators.email]],
-    numeroSocio: ['', Validators.required],
-    rol:         ['socio' as UserRole, Validators.required],
+    nombre:    ['', Validators.required],
+    apellidos: ['', Validators.required],
+    email:     ['', [Validators.required, Validators.email]],
+    rol:       ['socio' as UserRole, Validators.required],
   });
 
   ngOnInit(): void {
@@ -35,21 +36,38 @@ export class FormSocioComponent implements OnInit {
         this.isEdit = true;
         this.editId = id;
         this.form.patchValue(user);
+        this.form.get('email')?.disable();
       }
     }
   }
 
   async onSubmit(): Promise<void> {
-    if (this.form.invalid || !this.editId) return;
-    const val = this.form.value;
-    await this.userService.update(this.editId, {
-      nombre: val.nombre!,
-      apellidos: val.apellidos!,
-      email: val.email!,
-      numeroSocio: val.numeroSocio!,
-      rol: val.rol as UserRole,
-    });
-    this.router.navigate(['/admin/socios']);
+    if (this.form.invalid) return;
+    this.saving.set(true);
+    this.error.set('');
+    const val = this.form.getRawValue();
+
+    try {
+      if (this.isEdit && this.editId) {
+        await this.userService.update(this.editId, {
+          nombre: val.nombre!,
+          apellidos: val.apellidos!,
+          rol: val.rol as UserRole,
+        });
+      } else {
+        await this.userService.crearEnAuth({
+          nombre: val.nombre!,
+          apellidos: val.apellidos!,
+          email: val.email!,
+          rol: val.rol!,
+        });
+      }
+      this.router.navigate(['/admin/socios']);
+    } catch (err: unknown) {
+      this.error.set(err instanceof Error ? err.message : 'Error al guardar.');
+    } finally {
+      this.saving.set(false);
+    }
   }
 
   cancel(): void {

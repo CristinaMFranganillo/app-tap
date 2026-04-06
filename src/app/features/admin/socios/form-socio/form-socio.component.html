@@ -1,58 +1,57 @@
 <div class="p-3">
-  <h3 class="section-title">{{ isEdit ? 'Editar Socio' : 'Nuevo Socio' }}</h3>
+  <div class="flex items-center gap-2 mb-4">
+    <button (click)="cancel()" class="text-gray-400">
+      <i class="bi bi-chevron-left text-[15px]"></i>
+    </button>
+    <h3 class="text-[11px] font-extrabold text-brand-dark">{{ isEdit ? 'Editar Socio' : 'Nuevo Socio' }}</h3>
+  </div>
+
+  @if (error()) {
+    <p class="text-[9px] text-danger font-semibold mb-3">{{ error() }}</p>
+  }
 
   <div class="bg-white rounded-[12px] p-3 shadow-sm">
-    <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <label class="form-label" for="nombre">Nombre</label>
-      <div class="form-field">
-        <i class="bi bi-person"></i>
-        <input id="nombre" formControlName="nombre" placeholder="Nombre" class="form-input" />
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
+      <div>
+        <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Nombre</label>
+        <input formControlName="nombre" placeholder="Nombre"
+          class="w-full bg-surface rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none" />
       </div>
 
-      <label class="form-label" for="apellidos">Apellidos</label>
-      <div class="form-field">
-        <i class="bi bi-person"></i>
-        <input id="apellidos" formControlName="apellidos" placeholder="Apellidos" class="form-input" />
+      <div>
+        <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Apellidos</label>
+        <input formControlName="apellidos" placeholder="Apellidos"
+          class="w-full bg-surface rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none" />
       </div>
 
-      <label class="form-label" for="email">Email</label>
-      <div class="form-field">
-        <i class="bi bi-envelope"></i>
-        <input id="email" formControlName="email" type="email" placeholder="email@ejemplo.es" class="form-input" autocomplete="email" />
-      </div>
+      @if (!isEdit) {
+        <div>
+          <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Email</label>
+          <input formControlName="email" type="email" placeholder="email@ejemplo.es"
+            class="w-full bg-surface rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none" />
+        </div>
+      }
 
-      <label class="form-label" for="numeroSocio">Nº Socio</label>
-      <div class="form-field">
-        <i class="bi bi-hash"></i>
-        <input id="numeroSocio" formControlName="numeroSocio" placeholder="0001" class="form-input" />
-      </div>
-
-      <label class="form-label" for="rol">Rol</label>
-      <div class="form-field">
-        <i class="bi bi-shield"></i>
-        <select id="rol" formControlName="rol" class="form-input">
+      <div>
+        <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Rol</label>
+        <select formControlName="rol"
+          class="w-full bg-surface rounded-[10px] px-3 py-2 text-[10px] font-medium text-brand-dark outline-none">
           <option value="socio">Socio</option>
           <option value="moderador">Moderador</option>
           <option value="admin">Admin</option>
         </select>
       </div>
 
-      <button
-        type="submit"
-        [disabled]="form.invalid"
-        class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-extrabold text-[10px] tracking-wide rounded-[10px] py-2.5 mt-2 disabled:opacity-50"
-      >
-        <i class="bi bi-person-plus-fill"></i>
-        {{ isEdit ? 'Guardar cambios' : 'Crear socio' }}
-      </button>
-
-      <button
-        type="button"
-        (click)="cancel()"
-        class="w-full flex items-center justify-center gap-2 border border-gray-200 text-gray-400 font-bold text-[10px] rounded-[10px] py-2.5 mt-2"
-      >
-        <i class="bi bi-x"></i> Cancelar
-      </button>
+      <div class="flex gap-2 pt-1">
+        <button type="button" (click)="cancel()"
+          class="flex-1 py-2.5 rounded-[12px] border border-gray-200 text-[9px] font-bold text-gray-400">
+          Cancelar
+        </button>
+        <button type="submit" [disabled]="form.invalid || saving()"
+          class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50">
+          {{ saving() ? 'Guardando...' : (isEdit ? 'Guardar cambios' : 'Crear socio') }}
+        </button>
+      </div>
     </form>
   </div>
 </div>
