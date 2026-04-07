@@ -23,10 +23,14 @@ export class FormSocioComponent implements OnInit {
   error = signal('');
 
   form = this.fb.group({
-    nombre:    ['', Validators.required],
-    apellidos: ['', Validators.required],
-    email:     ['', [Validators.required, Validators.email]],
-    rol:       ['socio' as UserRole, Validators.required],
+    nombre:      ['', Validators.required],
+    apellidos:   ['', Validators.required],
+    email:       ['', [Validators.required, Validators.email]],
+    rol:         ['socio' as UserRole, Validators.required],
+    numeroSocio: ['', Validators.required],
+    dni:         [''],
+    telefono:    [''],
+    direccion:   [''],
   });
 
   ngOnInit(): void {
@@ -61,6 +65,10 @@ export class FormSocioComponent implements OnInit {
           apellidos: val.apellidos!,
           email: val.email!,
           rol: val.rol!,
+          numeroSocio: val.numeroSocio!,
+          dni: val.dni || undefined,
+          telefono: val.telefono || undefined,
+          direccion: val.direccion || undefined,
         });
       }
       this.router.navigate(['/admin/socios']);

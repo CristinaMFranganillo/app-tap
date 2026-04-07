@@ -11,4 +11,7 @@ export interface User {
   fechaAlta: Date;
   activo: boolean;
   firstLogin: boolean;
+  dni?: string;
+  telefono?: string;
+  direccion?: string;
 }

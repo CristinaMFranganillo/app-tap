@@ -8,13 +8,16 @@ function toUser(row: Record<string, unknown>): User {
     id: row['id'] as string,
     nombre: row['nombre'] as string,
     apellidos: row['apellidos'] as string,
-    email: '',
+    email: (row['email'] as string) ?? '',
     numeroSocio: row['numero_socio'] as string,
     avatarUrl: (row['avatar_url'] as string) ?? undefined,
     rol: row['rol'] as UserRole,
     fechaAlta: new Date(row['fecha_alta'] as string),
     activo: row['activo'] as boolean,
     firstLogin: (row['first_login'] as boolean) ?? true,
+    dni: (row['dni'] as string) ?? undefined,
+    telefono: (row['telefono'] as string) ?? undefined,
+    direccion: (row['direccion'] as string) ?? undefined,
   };
 }
 
@@ -43,8 +46,11 @@ export class UserService {
     if (data.rol !== undefined) payload['rol'] = data.rol;
     if (data.avatarUrl !== undefined) payload['avatar_url'] = data.avatarUrl;
     if (data.activo !== undefined) payload['activo'] = data.activo;
+    if (data.dni !== undefined) payload['dni'] = data.dni;
+    if (data.telefono !== undefined) payload['telefono'] = data.telefono;
+    if (data.direccion !== undefined) payload['direccion'] = data.direccion;
+    if (data.email !== undefined) payload['email'] = data.email;
     await supabase.from('profiles').update(payload).eq('id', id);
-    // Actualizar cache local
     const current = this.cache.getValue();
     this.cache.next(current.map(u => u.id === id ? { ...u, ...data } : u));
   }
@@ -56,7 +62,16 @@ export class UserService {
     }
   }
 
-  async crearEnAuth(data: { nombre: string; apellidos: string; email: string; rol: string }): Promise<void> {
+  async crearEnAuth(data: {
+    nombre: string;
+    apellidos: string;
+    email: string;
+    rol: string;
+    numeroSocio: string;
+    dni?: string;
+    telefono?: string;
+    direccion?: string;
+  }): Promise<void> {
     const { error } = await supabase.functions.invoke('crear-usuario', { body: data });
     if (error) throw new Error('Error al crear el usuario.');
   }
