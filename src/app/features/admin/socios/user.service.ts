@@ -50,7 +50,8 @@ export class UserService {
     if (data.telefono !== undefined) payload['telefono'] = data.telefono;
     if (data.direccion !== undefined) payload['direccion'] = data.direccion;
     if (data.email !== undefined) payload['email'] = data.email;
-    await supabase.from('profiles').update(payload).eq('id', id);
+    const { error } = await supabase.from('profiles').update(payload).eq('id', id);
+    if (error) throw new Error(error.message ?? 'Error al actualizar el perfil');
     const current = this.cache.getValue();
     this.cache.next(current.map(u => u.id === id ? { ...u, ...data } : u));
   }
@@ -66,7 +67,7 @@ export class UserService {
     nombre: string;
     apellidos: string;
     email: string;
-    rol: string;
+    rol: UserRole;
     numeroSocio: string;
     dni?: string;
     telefono?: string;
