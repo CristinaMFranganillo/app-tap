@@ -1,5 +1,4 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
@@ -8,17 +7,17 @@ import { EscuadraService } from '../../../../features/scores/escuadra.service';
 import { UserService } from '../../socios/user.service';
 import { AuthService } from '../../../../core/auth/auth.service';
 
-interface PuestoForm {
+interface TiradorSession {
   userId: string;
   nombre: string;
-  platosRotos: number;
   puesto: number;
+  platos: boolean[];   // 25 elementos, true = roto
 }
 
 @Component({
   selector: 'app-registrar-resultado-entrenamiento',
   standalone: true,
-  imports: [FormsModule],
+  imports: [],
   templateUrl: './registrar-resultado-entrenamiento.component.html',
   styleUrl: './registrar-resultado-entrenamiento.component.scss',
 })
@@ -39,25 +38,76 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
     { initialValue: [] }
   );
 
-  puestos = computed<PuestoForm[]>(() => {
-    const socios = this.socios();
-    return this.tiradores().map(t => {
-      const socio = socios.find(s => s.id === t.userId);
-      return {
-        userId: t.userId,
-        nombre: socio ? `${socio.nombre} ${socio.apellidos}` : t.userId,
-        platosRotos: 0,
-        puesto: t.puesto,
-      };
-    });
-  });
-
-  puestosForm = signal<PuestoForm[]>([]);
+  session = signal<TiradorSession[]>([]);
+  tiradoreActual = signal(0);
   saving = signal(false);
   error = signal('');
 
+  readonly indices = Array.from({ length: 25 }, (_, i) => i);
+
   ngOnInit(): void {
-    this.puestosForm.set(this.puestos().map(p => ({ ...p })));
+    const init = () => {
+      const socios = this.socios();
+      const tiradores = this.tiradores();
+      if (tiradores.length === 0) return;
+      this.session.set(
+        tiradores.map(t => {
+          const socio = socios.find(s => s.id === t.userId);
+          return {
+            userId: t.userId,
+            nombre: socio ? `${socio.nombre} ${socio.apellidos}` : t.userId,
+            puesto: t.puesto,
+            platos: Array(25).fill(false),
+          };
+        })
+      );
+    };
+
+    init();
+    if (this.session().length === 0) {
+      const interval = setInterval(() => {
+        init();
+        if (this.session().length > 0) clearInterval(interval);
+      }, 200);
+    }
+  }
+
+  tirador(): TiradorSession | null {
+    return this.session()[this.tiradoreActual()] ?? null;
+  }
+
+  platosRotosActual(): number {
+    return this.tirador()?.platos.filter(Boolean).length ?? 0;
+  }
+
+  esUltimo(): boolean {
+    return this.tiradoreActual() === this.session().length - 1;
+  }
+
+  togglePlato(i: number): void {
+    this.session.update(session => {
+      const idx = this.tiradoreActual();
+      return session.map((t, ti) => {
+        if (ti !== idx) return t;
+        const platos = [...t.platos];
+        platos[i] = !platos[i];
+        return { ...t, platos };
+      });
+    });
+  }
+
+  siguiente(): void {
+    if (this.esUltimo()) {
+      this.guardar();
+    } else {
+      this.tiradoreActual.update(i => i + 1);
+    }
+  }
+
+  anterior(): void {
+    if (this.tiradoreActual() > 0) {
+      this.tiradoreActual.update(i => i - 1);
+    }
   }
 
   async guardar(): Promise<void> {
@@ -67,18 +117,17 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
       const user = await firstValueFrom(this.authService.currentUser$);
       if (!user) throw new Error('No autenticado');
       await this.entrenamientoService.upsertResultados(
-        this.puestosForm().map(p => ({
+        this.session().map(t => ({
           escuadraId: this.escuadraId,
-          userId: p.userId,
-          puesto: p.puesto,
-          platosRotos: p.platosRotos,
+          userId: t.userId,
+          puesto: t.puesto,
+          platosRotos: t.platos.filter(Boolean).length,
         })),
         user.id
       );
       this.router.navigate(['/admin/entrenamientos', this.entrenamientoId]);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error al guardar');
-    } finally {
       this.saving.set(false);
     }
   }

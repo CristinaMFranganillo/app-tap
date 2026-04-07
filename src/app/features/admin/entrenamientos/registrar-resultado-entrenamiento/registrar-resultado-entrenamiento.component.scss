@@ -1,27 +1,54 @@
 .registrar-e {
-  @apply p-3;
+  @apply p-3 flex flex-col gap-4;
 
-  &__back-btn { @apply text-gray-400; }
-  &__back-icon { @apply text-[15px]; }
-  &__title { @apply text-[18px] font-extrabold text-secondary; }
-  &__error { @apply text-danger text-sm font-semibold mt-2; }
-  &__btn-guardar { @apply w-full mt-4; }
-}
+  &__back-btn { @apply text-gray-400 text-[15px]; }
 
-.resultado-item {
-  @apply flex items-center justify-between;
-
-  &__info { @apply flex-1 min-w-0; }
-  &__nombre { @apply text-base font-bold text-secondary truncate; }
+  &__header-info { @apply flex-1 min-w-0; }
+  &__nombre { @apply text-[18px] font-extrabold text-secondary truncate; }
   &__puesto { @apply text-xs text-neutral-300 font-medium; }
+  &__progreso { @apply text-xs font-bold text-neutral-300 flex-shrink-0; }
 
-  &__input-wrap { @apply flex items-center gap-1; }
-
-  &__input {
-    @apply w-16 bg-neutral-100 rounded-input px-2 py-1
-           text-base font-black text-secondary text-center outline-none
-           focus:ring-2 focus:ring-primary/40;
+  &__contador {
+    @apply flex items-baseline gap-2 justify-center py-2;
   }
 
-  &__unit { @apply text-xs text-neutral-300 font-medium; }
+  &__contador-num {
+    @apply text-[48px] font-black text-secondary leading-none;
+  }
+
+  &__contador-de {
+    @apply text-sm text-neutral-300 font-medium;
+  }
+
+  &__error { @apply text-danger text-sm font-semibold text-center; }
+
+  &__nav {
+    @apply flex items-center justify-between gap-3 pt-2;
+  }
+
+  &__nav-btn {
+    @apply flex items-center gap-1;
+  }
+
+  &__loading {
+    @apply flex items-center justify-center py-16 text-neutral-300 text-sm;
+  }
+}
+
+// ── Cuadrícula de platos ───────────────────────────────────────
+
+.platos-grid {
+  @apply grid gap-2;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.plato-btn {
+  @apply aspect-square rounded-[10px] bg-neutral-100 text-neutral-400
+         font-bold text-sm flex items-center justify-center
+         active:scale-95 transition-all duration-fast
+         select-none;
+
+  &--roto {
+    @apply bg-primary text-secondary shadow-sm;
+  }
 }

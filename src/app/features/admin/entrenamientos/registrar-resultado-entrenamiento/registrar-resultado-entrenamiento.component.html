@@ -1,35 +1,71 @@
 <div class="registrar-e">
-  <div class="page-header">
-    <button (click)="goBack()" class="registrar-e__back-btn">
-      <i class="bi bi-chevron-left registrar-e__back-icon"></i>
-    </button>
-    <h2 class="registrar-e__title">Resultados escuadra</h2>
-  </div>
 
-  @for (p of puestosForm(); track p.userId) {
-    <div class="card resultado-item">
-      <div class="resultado-item__info">
-        <p class="resultado-item__nombre">{{ p.nombre }}</p>
-        <p class="resultado-item__puesto">Puesto {{ p.puesto }}</p>
+  @if (tirador(); as t) {
+
+    <!-- Header -->
+    <div class="page-header">
+      <button (click)="goBack()" class="registrar-e__back-btn">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <div class="registrar-e__header-info">
+        <h2 class="registrar-e__nombre">{{ t.nombre }}</h2>
+        <p class="registrar-e__puesto">Puesto {{ t.puesto }}</p>
       </div>
-      <div class="resultado-item__input-wrap">
-        <input
-          type="number"
-          [(ngModel)]="p.platosRotos"
-          min="0"
-          max="25"
-          class="resultado-item__input"
-        />
-        <span class="resultado-item__unit">platos</span>
-      </div>
+      <span class="registrar-e__progreso">{{ tiradoreActual() + 1 }}/{{ session().length }}</span>
+    </div>
+
+    <!-- Contador -->
+    <div class="registrar-e__contador">
+      <span class="registrar-e__contador-num">{{ platosRotosActual() }}</span>
+      <span class="registrar-e__contador-de">/ 25 platos rotos</span>
+    </div>
+
+    <!-- Cuadrícula 25 platos -->
+    <div class="platos-grid">
+      @for (i of indices; track i) {
+        <button
+          type="button"
+          (click)="togglePlato(i)"
+          class="plato-btn"
+          [class.plato-btn--roto]="t.platos[i]"
+        >
+          {{ i + 1 }}
+        </button>
+      }
+    </div>
+
+    @if (error()) {
+      <p class="registrar-e__error">{{ error() }}</p>
+    }
+
+    <!-- Navegación -->
+    <div class="registrar-e__nav">
+      @if (tiradoreActual() > 0) {
+        <button type="button" (click)="anterior()" class="btn-secondary registrar-e__nav-btn">
+          <i class="bi bi-chevron-left"></i> Anterior
+        </button>
+      } @else {
+        <span></span>
+      }
+
+      <button
+        type="button"
+        (click)="siguiente()"
+        [disabled]="saving()"
+        class="btn-primary registrar-e__nav-btn"
+      >
+        @if (esUltimo()) {
+          {{ saving() ? 'Guardando...' : 'Guardar' }}
+        } @else {
+          Siguiente <i class="bi bi-chevron-right"></i>
+        }
+      </button>
+    </div>
+
+  } @else {
+    <div class="registrar-e__loading">
+      <p>Cargando tiradores...</p>
     </div>
   }
 
-  @if (error()) {
-    <p class="registrar-e__error">{{ error() }}</p>
-  }
-
-  <button (click)="guardar()" [disabled]="saving()" class="registrar-e__btn-guardar btn-primary">
-    {{ saving() ? 'Guardando...' : 'Guardar resultados' }}
-  </button>
 </div>
