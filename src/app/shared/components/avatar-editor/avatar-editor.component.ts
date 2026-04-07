@@ -26,6 +26,10 @@ export class AvatarEditorComponent {
       this.error.set('Solo se permiten imágenes.');
       return;
     }
+    if (file.size > 5 * 1024 * 1024) {
+      this.error.set('La imagen no puede superar 5 MB.');
+      return;
+    }
     this.selectedFile = file;
     this.error.set('');
     const reader = new FileReader();
