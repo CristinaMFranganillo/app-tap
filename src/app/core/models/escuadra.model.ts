@@ -1,6 +1,7 @@
 export interface Escuadra {
   id: string;
-  competicionId: string;
+  competicionId?: string;
+  entrenamientoId?: string;
   numero: number;
   tiradores?: EscuadraTirador[];
 }
