@@ -38,6 +38,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/admin/admin.routes').then(m => m.adminRoutes),
       },
+      {
+        path: 'juego',
+        loadComponent: () =>
+          import('./features/juego-platos/juego-platos.component').then(m => m.JuegoPlatosComponent),
+      },
     ],
   },
   { path: '**', redirectTo: '' },

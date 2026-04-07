@@ -1,0 +1,84 @@
+<div class="juego">
+
+  <!-- Canvas principal -->
+  <canvas
+    #canvas
+    class="juego__canvas"
+    (click)="onCanvasClick($event)"
+    (touchstart)="onCanvasClick($event)"
+  ></canvas>
+
+  <!-- Pantalla: READY -->
+  @if (fase() === 'ready') {
+    <div class="juego__overlay">
+      <div class="juego__panel">
+        <span class="juego__emoji">🎯</span>
+        <h1 class="juego__titulo">Tiro al Plato</h1>
+        <p class="juego__desc">
+          25 platos. <strong>Toca</strong> para dispararlos<br>antes de que caigan.
+        </p>
+        <button class="btn-primary juego__btn-start" (click)="start()">
+          <i class="bi bi-play-fill"></i> Empezar serie
+        </button>
+        <button class="btn-secondary juego__btn-volver" (click)="volver()">
+          Volver al inicio
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- HUD en partida -->
+  @if (fase() === 'playing') {
+    <div class="juego__hud">
+      <div class="juego__hud-stat">
+        <span class="juego__hud-num">{{ platosRotos() }}</span>
+        <span class="juego__hud-label">rotos</span>
+      </div>
+      <div class="juego__hud-stat juego__hud-stat--center">
+        <span class="juego__hud-num juego__hud-num--sm">{{ platosLanzados() }}/25</span>
+        <span class="juego__hud-label">lanzados</span>
+      </div>
+      <div class="juego__hud-stat juego__hud-stat--right">
+        <span class="juego__hud-num juego__hud-num--danger">{{ platosErrados() }}</span>
+        <span class="juego__hud-label">errados</span>
+      </div>
+    </div>
+  }
+
+  <!-- Pantalla: END -->
+  @if (fase() === 'end') {
+    <div class="juego__overlay">
+      <div class="juego__panel">
+        <span class="juego__emoji">🏅</span>
+        <h2 class="juego__titulo">{{ mensajeFinal }}</h2>
+
+        <div class="juego__resultado">
+          <div class="juego__resultado-big">
+            <span class="juego__resultado-num">{{ platosRotos() }}</span>
+            <span class="juego__resultado-de">/25</span>
+          </div>
+          <p class="juego__precision">{{ precision }}% de precisión</p>
+        </div>
+
+        <div class="juego__stats-fin">
+          <div class="juego__stat-fin">
+            <i class="bi bi-check-circle-fill juego__icon-ok"></i>
+            <span>{{ platosRotos() }} rotos</span>
+          </div>
+          <div class="juego__stat-fin">
+            <i class="bi bi-x-circle-fill juego__icon-ko"></i>
+            <span>{{ platosErrados() }} errados</span>
+          </div>
+        </div>
+
+        <button class="btn-primary juego__btn-start" (click)="start()">
+          <i class="bi bi-arrow-repeat"></i> Repetir serie
+        </button>
+        <button class="btn-secondary juego__btn-volver" (click)="volver()">
+          Volver al inicio
+        </button>
+      </div>
+    </div>
+  }
+
+</div>

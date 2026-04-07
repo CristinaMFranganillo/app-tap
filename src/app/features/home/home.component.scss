@@ -52,3 +52,43 @@
     @apply text-neutral-200;
   }
 }
+
+// ── Botón juego ────────────────────────────────────────────────
+
+.home-juego {
+  @apply w-full flex items-center justify-between
+         px-3 py-3 mb-4 rounded-card
+         active:scale-[.98] transition-transform duration-fast;
+
+  background: #1A1A1A;
+  border: 1.5px solid #F5E000;
+  box-shadow: 0 2px 12px rgba(245, 224, 0, 0.12);
+
+  &__left {
+    @apply flex items-center gap-3;
+  }
+
+  &__icon {
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  &__titulo {
+    @apply text-sm font-extrabold text-left;
+    color: #F5E000;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  &__sub {
+    @apply text-xs font-medium text-left mt-0.5;
+    color: #6B7280;
+    margin: 0;
+  }
+
+  &__play {
+    font-size: 22px;
+    color: #F5E000;
+    opacity: 0.9;
+  }
+}

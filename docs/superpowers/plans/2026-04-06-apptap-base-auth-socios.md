@@ -803,7 +803,7 @@ export class HeaderComponent {
     color: #1A1A1A !important;
   }
   .active-nav i {
-    color: #D4E600 !important;
+    color: #FFE401!important;
   }
 </style>
 ```

@@ -1,0 +1,153 @@
+.juego {
+  @apply fixed inset-0 z-50 flex items-center justify-center;
+  background: #0d1520;
+  touch-action: none;
+
+  &__canvas {
+    @apply absolute inset-0 w-full h-full;
+    display: block;
+    cursor: crosshair;
+  }
+
+  // ── Overlay ───────────────────────────────────────────────────────
+
+  &__overlay {
+    @apply absolute inset-0 flex items-center justify-center z-10;
+    background: rgba(10, 14, 20, 0.82);
+    backdrop-filter: blur(4px);
+  }
+
+  &__panel {
+    @apply flex flex-col items-center gap-3 px-6 py-7 mx-4;
+    width: 100%;
+    max-width: 320px;
+    background: #1A1A1A;
+    border-radius: 20px;
+    border: 1.5px solid rgba(245, 224, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  }
+
+  &__emoji {
+    font-size: 42px;
+    line-height: 1;
+  }
+
+  &__titulo {
+    font-size: 22px;
+    font-weight: 900;
+    color: #F5E000;
+    text-align: center;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  &__desc {
+    font-size: 13px;
+    font-weight: 500;
+    color: #9CA3AF;
+    text-align: center;
+    line-height: 1.6;
+    margin: 0;
+
+    strong {
+      color: #F5E000;
+      font-weight: 700;
+    }
+  }
+
+  // ── Botones ───────────────────────────────────────────────────────
+
+  &__btn-start {
+    @apply w-full;
+    margin-top: 4px;
+  }
+
+  &__btn-volver {
+    @apply w-full;
+    color: #6B7280;
+    font-size: 13px;
+  }
+
+  // ── HUD ───────────────────────────────────────────────────────────
+
+  &__hud {
+    @apply absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-4 py-2.5;
+    background: linear-gradient(to bottom, rgba(10, 14, 20, 0.88) 0%, transparent 100%);
+  }
+
+  &__hud-stat {
+    @apply flex flex-col items-start;
+    &--center { @apply items-center; }
+    &--right  { @apply items-end; }
+  }
+
+  &__hud-num {
+    font-size: 30px;
+    font-weight: 900;
+    color: #F5E000;
+    line-height: 1;
+    letter-spacing: -0.03em;
+
+    &--sm     { font-size: 20px; color: #E5E7EB; }
+    &--danger { color: #EF4444; }
+  }
+
+  &__hud-label {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6B7280;
+  }
+
+  // ── Resultado final ───────────────────────────────────────────────
+
+  &__resultado {
+    @apply flex flex-col items-center gap-1 py-3 w-full;
+    border-top: 1px solid rgba(245, 224, 0, 0.12);
+    border-bottom: 1px solid rgba(245, 224, 0, 0.12);
+  }
+
+  &__resultado-big {
+    @apply flex items-baseline gap-1;
+  }
+
+  &__resultado-num {
+    font-size: 58px;
+    font-weight: 900;
+    color: #F5E000;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  &__resultado-de {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4A4A4A;
+  }
+
+  &__precision {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6B7280;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0;
+  }
+
+  &__stats-fin {
+    @apply flex items-center gap-5 w-full justify-center;
+  }
+
+  &__stat-fin {
+    @apply flex items-center gap-1.5;
+    font-size: 13px;
+    font-weight: 600;
+    color: #E5E7EB;
+
+    i { font-size: 14px; }
+  }
+
+  &__icon-ok { color: #22C55E; }
+  &__icon-ko { color: #EF4444; }
+}

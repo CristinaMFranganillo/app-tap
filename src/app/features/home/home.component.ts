@@ -66,4 +66,8 @@ export class HomeComponent {
   goToPerfil(): void {
     this.router.navigate(['/perfil']);
   }
+
+  goToJuego(): void {
+    this.router.navigate(['/juego']);
+  }
 }
