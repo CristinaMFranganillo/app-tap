@@ -24,9 +24,9 @@ export class DetalleEntrenamientoComponent {
 
   private id$ = this.route.paramMap.pipe(map(p => p.get('id')!));
 
-  entrenamiento = toSignal(
+  entrenamiento = toSignal<Entrenamiento | null>(
     this.id$.pipe(switchMap(id => this.entrenamientoService.getById(id))),
-    { initialValue: null as Entrenamiento | null }
+    { initialValue: null }
   );
 
   escuadras = toSignal(
