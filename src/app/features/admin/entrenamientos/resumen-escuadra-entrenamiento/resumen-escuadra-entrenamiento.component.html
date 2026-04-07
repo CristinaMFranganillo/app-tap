@@ -38,6 +38,9 @@
             } @else {
               <span class="resumen-e__fila-perfecto"><i class="bi bi-star-fill"></i> Perfecto</span>
             }
+            @if (fila.numerosFallos.length > 0) {
+              <p class="resumen-e__fila-numfallos">Platos: {{ fila.numerosFallos.join(' · ') }}</p>
+            }
           </div>
         </div>
       }

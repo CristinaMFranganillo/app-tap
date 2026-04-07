@@ -11,6 +11,7 @@ interface FilaResumen {
   nombre: string;
   platosRotos: number;
   fallos: number;
+  numerosFallos: number[];  // platos que falló, ej: [3, 11, 19]
 }
 
 @Component({
@@ -34,10 +35,18 @@ export class ResumenEscuadraEntrenamientoComponent implements OnInit {
   cargando = signal(true);
 
   async ngOnInit(): Promise<void> {
-    const [resultados, socios] = await Promise.all([
+    const [resultados, socios, fallos] = await Promise.all([
       firstValueFrom(this.entrenamientoService.getResultadosByEscuadra(this.escuadraId)),
       firstValueFrom(this.userService.getAll()),
+      firstValueFrom(this.entrenamientoService.getFallosByEscuadra(this.escuadraId)),
     ]);
+
+    // Agrupar fallos por userId
+    const fallosPorUser = new Map<string, number[]>();
+    for (const f of fallos) {
+      if (!fallosPorUser.has(f.userId)) fallosPorUser.set(f.userId, []);
+      fallosPorUser.get(f.userId)!.push(f.numeroPlato);
+    }
 
     const filas: FilaResumen[] = resultados.map((r: ResultadoEntrenamiento) => {
       const socio = socios.find(s => s.id === r.userId);
@@ -46,6 +55,7 @@ export class ResumenEscuadraEntrenamientoComponent implements OnInit {
         nombre: socio ? `${socio.nombre} ${socio.apellidos}` : r.userId,
         platosRotos: r.platosRotos,
         fallos: 25 - r.platosRotos,
+        numerosFallos: (fallosPorUser.get(r.userId) ?? []).sort((a, b) => a - b),
       };
     }).sort((a, b) => a.puesto - b.puesto);
 
