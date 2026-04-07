@@ -14,4 +14,6 @@ export interface User {
   dni?: string;
   telefono?: string;
   direccion?: string;
+  cuotaPagada?: boolean;   // estado en la temporada activa; undefined si no hay temporada
+  cuotaId?: string;        // id del registro cuota para poder actualizarlo directamente
 }
