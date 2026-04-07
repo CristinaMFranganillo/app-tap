@@ -47,7 +47,31 @@
 }
 
 .login-forgot {
-  @apply text-center mt-3 text-[12px] text-gray-300 font-semibold;
+  @apply block w-full text-center mt-3 text-[12px] text-gray-400 font-semibold underline bg-transparent border-0 cursor-pointer;
+}
+
+.recuperar-overlay {
+  @apply fixed inset-0 bg-black/40 z-40;
+}
+
+.recuperar-modal {
+  @apply fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl px-5 pt-6 pb-10 flex flex-col gap-3;
+}
+
+.recuperar-title {
+  @apply text-brand-dark font-semibold text-[16px] mb-1;
+}
+
+.recuperar-desc {
+  @apply text-gray-500 text-[13px] mb-1;
+}
+
+.recuperar-ok {
+  @apply text-green-600 text-[13px] font-semibold;
+}
+
+.recuperar-cancel {
+  @apply w-full text-center text-[13px] text-gray-400 font-semibold bg-transparent border-0 cursor-pointer mt-1;
 }
 
 .btn-login {

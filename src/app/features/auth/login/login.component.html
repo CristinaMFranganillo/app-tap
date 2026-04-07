@@ -43,6 +43,44 @@
       </button>
     </form>
 
-    <p class="login-forgot">¿Olvidaste tu contraseña?</p>
+    <button type="button" class="login-forgot" (click)="abrirRecuperar()">¿Olvidaste tu contraseña?</button>
   </div>
 </div>
+
+@if (mostrarRecuperar()) {
+  <div class="recuperar-overlay" (click)="cerrarRecuperar()"></div>
+  <div class="recuperar-modal">
+    <h3 class="recuperar-title">Recuperar contraseña</h3>
+
+    @if (recuperarMsg()) {
+      <p class="recuperar-ok">{{ recuperarMsg() }}</p>
+      <button type="button" class="btn-login" (click)="cerrarRecuperar()">Cerrar</button>
+    } @else {
+      <p class="recuperar-desc">Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.</p>
+      <div class="login-field login-field--mb">
+        <i class="bi bi-envelope-fill"></i>
+        <input
+          type="email"
+          [(ngModel)]="recuperarEmail"
+          placeholder="socio@sanisidro.es"
+          autocomplete="email"
+        />
+      </div>
+
+      @if (recuperarError()) {
+        <p class="login-error">{{ recuperarError() }}</p>
+      }
+
+      <button
+        type="button"
+        class="btn-login"
+        [disabled]="recuperarLoading()"
+        (click)="enviarRecuperar()"
+      >
+        {{ recuperarLoading() ? 'Enviando...' : 'Enviar enlace' }}
+      </button>
+
+      <button type="button" class="recuperar-cancel" (click)="cerrarRecuperar()">Cancelar</button>
+    }
+  </div>
+}
