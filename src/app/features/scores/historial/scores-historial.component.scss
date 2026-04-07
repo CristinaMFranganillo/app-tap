@@ -1,47 +1,56 @@
-.scores-historial {
-  @apply p-3;
+.historial {
+  @apply p-3 flex flex-col gap-3;
+}
 
-  &__title {
-    @apply mb-3;
+.historial-item {
+  @apply flex flex-col gap-2;
+
+  &__top {
+    @apply flex items-center justify-between;
   }
-}
 
-.historial-item__header {
-  @apply flex items-start justify-between mb-1.5;
-}
+  &__badge {
+    @apply inline-flex items-center gap-1 text-[11px] font-bold
+           uppercase tracking-wide px-2 py-0.5 rounded-full;
 
-.historial-item__info {
-  @apply flex-1 min-w-0;
-}
+    &--entrenamiento {
+      @apply bg-primary/20 text-secondary;
+    }
 
-.historial-item__nombre {
-  @apply text-[14px] font-bold text-brand-dark truncate;
-}
+    &--competicion {
+      @apply bg-secondary/10 text-secondary;
+    }
+  }
 
-.historial-item__fecha {
-  @apply text-[11px] text-gray-300 font-medium;
-}
+  &__fecha {
+    @apply text-xs text-neutral-300 font-medium;
+  }
 
-.historial-item__resultado {
-  @apply text-right ml-2;
-}
+  &__titulo {
+    @apply text-sm font-bold text-secondary;
+  }
 
-.historial-item__rotos {
-  @apply text-[14px] font-black text-brand-dark;
-}
+  &__bottom {
+    @apply flex items-center gap-3;
+  }
 
-.historial-item__total {
-  @apply text-[13px] text-gray-300 font-semibold;
-}
+  &__barra-wrap {
+    @apply flex-1 h-1.5 bg-neutral-100 rounded-full overflow-hidden;
+  }
 
-.historial-item__porcentaje {
-  @apply text-[10px] font-bold text-gray-300 text-right mt-0.5;
-}
+  &__barra {
+    @apply h-full bg-primary rounded-full transition-all duration-300;
 
-.progress-track {
-  @apply w-full h-[3px] bg-gray-100 rounded-full overflow-hidden;
-}
+    &--competicion {
+      @apply bg-secondary;
+    }
+  }
 
-.progress-fill {
-  @apply h-full bg-brand-yellow rounded-full transition-all;
+  &__resultado {
+    @apply text-sm font-black text-secondary flex-shrink-0;
+  }
+
+  &__pct {
+    @apply text-xs font-medium text-neutral-300;
+  }
 }

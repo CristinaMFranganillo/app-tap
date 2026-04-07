@@ -5,8 +5,17 @@ import { DatePipe } from '@angular/common';
 import { ResultadoService } from '../resultado.service';
 import { CompeticionService } from '../competicion.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { EntrenamientoService } from '../../admin/entrenamientos/entrenamiento.service';
 import { Resultado } from '../../../core/models/resultado.model';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
+
+interface ItemHistorial {
+  tipo: 'entrenamiento' | 'competicion';
+  fecha: Date;
+  titulo: string;
+  platosRotos: number;
+  totalPlatos: number;
+}
 
 @Component({
   selector: 'app-scores-historial',
@@ -19,6 +28,9 @@ export class ScoresHistorialComponent {
   private auth = inject(AuthService);
   private resultadoService = inject(ResultadoService);
   private competicionService = inject(CompeticionService);
+  private entrenamientoService = inject(EntrenamientoService);
+
+  private anio = new Date().getFullYear();
 
   resultados = toSignal(
     this.auth.currentUser$.pipe(
@@ -27,22 +39,47 @@ export class ScoresHistorialComponent {
     { initialValue: [] as Resultado[] }
   );
 
-  resumenPorCompeticion = computed(() => {
-    const map = new Map<string, { rotos: number; total: number; fecha: Date }>();
+  entrenamientos = toSignal(
+    this.auth.currentUser$.pipe(
+      switchMap(user =>
+        this.entrenamientoService.getByUser(user?.id ?? '', this.anio)
+      )
+    ),
+    { initialValue: [] }
+  );
+
+  timeline = computed<ItemHistorial[]>(() => {
+    const compMap = new Map<string, { rotos: number; total: number; fecha: Date }>();
     for (const r of this.resultados()) {
       const comp = this.competicionService.getById(r.competicionId);
       const total = comp ? comp.platosPorSerie * comp.numSeries : 25;
-      if (!map.has(r.competicionId)) {
-        map.set(r.competicionId, { rotos: 0, total, fecha: r.fecha });
+      if (!compMap.has(r.competicionId)) {
+        compMap.set(r.competicionId, { rotos: 0, total, fecha: r.fecha });
       }
-      map.get(r.competicionId)!.rotos += r.resultado;
+      compMap.get(r.competicionId)!.rotos += r.resultado;
     }
-    return Array.from(map.entries()).map(([competicionId, v]) => ({ competicionId, ...v }));
-  });
+    const competicionItems: ItemHistorial[] = Array.from(compMap.entries()).map(
+      ([competicionId, v]) => ({
+        tipo: 'competicion' as const,
+        fecha: v.fecha,
+        titulo: this.competicionService.getById(competicionId)?.nombre ?? 'Competición',
+        platosRotos: v.rotos,
+        totalPlatos: v.total,
+      })
+    );
 
-  getCompeticionNombre(competicionId: string): string {
-    return this.competicionService.getById(competicionId)?.nombre ?? 'Competición';
-  }
+    const entrenamientoItems: ItemHistorial[] = this.entrenamientos().map(e => ({
+      tipo: 'entrenamiento' as const,
+      fecha: new Date(e.fecha),
+      titulo: 'Entrenamiento',
+      platosRotos: e.platosRotos,
+      totalPlatos: 25,
+    }));
+
+    return [...competicionItems, ...entrenamientoItems].sort(
+      (a, b) => b.fecha.getTime() - a.fecha.getTime()
+    );
+  });
 
   getPorcentaje(rotos: number, total: number): number {
     return total > 0 ? Math.round((rotos / total) * 100) : 0;

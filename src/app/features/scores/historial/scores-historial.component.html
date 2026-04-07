@@ -1,25 +1,44 @@
-<div class="scores-historial">
-  <h2 class="page-title scores-historial__title">Mi Historial</h2>
+<div class="historial">
 
-  @if (resumenPorCompeticion().length === 0) {
-    <app-empty-state icon="bi-trophy" mensaje="Sin resultados registrados" />
+  @if (timeline().length === 0) {
+    <app-empty-state icon="bi-clock-history" mensaje="Sin actividad registrada" />
   } @else {
-    @for (item of resumenPorCompeticion(); track item.competicionId) {
-      <div class="card">
-        <div class="historial-item__header">
-          <div class="historial-item__info">
-            <p class="historial-item__nombre">{{ getCompeticionNombre(item.competicionId) }}</p>
-            <p class="historial-item__fecha">{{ item.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
-          </div>
-          <div class="historial-item__resultado">
-            <p class="historial-item__rotos">{{ item.rotos }}<span class="historial-item__total">/{{ item.total }}</span></p>
-          </div>
+    @for (item of timeline(); track $index) {
+      <div class="card historial-item">
+
+        <div class="historial-item__top">
+          <span
+            class="historial-item__badge"
+            [class.historial-item__badge--competicion]="item.tipo === 'competicion'"
+            [class.historial-item__badge--entrenamiento]="item.tipo === 'entrenamiento'"
+          >
+            @if (item.tipo === 'competicion') {
+              <i class="bi bi-trophy-fill"></i> Competición
+            } @else {
+              <i class="bi bi-bullseye"></i> Entrenamiento
+            }
+          </span>
+          <span class="historial-item__fecha">{{ item.fecha | date:'d MMM yyyy' : '' : 'es' }}</span>
         </div>
-        <div class="progress-track">
-          <div class="progress-fill" [style.width.%]="getPorcentaje(item.rotos, item.total)"></div>
+
+        <p class="historial-item__titulo">{{ item.titulo }}</p>
+
+        <div class="historial-item__bottom">
+          <div class="historial-item__barra-wrap">
+            <div
+              class="historial-item__barra"
+              [style.width.%]="getPorcentaje(item.platosRotos, item.totalPlatos)"
+              [class.historial-item__barra--competicion]="item.tipo === 'competicion'"
+            ></div>
+          </div>
+          <span class="historial-item__resultado">
+            {{ item.platosRotos }}/{{ item.totalPlatos }}
+            <span class="historial-item__pct">({{ getPorcentaje(item.platosRotos, item.totalPlatos) }}%)</span>
+          </span>
         </div>
-        <p class="historial-item__porcentaje">{{ getPorcentaje(item.rotos, item.total) }}%</p>
+
       </div>
     }
   }
+
 </div>
