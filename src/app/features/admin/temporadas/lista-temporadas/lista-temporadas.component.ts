@@ -4,12 +4,11 @@ import { DatePipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject, switchMap, startWith } from 'rxjs';
 import { CuotaService } from '../../socios/cuota.service';
-import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-lista-temporadas',
   standalone: true,
-  imports: [FormsModule, DatePipe, ConfirmDialogComponent],
+  imports: [FormsModule, DatePipe],
   templateUrl: './lista-temporadas.component.html',
   styleUrl: './lista-temporadas.component.scss',
 })
