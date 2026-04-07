@@ -66,6 +66,20 @@
   @apply text-sm text-neutral-300 font-medium;
 }
 
+// ── Inline date picker ────────────────────────────────────────
+
+.admin-scores__picker {
+  @apply bg-white rounded-card p-4 shadow-card flex flex-col gap-3;
+}
+
+.admin-scores__picker-error {
+  @apply text-danger text-xs font-semibold;
+}
+
+.admin-scores__picker-actions {
+  @apply flex gap-2 pt-1;
+}
+
 // ── Tarjeta entrenamiento ──────────────────────────────────────
 
 .entrenamiento-item {

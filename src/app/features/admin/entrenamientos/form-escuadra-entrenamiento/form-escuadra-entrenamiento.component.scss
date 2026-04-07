@@ -5,7 +5,56 @@
   &__back-icon { @apply text-[15px]; }
   &__title { @apply text-[18px] font-extrabold text-secondary; }
   &__section-label { @apply text-xs font-bold text-neutral-300 uppercase tracking-wide mb-2; }
-  &__puesto { @apply mb-2; }
+  &__puesto { @apply mb-3; }
   &__error { @apply text-danger text-sm font-semibold mt-3; }
   &__actions { @apply flex gap-2 mt-4; }
+}
+
+// ── Buscador de tirador ────────────────────────────────────────
+
+.tirador-search {
+  @apply relative;
+
+  &__input-wrap {
+    @apply flex items-center bg-white border border-neutral-200 rounded-input px-3 gap-2
+           focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20
+           transition-all duration-fast;
+  }
+
+  &__icon {
+    @apply text-neutral-300 text-[13px] flex-shrink-0;
+  }
+
+  &__input {
+    @apply flex-1 py-2.5 text-sm text-secondary placeholder-neutral-300
+           bg-transparent outline-none;
+  }
+
+  &__clear {
+    @apply text-neutral-300 text-[16px] leading-none flex-shrink-0
+           hover:text-secondary transition-colors duration-fast;
+  }
+
+  &__dropdown {
+    @apply absolute left-0 right-0 top-[calc(100%+4px)] z-50
+           bg-white border border-neutral-200 rounded-card shadow-modal
+           max-h-48 overflow-y-auto;
+  }
+
+  &__option {
+    @apply flex items-center justify-between px-3 py-2.5 cursor-pointer
+           hover:bg-neutral-100 transition-colors duration-fast;
+
+    &--selected {
+      @apply bg-primary/10;
+    }
+  }
+
+  &__option-name {
+    @apply text-sm font-medium text-secondary;
+  }
+
+  &__option-num {
+    @apply text-xs text-neutral-300 font-medium;
+  }
 }

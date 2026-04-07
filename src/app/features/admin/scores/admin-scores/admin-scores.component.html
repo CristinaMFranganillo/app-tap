@@ -4,10 +4,31 @@
   <section class="admin-scores__section">
     <h2 class="admin-scores__section-title">Entrenamientos</h2>
 
-    <button (click)="nuevoEntrenamiento()" class="admin-scores__btn-primary">
-      <i class="bi bi-plus-circle admin-scores__btn-primary-icon"></i>
-      <span>Nuevo entrenamiento</span>
-    </button>
+    @if (!mostrarPicker()) {
+      <button (click)="abrirPicker()" class="admin-scores__btn-primary">
+        <i class="bi bi-plus-circle admin-scores__btn-primary-icon"></i>
+        <span>Nuevo entrenamiento</span>
+      </button>
+    } @else {
+      <div class="admin-scores__picker">
+        <label class="form-label">Fecha del entrenamiento</label>
+        <input
+          type="date"
+          [ngModel]="fechaNueva()"
+          (ngModelChange)="fechaNueva.set($event)"
+          class="form-input"
+        />
+        @if (errorCrear()) {
+          <p class="admin-scores__picker-error">{{ errorCrear() }}</p>
+        }
+        <div class="admin-scores__picker-actions">
+          <button (click)="cancelarPicker()" class="btn-secondary">Cancelar</button>
+          <button (click)="confirmarEntrenamiento()" [disabled]="creando()" class="btn-primary">
+            {{ creando() ? 'Creando...' : 'Crear' }}
+          </button>
+        </div>
+      </div>
+    }
 
     @if (entrenamientos().length === 0) {
       <div class="admin-scores__empty">
