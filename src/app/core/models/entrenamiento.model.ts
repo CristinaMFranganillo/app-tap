@@ -13,3 +13,20 @@ export interface ResultadoEntrenamiento {
   puesto: number;
   platosRotos: number;
 }
+
+export interface ResultadoEntrenamientoConFecha {
+  id: string;
+  escuadraId: string;
+  entrenamientoId: string;
+  userId: string;
+  puesto: number;
+  platosRotos: number;
+  fecha: string;  // YYYY-MM-DD, de entrenamientos.fecha
+}
+
+export interface RankingEntrenamientoAnual {
+  userId: string;
+  mediaPlatos: number;
+  totalEntrenamientos: number;
+  mejorResultado: number;
+}

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, map } from 'rxjs';
-import { Entrenamiento, ResultadoEntrenamiento } from '../../../core/models/entrenamiento.model';
+import { Entrenamiento, ResultadoEntrenamiento, ResultadoEntrenamientoConFecha, RankingEntrenamientoAnual } from '../../../core/models/entrenamiento.model';
 import { supabase } from '../../../core/supabase/supabase.client';
 
 function toEntrenamiento(row: Record<string, unknown>): Entrenamiento {
@@ -83,5 +83,63 @@ export class EntrenamientoService {
       .from('resultados_entrenamiento')
       .upsert(rows, { onConflict: 'escuadra_id,user_id' });
     if (error) throw new Error('Error guardando resultados');
+  }
+
+  getByUser(userId: string, year: number): Observable<ResultadoEntrenamientoConFecha[]> {
+    const fromDate = `${year}-01-01`;
+    const toDate = `${year}-12-31`;
+    return from(
+      supabase
+        .from('resultados_entrenamiento')
+        .select('*, escuadras!inner(entrenamiento_id, entrenamientos!inner(fecha))')
+        .eq('user_id', userId)
+        .gte('escuadras.entrenamientos.fecha', fromDate)
+        .lte('escuadras.entrenamientos.fecha', toDate)
+    ).pipe(
+      map(({ data }) =>
+        (data ?? []).map((row: any) => ({
+          id: row['id'] as string,
+          escuadraId: row['escuadra_id'] as string,
+          entrenamientoId: row['escuadras']['entrenamiento_id'] as string,
+          userId: row['user_id'] as string,
+          puesto: row['puesto'] as number,
+          platosRotos: row['platos_rotos'] as number,
+          fecha: row['escuadras']['entrenamientos']['fecha'] as string,
+        })).sort((a: ResultadoEntrenamientoConFecha, b: ResultadoEntrenamientoConFecha) =>
+          b.fecha.localeCompare(a.fecha)
+        )
+      )
+    );
+  }
+
+  getRankingAnual(year: number): Observable<RankingEntrenamientoAnual[]> {
+    const fromDate = `${year}-01-01`;
+    const toDate = `${year}-12-31`;
+    return from(
+      supabase
+        .from('resultados_entrenamiento')
+        .select('user_id, platos_rotos, escuadras!inner(entrenamientos!inner(fecha))')
+        .gte('escuadras.entrenamientos.fecha', fromDate)
+        .lte('escuadras.entrenamientos.fecha', toDate)
+    ).pipe(
+      map(({ data }) => {
+        const map = new Map<string, { suma: number; count: number; mejor: number }>();
+        for (const row of (data ?? []) as any[]) {
+          const uid = row['user_id'] as string;
+          const platos = row['platos_rotos'] as number;
+          if (!map.has(uid)) map.set(uid, { suma: 0, count: 0, mejor: 0 });
+          const entry = map.get(uid)!;
+          entry.suma += platos;
+          entry.count += 1;
+          if (platos > entry.mejor) entry.mejor = platos;
+        }
+        return Array.from(map.entries()).map(([userId, v]) => ({
+          userId,
+          mediaPlatos: Math.round((v.suma / v.count) * 10) / 10,
+          totalEntrenamientos: v.count,
+          mejorResultado: v.mejor,
+        })).sort((a, b) => b.mediaPlatos - a.mediaPlatos);
+      })
+    );
   }
 }
