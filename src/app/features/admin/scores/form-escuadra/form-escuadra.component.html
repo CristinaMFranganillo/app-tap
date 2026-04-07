@@ -14,7 +14,7 @@
       <select [(ngModel)]="puestos[$index]" class="form-input-surface">
         <option value="">— Sin asignar —</option>
         @for (s of socios(); track s.id) {
-          <option [value]="s.id">{{ s.nombre }} {{ s.apellidos }} (#{{ s.numeroSocio }})</option>
+          <option [value]="s.id">{{ s.apellidos }}, {{ s.nombre }} (#{{ s.numeroSocio }})</option>
         }
       </select>
     </div>

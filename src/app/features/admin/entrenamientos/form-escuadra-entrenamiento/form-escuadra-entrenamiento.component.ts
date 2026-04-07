@@ -23,7 +23,10 @@ export class FormEscuadraEntrenamientoComponent {
 
   socios = toSignal(
     this.userService.getAll().pipe(
-      map(users => users.filter(u => u.activo && u.rol !== 'admin'))
+      map(users => users
+        .filter(u => u.activo && u.rol !== 'admin')
+        .sort((a, b) => `${a.apellidos} ${a.nombre}`.localeCompare(`${b.apellidos} ${b.nombre}`, 'es'))
+      )
     ),
     { initialValue: [] as User[] }
   );
