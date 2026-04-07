@@ -65,7 +65,7 @@
             <span class="socio-item__detail-label">Alta</span>
             <span class="socio-item__detail-value">{{ socio.fechaAlta | date:'dd/MM/yyyy' }}</span>
           </div>
-          @if (cuotasHistorial()[socio.id]?.length) {
+          @if (cuotasHistorial()[socio.id] && cuotasHistorial()[socio.id].length) {
             <div class="socio-item__detail-row socio-item__detail-row--header">
               <span class="socio-item__detail-label">Historial cuotas</span>
             </div>
