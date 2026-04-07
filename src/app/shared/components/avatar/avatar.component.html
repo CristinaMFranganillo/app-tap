@@ -8,11 +8,9 @@
   } @else {
     <div
       class="w-full h-full rounded-full bg-brand-yellow flex items-center justify-center"
-      [style.fontSize.px]="size * 0.35"
+      [style.fontSize.px]="size * 0.55"
     >
-      <span class="font-black text-brand-dark leading-none">
-        {{ nombre | iniciales: apellidos }}
-      </span>
+      <i class="bi bi-person-fill text-brand-dark leading-none"></i>
     </div>
   }
 </div>
