@@ -11,7 +11,6 @@
       <img [src]="preview()!" alt="Preview" class="avatar-editor__preview" />
     } @else {
       <i class="bi bi-camera-fill avatar-editor__icono"></i>
-      <span class="avatar-editor__hint">Toca para seleccionar</span>
     }
     <input
       type="file"
@@ -21,6 +20,9 @@
       (change)="onFileSelected($event)"
     />
   </label>
+  @if (!preview()) {
+    <span class="avatar-editor__hint">Toca para seleccionar</span>
+  }
 
   <div class="avatar-editor__actions">
     <button type="button" (click)="omitir()" class="btn-secondary">Ahora no</button>
