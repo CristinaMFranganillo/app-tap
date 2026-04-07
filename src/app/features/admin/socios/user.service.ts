@@ -22,6 +22,7 @@ function toUser(row: Record<string, unknown>): User {
     dni: (row['dni'] as string) ?? undefined,
     telefono: (row['telefono'] as string) ?? undefined,
     direccion: (row['direccion'] as string) ?? undefined,
+    localidad: (row['localidad'] as string) ?? '',
     cuotaPagada: cuota ? (cuota['pagada'] as boolean) : undefined,
     cuotaId: cuota ? (cuota['id'] as string) : undefined,
   };
@@ -75,6 +76,7 @@ export class UserService {
     if (data.dni !== undefined) payload['dni'] = data.dni;
     if (data.telefono !== undefined) payload['telefono'] = data.telefono;
     if (data.direccion !== undefined) payload['direccion'] = data.direccion;
+    if (data.localidad !== undefined) payload['localidad'] = data.localidad;
     if (data.email !== undefined) payload['email'] = data.email;
     const { error } = await supabase.from('profiles').update(payload).eq('id', id);
     if (error) throw new Error(error.message ?? 'Error al actualizar el perfil');
@@ -98,6 +100,7 @@ export class UserService {
     dni?: string;
     telefono?: string;
     direccion?: string;
+    localidad?: string;
   }): Promise<void> {
     const { error } = await supabase.functions.invoke('crear-usuario', { body: data });
     if (error) throw new Error('Error al crear el usuario.');

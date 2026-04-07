@@ -31,6 +31,7 @@ export class FormSocioComponent implements OnInit {
     dni:         ['', Validators.required],
     telefono:    ['', Validators.required],
     direccion:   [''],
+    localidad:   ['', Validators.required],
   });
 
   ngOnInit(): void {
@@ -62,6 +63,7 @@ export class FormSocioComponent implements OnInit {
           dni: val.dni || undefined,
           telefono: val.telefono || undefined,
           direccion: val.direccion || undefined,
+          localidad: val.localidad || undefined,
         });
       } else {
         await this.userService.crearEnAuth({
@@ -73,6 +75,7 @@ export class FormSocioComponent implements OnInit {
           dni: val.dni || undefined,
           telefono: val.telefono || undefined,
           direccion: val.direccion || undefined,
+          localidad: val.localidad || undefined,
         });
       }
       this.router.navigate(['/admin/socios']);

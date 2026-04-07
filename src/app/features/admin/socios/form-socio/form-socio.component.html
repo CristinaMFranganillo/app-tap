@@ -80,6 +80,14 @@
         <input formControlName="direccion" placeholder="Calle, número, ciudad" class="form-input-surface" />
       </div>
 
+      <div>
+        <label class="form-label">Localidad <span class="form-required">*</span></label>
+        <input formControlName="localidad" placeholder="Ciudad o localidad" class="form-input-surface" />
+        @if (form.get('localidad')?.invalid && form.get('localidad')?.touched) {
+          <p class="form-error">La localidad es obligatoria</p>
+        }
+      </div>
+
       <div class="form-socio__actions">
         <button type="button" (click)="cancel()" class="btn-secondary">Cancelar</button>
         <button type="submit" [disabled]="form.invalid || saving()" class="btn-primary">
