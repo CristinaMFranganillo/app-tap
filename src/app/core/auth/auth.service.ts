@@ -27,6 +27,11 @@ export class AuthService {
     });
   }
 
+  async reloadProfile(): Promise<void> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) await this.loadProfile(user.id);
+  }
+
   private async loadProfile(userId: string): Promise<void> {
     const { data } = await supabase
       .from('profiles')
