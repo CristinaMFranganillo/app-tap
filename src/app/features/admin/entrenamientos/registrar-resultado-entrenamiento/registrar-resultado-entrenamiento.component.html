@@ -1,42 +1,64 @@
 <div class="registrar-e">
 
-  @if (tirador(); as t) {
+  <!-- Header -->
+  <div class="page-header">
+    <button (click)="goBack()" class="registrar-e__back-btn">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <h2 class="registrar-e__title">Registrar escuadra</h2>
+  </div>
 
-    <!-- Header -->
-    <div class="page-header">
-      <button (click)="goBack()" class="registrar-e__back-btn">
-        <i class="bi bi-chevron-left"></i>
-      </button>
-      <div class="registrar-e__header-info">
-        <h2 class="registrar-e__nombre">{{ t.nombre }}</h2>
-        <p class="registrar-e__puesto">Puesto {{ t.puesto }}</p>
-      </div>
-      <span class="registrar-e__progreso">{{ tiradoreActual() + 1 }}/{{ session().length }}</span>
+  @if (session().length === 0) {
+    <div class="registrar-e__loading">
+      <p>Cargando tiradores...</p>
     </div>
+  } @else {
 
-    <!-- Contador -->
-    <div class="registrar-e__contador">
-      <span class="registrar-e__contador-num">{{ platosRotosActual() }}</span>
-      <span class="registrar-e__contador-de">/ 25 &nbsp;·&nbsp; {{ fallosActual() }} fallos</span>
-    </div>
-    <p class="registrar-e__instruccion">Pulsa los platos fallados</p>
+    <!-- Lista de tiradores tipo acordeón -->
+    <div class="registrar-e__lista">
+      @for (t of session(); track t.userId; let idx = $index) {
+        <div class="tirador-item" [class.tirador-item--abierto]="tiradorAbierto() === idx">
 
-    <!-- Cuadrícula 25 platos -->
-    <div class="platos-grid">
-      @for (i of indices; track i) {
-        <button
-          type="button"
-          (click)="togglePlato(i)"
-          class="plato-btn"
-          [class.plato-btn--roto]="t.platos[i]"
-          [class.plato-btn--fallo]="!t.platos[i]"
-        >
-          @if (t.platos[i]) {
-            {{ i + 1 }}
-          } @else {
-            <i class="bi bi-x-lg"></i>
+          <!-- Fila resumen (siempre visible) -->
+          <button type="button" class="tirador-item__fila" (click)="toggleTirador(idx)">
+            <span class="tirador-item__puesto">{{ t.puesto }}</span>
+            <span class="tirador-item__nombre">{{ t.nombre }}</span>
+            <span class="tirador-item__contador"
+              [class.tirador-item__contador--ok]="platosRotos(t) >= 20"
+              [class.tirador-item__contador--mal]="platosRotos(t) < 15">
+              {{ platosRotos(t) }}/25
+            </span>
+            <i class="bi tirador-item__chevron"
+              [class.bi-chevron-down]="tiradorAbierto() !== idx"
+              [class.bi-chevron-up]="tiradorAbierto() === idx">
+            </i>
+          </button>
+
+          <!-- Cuadrícula de platos (expandida) -->
+          @if (tiradorAbierto() === idx) {
+            <div class="tirador-item__grid-wrap">
+              <p class="tirador-item__fallos">{{ 25 - platosRotos(t) }} fallos</p>
+              <div class="platos-grid">
+                @for (i of indices; track i) {
+                  <button
+                    type="button"
+                    (click)="togglePlato(idx, i)"
+                    class="plato-btn"
+                    [class.plato-btn--roto]="t.platos[i]"
+                    [class.plato-btn--fallo]="!t.platos[i]"
+                  >
+                    @if (t.platos[i]) {
+                      {{ i + 1 }}
+                    } @else {
+                      <i class="bi bi-x-lg"></i>
+                    }
+                  </button>
+                }
+              </div>
+            </div>
           }
-        </button>
+
+        </div>
       }
     </div>
 
@@ -44,34 +66,16 @@
       <p class="registrar-e__error">{{ error() }}</p>
     }
 
-    <!-- Navegación -->
-    <div class="registrar-e__nav">
-      @if (tiradoreActual() > 0) {
-        <button type="button" (click)="anterior()" class="btn-secondary registrar-e__nav-btn">
-          <i class="bi bi-chevron-left"></i> Anterior
-        </button>
-      } @else {
-        <span></span>
-      }
+    <!-- Botón guardar -->
+    <button
+      type="button"
+      (click)="guardar()"
+      [disabled]="saving()"
+      class="btn-primary registrar-e__btn-guardar"
+    >
+      <i class="bi bi-check-lg"></i>
+      {{ saving() ? 'Guardando...' : 'Guardar escuadra' }}
+    </button>
 
-      <button
-        type="button"
-        (click)="siguiente()"
-        [disabled]="saving()"
-        class="btn-primary registrar-e__nav-btn"
-      >
-        @if (esUltimo()) {
-          {{ saving() ? 'Guardando...' : 'Guardar' }}
-        } @else {
-          Siguiente <i class="bi bi-chevron-right"></i>
-        }
-      </button>
-    </div>
-
-  } @else {
-    <div class="registrar-e__loading">
-      <p>Cargando tiradores...</p>
-    </div>
   }
-
 </div>

@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
@@ -31,6 +31,7 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
 
   private escuadraId = this.route.snapshot.paramMap.get('escuadraId')!;
   private entrenamientoId = this.route.snapshot.paramMap.get('entrenamientoId')!;
+  private fechaDia = this.route.snapshot.queryParamMap.get('fecha');
 
   private socios = toSignal(this.userService.getAll(), { initialValue: [] });
   private tiradores = toSignal(
@@ -39,7 +40,7 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
   );
 
   session = signal<TiradorSession[]>([]);
-  tiradoreActual = signal(0);
+  tiradorAbierto = signal<number | null>(null);  // índice del tirador expandido
   saving = signal(false);
   error = signal('');
 
@@ -57,10 +58,12 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
             userId: t.userId,
             nombre: socio ? `${socio.nombre} ${socio.apellidos}` : t.userId,
             puesto: t.puesto,
-            platos: Array(25).fill(true),  // true = roto, false = fallo
+            platos: Array(25).fill(true),
           };
         })
       );
+      // Abrir el primero por defecto
+      this.tiradorAbierto.set(0);
     };
 
     init();
@@ -72,46 +75,23 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
     }
   }
 
-  tirador(): TiradorSession | null {
-    return this.session()[this.tiradoreActual()] ?? null;
+  toggleTirador(idx: number): void {
+    this.tiradorAbierto.update(actual => actual === idx ? null : idx);
   }
 
-  platosRotosActual(): number {
-    return this.tirador()?.platos.filter(Boolean).length ?? 0;
+  platosRotos(t: TiradorSession): number {
+    return t.platos.filter(Boolean).length;
   }
 
-  fallosActual(): number {
-    return this.tirador()?.platos.filter(v => !v).length ?? 0;
-  }
-
-  esUltimo(): boolean {
-    return this.tiradoreActual() === this.session().length - 1;
-  }
-
-  togglePlato(i: number): void {
-    this.session.update(session => {
-      const idx = this.tiradoreActual();
-      return session.map((t, ti) => {
-        if (ti !== idx) return t;
+  togglePlato(tiradorIdx: number, platoIdx: number): void {
+    this.session.update(session =>
+      session.map((t, ti) => {
+        if (ti !== tiradorIdx) return t;
         const platos = [...t.platos];
-        platos[i] = !platos[i];
+        platos[platoIdx] = !platos[platoIdx];
         return { ...t, platos };
-      });
-    });
-  }
-
-  siguiente(): void {
-    if (this.esUltimo()) {
-      this.guardar();
-    } else {
-      this.tiradoreActual.update(i => i + 1);
-    }
-  }
-
-  anterior(): void {
-    if (this.tiradoreActual() > 0) {
-      this.tiradoreActual.update(i => i - 1);
-    }
+      })
+    );
   }
 
   async guardar(): Promise<void> {
@@ -129,10 +109,11 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
         })),
         user.id
       );
+      const extras = this.fechaDia ? { queryParams: { fecha: this.fechaDia } } : {};
       this.router.navigate([
         '/admin/entrenamientos', this.entrenamientoId,
         'escuadra', this.escuadraId, 'resumen',
-      ]);
+      ], extras);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error al guardar');
       this.saving.set(false);
@@ -140,6 +121,10 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/admin/entrenamientos', this.entrenamientoId], { queryParams: { modo: 'editar' } });
+    if (this.fechaDia) {
+      this.router.navigate(['/admin/entrenamientos/dia', this.fechaDia], { queryParams: { modo: 'editar' } });
+    } else {
+      this.router.navigate(['/admin/entrenamientos', this.entrenamientoId], { queryParams: { modo: 'editar' } });
+    }
   }
 }

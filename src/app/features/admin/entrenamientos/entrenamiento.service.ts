@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, map } from 'rxjs';
-import { Entrenamiento, ResultadoEntrenamiento, ResultadoEntrenamientoConFecha, RankingEntrenamientoAnual } from '../../../core/models/entrenamiento.model';
+import { Entrenamiento, EntrenamientoDia, ResultadoEntrenamiento, ResultadoEntrenamientoConFecha, RankingEntrenamientoAnual } from '../../../core/models/entrenamiento.model';
 import { supabase } from '../../../core/supabase/supabase.client';
 
 function toEntrenamiento(row: Record<string, unknown>): Entrenamiento {
@@ -32,6 +32,50 @@ export class EntrenamientoService {
         .from('entrenamientos')
         .select('*, escuadras(id, escuadra_tiradores(count))')
         .order('fecha', { ascending: false })
+    ).pipe(
+      map(({ data }) =>
+        (data ?? []).map(row => {
+          const escuadras = (row as any).escuadras ?? [];
+          const numTiradores = escuadras.reduce(
+            (sum: number, e: any) => sum + (e.escuadra_tiradores?.[0]?.count ?? 0),
+            0
+          );
+          return {
+            ...toEntrenamiento(row as Record<string, unknown>),
+            numEscuadras: escuadras.length,
+            numTiradores,
+          };
+        })
+      )
+    );
+  }
+
+  getAllAgrupado(): Observable<EntrenamientoDia[]> {
+    return this.getAll().pipe(
+      map(lista => {
+        const mapaFecha = new Map<string, EntrenamientoDia>();
+        for (const e of lista) {
+          if (!mapaFecha.has(e.fecha)) {
+            mapaFecha.set(e.fecha, { fecha: e.fecha, ids: [], numEscuadras: 0, numTiradores: 0 });
+          }
+          const dia = mapaFecha.get(e.fecha)!;
+          dia.ids.push(e.id);
+          dia.numEscuadras += e.numEscuadras ?? 0;
+          dia.numTiradores += e.numTiradores ?? 0;
+        }
+        return Array.from(mapaFecha.values())
+          .sort((a, b) => b.fecha.localeCompare(a.fecha));
+      })
+    );
+  }
+
+  getByFecha(fecha: string): Observable<Entrenamiento[]> {
+    return from(
+      supabase
+        .from('entrenamientos')
+        .select('*, escuadras(id, escuadra_tiradores(count))')
+        .eq('fecha', fecha)
+        .order('created_at')
     ).pipe(
       map(({ data }) =>
         (data ?? []).map(row => {

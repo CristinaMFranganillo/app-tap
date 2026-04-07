@@ -25,6 +25,14 @@ export interface ResultadoEntrenamientoConFecha {
   fecha: string;  // YYYY-MM-DD, de entrenamientos.fecha
 }
 
+// Agrupación por fecha para la tabla del admin
+export interface EntrenamientoDia {
+  fecha: string;         // 'YYYY-MM-DD' — clave única de la fila
+  ids: string[];         // IDs de todos los entrenamientos de ese día
+  numEscuadras: number;
+  numTiradores: number;
+}
+
 export interface RankingEntrenamientoAnual {
   userId: string;
   mediaPlatos: number;

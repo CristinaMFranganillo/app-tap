@@ -86,6 +86,15 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./scores/registrar-resultado/registrar-resultado.component').then(m => m.RegistrarResultadoComponent),
   },
+  // Entrenamientos — vista agrupada por día
+  {
+    path: 'entrenamientos/dia/:fecha',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./entrenamientos/detalle-dia-entrenamiento/detalle-dia-entrenamiento.component')
+        .then(m => m.DetalleDiaEntrenamientoComponent),
+  },
   // Entrenamientos
   {
     path: 'entrenamientos/nuevo',

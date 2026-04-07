@@ -2,59 +2,86 @@
   @apply p-3 flex flex-col gap-4;
 
   &__back-btn { @apply text-gray-400 text-[15px]; }
-
-  &__header-info { @apply flex-1 min-w-0; }
-  &__nombre { @apply text-[18px] font-extrabold text-secondary truncate; }
-  &__puesto { @apply text-xs text-neutral-300 font-medium; }
-  &__progreso { @apply text-xs font-bold text-neutral-300 flex-shrink-0; }
-
-  &__contador {
-    @apply flex items-baseline gap-2 justify-center py-2;
-  }
-
-  &__contador-num {
-    @apply text-[48px] font-black text-secondary leading-none;
-  }
-
-  &__contador-de {
-    @apply text-sm text-neutral-300 font-medium;
-  }
-
-  &__instruccion {
-    @apply text-center text-xs text-neutral-400 font-medium -mt-2;
-  }
-
-  &__error { @apply text-danger text-sm font-semibold text-center; }
-
-  &__nav {
-    @apply flex items-center justify-between gap-3 pt-2;
-  }
+  &__title { @apply text-[18px] font-extrabold text-secondary; }
 
   &__loading {
     @apply flex items-center justify-center py-16 text-neutral-300 text-sm;
+  }
+
+  &__lista {
+    @apply flex flex-col rounded-card border border-neutral-100 overflow-hidden bg-white;
+  }
+
+  &__error {
+    @apply text-danger text-sm font-semibold text-center;
+  }
+
+  &__btn-guardar {
+    @apply mt-1;
+  }
+}
+
+// ── Tirador acordeón ───────────────────────────────────────────
+
+.tirador-item {
+  @apply border-b border-neutral-100 last:border-0;
+
+  &--abierto {
+    @apply bg-neutral-50;
+  }
+
+  &__fila {
+    @apply flex items-center gap-3 w-full px-4 py-3
+           bg-transparent border-0 text-left cursor-pointer
+           active:bg-neutral-100 transition-colors;
+  }
+
+  &__puesto {
+    @apply w-5 text-center text-xs font-bold text-neutral-300 flex-shrink-0;
+  }
+
+  &__nombre {
+    @apply flex-1 text-sm font-bold text-secondary truncate;
+  }
+
+  &__contador {
+    @apply text-sm font-extrabold text-secondary flex-shrink-0;
+
+    &--ok  { @apply text-success; }
+    &--mal { @apply text-danger; }
+  }
+
+  &__chevron {
+    @apply text-neutral-300 text-[13px] flex-shrink-0 ml-1;
+  }
+
+  &__grid-wrap {
+    @apply px-4 pb-4 flex flex-col gap-2;
+  }
+
+  &__fallos {
+    @apply text-xs font-semibold text-neutral-400 text-right;
   }
 }
 
 // ── Cuadrícula de platos ───────────────────────────────────────
 
 .platos-grid {
-  @apply grid gap-2;
+  @apply grid gap-1.5;
   grid-template-columns: repeat(5, 1fr);
 }
 
 .plato-btn {
-  @apply w-full h-12 rounded-[10px] bg-neutral-100 text-neutral-400
-         font-bold text-base leading-none
+  @apply w-full h-11 rounded-[8px]
+         font-bold text-sm leading-none
          flex items-center justify-center
          active:scale-95 transition-all duration-fast
          select-none;
 
-  // Estado por defecto: roto (amarillo)
   &--roto {
     @apply bg-primary text-secondary shadow-sm;
   }
 
-  // Estado marcado: fallo (gris claro, X roja)
   &--fallo {
     @apply bg-neutral-100 text-danger;
   }

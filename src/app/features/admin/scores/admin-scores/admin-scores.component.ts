@@ -7,7 +7,7 @@ import { CompeticionService } from '../../../scores/competicion.service';
 import { EntrenamientoService } from '../../entrenamientos/entrenamiento.service';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { Competicion } from '../../../../core/models/competicion.model';
-import { Entrenamiento } from '../../../../core/models/entrenamiento.model';
+import { EntrenamientoDia } from '../../../../core/models/entrenamiento.model';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -24,7 +24,7 @@ export class AdminScoresComponent {
   private router = inject(Router);
 
   competiciones = toSignal(this.competicionService.getAll(), { initialValue: [] as Competicion[] });
-  entrenamientos = toSignal(this.entrenamientoService.getAll(), { initialValue: [] as Entrenamiento[] });
+  entrenamientos = toSignal(this.entrenamientoService.getAllAgrupado(), { initialValue: [] as EntrenamientoDia[] });
 
   // Inline date picker state
   mostrarPicker = signal(false);
@@ -58,12 +58,12 @@ export class AdminScoresComponent {
     }
   }
 
-  verEntrenamiento(id: string): void {
-    this.router.navigate(['/admin/entrenamientos', id]);
+  verEntrenamiento(fecha: string): void {
+    this.router.navigate(['/admin/entrenamientos/dia', fecha]);
   }
 
-  editarEntrenamiento(id: string): void {
-    this.router.navigate(['/admin/entrenamientos', id], { queryParams: { modo: 'editar' } });
+  editarEntrenamiento(fecha: string): void {
+    this.router.navigate(['/admin/entrenamientos/dia', fecha], { queryParams: { modo: 'editar' } });
   }
 
   nuevaCompeticion(): void {

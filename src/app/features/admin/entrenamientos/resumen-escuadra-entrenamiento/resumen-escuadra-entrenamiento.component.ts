@@ -28,6 +28,7 @@ export class ResumenEscuadraEntrenamientoComponent implements OnInit {
 
   private escuadraId = this.route.snapshot.paramMap.get('escuadraId')!;
   private entrenamientoId = this.route.snapshot.paramMap.get('entrenamientoId')!;
+  private fechaDia = this.route.snapshot.queryParamMap.get('fecha');
 
   filas = signal<FilaResumen[]>([]);
   cargando = signal(true);
@@ -61,6 +62,10 @@ export class ResumenEscuadraEntrenamientoComponent implements OnInit {
   }
 
   volverEntrenamiento(): void {
-    this.router.navigate(['/admin/entrenamientos', this.entrenamientoId], { queryParams: { modo: 'editar' } });
+    if (this.fechaDia) {
+      this.router.navigate(['/admin/entrenamientos/dia', this.fechaDia], { queryParams: { modo: 'editar' } });
+    } else {
+      this.router.navigate(['/admin/entrenamientos', this.entrenamientoId], { queryParams: { modo: 'editar' } });
+    }
   }
 }
