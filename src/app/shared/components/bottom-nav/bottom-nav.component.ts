@@ -11,7 +11,7 @@ interface NavItem {
 const SOCIO_NAV: NavItem[] = [
   { route: '/',          icon: 'bi-house-fill',  label: 'Inicio'   },
   { route: '/noticias',  icon: 'bi-newspaper',   label: 'Noticias' },
-  { route: '/scores',    icon: 'bi-trophy',      label: 'Torneos'  },
+  { route: '/scores',    icon: 'bi-bullseye',    label: 'Entrena'  },
   { route: '/perfil',    icon: 'bi-person',      label: 'Perfil'   },
 ];
 
@@ -19,7 +19,7 @@ const ADMIN_NAV: NavItem[] = [
   { route: '/',                icon: 'bi-house-fill',  label: 'Inicio'   },
   { route: '/admin/socios',    icon: 'bi-people-fill', label: 'Socios'   },
   { route: '/admin/noticias',  icon: 'bi-newspaper',   label: 'Noticias' },
-  { route: '/admin/scores',    icon: 'bi-trophy',      label: 'Torneos'  },
+  { route: '/admin/scores',    icon: 'bi-bullseye',    label: 'Entrena'  },
   { route: '/perfil',          icon: 'bi-gear',        label: 'Config'   },
 ];
 
