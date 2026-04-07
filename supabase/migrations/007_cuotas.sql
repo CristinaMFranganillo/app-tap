@@ -23,28 +23,39 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_temporadas_activa
   ON temporadas (activa)
   WHERE activa = true;
 
--- RLS: los admin pueden leer y escribir todo
+-- Índice en cuotas.temporada_id
+CREATE INDEX IF NOT EXISTS idx_cuotas_temporada ON cuotas (temporada_id);
+
+-- RLS
 ALTER TABLE temporadas ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cuotas ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Admin full access temporadas"
-  ON temporadas FOR ALL
+-- Temporadas: todos los autenticados pueden leer
+CREATE POLICY "Todos ven temporadas"
+  ON temporadas FOR SELECT
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-        AND profiles.rol IN ('admin', 'moderador')
-    )
-  );
+  USING (true);
 
-CREATE POLICY "Admin full access cuotas"
-  ON cuotas FOR ALL
+-- Temporadas: solo admin/moderador pueden escribir
+CREATE POLICY "temporadas_insert" ON temporadas FOR INSERT TO authenticated
+  WITH CHECK (get_my_rol() IN ('admin', 'moderador'));
+CREATE POLICY "temporadas_update" ON temporadas FOR UPDATE TO authenticated
+  USING (get_my_rol() IN ('admin', 'moderador'))
+  WITH CHECK (get_my_rol() IN ('admin', 'moderador'));
+CREATE POLICY "temporadas_delete" ON temporadas FOR DELETE TO authenticated
+  USING (get_my_rol() IN ('admin', 'moderador'));
+
+-- Cuotas: socio puede leer su propia cuota
+CREATE POLICY "Socio lee su propia cuota"
+  ON cuotas FOR SELECT
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM profiles
-      WHERE profiles.id = auth.uid()
-        AND profiles.rol IN ('admin', 'moderador')
-    )
-  );
+  USING (user_id = auth.uid());
+
+-- Cuotas: admin/moderador pueden insertar, actualizar y borrar
+CREATE POLICY "cuotas_insert" ON cuotas FOR INSERT TO authenticated
+  WITH CHECK (get_my_rol() IN ('admin', 'moderador'));
+CREATE POLICY "cuotas_update" ON cuotas FOR UPDATE TO authenticated
+  USING (get_my_rol() IN ('admin', 'moderador'))
+  WITH CHECK (get_my_rol() IN ('admin', 'moderador'));
+CREATE POLICY "cuotas_delete" ON cuotas FOR DELETE TO authenticated
+  USING (get_my_rol() IN ('admin', 'moderador'));
