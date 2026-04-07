@@ -15,7 +15,7 @@
           <button (click)="editar(n.id)" class="noticia-item__btn-edit">
             <i class="bi bi-pencil-fill noticia-item__icon"></i>
           </button>
-          <button (click)="eliminar(n.id)" class="noticia-item__btn-delete">
+          <button (click)="confirmarEliminar(n.id)" class="noticia-item__btn-delete">
             <i class="bi bi-trash-fill noticia-item__icon"></i>
           </button>
         }
@@ -43,7 +43,7 @@
           <button (click)="editar(n.id)" class="noticia-item__btn-edit">
             <i class="bi bi-pencil-fill noticia-item__icon"></i>
           </button>
-          <button (click)="eliminar(n.id)" class="noticia-item__btn-delete">
+          <button (click)="confirmarEliminar(n.id)" class="noticia-item__btn-delete">
             <i class="bi bi-trash-fill noticia-item__icon"></i>
           </button>
         }
@@ -59,3 +59,13 @@
 <button (click)="crear()" class="fab">
   <i class="bi bi-plus-lg fab-icon"></i>
 </button>
+
+@if (pendingDeleteId()) {
+  <app-confirm-dialog
+    titulo="Eliminar noticia"
+    mensaje="¿Seguro que quieres eliminar esta noticia? Esta acción no se puede deshacer."
+    labelConfirmar="Eliminar"
+    (confirmado)="eliminar()"
+    (cancelado)="cancelarEliminar()"
+  />
+}

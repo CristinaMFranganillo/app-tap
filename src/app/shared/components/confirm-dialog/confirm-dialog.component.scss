@@ -1,0 +1,115 @@
+// ── Backdrop ──────────────────────────────────────────────────────────────────
+
+.cd-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 100;
+  animation: cd-fade-in 160ms ease both;
+}
+
+// ── Sheet (bottom sheet) ──────────────────────────────────────────────────────
+
+.cd-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 101;
+  background: #ffffff;
+  border-radius: 20px 20px 0 0;
+  padding: 28px 24px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: cd-slide-up 220ms cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
+// ── Icono ─────────────────────────────────────────────────────────────────────
+
+.cd-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: #FEE2E2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.cd-icon {
+  font-size: 22px;
+  color: #DC2626;
+}
+
+// ── Tipografía ────────────────────────────────────────────────────────────────
+
+.cd-titulo {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #1A1A1A;
+  text-align: center;
+  margin: 0;
+}
+
+.cd-mensaje {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6B7280;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0 0 8px;
+}
+
+// ── Botones ───────────────────────────────────────────────────────────────────
+
+.cd-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.cd-btn {
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: transform 100ms ease, opacity 100ms ease;
+
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+
+  &--confirm {
+    background: #EF4444;
+    color: #ffffff;
+  }
+
+  &--cancel {
+    background: #F5F5F5;
+    color: #374151;
+  }
+}
+
+// ── Animaciones ───────────────────────────────────────────────────────────────
+
+@keyframes cd-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes cd-slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}

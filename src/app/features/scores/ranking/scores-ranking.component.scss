@@ -23,7 +23,7 @@
 }
 
 .ranking-chip {
-  @apply flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition-colors;
+  @apply flex-shrink-0 px-3 py-1.5 rounded-full text-[13px] font-bold transition-colors;
 
   &--active {
     @apply bg-brand-dark text-white;
@@ -67,5 +67,5 @@
 }
 
 .ranking-row__label {
-  @apply text-[10px] font-bold text-gray-300 uppercase tracking-wide;
+  @apply text-[11px] font-bold text-gray-400 uppercase tracking-wide;
 }

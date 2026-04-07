@@ -29,7 +29,7 @@
           <button (click)="goToEdit(socio.id)" class="socio-item__btn-edit">
             <i class="bi bi-pencil-fill socio-item__btn-icon"></i>
           </button>
-          <button (click)="eliminar(socio.id)" class="socio-item__btn-delete">
+          <button (click)="confirmarEliminar(socio.id)" class="socio-item__btn-delete">
             <i class="bi bi-trash-fill socio-item__btn-icon"></i>
           </button>
         </div>
@@ -67,3 +67,13 @@
 <button (click)="goToCreate()" class="fab">
   <i class="bi bi-plus-lg fab-icon"></i>
 </button>
+
+@if (pendingDeleteId()) {
+  <app-confirm-dialog
+    titulo="Eliminar socio"
+    mensaje="¿Seguro que quieres eliminar este socio? Esta acción no se puede deshacer."
+    labelConfirmar="Eliminar"
+    (confirmado)="eliminar()"
+    (cancelado)="cancelarEliminar()"
+  />
+}

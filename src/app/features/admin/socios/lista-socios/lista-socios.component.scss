@@ -31,7 +31,7 @@
 }
 
 .socio-item__meta {
-  @apply text-[11px] text-gray-400 font-medium truncate;
+  @apply text-[12px] text-gray-400 font-medium truncate;
 }
 
 .socio-item__actions {
@@ -43,7 +43,7 @@
 }
 
 .socio-item__numero {
-  @apply text-[11px] text-gray-300 font-semibold;
+  @apply text-[12px] text-gray-400 font-semibold;
 }
 
 .socio-item__btn-info {
@@ -75,11 +75,11 @@
 }
 
 .socio-item__detail-label {
-  @apply text-[11px] font-semibold text-gray-400 uppercase tracking-wide;
+  @apply text-[12px] font-semibold text-gray-400 uppercase tracking-wide;
 }
 
 .socio-item__detail-value {
-  @apply text-[12px] font-medium text-brand-dark;
+  @apply text-[13px] font-medium text-brand-dark;
 }
 
 .lista-socios__empty {
@@ -91,10 +91,10 @@
 }
 
 .section-title {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
+  letter-spacing: 1px;
   margin-bottom: 10px;
   display: flex;
   align-items: center;

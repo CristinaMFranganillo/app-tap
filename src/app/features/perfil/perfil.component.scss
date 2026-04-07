@@ -4,7 +4,7 @@
 
 .perfil-hero__cambiar-foto {
   @apply flex items-center gap-1 mt-1;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: #F5E000;
   background: none;
@@ -22,7 +22,7 @@
 }
 
 .perfil-hero__rol {
-  @apply text-brand-yellow font-bold text-[11px] uppercase tracking-wider;
+  @apply text-brand-yellow font-bold text-[12px] uppercase tracking-wider;
 }
 
 .perfil-stats {
@@ -41,7 +41,7 @@
   }
 
   &__label {
-    @apply text-[10px] font-bold text-gray-300 uppercase tracking-wide;
+    @apply text-[12px] font-bold text-gray-400 uppercase tracking-wide;
   }
 }
 
@@ -110,7 +110,7 @@
   @apply flex flex-col gap-2;
 
   &__titulo {
-    @apply text-xs font-bold text-neutral-400 uppercase tracking-wider;
+    @apply text-sm font-bold text-neutral-400 uppercase tracking-wider;
   }
 
   &__svg {
@@ -119,7 +119,7 @@
   }
 
   &__leyenda {
-    @apply flex justify-between text-[10px] text-neutral-300 font-medium px-1;
+    @apply flex justify-between text-[12px] text-neutral-400 font-medium px-1;
   }
 }
 

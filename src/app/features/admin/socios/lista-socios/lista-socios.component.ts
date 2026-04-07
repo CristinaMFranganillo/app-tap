@@ -5,13 +5,14 @@ import { TitleCasePipe, DatePipe } from '@angular/common';
 import { Subject, switchMap, startWith } from 'rxjs';
 import { UserService } from '../user.service';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { User } from '../../../../core/models/user.model';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-lista-socios',
   standalone: true,
-  imports: [FormsModule, TitleCasePipe, DatePipe, AvatarComponent],
+  imports: [FormsModule, TitleCasePipe, DatePipe, AvatarComponent, ConfirmDialogComponent],
   templateUrl: './lista-socios.component.html',
   styleUrl: './lista-socios.component.scss',
 })
@@ -21,6 +22,7 @@ export class ListaSociosComponent {
 
   searchTerm = signal('');
   expandedId = signal<string | null>(null);
+  pendingDeleteId = signal<string | null>(null);
   private refresh$ = new Subject<void>();
 
   private socios = toSignal(
@@ -56,9 +58,19 @@ export class ListaSociosComponent {
     this.router.navigate(['/admin/socios', id]);
   }
 
-  async eliminar(id: string): Promise<void> {
-    if (!confirm('¿Eliminar este socio? Esta acción no se puede deshacer.')) return;
+  confirmarEliminar(id: string): void {
+    this.pendingDeleteId.set(id);
+  }
+
+  async eliminar(): Promise<void> {
+    const id = this.pendingDeleteId();
+    if (!id) return;
+    this.pendingDeleteId.set(null);
     await this.userService.eliminar(id);
     this.refresh$.next();
+  }
+
+  cancelarEliminar(): void {
+    this.pendingDeleteId.set(null);
   }
 }

@@ -59,7 +59,7 @@
 }
 
 .admin-scores__empty-subtitle {
-  @apply text-xs text-neutral-300 mt-1;
+  @apply text-sm text-neutral-400 mt-1;
 }
 
 .admin-scores__empty-text {
@@ -73,7 +73,7 @@
 }
 
 .admin-scores__picker-error {
-  @apply text-danger text-xs font-semibold;
+  @apply text-danger text-sm font-semibold;
 }
 
 .admin-scores__picker-actions {
@@ -90,7 +90,7 @@
   }
 
   &__th {
-    @apply text-[11px] font-black uppercase tracking-widest text-neutral-400;
+    @apply text-[12px] font-black uppercase tracking-widest text-neutral-400;
 
     &--fecha   { @apply flex-1; }
     &--num     { @apply w-10 text-center; }

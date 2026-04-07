@@ -10,7 +10,7 @@
   }
 
   &__badge {
-    @apply inline-flex items-center gap-1 text-[11px] font-bold
+    @apply inline-flex items-center gap-1 text-[12px] font-bold
            uppercase tracking-wide px-2 py-0.5 rounded-full;
 
     &--entrenamiento {
@@ -23,7 +23,7 @@
   }
 
   &__fecha {
-    @apply text-xs text-neutral-300 font-medium;
+    @apply text-sm text-neutral-400 font-medium;
   }
 
   &__titulo {
@@ -51,6 +51,6 @@
   }
 
   &__pct {
-    @apply text-xs font-medium text-neutral-300;
+    @apply text-sm font-medium text-neutral-400;
   }
 }

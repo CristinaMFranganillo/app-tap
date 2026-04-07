@@ -80,7 +80,7 @@
 
   &__record-fecha {
     color: #6B7280;
-    font-size: 11px;
+    font-size: 12px;
   }
 
   // ── Ranking local ─────────────────────────────────────────────────
@@ -90,10 +90,10 @@
   }
 
   &__ranking-titulo {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     color: #6B7280;
     margin: 0 0 4px 0;
 
@@ -112,9 +112,9 @@
   }
 
   &__ranking-pos {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 900;
-    color: #6B7280;
+    color: #9CA3AF;
     width: 14px;
     text-align: center;
   }
@@ -126,13 +126,13 @@
   }
 
   &__ranking-pct {
-    font-size: 11px;
+    font-size: 12px;
     color: #9CA3AF;
   }
 
   &__ranking-fecha {
-    font-size: 10px;
-    color: #4B5563;
+    font-size: 11px;
+    color: #6B7280;
   }
 
   // ── Cuenta atrás ─────────────────────────────────────────────────
@@ -183,11 +183,11 @@
   }
 
   &__hud-label {
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #4B5563;
+    letter-spacing: 0.06em;
+    color: #6B7280;
   }
 
   // ── Combo / racha ─────────────────────────────────────────────────
@@ -258,11 +258,11 @@
   }
 
   &__precision {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     color: #6B7280;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     margin: 0;
   }
 
@@ -297,10 +297,10 @@
   }
 
   &__ranking-titulo {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     color: #6B7280;
     margin: 0 0 4px;
 
@@ -321,9 +321,9 @@
   }
 
   &__ranking-pos {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 800;
-    color: #4B5563;
+    color: #6B7280;
     width: 14px;
     text-align: center;
     flex-shrink: 0;
@@ -348,22 +348,22 @@
   }
 
   &__ranking-pct {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
-    color: #4B5563;
+    color: #6B7280;
     width: 32px;
     text-align: right;
     flex-shrink: 0;
   }
 
   &__ranking-fecha {
-    font-size: 10px;
-    color: #4B5563;
+    font-size: 11px;
+    color: #6B7280;
     flex-shrink: 0;
   }
 
   &__record-hint {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 600;
     color: #6B7280;
     text-align: center;

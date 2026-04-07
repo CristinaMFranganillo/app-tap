@@ -137,7 +137,7 @@
   }
 
   .form-error {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     color: #EF4444;
     margin-top: 4px;
@@ -228,7 +228,7 @@
     }
 
     &__text {
-      @apply text-xs font-bold text-neutral-300 uppercase tracking-wider;
+      @apply text-sm font-bold text-neutral-300 uppercase tracking-wider;
     }
   }
 
@@ -236,7 +236,7 @@
 
   .badge {
     @apply inline-flex items-center px-1.5 py-0.5 rounded-badge
-           text-xs font-black uppercase tracking-wide;
+           text-sm font-black uppercase tracking-wide;
 
     &--primary {
       @apply bg-primary text-secondary;
