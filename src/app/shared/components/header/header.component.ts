@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -15,10 +15,16 @@ export class HeaderComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
   readonly currentUser$ = this.auth.currentUser$;
-  menuAbierto = signal(false);
+  menuAbierto      = signal(false);
+  cambiarPassword  = output<void>();
 
   toggleMenu(): void {
     this.menuAbierto.update(v => !v);
+  }
+
+  onCambiarPassword(): void {
+    this.menuAbierto.set(false);
+    this.cambiarPassword.emit();
   }
 
   logout(): void {

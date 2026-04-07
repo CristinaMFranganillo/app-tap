@@ -15,6 +15,7 @@ import { AuthService } from '../../core/auth/auth.service';
 export class ShellComponent implements OnInit {
   private auth = inject(AuthService);
   mostrarCambioPassword = signal(false);
+  cambioPasswordManual  = signal(false);
 
   ngOnInit(): void {
     if (this.auth.currentUser?.firstLogin) {
@@ -24,5 +25,10 @@ export class ShellComponent implements OnInit {
 
   onPasswordCerrado(): void {
     this.mostrarCambioPassword.set(false);
+    this.cambioPasswordManual.set(false);
+  }
+
+  abrirCambioPassword(): void {
+    this.cambioPasswordManual.set(true);
   }
 }

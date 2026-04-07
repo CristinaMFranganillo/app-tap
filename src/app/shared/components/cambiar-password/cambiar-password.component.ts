@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserService } from '../../../features/admin/socios/user.service';
@@ -17,7 +17,8 @@ export class CambiarPasswordComponent {
   private auth = inject(AuthService);
   private userService = inject(UserService);
 
-  cerrar = output<void>();
+  cerrar    = output<void>();
+  soloPassword = input(false);  // true = no muestra paso de foto
 
   fase    = signal<'password' | 'avatar'>('password');
   saving  = signal(false);
@@ -40,7 +41,11 @@ export class CambiarPasswordComponent {
       const { error } = await supabase.auth.updateUser({ password: password! });
       if (error) throw new Error(error.message);
       await this.marcarLoginDone();
-      this.fase.set('avatar');
+      if (this.soloPassword()) {
+        this.cerrar.emit();
+      } else {
+        this.fase.set('avatar');
+      }
     } catch (err: unknown) {
       this.error.set(err instanceof Error ? err.message : 'Error al cambiar la contraseña.');
     } finally {

@@ -26,6 +26,10 @@
       <div class="header-overlay" (click)="toggleMenu()"></div>
 
       <div class="header-menu">
+        <button (click)="onCambiarPassword()" class="header-menu__item">
+          <i class="bi bi-key"></i>
+          Cambiar contraseña
+        </button>
         <button (click)="logout()" class="header-menu__item">
           <i class="bi bi-box-arrow-right"></i>
           Cerrar sesión

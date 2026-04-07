@@ -1,4 +1,4 @@
-<app-header />
+<app-header (cambiarPassword)="abrirCambioPassword()" />
 <main class="shell-main">
   <router-outlet />
 </main>
@@ -6,4 +6,8 @@
 
 @if (mostrarCambioPassword()) {
   <app-cambiar-password (cerrar)="onPasswordCerrado()" />
+}
+
+@if (cambioPasswordManual()) {
+  <app-cambiar-password [soloPassword]="true" (cerrar)="onPasswordCerrado()" />
 }
