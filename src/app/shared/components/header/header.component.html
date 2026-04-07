@@ -10,10 +10,27 @@
       <p class="text-gray-400 font-medium text-[11px] uppercase tracking-widest">San Isidro</p>
     </div>
   </a>
-  <app-avatar
-    [nombre]="(currentUser$ | async)?.nombre ?? ''"
-    [apellidos]="(currentUser$ | async)?.apellidos ?? ''"
-    [avatarUrl]="(currentUser$ | async)?.avatarUrl"
-    [size]="30"
-  />
+
+  <div class="header-avatar-wrap">
+    <button (click)="toggleMenu()" class="header-avatar-wrap__btn">
+      <app-avatar
+        [nombre]="(currentUser$ | async)?.nombre ?? ''"
+        [apellidos]="(currentUser$ | async)?.apellidos ?? ''"
+        [avatarUrl]="(currentUser$ | async)?.avatarUrl"
+        [size]="30"
+      />
+    </button>
+
+    @if (menuAbierto()) {
+      <!-- Overlay para cerrar al pulsar fuera -->
+      <div class="header-overlay" (click)="toggleMenu()"></div>
+
+      <div class="header-menu">
+        <button (click)="logout()" class="header-menu__item">
+          <i class="bi bi-box-arrow-right"></i>
+          Cerrar sesión
+        </button>
+      </div>
+    }
+  </div>
 </header>

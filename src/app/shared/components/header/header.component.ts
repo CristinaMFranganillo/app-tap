@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
 import { AvatarComponent } from '../avatar/avatar.component';
 
@@ -13,5 +13,17 @@ import { AvatarComponent } from '../avatar/avatar.component';
 })
 export class HeaderComponent {
   private auth = inject(AuthService);
+  private router = inject(Router);
   readonly currentUser$ = this.auth.currentUser$;
+  menuAbierto = signal(false);
+
+  toggleMenu(): void {
+    this.menuAbierto.update(v => !v);
+  }
+
+  logout(): void {
+    this.menuAbierto.set(false);
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
 }
