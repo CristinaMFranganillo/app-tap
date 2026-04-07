@@ -86,4 +86,37 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./scores/registrar-resultado/registrar-resultado.component').then(m => m.RegistrarResultadoComponent),
   },
+  // Entrenamientos
+  {
+    path: 'entrenamientos/nuevo',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./entrenamientos/form-entrenamiento/form-entrenamiento.component')
+        .then(m => m.FormEntrenamientoComponent),
+  },
+  {
+    path: 'entrenamientos/:id',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./entrenamientos/detalle-entrenamiento/detalle-entrenamiento.component')
+        .then(m => m.DetalleEntrenamientoComponent),
+  },
+  {
+    path: 'entrenamientos/:id/escuadra/nueva',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./entrenamientos/form-escuadra-entrenamiento/form-escuadra-entrenamiento.component')
+        .then(m => m.FormEscuadraEntrenamientoComponent),
+  },
+  {
+    path: 'entrenamientos/:entrenamientoId/escuadra/:escuadraId/resultados',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./entrenamientos/registrar-resultado-entrenamiento/registrar-resultado-entrenamiento.component')
+        .then(m => m.RegistrarResultadoEntrenamientoComponent),
+  },
 ];
