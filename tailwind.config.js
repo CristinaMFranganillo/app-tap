@@ -35,9 +35,9 @@ module.exports = {
       colors: {
         // Primary — Amarillo vibrante (CTAs, énfasis, marca)
         primary: {
-          DEFAULT: '#D4E600',
-          light:   '#E8F233',
-          dark:    '#AABB00',
+          DEFAULT: '#F5E000',
+          light:   '#FAF066',
+          dark:    '#C9B800',
         },
 
         // Secondary — Negro profundo (texto, fondos oscuros)
@@ -81,7 +81,7 @@ module.exports = {
         },
 
         // Aliases semánticos (retrocompatibilidad)
-        'brand-yellow': '#D4E600',
+        'brand-yellow': '#F5E000',
         'brand-dark':   '#1A1A1A',
         surface:        '#F5F5F5',
       },
