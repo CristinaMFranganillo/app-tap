@@ -43,8 +43,9 @@
 }
 
 .plato-btn {
-  @apply aspect-square rounded-[10px] bg-neutral-100 text-neutral-400
-         font-bold text-sm flex items-center justify-center
+  @apply w-full h-12 rounded-[10px] bg-neutral-100 text-neutral-400
+         font-bold text-base leading-none
+         flex items-center justify-center
          active:scale-95 transition-all duration-fast
          select-none;
 
