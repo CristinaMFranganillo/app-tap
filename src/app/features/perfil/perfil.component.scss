@@ -77,3 +77,69 @@
     @apply mr-1;
   }
 }
+
+// ── Sección entrenamientos ─────────────────────────────────────
+
+.perfil-entrena {
+  @apply flex flex-col gap-3 px-3 pb-2;
+
+  &__header {
+    @apply flex items-center justify-between;
+  }
+
+  &__anio-select {
+    @apply text-sm font-bold text-secondary bg-neutral-100
+           rounded-input px-2 py-1 outline-none border-none;
+  }
+}
+
+.perfil-stats--entrena {
+  @apply mt-1;
+}
+
+// ── Posición en el club ────────────────────────────────────────
+
+.perfil-posicion {
+  @apply flex items-center gap-4;
+
+  &__puesto {
+    @apply flex items-baseline gap-1 flex-shrink-0;
+  }
+
+  &__num {
+    @apply text-[32px] font-black text-secondary leading-none;
+  }
+
+  &__de {
+    @apply text-xs text-neutral-300 font-medium;
+  }
+
+  &__metas {
+    @apply flex flex-col gap-0.5;
+  }
+
+  &__linea {
+    @apply text-sm text-neutral-400;
+
+    strong { @apply text-secondary font-black; }
+  }
+}
+
+// ── Gráfico SVG ────────────────────────────────────────────────
+
+.perfil-grafico {
+  @apply flex flex-col gap-2;
+
+  &__titulo {
+    @apply text-xs font-bold text-neutral-400 uppercase tracking-wider;
+  }
+
+  &__svg {
+    @apply w-full;
+    height: 80px;
+  }
+
+  &__leyenda {
+    @apply flex justify-between text-[10px] text-neutral-300 font-medium px-1;
+  }
+}
