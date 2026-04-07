@@ -3,11 +3,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/auth/auth.service';
 import { UserService } from '../../../features/admin/socios/user.service';
 import { supabase } from '../../../core/supabase/supabase.client';
+import { AvatarEditorComponent } from '../avatar-editor/avatar-editor.component';
 
 @Component({
   selector: 'app-cambiar-password',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, AvatarEditorComponent],
   templateUrl: './cambiar-password.component.html',
   styleUrl: './cambiar-password.component.scss',
 })
@@ -18,8 +19,9 @@ export class CambiarPasswordComponent {
 
   cerrar = output<void>();
 
-  saving = signal(false);
-  error = signal('');
+  fase    = signal<'password' | 'avatar'>('password');
+  saving  = signal(false);
+  error   = signal('');
 
   form = this.fb.group({
     password:  ['', [Validators.required, Validators.minLength(6)]],
@@ -38,7 +40,7 @@ export class CambiarPasswordComponent {
       const { error } = await supabase.auth.updateUser({ password: password! });
       if (error) throw new Error(error.message);
       await this.marcarLoginDone();
-      this.cerrar.emit();
+      this.fase.set('avatar');
     } catch (err: unknown) {
       this.error.set(err instanceof Error ? err.message : 'Error al cambiar la contraseña.');
     } finally {
@@ -48,6 +50,14 @@ export class CambiarPasswordComponent {
 
   async omitir(): Promise<void> {
     await this.marcarLoginDone();
+    this.cerrar.emit();
+  }
+
+  onAvatarCompletado(): void {
+    this.cerrar.emit();
+  }
+
+  onAvatarOmitido(): void {
     this.cerrar.emit();
   }
 
