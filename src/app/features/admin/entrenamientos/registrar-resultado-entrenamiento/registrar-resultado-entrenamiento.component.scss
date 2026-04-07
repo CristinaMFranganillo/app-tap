@@ -26,10 +26,6 @@
     @apply flex items-center justify-between gap-3 pt-2;
   }
 
-  &__nav-btn {
-    @apply flex items-center gap-1;
-  }
-
   &__loading {
     @apply flex items-center justify-center py-16 text-neutral-300 text-sm;
   }
