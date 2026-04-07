@@ -1,0 +1,35 @@
+<div class="registrar-e">
+  <div class="page-header">
+    <button (click)="goBack()" class="registrar-e__back-btn">
+      <i class="bi bi-chevron-left registrar-e__back-icon"></i>
+    </button>
+    <h2 class="registrar-e__title">Resultados escuadra</h2>
+  </div>
+
+  @for (p of puestosForm(); track p.userId) {
+    <div class="card resultado-item">
+      <div class="resultado-item__info">
+        <p class="resultado-item__nombre">{{ p.nombre }}</p>
+        <p class="resultado-item__puesto">Puesto {{ p.puesto }}</p>
+      </div>
+      <div class="resultado-item__input-wrap">
+        <input
+          type="number"
+          [(ngModel)]="p.platosRotos"
+          min="0"
+          max="25"
+          class="resultado-item__input"
+        />
+        <span class="resultado-item__unit">platos</span>
+      </div>
+    </div>
+  }
+
+  @if (error()) {
+    <p class="registrar-e__error">{{ error() }}</p>
+  }
+
+  <button (click)="guardar()" [disabled]="saving()" class="registrar-e__btn-guardar btn-primary">
+    {{ saving() ? 'Guardando...' : 'Guardar resultados' }}
+  </button>
+</div>

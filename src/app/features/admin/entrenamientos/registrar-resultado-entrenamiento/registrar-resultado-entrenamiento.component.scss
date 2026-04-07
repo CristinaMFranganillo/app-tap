@@ -1,0 +1,27 @@
+.registrar-e {
+  @apply p-3;
+
+  &__back-btn { @apply text-gray-400; }
+  &__back-icon { @apply text-[15px]; }
+  &__title { @apply text-[18px] font-extrabold text-secondary; }
+  &__error { @apply text-danger text-sm font-semibold mt-2; }
+  &__btn-guardar { @apply w-full mt-4; }
+}
+
+.resultado-item {
+  @apply flex items-center justify-between;
+
+  &__info { @apply flex-1 min-w-0; }
+  &__nombre { @apply text-base font-bold text-secondary truncate; }
+  &__puesto { @apply text-xs text-neutral-300 font-medium; }
+
+  &__input-wrap { @apply flex items-center gap-1; }
+
+  &__input {
+    @apply w-16 bg-neutral-100 rounded-input px-2 py-1
+           text-base font-black text-secondary text-center outline-none
+           focus:ring-2 focus:ring-primary/40;
+  }
+
+  &__unit { @apply text-xs text-neutral-300 font-medium; }
+}
