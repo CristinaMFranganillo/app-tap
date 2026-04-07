@@ -1,17 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { EscuadraService } from '../../../scores/escuadra.service';
 import { UserService } from '../../socios/user.service';
 import { User } from '../../../../core/models/user.model';
-
-interface PuestoState {
-  userId: string | null;
-  query: string;
-  open: boolean;
-}
 
 @Component({
   selector: 'app-form-escuadra',
@@ -25,61 +20,20 @@ export class FormEscuadraComponent {
   private userService = inject(UserService);
   private router = inject(Router);
 
-  socios = toSignal(this.userService.getAll(), { initialValue: [] as User[] });
-
-  puestos = signal<PuestoState[]>(
-    Array.from({ length: 6 }, () => ({ userId: null, query: '', open: false }))
+  // Todos los usuarios activos excepto admins: solo socios y moderadores pueden ser tiradores
+  socios = toSignal(
+    this.userService.getAll().pipe(
+      map(users => users.filter(u => u.activo && u.rol !== 'admin'))
+    ),
+    { initialValue: [] as User[] }
   );
 
+  puestos: (string | null)[] = [null, null, null, null, null, null];
   loading = false;
   error = '';
 
-  filtrados(index: number): User[] {
-    const q = this.puestos()[index].query.toLowerCase().trim();
-    if (!q) return this.socios().slice(0, 8);
-    return this.socios()
-      .filter(s => `${s.nombre} ${s.apellidos}`.toLowerCase().includes(q))
-      .slice(0, 8);
-  }
-
-  onQuery(index: number, value: string): void {
-    this.puestos.update(ps =>
-      ps.map((p, i) => i === index ? { ...p, query: value, userId: null, open: true } : p)
-    );
-  }
-
-  seleccionar(index: number, socio: User): void {
-    this.puestos.update(ps =>
-      ps.map((p, i) =>
-        i === index
-          ? { ...p, userId: socio.id, query: `${socio.nombre} ${socio.apellidos}`, open: false }
-          : p
-      )
-    );
-  }
-
-  limpiar(index: number): void {
-    this.puestos.update(ps =>
-      ps.map((p, i) => i === index ? { ...p, userId: null, query: '', open: false } : p)
-    );
-  }
-
-  abrirDropdown(index: number): void {
-    this.puestos.update(ps =>
-      ps.map((p, i) => i === index ? { ...p, open: true } : { ...p, open: false })
-    );
-  }
-
-  cerrarDropdown(index: number): void {
-    setTimeout(() => {
-      this.puestos.update(ps =>
-        ps.map((p, i) => i === index ? { ...p, open: false } : p)
-      );
-    }, 150);
-  }
-
   async onSubmit(): Promise<void> {
-    const asignados = this.puestos().filter(p => p.userId !== null);
+    const asignados = this.puestos.filter(p => p !== null && p !== '');
     if (asignados.length === 0) { this.error = 'Asigna al menos un tirador'; return; }
     this.loading = true;
     this.error = '';
@@ -87,8 +41,8 @@ export class FormEscuadraComponent {
       const escuadras = await firstValueFrom(this.escuadraService.getByCompeticion(null));
       const siguienteNumero = escuadras.length + 1;
       const escuadraId = await this.escuadraService.createEscuadra(null, siguienteNumero);
-      for (let i = 0; i < this.puestos().length; i++) {
-        const userId = this.puestos()[i].userId;
+      for (let i = 0; i < this.puestos.length; i++) {
+        const userId = this.puestos[i];
         if (userId) {
           await this.escuadraService.addTirador(escuadraId, userId, i + 1);
         }

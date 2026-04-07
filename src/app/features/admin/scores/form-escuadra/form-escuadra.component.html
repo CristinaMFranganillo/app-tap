@@ -8,45 +8,15 @@
 
   <p class="form-escuadra__section-label">Tiradores por puesto</p>
 
-  @for (p of puestos(); track $index) {
+  @for (puesto of puestos; track $index) {
     <div class="form-escuadra__puesto">
       <label class="form-escuadra__puesto-label">Puesto {{ $index + 1 }}</label>
-
-      <div class="tirador-search">
-        <div class="tirador-search__input-wrap">
-          <i class="bi bi-search tirador-search__icon"></i>
-          <input
-            type="text"
-            [ngModel]="p.query"
-            (ngModelChange)="onQuery($index, $event)"
-            (focus)="abrirDropdown($index)"
-            (blur)="cerrarDropdown($index)"
-            placeholder="Buscar tirador..."
-            class="tirador-search__input"
-            autocomplete="off"
-          />
-          @if (p.userId) {
-            <button type="button" (click)="limpiar($index)" class="tirador-search__clear">
-              <i class="bi bi-x"></i>
-            </button>
-          }
-        </div>
-
-        @if (p.open && filtrados($index).length > 0) {
-          <ul class="tirador-search__dropdown">
-            @for (s of filtrados($index); track s.id) {
-              <li
-                (pointerdown)="seleccionar($index, s)"
-                class="tirador-search__option"
-                [class.tirador-search__option--selected]="p.userId === s.id"
-              >
-                <span class="tirador-search__option-name">{{ s.nombre }} {{ s.apellidos }}</span>
-                <span class="tirador-search__option-num">#{{ s.numeroSocio }}</span>
-              </li>
-            }
-          </ul>
+      <select [(ngModel)]="puestos[$index]" class="form-input-surface">
+        <option value="">— Sin asignar —</option>
+        @for (s of socios(); track s.id) {
+          <option [value]="s.id">{{ s.nombre }} {{ s.apellidos }} (#{{ s.numeroSocio }})</option>
         }
-      </div>
+      </select>
     </div>
   }
 
