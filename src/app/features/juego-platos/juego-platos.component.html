@@ -1,6 +1,6 @@
 <div class="juego">
 
-  <!-- Canvas principal -->
+  <!-- Canvas siempre presente -->
   <canvas
     #canvas
     class="juego__canvas"
@@ -8,16 +8,61 @@
     (touchstart)="onCanvasClick($event)"
   ></canvas>
 
-  <!-- Pantalla: READY -->
+  <!-- ── PANTALLA READY ─────────────────────────────────────────── -->
   @if (fase() === 'ready') {
     <div class="juego__overlay">
       <div class="juego__panel">
         <span class="juego__emoji">🎯</span>
         <h1 class="juego__titulo">Tiro al Plato</h1>
         <p class="juego__desc">
-          25 platos. <strong>Toca</strong> para dispararlos<br>antes de que caigan.
+          25 platos. <strong>Toca</strong> para dispararlos<br>
+          antes de que caigan.
         </p>
-        <button class="btn-primary juego__btn-start" (click)="start()">
+
+        <!-- Récord personal -->
+        @if (record()) {
+          <div class="juego__record-badge">
+            <i class="bi bi-trophy-fill"></i>
+            Récord: <strong>{{ record()!.rotos }}/25</strong>
+            <span class="juego__record-fecha">· {{ record()!.fecha }}</span>
+          </div>
+        }
+
+        <!-- Ranking local -->
+        @if (ranking().length > 0) {
+          <div class="juego__ranking">
+            <p class="juego__ranking-titulo">
+              <i class="bi bi-list-ol"></i> Tus mejores series
+            </p>
+            @for (entry of ranking(); track $index) {
+              <div class="juego__ranking-row">
+                <span class="juego__ranking-pos">{{ $index + 1 }}</span>
+                <span class="juego__ranking-rotos">{{ entry.rotos }}/25</span>
+                <span class="juego__ranking-pct">{{ entry.precision }}%</span>
+                <span class="juego__ranking-fecha">{{ entry.fecha }}</span>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Ranking global del club -->
+        @if (rankingGlobal().length > 0) {
+          <div class="juego__ranking juego__ranking--global">
+            <p class="juego__ranking-titulo">
+              <i class="bi bi-trophy-fill"></i> Ranking del club
+            </p>
+            @for (entry of rankingGlobal(); track $index) {
+              <div class="juego__ranking-row" [class.juego__ranking-row--top]="$index === 0">
+                <span class="juego__ranking-pos">{{ $index + 1 }}</span>
+                <span class="juego__ranking-nombre">{{ entry.nombre }} {{ entry.apellidos }}</span>
+                <span class="juego__ranking-rotos">{{ entry.rotos }}/25</span>
+                <span class="juego__ranking-pct">{{ entry.precision }}%</span>
+              </div>
+            }
+          </div>
+        }
+
+        <button class="btn-primary juego__btn-start" (click)="iniciarCuentaAtras()">
           <i class="bi bi-play-fill"></i> Empezar serie
         </button>
         <button class="btn-secondary juego__btn-volver" (click)="volver()">
@@ -27,7 +72,18 @@
     </div>
   }
 
-  <!-- HUD en partida -->
+  <!-- ── CUENTA ATRÁS ───────────────────────────────────────────── -->
+  @if (fase() === 'countdown') {
+    <div class="juego__overlay juego__overlay--countdown">
+      @if (cuentaAtras() > 0) {
+        <span class="juego__countdown">{{ cuentaAtras() }}</span>
+      } @else {
+        <span class="juego__countdown juego__countdown--ya">¡YA!</span>
+      }
+    </div>
+  }
+
+  <!-- ── HUD EN PARTIDA ─────────────────────────────────────────── -->
   @if (fase() === 'playing') {
     <div class="juego__hud">
       <div class="juego__hud-stat">
@@ -43,23 +99,39 @@
         <span class="juego__hud-label">errados</span>
       </div>
     </div>
+
+    <!-- Combo / racha -->
+    @if (rachaLabel) {
+      <div class="juego__racha">{{ rachaLabel }}</div>
+    }
   }
 
-  <!-- Pantalla: END -->
+  <!-- ── PANTALLA FIN ───────────────────────────────────────────── -->
   @if (fase() === 'end') {
     <div class="juego__overlay">
       <div class="juego__panel">
-        <span class="juego__emoji">🏅</span>
+
+        <!-- Nuevo récord -->
+        @if (esBatidoRecord()) {
+          <div class="juego__nuevo-record">
+            <i class="bi bi-trophy-fill"></i> ¡Nuevo récord personal!
+          </div>
+        } @else {
+          <span class="juego__emoji">🏅</span>
+        }
+
         <h2 class="juego__titulo">{{ mensajeFinal }}</h2>
 
+        <!-- Marcador con animación de conteo -->
         <div class="juego__resultado">
           <div class="juego__resultado-big">
-            <span class="juego__resultado-num">{{ platosRotos() }}</span>
+            <span class="juego__resultado-num">{{ contadorFin() }}</span>
             <span class="juego__resultado-de">/25</span>
           </div>
           <p class="juego__precision">{{ precision }}% de precisión</p>
         </div>
 
+        <!-- Stats detalle -->
         <div class="juego__stats-fin">
           <div class="juego__stat-fin">
             <i class="bi bi-check-circle-fill juego__icon-ok"></i>
@@ -69,9 +141,25 @@
             <i class="bi bi-x-circle-fill juego__icon-ko"></i>
             <span>{{ platosErrados() }} errados</span>
           </div>
+          @if (maxRacha() >= 3) {
+            <div class="juego__stat-fin">
+              <i class="bi bi-fire juego__icon-racha"></i>
+              <span>Racha x{{ maxRacha() }}</span>
+            </div>
+          }
         </div>
 
-        <button class="btn-primary juego__btn-start" (click)="start()">
+        <!-- Récord contextual -->
+        @if (record() && !esBatidoRecord()) {
+          <p class="juego__record-hint">
+            Récord: <strong>{{ record()!.rotos }}/25</strong>
+            @if (platosRotos() < record()!.rotos) {
+              · te faltan {{ record()!.rotos - platosRotos() }} platos
+            }
+          </p>
+        }
+
+        <button class="btn-primary juego__btn-start" (click)="iniciarCuentaAtras()">
           <i class="bi bi-arrow-repeat"></i> Repetir serie
         </button>
         <button class="btn-secondary juego__btn-volver" (click)="volver()">

@@ -40,6 +40,13 @@ interface ScoreEntry {
   fecha: string;
 }
 
+interface RankingGlobalEntry {
+  nombre: string;
+  apellidos: string;
+  rotos: number;
+  precision: number;
+}
+
 // ── Constantes ────────────────────────────────────────────────────────────────
 
 const TOTAL_PLATOS    = 25;
@@ -72,8 +79,9 @@ export class JuegoPlatosComponent implements AfterViewInit, OnDestroy {
   contadorFin    = signal(0);        // para animación de conteo en resultado
 
   // Récord y ranking en localStorage
-  record  = signal<ScoreEntry | null>(this.loadRecord());
-  ranking = signal<ScoreEntry[]>(this.loadRanking());
+  record        = signal<ScoreEntry | null>(this.loadRecord());
+  ranking       = signal<ScoreEntry[]>(this.loadRanking());
+  rankingGlobal = signal<RankingGlobalEntry[]>([]);
 
   // ── Canvas / loop ─────────────────────────────────────────────────
   private canvas!: HTMLCanvasElement;
@@ -101,6 +109,7 @@ export class JuegoPlatosComponent implements AfterViewInit, OnDestroy {
     this.resize();
     this.generateClouds();
     this.drawStatic(); // dibuja el fondo en pantalla ready
+    this.cargarRankingGlobal();
   }
 
   ngOnDestroy(): void {
@@ -305,6 +314,29 @@ export class JuegoPlatosComponent implements AfterViewInit, OnDestroy {
 
   // ── Guardar récord y ranking ──────────────────────────────────────
 
+  private async cargarRankingGlobal(): Promise<void> {
+    const { data } = await supabase
+      .from('juego_resultados')
+      .select('rotos, precision, profiles(nombre, apellidos)')
+      .order('rotos', { ascending: false })
+      .order('precision', { ascending: false })
+      .limit(10);
+
+    if (!data) return;
+
+    const entries: RankingGlobalEntry[] = data.map((r: Record<string, unknown>) => {
+      const p = r['profiles'] as Record<string, string> | null;
+      return {
+        nombre:    p?.['nombre']    ?? 'Socio',
+        apellidos: p?.['apellidos'] ?? '',
+        rotos:     r['rotos'] as number,
+        precision: r['precision'] as number,
+      };
+    });
+
+    this.rankingGlobal.set(entries);
+  }
+
   private saveResult(): void {
     const entry: ScoreEntry = {
       rotos:     this.platosRotos(),
@@ -338,6 +370,7 @@ export class JuegoPlatosComponent implements AfterViewInit, OnDestroy {
         max_racha: this.maxRacha(),
       }).then(({ error }) => {
         if (error) console.warn('No se pudo guardar resultado en Supabase:', error.message);
+        else this.cargarRankingGlobal();
       });
     }).unsubscribe();
   }
