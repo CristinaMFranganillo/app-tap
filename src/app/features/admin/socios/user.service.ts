@@ -33,16 +33,29 @@ export class UserService {
 
   getAll(): Observable<User[]> {
     return from(
-      supabase
-        .from('profiles')
-        .select(`
-          *,
-          cuotas!left(id, pagada, temporada_id, temporadas!inner(activa))
-        `)
-        .eq('cuotas.temporadas.activa', true)
-        .order('fecha_alta', { ascending: true })
+      (async () => {
+        // Paso 1: obtener temporada activa
+        const { data: season } = await supabase
+          .from('temporadas')
+          .select('id')
+          .eq('activa', true)
+          .maybeSingle();
+
+        // Paso 2: cargar perfiles con cuotas filtradas por temporada_id
+        const query = supabase
+          .from('profiles')
+          .select('*, cuotas!left(id, pagada, temporada_id)')
+          .order('fecha_alta', { ascending: true });
+
+        if (season?.id) {
+          query.eq('cuotas.temporada_id', season.id);
+        }
+
+        const { data } = await query;
+        return data ?? [];
+      })()
     ).pipe(
-      map(({ data }) => (data ?? []).map(row => toUser(row as Record<string, unknown>))),
+      map(data => data.map(row => toUser(row as Record<string, unknown>))),
       tap(users => this.cache.next(users))
     );
   }
