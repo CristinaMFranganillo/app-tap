@@ -4,6 +4,10 @@ import { User, UserRole } from '../../../core/models/user.model';
 import { supabase } from '../../../core/supabase/supabase.client';
 
 function toUser(row: Record<string, unknown>): User {
+  // cuotas es un array con 0 o 1 elemento (la de la temporada activa)
+  const cuotaRows = (row['cuotas'] as Record<string, unknown>[] | null) ?? [];
+  const cuota = cuotaRows[0] ?? null;
+
   return {
     id: row['id'] as string,
     nombre: row['nombre'] as string,
@@ -18,6 +22,8 @@ function toUser(row: Record<string, unknown>): User {
     dni: (row['dni'] as string) ?? undefined,
     telefono: (row['telefono'] as string) ?? undefined,
     direccion: (row['direccion'] as string) ?? undefined,
+    cuotaPagada: cuota ? (cuota['pagada'] as boolean) : undefined,
+    cuotaId: cuota ? (cuota['id'] as string) : undefined,
   };
 }
 
@@ -27,9 +33,16 @@ export class UserService {
 
   getAll(): Observable<User[]> {
     return from(
-      supabase.from('profiles').select('*').order('fecha_alta', { ascending: true })
+      supabase
+        .from('profiles')
+        .select(`
+          *,
+          cuotas!left(id, pagada, temporada_id, temporadas!inner(activa))
+        `)
+        .eq('cuotas.temporadas.activa', true)
+        .order('fecha_alta', { ascending: true })
     ).pipe(
-      map(({ data }) => (data ?? []).map(toUser)),
+      map(({ data }) => (data ?? []).map(row => toUser(row as Record<string, unknown>))),
       tap(users => this.cache.next(users))
     );
   }
