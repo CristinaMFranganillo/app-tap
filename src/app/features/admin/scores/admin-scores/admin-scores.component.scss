@@ -1,107 +1,122 @@
 .admin-scores {
-  @apply p-3;
+  @apply p-3 flex flex-col gap-6;
 }
 
-.admin-scores__page-title {
-  @apply mb-4;
+// ── Secciones ──────────────────────────────────────────────────
+
+.admin-scores__section {
+  @apply flex flex-col gap-3;
+
+  &--secondary {
+    @apply pt-4 border-t border-neutral-200;
+  }
 }
 
-.admin-scores__acciones {
-  @apply flex flex-col gap-2 mb-5;
+.admin-scores__section-title {
+  @apply text-base font-black text-secondary uppercase tracking-[1.5px];
+
+  &--secondary {
+    @apply text-sm font-bold text-neutral-400 uppercase tracking-[1.5px];
+  }
 }
 
-.admin-scores__btn-nueva-competicion {
-  @apply flex items-center gap-3 bg-brand-yellow rounded-[12px] px-4 py-3;
+// ── Botón primario de acción (entrenamientos) ──────────────────
+
+.admin-scores__btn-primary {
+  @apply flex items-center gap-3 bg-primary rounded-card px-4 py-3
+         font-extrabold text-secondary w-full
+         active:scale-[.98] transition-transform duration-fast;
+
+  &-icon { @apply text-[20px]; }
+
+  span { @apply text-base; }
 }
 
-.admin-scores__btn-nueva-competicion-icon {
-  @apply text-brand-dark text-[20px];
+// ── Botón secundario de acción (competiciones) ─────────────────
+
+.admin-scores__btn-secondary {
+  @apply flex items-center gap-2 bg-neutral-100 rounded-card px-3 py-2.5
+         font-bold text-secondary w-full
+         active:scale-[.98] transition-transform duration-fast;
+
+  &-icon { @apply text-[16px] text-neutral-400; }
+
+  span { @apply text-sm; }
 }
 
-.admin-scores__btn-nueva-competicion-text {
-  @apply text-[14px] font-extrabold text-brand-dark;
-}
-
-.admin-scores__acciones-row {
-  @apply flex gap-2;
-}
-
-.admin-scores__btn-accion {
-  @apply flex-1 flex items-center gap-2 bg-white rounded-[12px] px-3 py-2.5 shadow-sm;
-}
-
-.admin-scores__btn-accion-icon {
-  @apply text-brand-dark text-[14px];
-}
-
-.admin-scores__btn-accion-text {
-  @apply text-[13px] font-bold text-brand-dark;
-}
-
-.admin-scores__section-label {
-  @apply text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-2;
-}
+// ── Estado vacío ───────────────────────────────────────────────
 
 .admin-scores__empty {
-  @apply flex flex-col items-center justify-center py-10 text-center;
+  @apply flex flex-col items-center justify-center py-8 text-center;
 }
 
 .admin-scores__empty-icon {
-  @apply text-[36px] text-gray-200 mb-2;
+  @apply text-[40px] text-neutral-200 mb-2;
 }
 
 .admin-scores__empty-title {
-  @apply text-[13px] font-bold text-gray-300 uppercase tracking-wider;
+  @apply text-sm font-bold text-neutral-300 uppercase tracking-wider;
 }
 
 .admin-scores__empty-subtitle {
-  @apply text-[11px] text-gray-300 mt-1;
+  @apply text-xs text-neutral-300 mt-1;
 }
+
+.admin-scores__empty-text {
+  @apply text-sm text-neutral-300 font-medium;
+}
+
+// ── Tarjeta entrenamiento ──────────────────────────────────────
+
+.entrenamiento-item {
+  @apply flex items-center justify-between cursor-pointer
+         active:scale-[.99] transition-transform duration-fast;
+
+  &__info { @apply flex-1 min-w-0; }
+
+  &__fecha {
+    @apply text-base font-bold text-secondary capitalize truncate;
+  }
+
+  &__meta {
+    @apply text-xs text-neutral-300 font-medium mt-0.5;
+  }
+
+  &__arrow { @apply text-neutral-300 text-[14px]; }
+}
+
+// ── Tarjeta competición (más compacta/discreta) ────────────────
 
 .competicion-item__header {
   @apply flex items-start justify-between;
 }
 
-.competicion-item__info {
-  @apply flex-1 min-w-0;
-}
+.competicion-item__info { @apply flex-1 min-w-0; }
 
 .competicion-item__nombre-row {
   @apply flex items-center gap-2;
 }
 
 .competicion-item__nombre {
-  @apply text-[14px] font-extrabold text-brand-dark truncate;
-}
-
-.competicion-item__badge-activa {
-  @apply flex-shrink-0 px-1.5 py-0.5 bg-brand-yellow rounded-full text-[10px] font-black text-brand-dark uppercase;
+  @apply text-sm font-bold text-secondary truncate;
 }
 
 .competicion-item__modalidad {
-  @apply text-[11px] text-gray-300 font-medium mt-0.5;
+  @apply text-xs text-neutral-300 font-medium mt-0.5;
 }
 
-.competicion-item__stats {
-  @apply text-right ml-2;
-}
+.competicion-item__stats { @apply text-right ml-2; }
 
 .competicion-item__total {
-  @apply text-[13px] font-black text-brand-dark;
+  @apply text-sm font-black text-secondary;
 }
 
 .competicion-item__total-unit {
-  @apply text-[10px] text-gray-300 font-medium;
+  @apply text-xs text-neutral-300 font-medium;
 }
 
-.competicion-item__series {
-  @apply text-[10px] text-gray-300;
-}
+.competicion-item__series { @apply text-xs text-neutral-300; }
 
-.competicion-item__lugar {
-  @apply text-[10px] text-gray-300 mt-1;
-}
+.competicion-item__lugar { @apply text-xs text-neutral-300 mt-1; }
 
-.competicion-item__fecha {
-  @apply text-[10px] text-gray-300 mt-0.5;
-}
+.competicion-item__fecha { @apply text-xs text-neutral-300 mt-0.5; }
