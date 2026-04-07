@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 import { EntrenamientoService } from '../entrenamiento.service';
+import { FalloEntrenamiento } from '../../../../core/models/entrenamiento.model';
 import { EscuadraService } from '../../../../features/scores/escuadra.service';
 import { UserService } from '../../socios/user.service';
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -100,6 +101,8 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
     try {
       const user = await firstValueFrom(this.authService.currentUser$);
       if (!user) throw new Error('No autenticado');
+
+      // 1. Guardar totales (igual que antes)
       await this.entrenamientoService.upsertResultados(
         this.session().map(t => ({
           escuadraId: this.escuadraId,
@@ -109,6 +112,23 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
         })),
         user.id
       );
+
+      // 2. Guardar fallos individuales (nuevo)
+      const fallos: FalloEntrenamiento[] = [];
+      for (const t of this.session()) {
+        for (let i = 0; i < t.platos.length; i++) {
+          if (!t.platos[i]) {
+            fallos.push({
+              escuadraId: this.escuadraId,
+              userId: t.userId,
+              numeroPlato: i + 1,
+            });
+          }
+        }
+      }
+      const userIds = this.session().map(t => t.userId);
+      await this.entrenamientoService.upsertFallos(fallos, this.escuadraId, userIds);
+
       const extras = this.fechaDia ? { queryParams: { fecha: this.fechaDia } } : {};
       this.router.navigate([
         '/admin/entrenamientos', this.entrenamientoId,
