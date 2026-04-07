@@ -17,8 +17,9 @@
     <!-- Contador -->
     <div class="registrar-e__contador">
       <span class="registrar-e__contador-num">{{ platosRotosActual() }}</span>
-      <span class="registrar-e__contador-de">/ 25 platos rotos</span>
+      <span class="registrar-e__contador-de">/ 25 &nbsp;·&nbsp; {{ fallosActual() }} fallos</span>
     </div>
+    <p class="registrar-e__instruccion">Pulsa los platos fallados</p>
 
     <!-- Cuadrícula 25 platos -->
     <div class="platos-grid">
@@ -28,6 +29,7 @@
           (click)="togglePlato(i)"
           class="plato-btn"
           [class.plato-btn--roto]="t.platos[i]"
+          [class.plato-btn--fallo]="!t.platos[i]"
         >
           {{ i + 1 }}
         </button>

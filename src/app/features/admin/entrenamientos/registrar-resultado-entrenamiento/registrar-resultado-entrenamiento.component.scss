@@ -20,6 +20,10 @@
     @apply text-sm text-neutral-300 font-medium;
   }
 
+  &__instruccion {
+    @apply text-center text-xs text-neutral-400 font-medium -mt-2;
+  }
+
   &__error { @apply text-danger text-sm font-semibold text-center; }
 
   &__nav {
@@ -45,7 +49,13 @@
          active:scale-95 transition-all duration-fast
          select-none;
 
+  // Estado por defecto: roto (amarillo)
   &--roto {
     @apply bg-primary text-secondary shadow-sm;
+  }
+
+  // Estado marcado: fallo (gris claro, texto tachado visualmente más tenue)
+  &--fallo {
+    @apply bg-neutral-100 text-neutral-300;
   }
 }

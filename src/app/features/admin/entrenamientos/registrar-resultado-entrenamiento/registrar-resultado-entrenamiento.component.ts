@@ -57,7 +57,7 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
             userId: t.userId,
             nombre: socio ? `${socio.nombre} ${socio.apellidos}` : t.userId,
             puesto: t.puesto,
-            platos: Array(25).fill(false),
+            platos: Array(25).fill(true),  // true = roto, false = fallo
           };
         })
       );
@@ -78,6 +78,10 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
 
   platosRotosActual(): number {
     return this.tirador()?.platos.filter(Boolean).length ?? 0;
+  }
+
+  fallosActual(): number {
+    return this.tirador()?.platos.filter(v => !v).length ?? 0;
   }
 
   esUltimo(): boolean {
