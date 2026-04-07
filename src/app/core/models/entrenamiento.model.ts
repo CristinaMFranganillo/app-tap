@@ -4,6 +4,7 @@ export interface Entrenamiento {
   creadoPor: string;
   createdAt?: string;
   numEscuadras?: number;
+  numTiradores?: number;
 }
 
 export interface ResultadoEntrenamiento {

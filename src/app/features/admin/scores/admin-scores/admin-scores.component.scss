@@ -80,23 +80,48 @@
   @apply flex gap-2 pt-1;
 }
 
-// ── Tarjeta entrenamiento ──────────────────────────────────────
+// ── Tabla de entrenamientos ────────────────────────────────────
 
-.entrenamiento-item {
-  @apply flex items-center justify-between cursor-pointer
-         active:scale-[.99] transition-transform duration-fast;
+.entrena-tabla {
+  @apply rounded-card border border-neutral-100 overflow-hidden bg-white;
 
-  &__info { @apply flex-1 min-w-0; }
-
-  &__fecha {
-    @apply text-base font-bold text-secondary capitalize truncate;
+  &__head {
+    @apply flex items-center px-3 py-2 bg-neutral-50 border-b border-neutral-100;
   }
 
-  &__meta {
-    @apply text-xs text-neutral-300 font-medium mt-0.5;
+  &__th {
+    @apply text-[11px] font-black uppercase tracking-widest text-neutral-400;
+
+    &--fecha   { @apply flex-1; }
+    &--num     { @apply w-10 text-center; }
+    &--acciones { @apply w-20 text-center; }
   }
 
-  &__arrow { @apply text-neutral-300 text-[14px]; }
+  &__row {
+    @apply flex items-center px-3 py-3 border-b border-neutral-100 last:border-0;
+  }
+
+  &__td {
+    @apply text-sm text-secondary;
+
+    &--fecha {
+      @apply flex-1 font-semibold capitalize;
+    }
+
+    &--num {
+      @apply w-10 text-center font-bold text-neutral-500;
+    }
+
+    &--acciones {
+      @apply w-20 flex items-center justify-center gap-3;
+    }
+  }
+
+  &__btn {
+    @apply bg-transparent border-0 p-1 cursor-pointer
+           text-neutral-400 text-[18px] leading-none
+           active:text-secondary transition-colors;
+  }
 }
 
 // ── Tarjeta competición (más compacta/discreta) ────────────────

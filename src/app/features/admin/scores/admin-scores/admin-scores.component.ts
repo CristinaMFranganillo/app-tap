@@ -62,6 +62,10 @@ export class AdminScoresComponent {
     this.router.navigate(['/admin/entrenamientos', id]);
   }
 
+  editarEntrenamiento(id: string): void {
+    this.router.navigate(['/admin/entrenamientos', id]);
+  }
+
   nuevaCompeticion(): void {
     this.router.navigate(['/admin/competiciones/nueva']);
   }

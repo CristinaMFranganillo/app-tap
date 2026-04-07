@@ -30,14 +30,22 @@ export class EntrenamientoService {
     return from(
       supabase
         .from('entrenamientos')
-        .select('*, escuadras(count)')
+        .select('*, escuadras(id, escuadra_tiradores(count))')
         .order('fecha', { ascending: false })
     ).pipe(
       map(({ data }) =>
-        (data ?? []).map(row => ({
-          ...toEntrenamiento(row as Record<string, unknown>),
-          numEscuadras: (row as any).escuadras?.[0]?.count ?? 0,
-        }))
+        (data ?? []).map(row => {
+          const escuadras = (row as any).escuadras ?? [];
+          const numTiradores = escuadras.reduce(
+            (sum: number, e: any) => sum + (e.escuadra_tiradores?.[0]?.count ?? 0),
+            0
+          );
+          return {
+            ...toEntrenamiento(row as Record<string, unknown>),
+            numEscuadras: escuadras.length,
+            numTiradores,
+          };
+        })
       )
     );
   }

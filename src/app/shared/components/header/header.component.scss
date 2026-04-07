@@ -22,10 +22,14 @@
   min-width: max-content;
 
   &__item {
-    @apply flex items-center gap-2 w-full px-4 py-3
-           text-sm font-bold text-secondary text-left
+    @apply flex items-center gap-3 w-full px-5 py-4
+           text-base font-bold text-secondary text-left
            whitespace-nowrap
            hover:bg-neutral-50 active:bg-neutral-100
            transition-colors;
+
+    i {
+      @apply text-[20px];
+    }
   }
 }

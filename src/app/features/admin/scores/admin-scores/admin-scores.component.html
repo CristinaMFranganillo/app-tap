@@ -37,15 +37,33 @@
         <p class="admin-scores__empty-subtitle">Crea el primero con el botón de arriba</p>
       </div>
     } @else {
-      @for (e of entrenamientos(); track e.id) {
-        <div class="card entrenamiento-item" (click)="verEntrenamiento(e.id)">
-          <div class="entrenamiento-item__info">
-            <p class="entrenamiento-item__fecha">{{ e.fecha | date:'EEEE d MMM yyyy' : '' : 'es' }}</p>
-            <p class="entrenamiento-item__meta">{{ e.numEscuadras }} escuadra{{ e.numEscuadras !== 1 ? 's' : '' }}</p>
-          </div>
-          <i class="bi bi-chevron-right entrenamiento-item__arrow"></i>
+      <div class="entrena-tabla">
+        <!-- Cabecera -->
+        <div class="entrena-tabla__head">
+          <span class="entrena-tabla__th entrena-tabla__th--fecha">Fecha</span>
+          <span class="entrena-tabla__th entrena-tabla__th--num">Esc.</span>
+          <span class="entrena-tabla__th entrena-tabla__th--num">Tir.</span>
+          <span class="entrena-tabla__th entrena-tabla__th--acciones">Acciones</span>
         </div>
-      }
+        <!-- Filas -->
+        @for (e of entrenamientos(); track e.id) {
+          <div class="entrena-tabla__row">
+            <span class="entrena-tabla__td entrena-tabla__td--fecha">
+              {{ e.fecha | date:'d MMM yy' : '' : 'es' }}
+            </span>
+            <span class="entrena-tabla__td entrena-tabla__td--num">{{ e.numEscuadras ?? 0 }}</span>
+            <span class="entrena-tabla__td entrena-tabla__td--num">{{ e.numTiradores ?? 0 }}</span>
+            <span class="entrena-tabla__td entrena-tabla__td--acciones">
+              <button (click)="verEntrenamiento(e.id)" class="entrena-tabla__btn" title="Ver resultados">
+                <i class="bi bi-eye"></i>
+              </button>
+              <button (click)="editarEntrenamiento(e.id)" class="entrena-tabla__btn" title="Editar">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+            </span>
+          </div>
+        }
+      </div>
     }
   </section>
 
