@@ -39,3 +39,9 @@ export interface RankingEntrenamientoAnual {
   totalEntrenamientos: number;
   mejorResultado: number;
 }
+
+export interface FalloEntrenamiento {
+  escuadraId: string;
+  userId: string;
+  numeroPlato: number;  // 1..25
+}
