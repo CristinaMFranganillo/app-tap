@@ -65,6 +65,19 @@
             <span class="socio-item__detail-label">Alta</span>
             <span class="socio-item__detail-value">{{ socio.fechaAlta | date:'dd/MM/yyyy' }}</span>
           </div>
+          @if (cuotasHistorial()[socio.id]?.length) {
+            <div class="socio-item__detail-row socio-item__detail-row--header">
+              <span class="socio-item__detail-label">Historial cuotas</span>
+            </div>
+            @for (cuota of cuotasHistorial()[socio.id]; track cuota.id) {
+              <div class="socio-item__detail-row">
+                <span class="socio-item__detail-label">{{ cuota.temporadaNombre }}</span>
+                <span class="socio-item__cuota-badge" [class.socio-item__cuota-badge--pagada]="cuota.pagada">
+                  {{ cuota.pagada ? 'Pagada' : 'Pendiente' }}
+                </span>
+              </div>
+            }
+          }
         </div>
       }
     </div>

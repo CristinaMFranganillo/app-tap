@@ -8,6 +8,7 @@ import { CuotaService } from '../cuota.service';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { User } from '../../../../core/models/user.model';
+import { Cuota } from '../../../../core/models/cuota.model';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -25,6 +26,7 @@ export class ListaSociosComponent {
   searchTerm = signal('');
   expandedId = signal<string | null>(null);
   pendingDeleteId = signal<string | null>(null);
+  cuotasHistorial = signal<Record<string, Cuota[]>>({});
   private refresh$ = new Subject<void>();
 
   private socios = toSignal(
@@ -49,7 +51,14 @@ export class ListaSociosComponent {
   }
 
   toggleExpanded(id: string): void {
-    this.expandedId.set(this.expandedId() === id ? null : id);
+    if (this.expandedId() === id) {
+      this.expandedId.set(null);
+      return;
+    }
+    this.expandedId.set(id);
+    this.cuotaService.getCuotasSocio(id).subscribe(cuotas => {
+      this.cuotasHistorial.update(h => ({ ...h, [id]: cuotas }));
+    });
   }
 
   goToCreate(): void {
