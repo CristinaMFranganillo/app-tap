@@ -1,0 +1,35 @@
+<div class="avatar-editor">
+  <p class="avatar-editor__titulo">Añade una foto de perfil</p>
+  <p class="avatar-editor__sub">Opcional · puedes cambiarla más adelante desde tu perfil</p>
+
+  @if (error()) {
+    <p class="avatar-editor__error">{{ error() }}</p>
+  }
+
+  <label class="avatar-editor__zona" [class.avatar-editor__zona--preview]="preview()">
+    @if (preview()) {
+      <img [src]="preview()!" alt="Preview" class="avatar-editor__preview" />
+    } @else {
+      <i class="bi bi-camera-fill avatar-editor__icono"></i>
+      <span class="avatar-editor__hint">Toca para seleccionar</span>
+    }
+    <input
+      type="file"
+      accept="image/*"
+      class="avatar-editor__input"
+      (change)="onFileSelected($event)"
+    />
+  </label>
+
+  <div class="avatar-editor__actions">
+    <button type="button" (click)="omitir()" class="btn-secondary">Ahora no</button>
+    <button
+      type="button"
+      (click)="guardar()"
+      [disabled]="!preview() || saving()"
+      class="btn-primary"
+    >
+      {{ saving() ? 'Subiendo...' : 'Guardar foto' }}
+    </button>
+  </div>
+</div>

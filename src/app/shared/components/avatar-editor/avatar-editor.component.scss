@@ -1,0 +1,79 @@
+.avatar-editor {
+  @apply flex flex-col items-center gap-3 w-full;
+
+  &__titulo {
+    font-size: 14px;
+    font-weight: 800;
+    color: #1A1A1A;
+    margin: 0;
+  }
+
+  &__sub {
+    font-size: 11px;
+    color: #9CA3AF;
+    font-weight: 500;
+    margin: 0;
+    text-align: center;
+  }
+
+  &__error {
+    font-size: 12px;
+    font-weight: 600;
+    color: #EF4444;
+    margin: 0;
+  }
+
+  &__zona {
+    @apply flex flex-col items-center justify-center cursor-pointer;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 2px dashed #E5E7EB;
+    background: #F5F5F5;
+    overflow: hidden;
+    position: relative;
+    transition: border-color 150ms;
+
+    &:hover { border-color: #F5E000; }
+
+    &--preview {
+      border-style: solid;
+      border-color: #F5E000;
+    }
+  }
+
+  &__icono {
+    font-size: 24px;
+    color: #9CA3AF;
+  }
+
+  &__hint {
+    font-size: 9px;
+    font-weight: 700;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+  }
+
+  &__preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__actions {
+    @apply flex gap-2 w-full pt-1;
+
+    button { @apply flex-1; }
+  }
+}
