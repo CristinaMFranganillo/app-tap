@@ -40,6 +40,8 @@ export class DetalleEntrenamientoComponent {
 
   private id$ = this.route.paramMap.pipe(map(p => p.get('id')!));
 
+  modoEdicion = this.route.snapshot.queryParamMap.get('modo') === 'editar';
+
   entrenamiento = toSignal<Entrenamiento | null>(
     this.id$.pipe(switchMap(id => this.entrenamientoService.getById(id))),
     { initialValue: null }

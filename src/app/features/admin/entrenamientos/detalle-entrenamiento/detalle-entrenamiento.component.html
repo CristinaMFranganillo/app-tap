@@ -27,9 +27,11 @@
               </p>
             }
           </div>
-          <button (click)="irResultados(item.escuadra.id)" class="escuadra-card__btn-editar">
-            <i class="bi bi-pencil-square"></i>
-          </button>
+          @if (modoEdicion) {
+            <button (click)="irResultados(item.escuadra.id)" class="escuadra-card__btn-editar">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+          }
         </div>
 
         <!-- Resultados -->
@@ -57,7 +59,9 @@
     }
   }
 
-  <button (click)="nuevaEscuadra()" class="fab">
-    <i class="bi bi-plus-lg"></i>
-  </button>
+  @if (modoEdicion) {
+    <button (click)="nuevaEscuadra()" class="fab">
+      <i class="bi bi-plus-lg"></i>
+    </button>
+  }
 </div>

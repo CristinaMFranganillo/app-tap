@@ -63,7 +63,7 @@ export class AdminScoresComponent {
   }
 
   editarEntrenamiento(id: string): void {
-    this.router.navigate(['/admin/entrenamientos', id]);
+    this.router.navigate(['/admin/entrenamientos', id], { queryParams: { modo: 'editar' } });
   }
 
   nuevaCompeticion(): void {

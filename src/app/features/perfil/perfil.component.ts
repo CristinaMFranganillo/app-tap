@@ -1,28 +1,22 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { switchMap, combineLatest } from 'rxjs';
-import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
-import { ScoreService } from '../scores/score.service';
-import { CompeticionService } from '../scores/competicion.service';
 import { EntrenamientoService } from '../admin/entrenamientos/entrenamiento.service';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { AvatarEditorComponent } from '../../shared/components/avatar-editor/avatar-editor.component';
-import { Score } from '../../core/models/score.model';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [AvatarComponent, AvatarEditorComponent, DatePipe, EmptyStateComponent],
+  imports: [AvatarComponent, AvatarEditorComponent, EmptyStateComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss',
 })
 export class PerfilComponent {
   private authService = inject(AuthService);
-  private scoreService = inject(ScoreService);
-  private competicionService = inject(CompeticionService);
   private entrenamientoService = inject(EntrenamientoService);
   private router = inject(Router);
 
@@ -30,50 +24,14 @@ export class PerfilComponent {
 
   mostrarEditorAvatar = signal(false);
 
-  abrirEditorAvatar(): void {
-    this.mostrarEditorAvatar.set(true);
-  }
-
-  onAvatarCompletado(): void {
-    this.mostrarEditorAvatar.set(false);
-  }
-
-  onAvatarOmitido(): void {
-    this.mostrarEditorAvatar.set(false);
-  }
+  abrirEditorAvatar(): void { this.mostrarEditorAvatar.set(true); }
+  onAvatarCompletado(): void { this.mostrarEditorAvatar.set(false); }
+  onAvatarOmitido(): void { this.mostrarEditorAvatar.set(false); }
 
   // ── Año seleccionado ───────────────────────────────────────────
   anioActual = new Date().getFullYear();
   anioSeleccionado = signal(this.anioActual);
   anios = Array.from({ length: 3 }, (_, i) => this.anioActual - i);
-
-  // ── Competiciones (stats legacy) ──────────────────────────────
-  scores = toSignal(
-    this.authService.currentUser$.pipe(
-      switchMap(u => this.scoreService.getByUser(u?.id ?? ''))
-    ),
-    { initialValue: [] as Score[] }
-  );
-
-  totalCompeticiones = computed(() => new Set(this.scores().map(s => s.competicionId)).size);
-
-  mediaPlatos = computed(() => {
-    const list = this.scores();
-    if (list.length === 0) return 0;
-    const sum = list.reduce((acc, s) => acc + s.platosRotos, 0);
-    return Math.round(sum / list.length);
-  });
-
-  podios = computed(() => this.scores().filter(s => s.platosRotos >= 20).length);
-
-  getCompeticionNombre(competicionId: string): string {
-    return this.competicionService.getById(competicionId)?.nombre ?? 'Competición';
-  }
-
-  getCompeticionTotal(competicionId: string): number {
-    const c = this.competicionService.getById(competicionId);
-    return c ? c.platosPorSerie * c.numSeries : 25;
-  }
 
   // ── Entrenamientos del año ─────────────────────────────────────
   misEntrenamientos = toSignal(

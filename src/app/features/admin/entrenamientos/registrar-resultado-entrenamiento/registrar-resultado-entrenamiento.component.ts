@@ -140,6 +140,6 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/admin/entrenamientos', this.entrenamientoId]);
+    this.router.navigate(['/admin/entrenamientos', this.entrenamientoId], { queryParams: { modo: 'editar' } });
   }
 }

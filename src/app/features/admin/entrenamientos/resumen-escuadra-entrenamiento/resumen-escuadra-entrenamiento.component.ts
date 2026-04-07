@@ -61,6 +61,6 @@ export class ResumenEscuadraEntrenamientoComponent implements OnInit {
   }
 
   volverEntrenamiento(): void {
-    this.router.navigate(['/admin/entrenamientos', this.entrenamientoId]);
+    this.router.navigate(['/admin/entrenamientos', this.entrenamientoId], { queryParams: { modo: 'editar' } });
   }
 }

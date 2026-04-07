@@ -30,22 +30,6 @@
     </div>
   }
 
-  <!-- Stats competiciones -->
-  <div class="perfil-stats">
-    <div class="perfil-stat perfil-stat--border">
-      <p class="perfil-stat__value">{{ totalCompeticiones() }}</p>
-      <p class="perfil-stat__label">Competiciones</p>
-    </div>
-    <div class="perfil-stat perfil-stat--border">
-      <p class="perfil-stat__value">{{ mediaPlatos() }}</p>
-      <p class="perfil-stat__label">Media platos</p>
-    </div>
-    <div class="perfil-stat">
-      <p class="perfil-stat__value">{{ podios() }}</p>
-      <p class="perfil-stat__label">Podios</p>
-    </div>
-  </div>
-
   <!-- ── Sección entrenamientos ─────────────────────────────── -->
   <div class="perfil-entrena">
 
@@ -138,29 +122,6 @@
         </div>
       }
 
-    }
-  </div>
-
-  <!-- Historial competiciones -->
-  <div class="perfil-historial">
-    <h3 class="page-title perfil-historial__title">Mis Resultados</h3>
-
-    @if (scores().length === 0) {
-      <app-empty-state icon="bi-trophy" mensaje="Sin resultados registrados" />
-    } @else {
-      @for (score of scores(); track score.id) {
-        <div class="card perfil-score-item">
-          <div class="perfil-score-item__info">
-            <p class="perfil-score-item__nombre">{{ getCompeticionNombre(score.competicionId) }}</p>
-            <p class="perfil-score-item__fecha">{{ score.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
-          </div>
-          <div class="perfil-score-item__resultado">
-            <p class="perfil-score-item__rotos">
-              {{ score.platosRotos }}<span class="perfil-score-item__total">/{{ getCompeticionTotal(score.competicionId) }}</span>
-            </p>
-          </div>
-        </div>
-      }
     }
   </div>
 
