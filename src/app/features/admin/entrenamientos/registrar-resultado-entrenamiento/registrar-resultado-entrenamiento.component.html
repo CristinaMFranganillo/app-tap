@@ -31,7 +31,11 @@
           [class.plato-btn--roto]="t.platos[i]"
           [class.plato-btn--fallo]="!t.platos[i]"
         >
-          {{ i + 1 }}
+          @if (t.platos[i]) {
+            {{ i + 1 }}
+          } @else {
+            <i class="bi bi-x-lg"></i>
+          }
         </button>
       }
     </div>

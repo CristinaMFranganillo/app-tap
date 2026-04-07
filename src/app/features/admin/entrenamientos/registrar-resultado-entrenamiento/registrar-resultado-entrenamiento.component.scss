@@ -54,8 +54,8 @@
     @apply bg-primary text-secondary shadow-sm;
   }
 
-  // Estado marcado: fallo (gris claro, texto tachado visualmente más tenue)
+  // Estado marcado: fallo (gris claro, X roja)
   &--fallo {
-    @apply bg-neutral-100 text-neutral-300;
+    @apply bg-neutral-100 text-danger;
   }
 }
