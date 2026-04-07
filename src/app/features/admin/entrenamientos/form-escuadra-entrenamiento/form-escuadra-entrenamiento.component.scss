@@ -1,0 +1,11 @@
+.form-escuadra-e {
+  @apply p-3;
+
+  &__back-btn { @apply text-gray-400; }
+  &__back-icon { @apply text-[15px]; }
+  &__title { @apply text-[18px] font-extrabold text-secondary; }
+  &__section-label { @apply text-xs font-bold text-neutral-300 uppercase tracking-wide mb-2; }
+  &__puesto { @apply mb-2; }
+  &__error { @apply text-danger text-sm font-semibold mt-3; }
+  &__actions { @apply flex gap-2 mt-4; }
+}

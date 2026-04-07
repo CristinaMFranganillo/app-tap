@@ -1,0 +1,33 @@
+<div class="form-escuadra-e">
+  <div class="page-header">
+    <button (click)="cancel()" class="form-escuadra-e__back-btn">
+      <i class="bi bi-chevron-left form-escuadra-e__back-icon"></i>
+    </button>
+    <h2 class="form-escuadra-e__title">Nueva escuadra</h2>
+  </div>
+
+  <p class="form-escuadra-e__section-label">Tiradores por puesto</p>
+
+  @for (puesto of puestos; track $index) {
+    <div class="form-escuadra-e__puesto">
+      <label class="form-label">Puesto {{ $index + 1 }}</label>
+      <select [(ngModel)]="puestos[$index]" class="form-input">
+        <option [value]="null">— Sin asignar —</option>
+        @for (s of socios(); track s.id) {
+          <option [value]="s.id">{{ s.nombre }} {{ s.apellidos }}</option>
+        }
+      </select>
+    </div>
+  }
+
+  @if (error) {
+    <p class="form-escuadra-e__error">{{ error }}</p>
+  }
+
+  <div class="form-escuadra-e__actions">
+    <button (click)="cancel()" class="btn-secondary">Cancelar</button>
+    <button (click)="onSubmit()" [disabled]="loading" class="btn-primary">
+      {{ loading ? 'Guardando...' : 'Crear escuadra' }}
+    </button>
+  </div>
+</div>
