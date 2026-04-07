@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, map } from 'rxjs';
-import { Entrenamiento, EntrenamientoDia, ResultadoEntrenamiento, ResultadoEntrenamientoConFecha, RankingEntrenamientoAnual } from '../../../core/models/entrenamiento.model';
+import { Entrenamiento, EntrenamientoDia, ResultadoEntrenamiento, ResultadoEntrenamientoConFecha, RankingEntrenamientoAnual, FalloEntrenamiento } from '../../../core/models/entrenamiento.model';
 import { supabase } from '../../../core/supabase/supabase.client';
 
 function toEntrenamiento(row: Record<string, unknown>): Entrenamiento {
@@ -191,6 +191,70 @@ export class EntrenamientoService {
           totalEntrenamientos: v.count,
           mejorResultado: v.mejor,
         })).sort((a, b) => b.mediaPlatos - a.mediaPlatos);
+      })
+    );
+  }
+
+  async upsertFallos(
+    fallos: FalloEntrenamiento[],
+    escuadraId: string,
+    userIds: string[]
+  ): Promise<void> {
+    // Borrar fallos anteriores de esta escuadra para estos usuarios
+    if (userIds.length > 0) {
+      await supabase
+        .from('entrenamiento_fallos')
+        .delete()
+        .eq('escuadra_id', escuadraId)
+        .in('user_id', userIds);
+    }
+    // Insertar nuevos fallos (si los hay)
+    if (fallos.length > 0) {
+      const rows = fallos.map(f => ({
+        escuadra_id: f.escuadraId,
+        user_id: f.userId,
+        numero_plato: f.numeroPlato,
+      }));
+      const { error } = await supabase.from('entrenamiento_fallos').insert(rows);
+      if (error) throw new Error(error.message ?? 'Error guardando fallos');
+    }
+  }
+
+  getFallosByEscuadra(escuadraId: string): Observable<FalloEntrenamiento[]> {
+    return from(
+      supabase
+        .from('entrenamiento_fallos')
+        .select('*')
+        .eq('escuadra_id', escuadraId)
+        .order('user_id')
+        .order('numero_plato')
+    ).pipe(
+      map(({ data }) =>
+        (data ?? []).map((row: Record<string, unknown>) => ({
+          escuadraId: row['escuadra_id'] as string,
+          userId: row['user_id'] as string,
+          numeroPlato: row['numero_plato'] as number,
+        }))
+      )
+    );
+  }
+
+  getFallosByUser(userId: string): Observable<{ numeroPlato: number; veces: number }[]> {
+    return from(
+      supabase
+        .from('entrenamiento_fallos')
+        .select('numero_plato')
+        .eq('user_id', userId)
+    ).pipe(
+      map(({ data }) => {
+        const counts = new Map<number, number>();
+        for (const row of (data ?? []) as Record<string, unknown>[]) {
+          const p = row['numero_plato'] as number;
+          counts.set(p, (counts.get(p) ?? 0) + 1);
+        }
+        return Array.from(counts.entries())
+          .map(([numeroPlato, veces]) => ({ numeroPlato, veces }))
+          .sort((a, b) => a.numeroPlato - b.numeroPlato);
       })
     );
   }
