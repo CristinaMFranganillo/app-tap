@@ -2,6 +2,21 @@
   @apply bg-brand-dark px-4 pt-4 pb-6 flex flex-col items-center;
 }
 
+.perfil-hero__cambiar-foto {
+  @apply flex items-center gap-1 mt-1;
+  font-size: 11px;
+  font-weight: 700;
+  color: #F5E000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.85;
+
+  &:hover { opacity: 1; }
+
+  i { font-size: 12px; }
+}
+
 .perfil-hero__nombre {
   @apply text-white font-extrabold text-[16px] mt-2;
 }
