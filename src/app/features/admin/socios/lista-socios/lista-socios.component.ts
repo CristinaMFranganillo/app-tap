@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { Subject, switchMap, startWith } from 'rxjs';
 import { UserService } from '../user.service';
+import { CuotaService } from '../cuota.service';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { User } from '../../../../core/models/user.model';
@@ -18,6 +19,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 })
 export class ListaSociosComponent {
   private userService = inject(UserService);
+  private cuotaService = inject(CuotaService);
   private router = inject(Router);
 
   searchTerm = signal('');
@@ -72,5 +74,12 @@ export class ListaSociosComponent {
 
   cancelarEliminar(): void {
     this.pendingDeleteId.set(null);
+  }
+
+  async toggleCuota(socio: User, event: Event): Promise<void> {
+    event.stopPropagation();
+    if (socio.cuotaId === undefined) return;
+    await this.cuotaService.toggleCuota(socio.cuotaId, !socio.cuotaPagada);
+    this.refresh$.next();
   }
 }

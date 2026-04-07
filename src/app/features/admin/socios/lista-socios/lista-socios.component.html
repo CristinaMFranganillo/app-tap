@@ -21,6 +21,18 @@
           <p class="socio-item__nombre">{{ socio.nombre }} {{ socio.apellidos }}</p>
           <p class="socio-item__meta">{{ socio.email }} · {{ socio.rol | titlecase }}</p>
         </div>
+        @if (socio.cuotaId !== undefined) {
+          <button
+            (click)="toggleCuota(socio, $event)"
+            class="socio-item__cuota-btn"
+            [title]="socio.cuotaPagada ? 'Cuota pagada — click para desmarcar' : 'Cuota pendiente — click para marcar'"
+          >
+            <span
+              class="socio-item__cuota-dot"
+              [class.socio-item__cuota-dot--pagada]="socio.cuotaPagada"
+            ></span>
+          </button>
+        }
         <div class="socio-item__actions">
           <span class="socio-item__numero">#{{ socio.numeroSocio }}</span>
           <button (click)="toggleExpanded(socio.id)" class="socio-item__btn-info" [class.socio-item__btn-info--active]="expandedId() === socio.id">
