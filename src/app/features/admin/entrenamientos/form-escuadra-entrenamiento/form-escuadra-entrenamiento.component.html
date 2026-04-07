@@ -36,7 +36,7 @@
           <ul class="tirador-search__dropdown">
             @for (s of filtrados($index); track s.id) {
               <li
-                (mousedown)="seleccionar($index, s)"
+                (pointerdown)="seleccionar($index, s)"
                 class="tirador-search__option"
                 [class.tirador-search__option--selected]="p.userId === s.id"
               >
