@@ -1,0 +1,28 @@
+<div class="form-entrenamiento">
+  <div class="page-header">
+    <button (click)="cancel()" class="form-entrenamiento__back-btn">
+      <i class="bi bi-chevron-left form-entrenamiento__back-icon"></i>
+    </button>
+    <h2 class="form-entrenamiento__title">Nuevo entrenamiento</h2>
+  </div>
+
+  <div class="form-entrenamiento__card">
+    <label class="form-label">Fecha</label>
+    <input
+      type="date"
+      [(ngModel)]="fecha"
+      class="form-input form-entrenamiento__date"
+    />
+
+    @if (error) {
+      <p class="form-entrenamiento__error">{{ error }}</p>
+    }
+
+    <div class="form-entrenamiento__actions">
+      <button type="button" (click)="cancel()" class="btn-secondary">Cancelar</button>
+      <button (click)="onSubmit()" [disabled]="loading" class="btn-primary">
+        {{ loading ? 'Creando...' : 'Crear entrenamiento' }}
+      </button>
+    </div>
+  </div>
+</div>
