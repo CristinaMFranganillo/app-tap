@@ -8,13 +8,14 @@ import { ScoreService } from '../scores/score.service';
 import { CompeticionService } from '../scores/competicion.service';
 import { EntrenamientoService } from '../admin/entrenamientos/entrenamiento.service';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+import { AvatarEditorComponent } from '../../shared/components/avatar-editor/avatar-editor.component';
 import { Score } from '../../core/models/score.model';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [AvatarComponent, DatePipe, EmptyStateComponent],
+  imports: [AvatarComponent, AvatarEditorComponent, DatePipe, EmptyStateComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss',
 })
@@ -26,6 +27,20 @@ export class PerfilComponent {
   private router = inject(Router);
 
   user = toSignal(this.authService.currentUser$, { initialValue: null });
+
+  mostrarEditorAvatar = signal(false);
+
+  abrirEditorAvatar(): void {
+    this.mostrarEditorAvatar.set(true);
+  }
+
+  onAvatarCompletado(): void {
+    this.mostrarEditorAvatar.set(false);
+  }
+
+  onAvatarOmitido(): void {
+    this.mostrarEditorAvatar.set(false);
+  }
 
   // ── Año seleccionado ───────────────────────────────────────────
   anioActual = new Date().getFullYear();

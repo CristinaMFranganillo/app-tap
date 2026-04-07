@@ -143,3 +143,43 @@
     @apply flex justify-between text-[10px] text-neutral-300 font-medium px-1;
   }
 }
+
+.perfil-hero__avatar-btn {
+  position: relative;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.perfil-hero__camara {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #F5E000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+
+  i {
+    font-size: 10px;
+    color: #1A1A1A;
+  }
+}
+
+.perfil-avatar-modal {
+  @apply fixed inset-0 z-50 flex items-end justify-center;
+  background: rgba(0, 0, 0, 0.5);
+
+  &__sheet {
+    @apply w-full p-5 pb-8;
+    background: white;
+    border-radius: 20px 20px 0 0;
+    max-width: 480px;
+  }
+}

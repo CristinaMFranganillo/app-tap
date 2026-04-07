@@ -2,12 +2,17 @@
 
   <!-- Hero -->
   <div class="perfil-hero">
-    <app-avatar
-      [nombre]="user()?.nombre ?? ''"
-      [apellidos]="user()?.apellidos ?? ''"
-      [avatarUrl]="user()?.avatarUrl"
-      [size]="64"
-    />
+    <button class="perfil-hero__avatar-btn" (click)="abrirEditorAvatar()">
+      <app-avatar
+        [nombre]="user()?.nombre ?? ''"
+        [apellidos]="user()?.apellidos ?? ''"
+        [avatarUrl]="user()?.avatarUrl"
+        [size]="64"
+      />
+      <span class="perfil-hero__camara">
+        <i class="bi bi-camera-fill"></i>
+      </span>
+    </button>
     <h2 class="perfil-hero__nombre">
       {{ user()?.nombre }} {{ user()?.apellidos }}
     </h2>
@@ -15,6 +20,17 @@
       {{ user()?.rol }} · #{{ user()?.numeroSocio }}
     </p>
   </div>
+
+  @if (mostrarEditorAvatar()) {
+    <div class="perfil-avatar-modal">
+      <div class="perfil-avatar-modal__sheet">
+        <app-avatar-editor
+          (completado)="onAvatarCompletado()"
+          (omitido)="onAvatarOmitido()"
+        />
+      </div>
+    </div>
+  }
 
   <!-- Stats competiciones -->
   <div class="perfil-stats">
