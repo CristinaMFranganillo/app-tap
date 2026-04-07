@@ -58,6 +58,7 @@ export class FormSocioComponent implements OnInit {
           nombre: val.nombre!,
           apellidos: val.apellidos!,
           rol: val.rol as UserRole,
+          numeroSocio: val.numeroSocio!,
           dni: val.dni || undefined,
           telefono: val.telefono || undefined,
           direccion: val.direccion || undefined,
