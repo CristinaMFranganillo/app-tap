@@ -24,6 +24,8 @@ export class LoginComponent {
   error = '';
   loading = false;
 
+  mostrarPassword = signal(false);
+
   // Recuperar contraseña
   mostrarRecuperar = signal(false);
   recuperarEmail   = '';

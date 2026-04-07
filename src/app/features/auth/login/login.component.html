@@ -27,10 +27,13 @@
         <i class="bi bi-lock-fill"></i>
         <input
           formControlName="password"
-          type="password"
+          [type]="mostrarPassword() ? 'text' : 'password'"
           autocomplete="current-password"
           placeholder="••••••••"
         />
+        <button type="button" class="login-field__eye" (click)="mostrarPassword.set(!mostrarPassword())">
+          <i [class]="mostrarPassword() ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+        </button>
       </div>
 
       @if (error) {

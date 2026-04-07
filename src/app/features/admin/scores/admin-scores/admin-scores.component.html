@@ -49,42 +49,10 @@
     }
   </section>
 
-  <!-- ── COMPETICIONES (sección secundaria) ───────────────────── -->
+  <!-- ── COMPETICIONES (oculto temporalmente, pendiente de implementar) ───
   <section class="admin-scores__section admin-scores__section--secondary">
-    <h2 class="admin-scores__section-title admin-scores__section-title--secondary">Competiciones</h2>
-
-    <button (click)="nuevaCompeticion()" class="admin-scores__btn-secondary">
-      <i class="bi bi-trophy admin-scores__btn-secondary-icon"></i>
-      <span>Nueva competición</span>
-    </button>
-
-    @if (competiciones().length === 0) {
-      <p class="admin-scores__empty-text">Sin competiciones registradas.</p>
-    } @else {
-      @for (c of competiciones(); track c.id) {
-        <div class="card competicion-item">
-          <div class="competicion-item__header">
-            <div class="competicion-item__info">
-              <div class="competicion-item__nombre-row">
-                <p class="competicion-item__nombre">{{ c.nombre }}</p>
-                @if (c.activa) {
-                  <span class="badge badge--primary">Activa</span>
-                }
-              </div>
-              <p class="competicion-item__modalidad">{{ c.modalidad }}</p>
-            </div>
-            <div class="competicion-item__stats">
-              <p class="competicion-item__total">{{ totalPlatos(c) }}<span class="competicion-item__total-unit"> platos</span></p>
-              <p class="competicion-item__series">{{ c.numSeries }} serie(s) · {{ c.platosPorSerie }}/serie</p>
-            </div>
-          </div>
-          @if (c.lugar) {
-            <p class="competicion-item__lugar"><i class="bi bi-geo-alt"></i> {{ c.lugar }}</p>
-          }
-          <p class="competicion-item__fecha">{{ c.fecha | date:'dd/MM/yyyy' }}</p>
-        </div>
-      }
-    }
+    ...
   </section>
+  ─────────────────────────────────────────────────────────────────────── -->
 
 </div>

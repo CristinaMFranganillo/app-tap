@@ -8,16 +8,51 @@
     </h2>
   </div>
 
-  @if (escuadras().length === 0) {
+  @if (escuadrasConResultados().length === 0) {
     <app-empty-state icon="bi-people" mensaje="Sin escuadras todavía" />
   } @else {
-    @for (e of escuadras(); track e.id) {
-      <div class="card escuadra-item" (click)="irResultados(e.id)">
-        <div class="escuadra-item__info">
-          <p class="escuadra-item__nombre">Escuadra {{ e.numero }}</p>
-          <p class="escuadra-item__tiradores">{{ e.tiradores?.length ?? 0 }} tiradores</p>
+    @for (item of escuadrasConResultados(); track item.escuadra.id) {
+      <div class="escuadra-card card">
+
+        <!-- Cabecera de escuadra -->
+        <div class="escuadra-card__header">
+          <div class="escuadra-card__header-info">
+            <p class="escuadra-card__titulo">Escuadra {{ item.escuadra.numero }}</p>
+            @if (!item.cargando) {
+              <p class="escuadra-card__meta">
+                {{ item.filas.length }} tirador{{ item.filas.length !== 1 ? 'es' : '' }}
+                @if (item.filas.length > 0) {
+                  &nbsp;·&nbsp; {{ item.total }}/{{ item.filas.length * 25 }} platos
+                }
+              </p>
+            }
+          </div>
+          <button (click)="irResultados(item.escuadra.id)" class="escuadra-card__btn-editar">
+            <i class="bi bi-pencil-square"></i>
+          </button>
         </div>
-        <i class="bi bi-chevron-right escuadra-item__arrow"></i>
+
+        <!-- Resultados -->
+        @if (item.cargando) {
+          <p class="escuadra-card__cargando">Cargando resultados...</p>
+        } @else if (item.filas.length === 0) {
+          <p class="escuadra-card__sin-resultados">Sin resultados registrados</p>
+        } @else {
+          <div class="escuadra-card__resultados">
+            @for (fila of item.filas; track fila.puesto) {
+              <div class="resultado-fila">
+                <span class="resultado-fila__puesto">{{ fila.puesto }}</span>
+                <span class="resultado-fila__nombre">{{ fila.nombre }}</span>
+                <span class="resultado-fila__rotos"
+                  [class.resultado-fila__rotos--bueno]="fila.platosRotos >= 20"
+                  [class.resultado-fila__rotos--malo]="fila.platosRotos < 15">
+                  {{ fila.platosRotos }}/25
+                </span>
+              </div>
+            }
+          </div>
+        }
+
       </div>
     }
   }

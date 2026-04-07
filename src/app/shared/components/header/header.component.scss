@@ -18,11 +18,13 @@
   @apply absolute right-0 top-10 z-50
          bg-white rounded-card shadow-card
          border border-neutral-100
-         min-w-[160px] overflow-hidden;
+         overflow-hidden;
+  min-width: max-content;
 
   &__item {
     @apply flex items-center gap-2 w-full px-4 py-3
-           text-sm font-bold text-secondary
+           text-sm font-bold text-secondary text-left
+           whitespace-nowrap
            hover:bg-neutral-50 active:bg-neutral-100
            transition-colors;
   }

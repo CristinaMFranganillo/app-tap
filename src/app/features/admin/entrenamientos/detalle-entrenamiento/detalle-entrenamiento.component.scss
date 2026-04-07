@@ -1,16 +1,72 @@
 .detalle-entrenamiento {
-  @apply p-3;
+  @apply p-3 flex flex-col gap-3;
 
   &__back-btn { @apply text-gray-400; }
   &__back-icon { @apply text-[15px]; }
   &__title { @apply text-[18px] font-extrabold text-secondary; }
 }
 
-.escuadra-item {
-  @apply flex items-center justify-between cursor-pointer;
+// ── Tarjeta de escuadra ────────────────────────────────────────
 
-  &__info { @apply flex-1 min-w-0; }
-  &__nombre { @apply text-base font-bold text-secondary; }
-  &__tiradores { @apply text-xs text-neutral-300 font-medium; }
-  &__arrow { @apply text-neutral-300 text-[14px]; }
+.escuadra-card {
+  @apply flex flex-col gap-2 p-0 overflow-hidden;
+
+  &__header {
+    @apply flex items-center justify-between px-4 pt-4 pb-2;
+  }
+
+  &__header-info {
+    @apply flex-1 min-w-0;
+  }
+
+  &__titulo {
+    @apply text-base font-bold text-secondary;
+  }
+
+  &__meta {
+    @apply text-xs text-neutral-300 font-medium mt-0.5;
+  }
+
+  &__btn-editar {
+    @apply bg-transparent border-0 text-neutral-300 text-[18px] p-1 cursor-pointer
+           active:text-secondary transition-colors flex-shrink-0;
+  }
+
+  &__cargando {
+    @apply text-xs text-neutral-300 font-medium px-4 pb-3;
+  }
+
+  &__sin-resultados {
+    @apply text-xs text-neutral-300 font-medium italic px-4 pb-3;
+  }
+
+  &__resultados {
+    @apply flex flex-col divide-y divide-neutral-100;
+  }
+}
+
+// ── Fila de resultado por tirador ──────────────────────────────
+
+.resultado-fila {
+  @apply flex items-center gap-3 px-4 py-2.5;
+
+  &__puesto {
+    @apply w-5 text-center text-xs font-bold text-neutral-300 flex-shrink-0;
+  }
+
+  &__nombre {
+    @apply flex-1 text-sm font-semibold text-secondary truncate;
+  }
+
+  &__rotos {
+    @apply text-sm font-extrabold text-secondary flex-shrink-0;
+
+    &--bueno {
+      @apply text-success;
+    }
+
+    &--malo {
+      @apply text-danger;
+    }
+  }
 }

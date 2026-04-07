@@ -129,7 +129,10 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
         })),
         user.id
       );
-      this.router.navigate(['/admin/entrenamientos', this.entrenamientoId]);
+      this.router.navigate([
+        '/admin/entrenamientos', this.entrenamientoId,
+        'escuadra', this.escuadraId, 'resumen',
+      ]);
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error al guardar');
       this.saving.set(false);

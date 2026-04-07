@@ -1,0 +1,53 @@
+<div class="resumen-e">
+
+  <!-- Header -->
+  <div class="page-header">
+    <button (click)="volverEntrenamiento()" class="resumen-e__back-btn">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <h2 class="resumen-e__title">Resumen escuadra</h2>
+  </div>
+
+  @if (cargando()) {
+    <div class="resumen-e__loading">
+      <p>Cargando resultados...</p>
+    </div>
+  } @else {
+
+    <!-- Total escuadra -->
+    <div class="resumen-e__total-card card">
+      <p class="resumen-e__total-label">Total escuadra</p>
+      <p class="resumen-e__total-num">
+        {{ total }}<span class="resumen-e__total-de">/{{ totalPosible }}</span>
+      </p>
+      <p class="resumen-e__total-media">
+        Media: {{ filas().length > 0 ? (total / filas().length | number:'1.1-1') : '—' }} platos/tirador
+      </p>
+    </div>
+
+    <!-- Tabla de resultados -->
+    <div class="resumen-e__tabla">
+      @for (fila of filas(); track fila.puesto) {
+        <div class="resumen-e__fila card">
+          <span class="resumen-e__fila-puesto">{{ fila.puesto }}</span>
+          <span class="resumen-e__fila-nombre">{{ fila.nombre }}</span>
+          <div class="resumen-e__fila-scores">
+            <span class="resumen-e__fila-rotos">{{ fila.platosRotos }}/25</span>
+            @if (fila.fallos > 0) {
+              <span class="resumen-e__fila-fallos">{{ fila.fallos }} fallos</span>
+            } @else {
+              <span class="resumen-e__fila-perfecto"><i class="bi bi-star-fill"></i> Perfecto</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Botón volver -->
+    <button (click)="volverEntrenamiento()" class="btn-primary resumen-e__btn-volver">
+      <i class="bi bi-check-lg"></i>
+      Volver al entrenamiento
+    </button>
+
+  }
+</div>

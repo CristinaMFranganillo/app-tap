@@ -33,6 +33,10 @@
     @apply flex-1 bg-transparent text-[14px] font-medium text-brand-dark outline-none placeholder-gray-300;
   }
 
+  &__eye {
+    @apply bg-transparent border-0 p-0 cursor-pointer text-gray-300 text-[16px] leading-none;
+  }
+
   &--mb {
     @apply mb-3;
   }

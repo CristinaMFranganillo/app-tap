@@ -1,0 +1,69 @@
+.resumen-e {
+  @apply p-3 flex flex-col gap-4;
+
+  &__back-btn { @apply text-gray-400 text-[15px]; }
+  &__title { @apply text-[18px] font-extrabold text-secondary; }
+
+  &__loading {
+    @apply flex items-center justify-center py-16 text-neutral-300 text-sm;
+  }
+
+  // ── Tarjeta total ──────────────────────────────────────────────
+  &__total-card {
+    @apply flex flex-col items-center py-5 gap-1;
+  }
+
+  &__total-label {
+    @apply text-xs font-bold uppercase tracking-widest text-neutral-400;
+  }
+
+  &__total-num {
+    @apply text-[52px] font-black text-secondary leading-none;
+  }
+
+  &__total-de {
+    @apply text-[28px] font-bold text-neutral-300;
+  }
+
+  &__total-media {
+    @apply text-sm text-neutral-400 font-medium mt-1;
+  }
+
+  // ── Filas de tiradores ─────────────────────────────────────────
+  &__tabla {
+    @apply flex flex-col gap-2;
+  }
+
+  &__fila {
+    @apply flex items-center gap-3 py-3 px-4;
+  }
+
+  &__fila-puesto {
+    @apply w-6 text-center text-xs font-bold text-neutral-300 flex-shrink-0;
+  }
+
+  &__fila-nombre {
+    @apply flex-1 text-sm font-bold text-secondary truncate;
+  }
+
+  &__fila-scores {
+    @apply flex flex-col items-end gap-0.5 flex-shrink-0;
+  }
+
+  &__fila-rotos {
+    @apply text-base font-extrabold text-secondary;
+  }
+
+  &__fila-fallos {
+    @apply text-xs font-semibold text-danger;
+  }
+
+  &__fila-perfecto {
+    @apply text-xs font-semibold text-success;
+  }
+
+  // ── Botón volver ───────────────────────────────────────────────
+  &__btn-volver {
+    @apply mt-2;
+  }
+}

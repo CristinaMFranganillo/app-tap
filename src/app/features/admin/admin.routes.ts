@@ -119,4 +119,12 @@ export const adminRoutes: Routes = [
       import('./entrenamientos/registrar-resultado-entrenamiento/registrar-resultado-entrenamiento.component')
         .then(m => m.RegistrarResultadoEntrenamientoComponent),
   },
+  {
+    path: 'entrenamientos/:entrenamientoId/escuadra/:escuadraId/resumen',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./entrenamientos/resumen-escuadra-entrenamiento/resumen-escuadra-entrenamiento.component')
+        .then(m => m.ResumenEscuadraEntrenamientoComponent),
+  },
 ];
