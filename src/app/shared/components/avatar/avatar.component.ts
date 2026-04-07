@@ -1,11 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InicialesPipe } from '../../pipes/iniciales.pipe';
 
 @Component({
   selector: 'app-avatar',
   standalone: true,
-  imports: [CommonModule, InicialesPipe],
+  imports: [CommonModule],
   templateUrl: './avatar.component.html',
   styleUrl: './avatar.component.scss',
 })
