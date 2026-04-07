@@ -1,7 +1,7 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { TitleCasePipe } from '@angular/common';
+import { TitleCasePipe, DatePipe } from '@angular/common';
 import { Subject, switchMap, startWith } from 'rxjs';
 import { UserService } from '../user.service';
 import { AvatarComponent } from '../../../../shared/components/avatar/avatar.component';
@@ -11,7 +11,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-lista-socios',
   standalone: true,
-  imports: [FormsModule, TitleCasePipe, AvatarComponent],
+  imports: [FormsModule, TitleCasePipe, DatePipe, AvatarComponent],
   templateUrl: './lista-socios.component.html',
   styleUrl: './lista-socios.component.scss',
 })
@@ -20,6 +20,7 @@ export class ListaSociosComponent {
   private router = inject(Router);
 
   searchTerm = signal('');
+  expandedId = signal<string | null>(null);
   private refresh$ = new Subject<void>();
 
   private socios = toSignal(
@@ -41,6 +42,10 @@ export class ListaSociosComponent {
   async toggleActivo(id: string): Promise<void> {
     await this.userService.toggleActivo(id);
     this.refresh$.next();
+  }
+
+  toggleExpanded(id: string): void {
+    this.expandedId.set(this.expandedId() === id ? null : id);
   }
 
   goToCreate(): void {

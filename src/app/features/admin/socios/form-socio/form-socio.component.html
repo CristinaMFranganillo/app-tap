@@ -38,6 +38,28 @@
         </select>
       </div>
 
+      @if (!isEdit) {
+        <div>
+          <label class="form-label">Número de socio <span class="form-required">*</span></label>
+          <input formControlName="numeroSocio" placeholder="Nº socio" class="form-input-surface" />
+        </div>
+      }
+
+      <div>
+        <label class="form-label">DNI</label>
+        <input formControlName="dni" placeholder="12345678A" class="form-input-surface" />
+      </div>
+
+      <div>
+        <label class="form-label">Teléfono</label>
+        <input formControlName="telefono" type="tel" placeholder="600 000 000" class="form-input-surface" />
+      </div>
+
+      <div>
+        <label class="form-label">Dirección</label>
+        <input formControlName="direccion" placeholder="Calle, número, ciudad" class="form-input-surface" />
+      </div>
+
       <div class="form-socio__actions">
         <button type="button" (click)="cancel()" class="btn-secondary">Cancelar</button>
         <button type="submit" [disabled]="form.invalid || saving()" class="btn-primary">

@@ -14,21 +14,47 @@
   <h3 class="section-title">Socios ({{ filteredSocios().length }})</h3>
 
   @for (socio of filteredSocios(); track socio.id) {
-    <div class="card socio-item">
-      <app-avatar [nombre]="socio.nombre" [apellidos]="socio.apellidos" [avatarUrl]="socio.avatarUrl" [size]="34" />
-      <div class="socio-item__info">
-        <p class="socio-item__nombre">{{ socio.nombre }} {{ socio.apellidos }}</p>
-        <p class="socio-item__meta">{{ socio.email }} · {{ socio.rol | titlecase }}</p>
+    <div class="card socio-item" [class.socio-item--expanded]="expandedId() === socio.id">
+      <div class="socio-item__row">
+        <app-avatar [nombre]="socio.nombre" [apellidos]="socio.apellidos" [avatarUrl]="socio.avatarUrl" [size]="34" />
+        <div class="socio-item__info">
+          <p class="socio-item__nombre">{{ socio.nombre }} {{ socio.apellidos }}</p>
+          <p class="socio-item__meta">{{ socio.email }} · {{ socio.rol | titlecase }}</p>
+        </div>
+        <div class="socio-item__actions">
+          <span class="socio-item__numero">#{{ socio.numeroSocio }}</span>
+          <button (click)="toggleExpanded(socio.id)" class="socio-item__btn-info" [class.socio-item__btn-info--active]="expandedId() === socio.id">
+            <i class="bi bi-info-circle-fill socio-item__btn-icon"></i>
+          </button>
+          <button (click)="goToEdit(socio.id)" class="socio-item__btn-edit">
+            <i class="bi bi-pencil-fill socio-item__btn-icon"></i>
+          </button>
+          <button (click)="eliminar(socio.id)" class="socio-item__btn-delete">
+            <i class="bi bi-trash-fill socio-item__btn-icon"></i>
+          </button>
+        </div>
       </div>
-      <div class="socio-item__actions">
-        <span class="socio-item__numero">#{{ socio.numeroSocio }}</span>
-        <button (click)="goToEdit(socio.id)" class="socio-item__btn-edit">
-          <i class="bi bi-pencil-fill socio-item__btn-icon"></i>
-        </button>
-        <button (click)="eliminar(socio.id)" class="socio-item__btn-delete">
-          <i class="bi bi-trash-fill socio-item__btn-icon"></i>
-        </button>
-      </div>
+
+      @if (expandedId() === socio.id) {
+        <div class="socio-item__details">
+          <div class="socio-item__detail-row">
+            <span class="socio-item__detail-label">DNI</span>
+            <span class="socio-item__detail-value">{{ socio.dni || '—' }}</span>
+          </div>
+          <div class="socio-item__detail-row">
+            <span class="socio-item__detail-label">Teléfono</span>
+            <span class="socio-item__detail-value">{{ socio.telefono || '—' }}</span>
+          </div>
+          <div class="socio-item__detail-row">
+            <span class="socio-item__detail-label">Dirección</span>
+            <span class="socio-item__detail-value">{{ socio.direccion || '—' }}</span>
+          </div>
+          <div class="socio-item__detail-row">
+            <span class="socio-item__detail-label">Alta</span>
+            <span class="socio-item__detail-value">{{ socio.fechaAlta | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      }
     </div>
   }
 

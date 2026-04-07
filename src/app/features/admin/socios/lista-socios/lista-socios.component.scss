@@ -15,7 +15,11 @@
 }
 
 .socio-item {
-  @apply flex items-center gap-2;
+  @apply flex flex-col gap-0;
+
+  &__row {
+    @apply flex items-center gap-2;
+  }
 }
 
 .socio-item__info {
@@ -42,6 +46,14 @@
   @apply text-[11px] text-gray-300 font-semibold;
 }
 
+.socio-item__btn-info {
+  @apply text-gray-300;
+
+  &--active {
+    @apply text-primary;
+  }
+}
+
 .socio-item__btn-edit {
   @apply text-gray-400;
 }
@@ -52,6 +64,22 @@
 
 .socio-item__btn-icon {
   @apply text-[16px];
+}
+
+.socio-item__details {
+  @apply mt-3 pt-3 border-t border-gray-100 flex flex-col gap-2;
+}
+
+.socio-item__detail-row {
+  @apply flex justify-between items-center;
+}
+
+.socio-item__detail-label {
+  @apply text-[11px] font-semibold text-gray-400 uppercase tracking-wide;
+}
+
+.socio-item__detail-value {
+  @apply text-[12px] font-medium text-brand-dark;
 }
 
 .lista-socios__empty {
