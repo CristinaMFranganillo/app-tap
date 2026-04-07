@@ -1,0 +1,27 @@
+.detalle-noticia {
+  @apply p-3;
+}
+
+.detalle-noticia__imagen {
+  @apply w-full h-[140px] object-cover rounded-[14px] mb-3;
+}
+
+.detalle-noticia__fecha {
+  @apply text-[18px] font-bold text-brand-dark uppercase tracking-wider mb-1;
+}
+
+.detalle-noticia__titulo {
+  @apply text-[16px] font-black text-brand-dark leading-tight mb-3;
+}
+
+.detalle-noticia__contenido {
+  @apply text-[14px] text-gray-500 font-medium leading-relaxed;
+}
+
+.noticia-accent {
+  @apply w-full h-[4px] bg-brand-yellow rounded-full mb-3;
+}
+
+.btn-volver {
+  @apply flex items-center gap-1 text-[18px] font-bold text-gray-400 mb-3;
+}

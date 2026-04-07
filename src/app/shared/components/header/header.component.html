@@ -1,5 +1,5 @@
 <header class="app-header fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 bg-white border-b border-gray-100">
-  <div class="flex items-center gap-2">
+  <a routerLink="/" class="flex items-center gap-2">
     <img
       src="logo.png"
       alt="Logo Campo de Tiro San Isidro"
@@ -9,7 +9,7 @@
       <p class="text-brand-dark font-semibold text-[14px] tracking-tight">Campo de Tiro</p>
       <p class="text-gray-400 font-medium text-[11px] uppercase tracking-widest">San Isidro</p>
     </div>
-  </div>
+  </a>
   <app-avatar
     [nombre]="(currentUser$ | async)?.nombre ?? ''"
     [apellidos]="(currentUser$ | async)?.apellidos ?? ''"

@@ -1,11 +1,11 @@
-<div class="p-3">
-  <h2 class="text-[13px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-3">Noticias</h2>
+<div class="lista-noticias">
+  <h2 class="page-title lista-noticias__title">Noticias</h2>
 
   @if (noticias().length === 0) {
     <app-empty-state icon="bi-newspaper" mensaje="No hay noticias publicadas" />
   } @else {
     @for (n of noticias(); track n.id) {
-      <button class="w-full text-left" (click)="goToDetalle(n.id)">
+      <button class="lista-noticias__noticia-btn" (click)="goToDetalle(n.id)">
         <app-card-noticia [noticia]="n" />
       </button>
     }

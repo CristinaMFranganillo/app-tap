@@ -7,6 +7,7 @@ import { News } from '../../../core/models/news.model';
   standalone: true,
   imports: [DatePipe],
   templateUrl: './card-noticia.component.html',
+  styleUrl: './card-noticia.component.scss',
 })
 export class CardNoticiaComponent {
   @Input({ required: true }) noticia!: News;

@@ -9,6 +9,7 @@ import { UserRole } from '../../../../core/models/user.model';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './form-socio.component.html',
+  styleUrl: './form-socio.component.scss',
 })
 export class FormSocioComponent implements OnInit {
   private fb = inject(FormBuilder);

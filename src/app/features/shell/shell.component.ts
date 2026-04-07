@@ -10,6 +10,7 @@ import { AuthService } from '../../core/auth/auth.service';
   standalone: true,
   imports: [RouterOutlet, HeaderComponent, BottomNavComponent, CambiarPasswordComponent],
   templateUrl: './shell.component.html',
+  styleUrl: './shell.component.scss',
 })
 export class ShellComponent implements OnInit {
   private auth = inject(AuthService);

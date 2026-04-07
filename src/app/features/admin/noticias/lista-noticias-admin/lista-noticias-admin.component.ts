@@ -12,6 +12,7 @@ import { News } from '../../../../core/models/news.model';
   standalone: true,
   imports: [DatePipe],
   templateUrl: './lista-noticias-admin.component.html',
+  styleUrl: './lista-noticias-admin.component.scss',
 })
 export class ListaNoticiasAdminComponent {
   private newsService = inject(NewsService);

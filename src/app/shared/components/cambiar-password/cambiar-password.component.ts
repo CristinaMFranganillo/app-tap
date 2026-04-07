@@ -9,6 +9,7 @@ import { supabase } from '../../../core/supabase/supabase.client';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './cambiar-password.component.html',
+  styleUrl: './cambiar-password.component.scss',
 })
 export class CambiarPasswordComponent {
   private fb = inject(FormBuilder);

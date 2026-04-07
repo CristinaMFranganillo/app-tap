@@ -1,0 +1,11 @@
+.empty-state {
+  @apply flex flex-col items-center justify-center py-10 text-center;
+
+  &__icon {
+    @apply text-[36px] text-neutral-200 mb-2;
+  }
+
+  &__text {
+    @apply text-xs font-bold text-neutral-300 uppercase tracking-wider;
+  }
+}

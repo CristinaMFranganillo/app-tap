@@ -1,0 +1,59 @@
+.registrar-resultado {
+  @apply p-3;
+}
+
+.registrar-resultado__title {
+  @apply text-[18px] font-extrabold text-brand-dark mb-4;
+}
+
+.registrar-resultado__selects {
+  @apply mb-3;
+}
+
+.registrar-resultado__counters {
+  @apply flex gap-3 mb-4;
+}
+
+.tirador-item {
+  @apply flex items-center justify-between;
+}
+
+.tirador-item__nombre {
+  @apply text-[14px] font-bold text-brand-dark;
+}
+
+.tirador-item__puesto {
+  @apply text-[11px] text-gray-300 font-medium;
+}
+
+.tirador-item__actions {
+  @apply flex gap-2;
+}
+
+.counter-card {
+  @apply flex-1 bg-surface rounded-[10px] px-3 py-2 text-center;
+
+  &__label {
+    @apply text-[14px] text-gray-300 font-bold uppercase tracking-wide;
+  }
+
+  &__controls {
+    @apply flex items-center justify-center gap-2 mt-1;
+  }
+
+  &__btn {
+    @apply text-gray-300 font-bold text-[14px] leading-none;
+  }
+
+  &__value {
+    @apply text-[20px] font-black text-brand-dark;
+  }
+}
+
+.btn-roto {
+  @apply px-3 py-1.5 rounded-[8px] bg-success text-white text-[13px] font-extrabold disabled:opacity-50;
+}
+
+.btn-fallo {
+  @apply px-3 py-1.5 rounded-[8px] bg-danger text-white text-[13px] font-extrabold disabled:opacity-50;
+}

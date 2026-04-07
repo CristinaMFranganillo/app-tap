@@ -1,0 +1,107 @@
+.admin-scores {
+  @apply p-3;
+}
+
+.admin-scores__page-title {
+  @apply mb-4;
+}
+
+.admin-scores__acciones {
+  @apply flex flex-col gap-2 mb-5;
+}
+
+.admin-scores__btn-nueva-competicion {
+  @apply flex items-center gap-3 bg-brand-yellow rounded-[12px] px-4 py-3;
+}
+
+.admin-scores__btn-nueva-competicion-icon {
+  @apply text-brand-dark text-[20px];
+}
+
+.admin-scores__btn-nueva-competicion-text {
+  @apply text-[14px] font-extrabold text-brand-dark;
+}
+
+.admin-scores__acciones-row {
+  @apply flex gap-2;
+}
+
+.admin-scores__btn-accion {
+  @apply flex-1 flex items-center gap-2 bg-white rounded-[12px] px-3 py-2.5 shadow-sm;
+}
+
+.admin-scores__btn-accion-icon {
+  @apply text-brand-dark text-[14px];
+}
+
+.admin-scores__btn-accion-text {
+  @apply text-[13px] font-bold text-brand-dark;
+}
+
+.admin-scores__section-label {
+  @apply text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-2;
+}
+
+.admin-scores__empty {
+  @apply flex flex-col items-center justify-center py-10 text-center;
+}
+
+.admin-scores__empty-icon {
+  @apply text-[36px] text-gray-200 mb-2;
+}
+
+.admin-scores__empty-title {
+  @apply text-[13px] font-bold text-gray-300 uppercase tracking-wider;
+}
+
+.admin-scores__empty-subtitle {
+  @apply text-[11px] text-gray-300 mt-1;
+}
+
+.competicion-item__header {
+  @apply flex items-start justify-between;
+}
+
+.competicion-item__info {
+  @apply flex-1 min-w-0;
+}
+
+.competicion-item__nombre-row {
+  @apply flex items-center gap-2;
+}
+
+.competicion-item__nombre {
+  @apply text-[14px] font-extrabold text-brand-dark truncate;
+}
+
+.competicion-item__badge-activa {
+  @apply flex-shrink-0 px-1.5 py-0.5 bg-brand-yellow rounded-full text-[10px] font-black text-brand-dark uppercase;
+}
+
+.competicion-item__modalidad {
+  @apply text-[11px] text-gray-300 font-medium mt-0.5;
+}
+
+.competicion-item__stats {
+  @apply text-right ml-2;
+}
+
+.competicion-item__total {
+  @apply text-[13px] font-black text-brand-dark;
+}
+
+.competicion-item__total-unit {
+  @apply text-[10px] text-gray-300 font-medium;
+}
+
+.competicion-item__series {
+  @apply text-[10px] text-gray-300;
+}
+
+.competicion-item__lugar {
+  @apply text-[10px] text-gray-300 mt-1;
+}
+
+.competicion-item__fecha {
+  @apply text-[10px] text-gray-300 mt-0.5;
+}

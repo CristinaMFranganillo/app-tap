@@ -1,15 +1,13 @@
-<div class="p-3">
-  <h2 class="text-[16px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-3">Ranking</h2>
+<div class="scores-ranking">
+  <h2 class="page-title scores-ranking__title">Ranking</h2>
 
   <!-- Selector de competición -->
-  <div class="flex gap-2 overflow-x-auto pb-1 mb-4">
+  <div class="scores-ranking__chips">
     @for (c of competiciones(); track c.id) {
       <button
         (click)="selectCompeticion(c.id)"
-        class="flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition-colors"
-        [class]="c.id === selectedId()
-          ? 'bg-brand-dark text-white'
-          : 'bg-white text-gray-400 shadow-sm'"
+        class="ranking-chip"
+        [class]="c.id === selectedId() ? 'ranking-chip--active' : 'ranking-chip--inactive'"
       >
         {{ c.nombre }}
       </button>
@@ -18,26 +16,25 @@
 
   <!-- Tabla ranking -->
   @if (ranking().length === 0) {
-    <div class="flex flex-col items-center justify-center py-10 text-center">
-      <i class="bi bi-trophy text-[36px] text-gray-200 mb-2"></i>
-      <p class="text-[16px] font-bold text-gray-300 uppercase tracking-wider">Sin resultados</p>
+    <div class="scores-ranking__empty">
+      <i class="bi bi-trophy scores-ranking__empty-icon"></i>
+      <p class="scores-ranking__empty-text">Sin resultados</p>
     </div>
   } @else {
     @for (entry of ranking(); track entry.userId; let posicion = $index) {
-      <div class="flex items-center gap-3 bg-white rounded-[12px] px-3 py-2.5 mb-2 shadow-sm"
-           [class]="posicion < 3 ? 'border-l-[3px] border-brand-yellow' : ''">
-        <span class="text-[14px] w-6 text-center">{{ getMedalIcon(posicion + 1) }}</span>
+      <div class="ranking-row" [class.ranking-row--podio]="posicion < 3">
+        <span class="ranking-row__posicion">{{ getMedalIcon(posicion + 1) }}</span>
         <app-avatar
           [nombre]="getUserNombre(entry.userId)"
           [apellidos]="getUserApellidos(entry.userId)"
           [size]="32"
         />
-        <div class="flex-1 min-w-0">
-          <p class="text-[14px] font-bold text-brand-dark truncate">{{ getUserNombre(entry.userId) }}</p>
+        <div class="ranking-row__info">
+          <p class="ranking-row__nombre">{{ getUserNombre(entry.userId) }}</p>
         </div>
-        <div class="text-right">
-          <p class="text-[16px] font-black text-brand-dark">{{ entry.totalRotos }}<span class="text-[16px] text-gray-300 font-semibold">/{{ (competicionActual()?.platosPorSerie ?? 25) * (competicionActual()?.numSeries ?? 1) }}</span></p>
-          <p class="text-[10px] font-bold text-gray-300 uppercase tracking-wide">platos</p>
+        <div class="ranking-row__resultado">
+          <p class="ranking-row__rotos">{{ entry.totalRotos }}<span class="ranking-row__total">/{{ (competicionActual()?.platosPorSerie ?? 25) * (competicionActual()?.numSeries ?? 1) }}</span></p>
+          <p class="ranking-row__label">platos</p>
         </div>
       </div>
     }

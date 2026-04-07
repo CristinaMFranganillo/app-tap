@@ -15,6 +15,7 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
   standalone: true,
   imports: [AvatarComponent, DatePipe, EmptyStateComponent],
   templateUrl: './perfil.component.html',
+  styleUrl: './perfil.component.scss',
 })
 export class PerfilComponent {
   private authService = inject(AuthService);

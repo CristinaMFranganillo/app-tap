@@ -1,0 +1,49 @@
+.form-competicion {
+  @apply p-3;
+}
+
+.form-competicion__back-btn {
+  @apply text-gray-400;
+}
+
+.form-competicion__back-icon {
+  @apply text-[15px];
+}
+
+.form-competicion__title {
+  @apply text-[18px] font-extrabold text-brand-dark;
+}
+
+.form-competicion__form {
+  @apply flex flex-col gap-3;
+}
+
+.form-competicion__row {
+  @apply flex gap-2;
+}
+
+.form-competicion__col {
+  @apply flex-1;
+}
+
+.form-competicion__checkbox-label {
+  @apply flex items-center gap-2 cursor-pointer;
+}
+
+.form-competicion__checkbox {
+  @apply accent-brand-yellow w-3.5 h-3.5;
+}
+
+.form-competicion__checkbox-text {
+  @apply text-[13px] font-semibold text-brand-dark;
+}
+
+.form-competicion__actions {
+  @apply flex gap-2 pt-1;
+}
+
+.form-competicion__input {
+  &::placeholder {
+    @apply text-gray-300;
+  }
+}

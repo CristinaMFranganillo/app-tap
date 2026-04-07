@@ -1,0 +1,45 @@
+.form-noticia {
+  @apply p-3;
+}
+
+.form-noticia__back-btn {
+  @apply text-gray-400;
+}
+
+.form-noticia__back-icon {
+  @apply text-[15px];
+}
+
+.form-noticia__title {
+  @apply text-[18px] font-extrabold text-brand-dark;
+}
+
+.form-noticia__form {
+  @apply flex flex-col gap-3;
+}
+
+.form-noticia__textarea {
+  @apply resize-none;
+}
+
+.form-noticia__checkbox-label {
+  @apply flex items-center gap-2 cursor-pointer;
+}
+
+.form-noticia__checkbox {
+  @apply accent-brand-yellow w-3.5 h-3.5;
+}
+
+.form-noticia__checkbox-text {
+  @apply text-[13px] font-semibold text-brand-dark;
+}
+
+.form-noticia__actions {
+  @apply flex gap-2 pt-1;
+}
+
+.form-noticia__input {
+  &::placeholder {
+    @apply text-gray-300;
+  }
+}

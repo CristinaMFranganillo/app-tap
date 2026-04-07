@@ -1,0 +1,71 @@
+.scores-ranking {
+  @apply p-3;
+
+  &__title {
+    @apply mb-3;
+  }
+}
+
+.scores-ranking__chips {
+  @apply flex gap-2 overflow-x-auto pb-1 mb-4;
+}
+
+.scores-ranking__empty {
+  @apply flex flex-col items-center justify-center py-10 text-center;
+}
+
+.scores-ranking__empty-icon {
+  @apply text-[36px] text-gray-200 mb-2;
+}
+
+.scores-ranking__empty-text {
+  @apply text-[16px] font-bold text-gray-300 uppercase tracking-wider;
+}
+
+.ranking-chip {
+  @apply flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition-colors;
+
+  &--active {
+    @apply bg-brand-dark text-white;
+  }
+
+  &--inactive {
+    @apply bg-white text-gray-400 shadow-sm;
+  }
+}
+
+.ranking-row {
+  @apply card flex items-center gap-3;
+
+  &--podio {
+    @apply border-l-[3px] border-brand-yellow;
+  }
+}
+
+.ranking-row__posicion {
+  @apply text-[14px] w-6 text-center;
+}
+
+.ranking-row__info {
+  @apply flex-1 min-w-0;
+}
+
+.ranking-row__nombre {
+  @apply text-[14px] font-bold text-brand-dark truncate;
+}
+
+.ranking-row__resultado {
+  @apply text-right;
+}
+
+.ranking-row__rotos {
+  @apply text-[16px] font-black text-brand-dark;
+}
+
+.ranking-row__total {
+  @apply text-[16px] text-gray-300 font-semibold;
+}
+
+.ranking-row__label {
+  @apply text-[10px] font-bold text-gray-300 uppercase tracking-wide;
+}

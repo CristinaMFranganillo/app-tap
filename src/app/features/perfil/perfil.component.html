@@ -1,52 +1,52 @@
 <div>
   <!-- Hero -->
-  <div class="bg-brand-dark px-4 pt-4 pb-6 flex flex-col items-center">
+  <div class="perfil-hero">
     <app-avatar
       [nombre]="user()?.nombre ?? ''"
       [apellidos]="user()?.apellidos ?? ''"
       [avatarUrl]="user()?.avatarUrl"
       [size]="64"
     />
-    <h2 class="text-white font-extrabold text-[16px] mt-2">
+    <h2 class="perfil-hero__nombre">
       {{ user()?.nombre }} {{ user()?.apellidos }}
     </h2>
-    <p class="text-brand-yellow font-bold text-[11px] uppercase tracking-wider">
+    <p class="perfil-hero__rol">
       {{ user()?.rol }} · #{{ user()?.numeroSocio }}
     </p>
   </div>
 
   <!-- Stats -->
-  <div class="flex mx-3 -mt-4 bg-white rounded-[14px] shadow-sm overflow-hidden">
-    <div class="flex-1 flex flex-col items-center py-3 border-r border-gray-100">
-      <p class="text-[22px] font-black text-brand-dark">{{ totalCompeticiones() }}</p>
-      <p class="text-[10px] font-bold text-gray-300 uppercase tracking-wide">Competiciones</p>
+  <div class="perfil-stats">
+    <div class="perfil-stat perfil-stat--border">
+      <p class="perfil-stat__value">{{ totalCompeticiones() }}</p>
+      <p class="perfil-stat__label">Competiciones</p>
     </div>
-    <div class="flex-1 flex flex-col items-center py-3 border-r border-gray-100">
-      <p class="text-[22px] font-black text-brand-dark">{{ mediaPlatos() }}</p>
-      <p class="text-[10px] font-bold text-gray-300 uppercase tracking-wide">Media platos</p>
+    <div class="perfil-stat perfil-stat--border">
+      <p class="perfil-stat__value">{{ mediaPlatos() }}</p>
+      <p class="perfil-stat__label">Media platos</p>
     </div>
-    <div class="flex-1 flex flex-col items-center py-3">
-      <p class="text-[22px] font-black text-brand-dark">{{ podios() }}</p>
-      <p class="text-[10px] font-bold text-gray-300 uppercase tracking-wide">Podios</p>
+    <div class="perfil-stat">
+      <p class="perfil-stat__value">{{ podios() }}</p>
+      <p class="perfil-stat__label">Podios</p>
     </div>
   </div>
 
   <!-- Historial -->
-  <div class="p-3 mt-2">
-    <h3 class="text-[13px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2">Mis Resultados</h3>
+  <div class="perfil-historial">
+    <h3 class="page-title perfil-historial__title">Mis Resultados</h3>
 
     @if (scores().length === 0) {
       <app-empty-state icon="bi-trophy" mensaje="Sin resultados registrados" />
     } @else {
       @for (score of scores(); track score.id) {
-        <div class="bg-white rounded-[12px] px-3 py-2.5 mb-2 shadow-sm flex items-center gap-3">
-          <div class="flex-1 min-w-0">
-            <p class="text-[14px] font-bold text-brand-dark truncate">{{ getCompeticionNombre(score.competicionId) }}</p>
-            <p class="text-[11px] text-gray-300 font-medium">{{ score.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
+        <div class="card perfil-score-item">
+          <div class="perfil-score-item__info">
+            <p class="perfil-score-item__nombre">{{ getCompeticionNombre(score.competicionId) }}</p>
+            <p class="perfil-score-item__fecha">{{ score.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
           </div>
-          <div class="text-right">
-            <p class="text-[16px] font-black text-brand-dark">
-              {{ score.platosRotos }}<span class="text-[11px] text-gray-300 font-semibold">/{{ getCompeticionTotal(score.competicionId) }}</span>
+          <div class="perfil-score-item__resultado">
+            <p class="perfil-score-item__rotos">
+              {{ score.platosRotos }}<span class="perfil-score-item__total">/{{ getCompeticionTotal(score.competicionId) }}</span>
             </p>
           </div>
         </div>
@@ -55,12 +55,9 @@
   </div>
 
   <!-- Logout -->
-  <div class="px-3 pb-4">
-    <button
-      (click)="logout()"
-      class="w-full py-2.5 rounded-[12px] border border-danger text-danger text-[13px] font-extrabold"
-    >
-      <i class="bi bi-box-arrow-right mr-1"></i>
+  <div class="perfil-logout">
+    <button (click)="logout()" class="btn-logout">
+      <i class="bi bi-box-arrow-right"></i>
       Cerrar sesión
     </button>
   </div>

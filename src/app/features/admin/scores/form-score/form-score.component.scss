@@ -1,0 +1,23 @@
+.form-score {
+  @apply p-3;
+}
+
+.form-score__back-btn {
+  @apply text-gray-400;
+}
+
+.form-score__back-icon {
+  @apply text-[15px];
+}
+
+.form-score__title {
+  @apply text-[18px] font-extrabold text-brand-dark;
+}
+
+.form-score__form {
+  @apply flex flex-col gap-3;
+}
+
+.form-score__actions {
+  @apply flex gap-2 pt-1;
+}

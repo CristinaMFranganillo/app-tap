@@ -5,51 +5,248 @@
 
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
-* {
-  box-sizing: border-box;
-}
+// ─── BASE ──────────────────────────────────────────────────────────────────────
 
-body {
-  font-family: 'Montserrat', system-ui, sans-serif;
-  background-color: #F5F5F5;
-  margin: 0;
-  padding: 0;
-}
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
 
-// Layout
-.app-header {
-  height: 54px;
-}
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-.app-bottom-nav {
-  padding: 7px 0 5px;
-}
+  body {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #1A1A1A;
+    background-color: #F5F5F5;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
 
-// Navigation active state
-.active-nav {
-  color: #1A1A1A !important;
+  // ── Jerarquía tipográfica ──────────────────────────────────────────
+  // Escala Major Third ×1.250 sobre base 14px
+  // h6: 10px · h5: 12px · h4: 14px · h3: 16px · h2: 19px · h1: 24px
 
-  i {
-    color: #D4E600 !important;
+  h1 {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: #1A1A1A;
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 19px;
+    line-height: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #1A1A1A;
+    margin: 0;
+  }
+
+  h3 {
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #1A1A1A;
+    margin: 0;
+  }
+
+  h4 {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 700;
+    color: #1A1A1A;
+    margin: 0;
+  }
+
+  h5 {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #1A1A1A;
+    margin: 0;
+  }
+
+  h6 {
+    font-size: 10px;
+    line-height: 14px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9CA3AF;
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    font-family: inherit;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  input, select, textarea {
+    font-family: inherit;
   }
 }
+
+// ─── COMPONENTS ───────────────────────────────────────────────────────────────
 
 @layer components {
-  .section-title {
-    @apply text-[9px] font-extrabold text-brand-dark uppercase tracking-[.8px] mb-2.5 flex items-center gap-1.5;
-    &::after {
-      content: '';
-      @apply flex-1 h-px bg-gray-200;
+
+  // ── Tipografía semántica ─────────────────────────────────────────
+
+  // Título de sección (usado en listados, headings de página)
+  .page-title {
+    @apply text-sm font-extrabold uppercase tracking-[1.5px] text-secondary;
+  }
+
+  // Cabecera de formulario con botón atrás
+  .page-header {
+    @apply flex items-center gap-2 mb-4;
+  }
+
+  // ── Formularios ───────────────────────────────────────────────────
+
+  .form-label {
+    @apply block text-sm font-medium text-neutral-400 tracking-wide mb-1;
+  }
+
+  // Input sobre fondo blanco (con sombra)
+  .form-input {
+    @apply w-full bg-neutral-white rounded-input px-3 py-2
+           text-base font-medium text-secondary
+           outline-none shadow-input
+           placeholder:text-neutral-300
+           focus:ring-2 focus:ring-primary/40 focus:shadow-none
+           transition-shadow duration-base;
+  }
+
+  // Input sobre fondo surface (sin sombra)
+  .form-input-surface {
+    @apply w-full bg-neutral-100 rounded-input px-3 py-2
+           text-base font-medium text-secondary
+           outline-none
+           placeholder:text-neutral-300
+           focus:ring-2 focus:ring-primary/40
+           transition-shadow duration-base;
+  }
+
+  // ── Cards ─────────────────────────────────────────────────────────
+
+  .card {
+    @apply bg-neutral-white rounded-card px-3 py-2.5 mb-2 shadow-card;
+  }
+
+  // ── Botones ───────────────────────────────────────────────────────
+
+  // Primario — amarillo marca
+  .btn-primary {
+    @apply flex-1 py-2.5 rounded-card
+           bg-primary text-secondary text-sm font-extrabold
+           disabled:opacity-50 disabled:cursor-not-allowed
+           active:scale-[.98] transition-transform duration-fast;
+  }
+
+  // Secundario — borde gris
+  .btn-secondary {
+    @apply flex-1 py-2.5 rounded-card
+           border border-neutral-200 text-sm font-bold text-neutral-400
+           disabled:opacity-50 disabled:cursor-not-allowed
+           active:scale-[.98] transition-transform duration-fast;
+  }
+
+  // Destructivo — borde rojo
+  .btn-danger {
+    @apply flex-1 py-2.5 rounded-card
+           border border-danger text-sm font-bold text-danger
+           disabled:opacity-50 disabled:cursor-not-allowed
+           active:scale-[.98] transition-transform duration-fast;
+  }
+
+  // Floating Action Button
+  .fab {
+    @apply fixed bottom-[60px] right-4
+           w-[42px] h-[42px] rounded-badge
+           bg-primary text-secondary
+           flex items-center justify-center
+           shadow-fab z-40
+           active:scale-95 transition-transform duration-fast;
+  }
+
+  // ── Navegación ────────────────────────────────────────────────────
+
+  // Icono y label activos en bottom nav
+  .active-nav {
+    color: #1A1A1A !important;
+
+    i {
+      color: #D4E600 !important;
     }
   }
-  .form-label {
-    @apply block text-[12px] font-bold text-gray-700 uppercase tracking-wide mb-1;
+
+  // ── Estados vacíos ────────────────────────────────────────────────
+
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-10 text-center;
+
+    &__icon {
+      @apply text-[36px] text-neutral-200 mb-2;
+    }
+
+    &__text {
+      @apply text-xs font-bold text-neutral-300 uppercase tracking-wider;
+    }
   }
-  .form-field {
-    @apply flex items-center gap-2 bg-surface rounded-[12px] px-3 py-2 mb-2.5;
-    i { @apply text-gray-300 text-[13px]; }
+
+  // ── Badges / Pills ────────────────────────────────────────────────
+
+  .badge {
+    @apply inline-flex items-center px-1.5 py-0.5 rounded-badge
+           text-xs font-black uppercase tracking-wide;
+
+    &--primary {
+      @apply bg-primary text-secondary;
+    }
+
+    &--success {
+      @apply bg-success-light text-success-dark;
+    }
+
+    &--danger {
+      @apply bg-danger-light text-danger-dark;
+    }
+
+    &--neutral {
+      @apply bg-neutral-200 text-neutral-500;
+    }
   }
-  .form-input {
-    @apply flex-1 bg-transparent text-[12px] font-medium text-brand-dark outline-none placeholder-gray-300;
+
+  // ── Indicador de estado (dot) ─────────────────────────────────────
+
+  .status-dot {
+    @apply w-2 h-2 rounded-full flex-shrink-0;
+
+    &--active   { @apply bg-success; }
+    &--inactive { @apply bg-neutral-200; }
   }
 }

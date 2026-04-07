@@ -1,24 +1,22 @@
-<div class="p-3">
-  <h3 class="text-[13px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2">
-    Publicadas ({{ publicadas().length }})
-  </h3>
+<div class="lista-noticias-admin">
+  <h3 class="page-title lista-noticias-admin__section-header">Publicadas ({{ publicadas().length }})</h3>
 
   @for (n of publicadas(); track n.id) {
-    <div class="flex items-center gap-2 bg-white rounded-[12px] px-3 py-2 mb-2 shadow-sm">
-      <div class="flex-1 min-w-0">
-        <p class="text-[14px] font-bold text-brand-dark truncate">{{ n.titulo }}</p>
-        <p class="text-[11px] text-gray-400 font-medium">{{ n.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
+    <div class="card noticia-item">
+      <div class="noticia-item__info">
+        <p class="noticia-item__titulo">{{ n.titulo }}</p>
+        <p class="noticia-item__fecha">{{ n.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="noticia-item__actions">
         @if (canEdit(n)) {
-          <button (click)="togglePublicada(n)" title="Despublicar" class="text-success">
-            <i class="bi bi-eye-fill text-[14px]"></i>
+          <button (click)="togglePublicada(n)" title="Despublicar" class="noticia-item__btn-publicar">
+            <i class="bi bi-eye-fill noticia-item__icon"></i>
           </button>
-          <button (click)="editar(n.id)" class="text-gray-400">
-            <i class="bi bi-pencil-fill text-[14px]"></i>
+          <button (click)="editar(n.id)" class="noticia-item__btn-edit">
+            <i class="bi bi-pencil-fill noticia-item__icon"></i>
           </button>
-          <button (click)="eliminar(n.id)" class="text-danger">
-            <i class="bi bi-trash-fill text-[14px]"></i>
+          <button (click)="eliminar(n.id)" class="noticia-item__btn-delete">
+            <i class="bi bi-trash-fill noticia-item__icon"></i>
           </button>
         }
       </div>
@@ -26,29 +24,27 @@
   }
 
   @if (publicadas().length === 0) {
-    <p class="text-[13px] text-gray-300 font-medium mb-4">No hay noticias publicadas.</p>
+    <p class="lista-noticias-admin__empty">No hay noticias publicadas.</p>
   }
 
-  <h3 class="text-[13px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2 mt-4">
-    Borradores ({{ borradores().length }})
-  </h3>
+  <h3 class="page-title lista-noticias-admin__section-header--mt">Borradores ({{ borradores().length }})</h3>
 
   @for (n of borradores(); track n.id) {
-    <div class="flex items-center gap-2 bg-white rounded-[12px] px-3 py-2 mb-2 shadow-sm opacity-70">
-      <div class="flex-1 min-w-0">
-        <p class="text-[14px] font-bold text-brand-dark truncate">{{ n.titulo }}</p>
-        <p class="text-[11px] text-gray-400 font-medium">{{ n.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
+    <div class="card noticia-item noticia-item--borrador">
+      <div class="noticia-item__info">
+        <p class="noticia-item__titulo">{{ n.titulo }}</p>
+        <p class="noticia-item__fecha">{{ n.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="noticia-item__actions">
         @if (canEdit(n)) {
-          <button (click)="togglePublicada(n)" title="Publicar" class="text-gray-300">
-            <i class="bi bi-eye-slash-fill text-[14px]"></i>
+          <button (click)="togglePublicada(n)" title="Publicar" class="noticia-item__btn-borrador">
+            <i class="bi bi-eye-slash-fill noticia-item__icon"></i>
           </button>
-          <button (click)="editar(n.id)" class="text-gray-400">
-            <i class="bi bi-pencil-fill text-[14px]"></i>
+          <button (click)="editar(n.id)" class="noticia-item__btn-edit">
+            <i class="bi bi-pencil-fill noticia-item__icon"></i>
           </button>
-          <button (click)="eliminar(n.id)" class="text-danger">
-            <i class="bi bi-trash-fill text-[14px]"></i>
+          <button (click)="eliminar(n.id)" class="noticia-item__btn-delete">
+            <i class="bi bi-trash-fill noticia-item__icon"></i>
           </button>
         }
       </div>
@@ -56,13 +52,10 @@
   }
 
   @if (borradores().length === 0) {
-    <p class="text-[13px] text-gray-300 font-medium">No hay borradores.</p>
+    <p class="lista-noticias-admin__empty--last">No hay borradores.</p>
   }
 </div>
 
-<button
-  (click)="crear()"
-  class="fixed bottom-[60px] right-4 w-[42px] h-[42px] rounded-full bg-brand-yellow text-brand-dark flex items-center justify-center shadow-lg z-40"
->
-  <i class="bi bi-plus-lg text-[18px] font-black"></i>
+<button (click)="crear()" class="fab">
+  <i class="bi bi-plus-lg fab-icon"></i>
 </button>

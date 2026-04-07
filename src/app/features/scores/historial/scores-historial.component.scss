@@ -1,0 +1,47 @@
+.scores-historial {
+  @apply p-3;
+
+  &__title {
+    @apply mb-3;
+  }
+}
+
+.historial-item__header {
+  @apply flex items-start justify-between mb-1.5;
+}
+
+.historial-item__info {
+  @apply flex-1 min-w-0;
+}
+
+.historial-item__nombre {
+  @apply text-[14px] font-bold text-brand-dark truncate;
+}
+
+.historial-item__fecha {
+  @apply text-[11px] text-gray-300 font-medium;
+}
+
+.historial-item__resultado {
+  @apply text-right ml-2;
+}
+
+.historial-item__rotos {
+  @apply text-[14px] font-black text-brand-dark;
+}
+
+.historial-item__total {
+  @apply text-[13px] text-gray-300 font-semibold;
+}
+
+.historial-item__porcentaje {
+  @apply text-[10px] font-bold text-gray-300 text-right mt-0.5;
+}
+
+.progress-track {
+  @apply w-full h-[3px] bg-gray-100 rounded-full overflow-hidden;
+}
+
+.progress-fill {
+  @apply h-full bg-brand-yellow rounded-full transition-all;
+}

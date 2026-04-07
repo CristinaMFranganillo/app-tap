@@ -1,0 +1,31 @@
+.form-socio {
+  @apply p-3;
+}
+
+.form-socio__back-btn {
+  @apply text-gray-400;
+}
+
+.form-socio__back-icon {
+  @apply text-[15px];
+}
+
+.form-socio__title {
+  @apply text-[18px] font-extrabold text-brand-dark;
+}
+
+.form-socio__error {
+  @apply text-[13px] text-danger font-semibold mb-3;
+}
+
+.form-socio__card {
+  @apply bg-white rounded-[12px] p-3 shadow-sm;
+}
+
+.form-socio__form {
+  @apply flex flex-col gap-3;
+}
+
+.form-socio__actions {
+  @apply flex gap-2 pt-1;
+}

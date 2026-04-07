@@ -1,0 +1,35 @@
+.form-escuadra {
+  @apply p-3;
+}
+
+.form-escuadra__back-btn {
+  @apply text-gray-400;
+}
+
+.form-escuadra__back-icon {
+  @apply text-[15px];
+}
+
+.form-escuadra__title {
+  @apply text-[18px] font-extrabold text-brand-dark;
+}
+
+.form-escuadra__section-label {
+  @apply text-[11px] font-bold text-gray-300 uppercase tracking-wide mb-2;
+}
+
+.form-escuadra__puesto {
+  @apply mb-2;
+}
+
+.form-escuadra__puesto-label {
+  @apply block text-[11px] text-gray-300 font-medium mb-1;
+}
+
+.form-escuadra__error {
+  @apply text-danger text-[13px] font-semibold mt-3;
+}
+
+.form-escuadra__actions {
+  @apply flex gap-2 mt-4;
+}

@@ -1,11 +1,11 @@
-<div class="p-3">
-  <h2 class="text-[18px] font-extrabold text-brand-dark mb-4">Registrar resultados</h2>
+<div class="registrar-resultado">
+  <h2 class="registrar-resultado__title">Registrar resultados</h2>
 
-  <label class="block text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-1">Competición</label>
+  <label class="form-label">Competición</label>
   <select
     [value]="competicionId()"
     (change)="competicionId.set($any($event.target).value)"
-    class="w-full bg-white rounded-[10px] px-3 py-2 text-[14px] font-medium text-brand-dark outline-none shadow-sm mb-3"
+    class="form-input registrar-resultado__selects"
   >
     <option value="">Selecciona</option>
     @for (c of competiciones(); track c.id) {
@@ -14,11 +14,11 @@
   </select>
 
   @if (competicionId()) {
-    <label class="block text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-1">Escuadra</label>
+    <label class="form-label">Escuadra</label>
     <select
       [value]="escuadraId()"
       (change)="escuadraId.set($any($event.target).value)"
-      class="w-full bg-white rounded-[10px] px-3 py-2 text-[14px] font-medium text-brand-dark outline-none shadow-sm mb-3"
+      class="form-input registrar-resultado__selects"
     >
       <option value="">Selecciona escuadra</option>
       @for (e of escuadras(); track e.id) {
@@ -28,46 +28,34 @@
   }
 
   @if (escuadraId()) {
-    <div class="flex gap-3 mb-4">
-      <div class="flex-1 bg-surface rounded-[10px] px-3 py-2 text-center">
-        <p class="text-[14px] text-gray-300 font-bold uppercase tracking-wide">Serie</p>
-        <div class="flex items-center justify-center gap-2 mt-1">
-          <button (click)="decrementSerie()" class="text-gray-300 font-bold text-[14px] leading-none">−</button>
-          <span class="text-[20px] font-black text-brand-dark">{{ serieActual() }}</span>
-          <button (click)="incrementSerie()" class="text-gray-300 font-bold text-[14px] leading-none">+</button>
+    <div class="registrar-resultado__counters">
+      <div class="counter-card">
+        <p class="counter-card__label">Serie</p>
+        <div class="counter-card__controls">
+          <button (click)="decrementSerie()" class="counter-card__btn">−</button>
+          <span class="counter-card__value">{{ serieActual() }}</span>
+          <button (click)="incrementSerie()" class="counter-card__btn">+</button>
         </div>
       </div>
-      <div class="flex-1 bg-surface rounded-[10px] px-3 py-2 text-center">
-        <p class="text-[14px] text-gray-300 font-bold uppercase tracking-wide">Plato</p>
-        <div class="flex items-center justify-center gap-2 mt-1">
-          <button (click)="decrementPlato()" class="text-gray-300 font-bold text-[14px] leading-none">−</button>
-          <span class="text-[20px] font-black text-brand-dark">{{ platoActual() }}</span>
-          <button (click)="incrementPlato()" class="text-gray-300 font-bold text-[14px] leading-none">+</button>
+      <div class="counter-card">
+        <p class="counter-card__label">Plato</p>
+        <div class="counter-card__controls">
+          <button (click)="decrementPlato()" class="counter-card__btn">−</button>
+          <span class="counter-card__value">{{ platoActual() }}</span>
+          <button (click)="incrementPlato()" class="counter-card__btn">+</button>
         </div>
       </div>
     </div>
 
     @for (t of tiradores(); track t.id) {
-      <div class="flex items-center justify-between bg-white rounded-[12px] px-3 py-2 mb-2 shadow-sm">
+      <div class="card tirador-item">
         <div>
-          <p class="text-[14px] font-bold text-brand-dark">{{ getUserNombre(t.userId) }}</p>
-          <p class="text-[11px] text-gray-300 font-medium">Puesto {{ t.puesto }}</p>
+          <p class="tirador-item__nombre">{{ getUserNombre(t.userId) }}</p>
+          <p class="tirador-item__puesto">Puesto {{ t.puesto }}</p>
         </div>
-        <div class="flex gap-2">
-          <button
-            (click)="registrar(t.userId, 1)"
-            [disabled]="saving()"
-            class="px-3 py-1.5 rounded-[8px] bg-success text-white text-[13px] font-extrabold disabled:opacity-50"
-          >
-            ROTO
-          </button>
-          <button
-            (click)="registrar(t.userId, 0)"
-            [disabled]="saving()"
-            class="px-3 py-1.5 rounded-[8px] bg-danger text-white text-[13px] font-extrabold disabled:opacity-50"
-          >
-            FALLO
-          </button>
+        <div class="tirador-item__actions">
+          <button (click)="registrar(t.userId, 1)" [disabled]="saving()" class="btn-roto">ROTO</button>
+          <button (click)="registrar(t.userId, 0)" [disabled]="saving()" class="btn-fallo">FALLO</button>
         </div>
       </div>
     }

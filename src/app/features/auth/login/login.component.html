@@ -1,55 +1,48 @@
-<div class="flex flex-col min-h-screen bg-white">
+<div class="login-page">
   <!-- Hero -->
-  <div class="flex flex-col items-center justify-center pt-14 pb-8 px-4 bg-white">
-    <div class="w-[160px] h-[160px]">
-      <img src="logo.png" alt="Logo" class="w-full h-full object-contain" />
+  <div class="login-hero">
+    <div class="login-logo">
+      <img src="logo.png" alt="Logo" />
     </div>
   </div>
 
   <!-- Card form -->
-  <div class="flex-1 bg-white px-5 pt-6 pb-6">
-    <h2 class="text-brand-dark font-semibold text-[16px] mb-5">Acceder</h2>
+  <div class="login-body">
+    <h2 class="login-heading">Acceder</h2>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-      <label class="block text-[14px] font-bold text-gray-300 uppercase tracking-wide mb-1">Email</label>
-      <div class="flex items-center gap-2 bg-surface rounded-[10px] px-3 py-2 mb-3">
-        <i class="bi bi-envelope-fill text-gray-300 text-[16px]"></i>
+      <label class="form-label">Email</label>
+      <div class="login-field login-field--mb">
+        <i class="bi bi-envelope-fill"></i>
         <input
           formControlName="email"
           type="email"
           autocomplete="email"
           placeholder="socio@sanisidro.es"
-          class="flex-1 bg-transparent text-[14px] font-medium text-brand-dark outline-none placeholder-gray-300"
         />
       </div>
 
-      <label class="block text-[14px] font-bold text-gray-300 uppercase tracking-wide mb-1">Contraseña</label>
-      <div class="flex items-center gap-2 bg-surface rounded-[10px] px-3 py-2 mb-4">
-        <i class="bi bi-lock-fill text-gray-300 text-[16px]"></i>
+      <label class="form-label">Contraseña</label>
+      <div class="login-field login-field--mb-lg">
+        <i class="bi bi-lock-fill"></i>
         <input
           formControlName="password"
           type="password"
           autocomplete="current-password"
           placeholder="••••••••"
-          class="flex-1 bg-transparent text-[14px] font-medium text-brand-dark outline-none placeholder-gray-300"
         />
       </div>
 
       @if (error) {
-        <p class="text-danger text-[13px] font-semibold mb-3">{{ error }}</p>
+        <p class="login-error">{{ error }}</p>
       }
 
-      <button
-        type="submit"
-        [disabled]="form.invalid || loading"
-        class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-extrabold text-[18px] tracking-wide rounded-[12px] py-3 disabled:opacity-50"
-      >
+      <button type="submit" [disabled]="form.invalid || loading" class="btn-login">
         <i class="bi bi-box-arrow-in-right"></i>
         {{ loading ? 'Entrando...' : 'Entrar' }}
       </button>
     </form>
 
-    <p class="text-center mt-3 text-[12px] text-gray-300 font-semibold">¿Olvidaste tu contraseña?</p>
-
+    <p class="login-forgot">¿Olvidaste tu contraseña?</p>
   </div>
 </div>

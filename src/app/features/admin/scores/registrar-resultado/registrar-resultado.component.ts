@@ -15,6 +15,7 @@ import { Escuadra, EscuadraTirador } from '../../../../core/models/escuadra.mode
   standalone: true,
   imports: [FormsModule],
   templateUrl: './registrar-resultado.component.html',
+  styleUrl: './registrar-resultado.component.scss',
 })
 export class RegistrarResultadoComponent {
   private resultadoService = inject(ResultadoService);

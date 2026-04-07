@@ -1,0 +1,11 @@
+<div class="home">
+  <h2 class="page-title home__welcome">¡Hola, {{ user()?.nombre }} {{ user()?.apellidos }}!</h2>
+
+  <p class="home__section-label">Últimas noticias</p>
+
+  @for (n of ultimasNoticias(); track n.id) {
+    <button class="home__noticia-btn" (click)="goToNoticia(n.id)">
+      <app-card-noticia [noticia]="n" />
+    </button>
+  }
+</div>

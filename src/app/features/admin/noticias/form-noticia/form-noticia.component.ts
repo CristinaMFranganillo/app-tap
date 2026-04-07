@@ -9,6 +9,7 @@ import { AuthService } from '../../../../core/auth/auth.service';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './form-noticia.component.html',
+  styleUrl: './form-noticia.component.scss',
 })
 export class FormNoticiaComponent implements OnInit {
   private fb = inject(FormBuilder);

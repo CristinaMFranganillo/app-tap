@@ -10,6 +10,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
   standalone: true,
   imports: [CardNoticiaComponent, EmptyStateComponent],
   templateUrl: './lista-noticias.component.html',
+  styleUrl: './lista-noticias.component.scss',
 })
 export class ListaNoticiasComponent {
   private newsService = inject(NewsService);

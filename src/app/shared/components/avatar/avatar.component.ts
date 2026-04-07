@@ -7,6 +7,7 @@ import { InicialesPipe } from '../../pipes/iniciales.pipe';
   standalone: true,
   imports: [CommonModule, InicialesPipe],
   templateUrl: './avatar.component.html',
+  styleUrl: './avatar.component.scss',
 })
 export class AvatarComponent {
   @Input() nombre: string = '';

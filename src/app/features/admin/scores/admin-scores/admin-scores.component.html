@@ -1,64 +1,64 @@
-<div class="p-3">
-  <h2 class="text-[13px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-4">Torneos</h2>
+<div class="admin-scores">
+  <h2 class="page-title admin-scores__page-title">Torneos</h2>
 
   <!-- Acciones rápidas -->
-  <div class="flex flex-col gap-2 mb-5">
+  <div class="admin-scores__acciones">
     <button
       (click)="nuevaCompeticion()"
-      class="flex items-center gap-3 bg-brand-yellow rounded-[12px] px-4 py-3"
+      class="admin-scores__btn-nueva-competicion"
     >
-      <i class="bi bi-plus-circle text-brand-dark text-[20px]"></i>
-      <span class="text-[14px] font-extrabold text-brand-dark">Nueva competición</span>
+      <i class="bi bi-plus-circle admin-scores__btn-nueva-competicion-icon"></i>
+      <span class="admin-scores__btn-nueva-competicion-text">Nueva competición</span>
     </button>
-    <div class="flex gap-2">
+    <div class="admin-scores__acciones-row">
       <button
         (click)="nuevaEscuadra()"
-        class="flex-1 flex items-center gap-2 bg-white rounded-[12px] px-3 py-2.5 shadow-sm"
+        class="admin-scores__btn-accion"
       >
-        <i class="bi bi-people text-brand-dark text-[14px]"></i>
-        <span class="text-[13px] font-bold text-brand-dark">Nueva escuadra</span>
+        <i class="bi bi-people admin-scores__btn-accion-icon"></i>
+        <span class="admin-scores__btn-accion-text">Nueva escuadra</span>
       </button>
       <button
         (click)="registrarResultados()"
-        class="flex-1 flex items-center gap-2 bg-white rounded-[12px] px-3 py-2.5 shadow-sm"
+        class="admin-scores__btn-accion"
       >
-        <i class="bi bi-pencil-square text-brand-dark text-[14px]"></i>
-        <span class="text-[13px] font-bold text-brand-dark">Registrar resultados</span>
+        <i class="bi bi-pencil-square admin-scores__btn-accion-icon"></i>
+        <span class="admin-scores__btn-accion-text">Registrar resultados</span>
       </button>
     </div>
   </div>
 
   <!-- Lista de competiciones -->
-  <p class="text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-2">Competiciones</p>
+  <p class="admin-scores__section-label">Competiciones</p>
 
   @if (competiciones().length === 0) {
-    <div class="flex flex-col items-center justify-center py-10 text-center">
-      <i class="bi bi-trophy text-[36px] text-gray-200 mb-2"></i>
-      <p class="text-[13px] font-bold text-gray-300 uppercase tracking-wider">Sin competiciones</p>
-      <p class="text-[11px] text-gray-300 mt-1">Crea la primera usando el botón de arriba</p>
+    <div class="admin-scores__empty">
+      <i class="bi bi-trophy admin-scores__empty-icon"></i>
+      <p class="admin-scores__empty-title">Sin competiciones</p>
+      <p class="admin-scores__empty-subtitle">Crea la primera usando el botón de arriba</p>
     </div>
   } @else {
     @for (c of competiciones(); track c.id) {
-      <div class="bg-white rounded-[12px] px-3 py-2.5 mb-2 shadow-sm">
-        <div class="flex items-start justify-between">
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2">
-              <p class="text-[14px] font-extrabold text-brand-dark truncate">{{ c.nombre }}</p>
+      <div class="card">
+        <div class="competicion-item__header">
+          <div class="competicion-item__info">
+            <div class="competicion-item__nombre-row">
+              <p class="competicion-item__nombre">{{ c.nombre }}</p>
               @if (c.activa) {
-                <span class="flex-shrink-0 px-1.5 py-0.5 bg-brand-yellow rounded-full text-[10px] font-black text-brand-dark uppercase">Activa</span>
+                <span class="competicion-item__badge-activa">Activa</span>
               }
             </div>
-            <p class="text-[11px] text-gray-300 font-medium mt-0.5">{{ c.modalidad }}</p>
+            <p class="competicion-item__modalidad">{{ c.modalidad }}</p>
           </div>
-          <div class="text-right ml-2">
-            <p class="text-[13px] font-black text-brand-dark">{{ totalPlatos(c) }}<span class="text-[10px] text-gray-300 font-medium"> platos</span></p>
-            <p class="text-[10px] text-gray-300">{{ c.numSeries }} serie(s) · {{ c.platosPorSerie }}/serie</p>
+          <div class="competicion-item__stats">
+            <p class="competicion-item__total">{{ totalPlatos(c) }}<span class="competicion-item__total-unit"> platos</span></p>
+            <p class="competicion-item__series">{{ c.numSeries }} serie(s) · {{ c.platosPorSerie }}/serie</p>
           </div>
         </div>
         @if (c.lugar) {
-          <p class="text-[10px] text-gray-300 mt-1"><i class="bi bi-geo-alt"></i> {{ c.lugar }}</p>
+          <p class="competicion-item__lugar"><i class="bi bi-geo-alt"></i> {{ c.lugar }}</p>
         }
-        <p class="text-[10px] text-gray-300 mt-0.5">{{ c.fecha | date:'dd/MM/yyyy' }}</p>
+        <p class="competicion-item__fecha">{{ c.fecha | date:'dd/MM/yyyy' }}</p>
       </div>
     }
   }

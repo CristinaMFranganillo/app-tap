@@ -1,0 +1,11 @@
+.lista-noticias {
+  @apply p-3;
+}
+
+.lista-noticias__title {
+  @apply mb-3;
+}
+
+.lista-noticias__noticia-btn {
+  @apply w-full text-left;
+}

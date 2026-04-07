@@ -9,6 +9,7 @@ import { AuthService } from '../../../../core/auth/auth.service';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './form-competicion.component.html',
+  styleUrl: './form-competicion.component.scss',
 })
 export class FormCompeticionComponent {
   private fb = inject(FormBuilder);

@@ -16,10 +16,11 @@ const SOCIO_NAV: NavItem[] = [
 ];
 
 const ADMIN_NAV: NavItem[] = [
-  { route: '/admin/socios',   icon: 'bi-people-fill', label: 'Socios'   },
-  { route: '/admin/noticias', icon: 'bi-newspaper',   label: 'Noticias' },
-  { route: '/admin/scores',   icon: 'bi-trophy',      label: 'Torneos'  },
-  { route: '/perfil',         icon: 'bi-gear',        label: 'Config'   },
+  { route: '/',                icon: 'bi-house-fill',  label: 'Inicio'   },
+  { route: '/admin/socios',    icon: 'bi-people-fill', label: 'Socios'   },
+  { route: '/admin/noticias',  icon: 'bi-newspaper',   label: 'Noticias' },
+  { route: '/admin/scores',    icon: 'bi-trophy',      label: 'Torneos'  },
+  { route: '/perfil',          icon: 'bi-gear',        label: 'Config'   },
 ];
 
 @Component({
@@ -27,6 +28,7 @@ const ADMIN_NAV: NavItem[] = [
   standalone: true,
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './bottom-nav.component.html',
+  styleUrl: './bottom-nav.component.scss',
 })
 export class BottomNavComponent {
   private auth = inject(AuthService);

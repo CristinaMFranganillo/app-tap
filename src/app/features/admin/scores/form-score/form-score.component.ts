@@ -14,6 +14,7 @@ import { Competicion } from '../../../../core/models/competicion.model';
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './form-score.component.html',
+  styleUrl: './form-score.component.scss',
 })
 export class FormScoreComponent {
   private fb = inject(FormBuilder);

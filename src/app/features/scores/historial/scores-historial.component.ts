@@ -13,6 +13,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
   standalone: true,
   imports: [DatePipe, EmptyStateComponent],
   templateUrl: './scores-historial.component.html',
+  styleUrl: './scores-historial.component.scss',
 })
 export class ScoresHistorialComponent {
   private auth = inject(AuthService);

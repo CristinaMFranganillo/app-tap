@@ -10,6 +10,7 @@ import { Competicion } from '../../../../core/models/competicion.model';
   standalone: true,
   imports: [DatePipe],
   templateUrl: './admin-scores.component.html',
+  styleUrl: './admin-scores.component.scss',
 })
 export class AdminScoresComponent {
   private competicionService = inject(CompeticionService);

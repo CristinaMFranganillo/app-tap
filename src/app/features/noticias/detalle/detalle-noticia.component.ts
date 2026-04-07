@@ -9,6 +9,7 @@ import { News } from '../../../core/models/news.model';
   standalone: true,
   imports: [DatePipe],
   templateUrl: './detalle-noticia.component.html',
+  styleUrl: './detalle-noticia.component.scss',
 })
 export class DetalleNoticiaComponent implements OnInit {
   private route = inject(ActivatedRoute);

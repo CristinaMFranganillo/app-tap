@@ -13,6 +13,7 @@ import { AvatarComponent } from '../../../shared/components/avatar/avatar.compon
   standalone: true,
   imports: [AvatarComponent],
   templateUrl: './scores-ranking.component.html',
+  styleUrl: './scores-ranking.component.scss',
 })
 export class ScoresRankingComponent {
   private competicionService = inject(CompeticionService);

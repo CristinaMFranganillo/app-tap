@@ -11,6 +11,7 @@ import { User } from '../../../../core/models/user.model';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './form-escuadra.component.html',
+  styleUrl: './form-escuadra.component.scss',
 })
 export class FormEscuadraComponent {
   private escuadraService = inject(EscuadraService);

@@ -1,0 +1,79 @@
+.perfil-hero {
+  @apply bg-brand-dark px-4 pt-4 pb-6 flex flex-col items-center;
+}
+
+.perfil-hero__nombre {
+  @apply text-white font-extrabold text-[16px] mt-2;
+}
+
+.perfil-hero__rol {
+  @apply text-brand-yellow font-bold text-[11px] uppercase tracking-wider;
+}
+
+.perfil-stats {
+  @apply flex mx-3 -mt-4 bg-white rounded-[14px] shadow-sm overflow-hidden;
+}
+
+.perfil-stat {
+  @apply flex-1 flex flex-col items-center py-3;
+
+  &--border {
+    @apply border-r border-gray-100;
+  }
+
+  &__value {
+    @apply text-[22px] font-black text-brand-dark;
+  }
+
+  &__label {
+    @apply text-[10px] font-bold text-gray-300 uppercase tracking-wide;
+  }
+}
+
+.perfil-historial {
+  @apply p-3 mt-2;
+
+  &__title {
+    @apply mb-2;
+  }
+}
+
+.perfil-score-item {
+  @apply flex items-center gap-3;
+}
+
+.perfil-score-item__info {
+  @apply flex-1 min-w-0;
+}
+
+.perfil-score-item__nombre {
+  @apply text-[14px] font-bold text-brand-dark truncate;
+}
+
+.perfil-score-item__fecha {
+  @apply text-[11px] text-gray-300 font-medium;
+}
+
+.perfil-score-item__resultado {
+  @apply text-right;
+}
+
+.perfil-score-item__rotos {
+  @apply text-[16px] font-black text-brand-dark;
+}
+
+.perfil-score-item__total {
+  @apply text-[11px] text-gray-300 font-semibold;
+}
+
+.perfil-logout {
+  @apply px-3 pb-4;
+}
+
+.btn-logout {
+  @apply w-full py-2.5 rounded-[12px] border border-danger text-danger text-[13px] font-extrabold;
+
+  i {
+    @apply mr-1;
+  }
+}

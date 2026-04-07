@@ -1,0 +1,15 @@
+.home {
+  @apply p-3;
+
+  &__welcome {
+    @apply mb-4;
+  }
+
+  &__section-label {
+    @apply text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2;
+  }
+
+  &__noticia-btn {
+    @apply w-full text-left;
+  }
+}

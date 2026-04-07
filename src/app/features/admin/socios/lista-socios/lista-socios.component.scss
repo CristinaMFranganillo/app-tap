@@ -1,0 +1,81 @@
+.lista-socios {
+  @apply p-3;
+}
+
+.lista-socios__search {
+  @apply flex items-center gap-2 bg-white rounded-[10px] px-3 py-2 mb-3 shadow-sm;
+}
+
+.lista-socios__search-icon {
+  @apply text-gray-300 text-[16px];
+}
+
+.lista-socios__search-input {
+  @apply flex-1 bg-transparent text-[13px] font-medium text-brand-dark outline-none placeholder-gray-300;
+}
+
+.socio-item {
+  @apply flex items-center gap-2;
+}
+
+.socio-item__info {
+  @apply flex-1 min-w-0;
+}
+
+.socio-item__nombre {
+  @apply text-[14px] font-bold text-brand-dark truncate;
+}
+
+.socio-item__meta {
+  @apply text-[11px] text-gray-400 font-medium truncate;
+}
+
+.socio-item__actions {
+  @apply flex items-center gap-2 ml-1;
+}
+
+.socio-item__estado {
+  @apply w-2 h-2 rounded-full flex-shrink-0;
+}
+
+.socio-item__numero {
+  @apply text-[11px] text-gray-300 font-semibold;
+}
+
+.socio-item__btn-edit {
+  @apply text-gray-400;
+}
+
+.socio-item__btn-delete {
+  @apply text-danger;
+}
+
+.socio-item__btn-icon {
+  @apply text-[16px];
+}
+
+.lista-socios__empty {
+  @apply text-center text-[13px] text-gray-400 mt-6;
+}
+
+.fab-icon {
+  @apply text-[18px] font-black;
+}
+
+.section-title {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: #e5e7eb;
+  }
+}

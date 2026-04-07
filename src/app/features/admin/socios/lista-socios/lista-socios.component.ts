@@ -13,6 +13,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   standalone: true,
   imports: [FormsModule, TitleCasePipe, AvatarComponent],
   templateUrl: './lista-socios.component.html',
+  styleUrl: './lista-socios.component.scss',
 })
 export class ListaSociosComponent {
   private userService = inject(UserService);

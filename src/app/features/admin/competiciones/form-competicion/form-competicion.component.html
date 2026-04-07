@@ -1,92 +1,80 @@
-<div class="p-3">
-  <div class="flex items-center gap-2 mb-4">
-    <button (click)="cancel()" class="text-gray-400">
-      <i class="bi bi-chevron-left text-[15px]"></i>
+<div class="form-competicion">
+  <div class="page-header">
+    <button (click)="cancel()" class="form-competicion__back-btn">
+      <i class="bi bi-chevron-left form-competicion__back-icon"></i>
     </button>
-    <h2 class="text-[18px] font-extrabold text-brand-dark">Nueva Competición</h2>
+    <h2 class="form-competicion__title">Nueva Competición</h2>
   </div>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-competicion__form">
     <div>
-      <label class="block text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-1">Nombre</label>
+      <label class="form-label">Nombre</label>
       <input
         formControlName="nombre"
         type="text"
         placeholder="Campeonato Provincial 2026"
-        class="w-full bg-white rounded-[10px] px-3 py-2 text-[14px] font-medium text-brand-dark outline-none shadow-sm placeholder-gray-300"
+        class="form-input form-competicion__input"
       />
     </div>
 
     <div>
-      <label class="block text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-1">Modalidad</label>
+      <label class="form-label">Modalidad</label>
       <input
         formControlName="modalidad"
         type="text"
         placeholder="Foso Olímpico, Skeet, Foso Universal..."
-        class="w-full bg-white rounded-[10px] px-3 py-2 text-[14px] font-medium text-brand-dark outline-none shadow-sm placeholder-gray-300"
+        class="form-input form-competicion__input"
       />
     </div>
 
-    <div class="flex gap-2">
-      <div class="flex-1">
-        <label class="block text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-1">Platos por serie</label>
+    <div class="form-competicion__row">
+      <div class="form-competicion__col">
+        <label class="form-label">Platos por serie</label>
         <input
           formControlName="platosPorSerie"
           type="number"
           min="1"
-          class="w-full bg-white rounded-[10px] px-3 py-2 text-[14px] font-medium text-brand-dark outline-none shadow-sm"
+          class="form-input"
         />
       </div>
-      <div class="flex-1">
-        <label class="block text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-1">Nº de series</label>
+      <div class="form-competicion__col">
+        <label class="form-label">Nº de series</label>
         <input
           formControlName="numSeries"
           type="number"
           min="1"
-          class="w-full bg-white rounded-[10px] px-3 py-2 text-[14px] font-medium text-brand-dark outline-none shadow-sm"
+          class="form-input"
         />
       </div>
     </div>
 
     <div>
-      <label class="block text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-1">Lugar (opcional)</label>
+      <label class="form-label">Lugar (opcional)</label>
       <input
         formControlName="lugar"
         type="text"
         placeholder="Campo de tiro..."
-        class="w-full bg-white rounded-[10px] px-3 py-2 text-[14px] font-medium text-brand-dark outline-none shadow-sm placeholder-gray-300"
+        class="form-input form-competicion__input"
       />
     </div>
 
     <div>
-      <label class="block text-[11px] font-bold text-brand-dark uppercase tracking-wide mb-1">Fecha</label>
+      <label class="form-label">Fecha</label>
       <input
         formControlName="fecha"
         type="date"
-        class="w-full bg-white rounded-[10px] px-3 py-2 text-[14px] font-medium text-brand-dark outline-none shadow-sm"
+        class="form-input"
       />
     </div>
 
-    <label class="flex items-center gap-2 cursor-pointer">
-      <input type="checkbox" formControlName="activa" class="accent-brand-yellow w-3.5 h-3.5" />
-      <span class="text-[13px] font-semibold text-brand-dark">Marcar como competición activa</span>
+    <label class="form-competicion__checkbox-label">
+      <input type="checkbox" formControlName="activa" class="form-competicion__checkbox" />
+      <span class="form-competicion__checkbox-text">Marcar como competición activa</span>
     </label>
 
-    <div class="flex gap-2 pt-1">
-      <button
-        type="button"
-        (click)="cancel()"
-        class="flex-1 py-2.5 rounded-[12px] border border-gray-200 text-[13px] font-bold text-gray-400"
-      >
-        Cancelar
-      </button>
-      <button
-        type="submit"
-        [disabled]="form.invalid"
-        class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[13px] font-extrabold disabled:opacity-50"
-      >
-        Crear competición
-      </button>
+    <div class="form-competicion__actions">
+      <button type="button" (click)="cancel()" class="btn-secondary">Cancelar</button>
+      <button type="submit" [disabled]="form.invalid" class="btn-primary">Crear competición</button>
     </div>
   </form>
 </div>
