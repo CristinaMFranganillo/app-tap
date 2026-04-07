@@ -1,7 +1,33 @@
 <div class="home">
-  <h2 class="page-title home__welcome">¡Hola, {{ user()?.nombre }} {{ user()?.apellidos }}!</h2>
+  <h2 class="page-title home__welcome">¡Hola, {{ user()?.nombre }}!</h2>
 
-  <p class="home__section-label">Últimas noticias</p>
+  <!-- Tarjeta entrenamientos -->
+  @if (ultimoEntrenamiento(); as e) {
+    <div class="card home-entrena" (click)="goToPerfil()">
+      <div class="home-entrena__top">
+        <span class="home-entrena__label">
+          <i class="bi bi-bullseye"></i> Último entrenamiento
+        </span>
+        <span class="home-entrena__fecha">{{ e.fecha | date:'d MMM' : '' : 'es' }}</span>
+      </div>
+      <div class="home-entrena__resultado">
+        <span class="home-entrena__num">{{ e.platosRotos }}</span>
+        <span class="home-entrena__de">/ 25 platos</span>
+      </div>
+      @if (mediaAnual() !== null) {
+        <div class="home-entrena__stats">
+          <span>Media {{ $any(mediaAnual()) }}/25</span>
+          @if (posicionClub(); as pos) {
+            <span class="home-entrena__sep">·</span>
+            <span>{{ pos.posicion }}º de {{ pos.total }}</span>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Última noticia -->
+  <p class="home__section-label">Última noticia</p>
 
   @for (n of ultimasNoticias(); track n.id) {
     <button class="home__noticia-btn" (click)="goToNoticia(n.id)">
