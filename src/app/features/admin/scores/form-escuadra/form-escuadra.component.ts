@@ -35,6 +35,12 @@ export class FormEscuadraComponent {
   loading = false;
   error = '';
 
+  sociosDisponibles(index: number) {
+    return this.socios().filter(s =>
+      !this.puestos.some((p, j) => j !== index && p === s.id)
+    );
+  }
+
   async onSubmit(): Promise<void> {
     const asignados = this.puestos.filter(p => p !== null && p !== '');
     if (asignados.length === 0) { this.error = 'Asigna al menos un tirador'; return; }

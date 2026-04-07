@@ -35,6 +35,12 @@ export class FormEscuadraEntrenamientoComponent {
   loading = false;
   error = '';
 
+  sociosDisponibles(index: number) {
+    return this.socios().filter(s =>
+      !this.puestos.some((p, j) => j !== index && p === s.id)
+    );
+  }
+
   async onSubmit(): Promise<void> {
     const asignados = this.puestos.filter(p => p !== null && p !== '');
     if (asignados.length === 0) { this.error = 'Asigna al menos un tirador'; return; }
@@ -49,7 +55,7 @@ export class FormEscuadraEntrenamientoComponent {
         const userId = this.puestos[i];
         if (userId) await this.escuadraService.addTirador(escuadraId, userId, i + 1);
       }
-      this.router.navigate(['/admin/entrenamientos', entrenamientoId]);
+      this.router.navigate(['/admin/entrenamientos', entrenamientoId, 'escuadra', escuadraId, 'resultados']);
     } catch (err) {
       this.error = err instanceof Error ? err.message : 'Error al guardar';
     } finally {
