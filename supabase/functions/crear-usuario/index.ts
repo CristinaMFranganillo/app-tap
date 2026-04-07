@@ -12,7 +12,6 @@ serve(async (req: Request) => {
   }
 
   try {
-    // Verificar que el llamante es un admin
     const authHeader = req.headers.get('Authorization')
     if (!authHeader) {
       return new Response(
@@ -26,7 +25,6 @@ serve(async (req: Request) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    // Verificar que el token pertenece a un admin o moderador
     const token = authHeader.replace('Bearer ', '')
     const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token)
     if (authError || !user) {
@@ -44,12 +42,26 @@ serve(async (req: Request) => {
       )
     }
 
-    const { nombre, apellidos, email, rol } = await req.json()
+    const { nombre, apellidos, email, rol, numeroSocio, dni, telefono, direccion } = await req.json()
 
-    if (!nombre || !apellidos || !email || !rol) {
+    if (!nombre || !apellidos || !email || !rol || !numeroSocio) {
       return new Response(
-        JSON.stringify({ error: 'Faltan campos: nombre, apellidos, email, rol' }),
+        JSON.stringify({ error: 'Faltan campos: nombre, apellidos, email, rol, numeroSocio' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Validar que el número de socio no esté repetido
+    const { data: existing } = await supabaseAdmin
+      .from('profiles')
+      .select('id')
+      .eq('numero_socio', numeroSocio)
+      .maybeSingle()
+
+    if (existing) {
+      return new Response(
+        JSON.stringify({ error: `El número de socio ${numeroSocio} ya está en uso` }),
+        { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
 
@@ -70,20 +82,16 @@ serve(async (req: Request) => {
       )
     }
 
-    // 2. Calcular número de socio automático
-    const { data: perfiles } = await supabaseAdmin.from('profiles').select('numero_socio')
-    const nums = (perfiles ?? [])
-      .map((r: { numero_socio: string }) => parseInt(r.numero_socio, 10))
-      .filter((n: number) => !isNaN(n))
-    const max = nums.length > 0 ? Math.max(...nums) : 0
-    const numeroSocio = String(max + 1).padStart(4, '0')
-
-    // 3. Actualizar el profile creado por el trigger
+    // 2. Actualizar el profile creado por el trigger
     const { error: profileError } = await supabaseAdmin.from('profiles').update({
       nombre,
       apellidos,
       numero_socio: numeroSocio,
       rol,
+      email,
+      dni: dni ?? null,
+      telefono: telefono ?? null,
+      direccion: direccion ?? null,
       activo: true,
       first_login: true,
     }).eq('id', authData.user.id)
