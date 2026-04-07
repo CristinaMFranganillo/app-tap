@@ -1,6 +1,6 @@
 import { Component, inject, computed, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
+import { toSignal, toObservable } from '@angular/core/rxjs-interop';
+import { switchMap, combineLatest } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
@@ -62,16 +62,21 @@ export class PerfilComponent {
 
   // ── Entrenamientos del año ─────────────────────────────────────
   misEntrenamientos = toSignal(
-    this.authService.currentUser$.pipe(
-      switchMap(u =>
-        this.entrenamientoService.getByUser(u?.id ?? '', this.anioSeleccionado())
+    combineLatest([
+      this.authService.currentUser$,
+      toObservable(this.anioSeleccionado),
+    ]).pipe(
+      switchMap(([u, year]) =>
+        this.entrenamientoService.getByUser(u?.id ?? '', year)
       )
     ),
     { initialValue: [] }
   );
 
   rankingAnual = toSignal(
-    this.entrenamientoService.getRankingAnual(this.anioSeleccionado()),
+    toObservable(this.anioSeleccionado).pipe(
+      switchMap(year => this.entrenamientoService.getRankingAnual(year))
+    ),
     { initialValue: [] }
   );
 
