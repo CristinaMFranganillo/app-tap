@@ -6,7 +6,7 @@
   }
 
   &__section-label {
-    @apply text-xs font-bold text-neutral-300 uppercase tracking-wider mb-2;
+    @apply text-sm font-bold text-neutral-400 uppercase tracking-wider mb-2;
   }
 
   &__noticia-btn {
@@ -25,11 +25,11 @@
   }
 
   &__label {
-    @apply text-xs font-bold text-neutral-400 uppercase tracking-wide flex items-center gap-1;
+    @apply text-sm font-bold text-neutral-400 uppercase tracking-wide flex items-center gap-1;
   }
 
   &__fecha {
-    @apply text-xs text-neutral-300 font-medium;
+    @apply text-sm text-neutral-400 font-medium;
   }
 
   &__resultado {
@@ -45,7 +45,7 @@
   }
 
   &__stats {
-    @apply flex items-center gap-1 text-xs text-neutral-400 font-medium mt-0.5;
+    @apply flex items-center gap-1 text-sm text-neutral-400 font-medium mt-0.5;
   }
 
   &__sep {
@@ -81,7 +81,7 @@
   }
 
   &__sub {
-    @apply text-xs font-medium text-left mt-0.5;
+    @apply text-sm font-medium text-left mt-0.5;
     color: #6B7280;
     margin: 0;
   }

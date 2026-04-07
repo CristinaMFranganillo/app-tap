@@ -4,7 +4,7 @@
   &__back-btn { @apply text-gray-400; }
   &__back-icon { @apply text-[15px]; }
   &__title { @apply text-[18px] font-extrabold text-secondary; }
-  &__section-label { @apply text-xs font-bold text-neutral-300 uppercase tracking-wide mb-2; }
+  &__section-label { @apply text-sm font-medium text-neutral-400 uppercase tracking-wide mb-2; }
   &__puesto { @apply mb-3; }
   &__error { @apply text-danger text-sm font-semibold mt-3; }
   &__actions { @apply flex gap-2 mt-4; }
@@ -55,6 +55,6 @@
   }
 
   &__option-num {
-    @apply text-xs text-neutral-300 font-medium;
+    @apply text-sm text-neutral-400 font-medium;
   }
 }

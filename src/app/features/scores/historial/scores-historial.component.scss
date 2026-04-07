@@ -10,7 +10,7 @@
   }
 
   &__badge {
-    @apply inline-flex items-center gap-1 text-[12px] font-bold
+    @apply inline-flex items-center gap-1 text-[12px] font-medium
            uppercase tracking-wide px-2 py-0.5 rounded-full;
 
     &--entrenamiento {
@@ -47,7 +47,7 @@
   }
 
   &__resultado {
-    @apply text-sm font-black text-secondary flex-shrink-0;
+    @apply text-sm font-bold text-secondary flex-shrink-0;
   }
 
   &__pct {

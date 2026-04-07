@@ -13,8 +13,8 @@ module.exports = {
         sans: ['Montserrat', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        'xs':   ['10px', { lineHeight: '14px', letterSpacing: '0.04em' }],
-        'sm':   ['12px', { lineHeight: '16px', letterSpacing: '0.02em' }],
+        'xs':   ['12px', { lineHeight: '16px', letterSpacing: '0.02em' }],
+        'sm':   ['13px', { lineHeight: '18px', letterSpacing: '0.01em' }],
         'base': ['14px', { lineHeight: '20px', letterSpacing: '0em'    }],
         'md':   ['16px', { lineHeight: '22px', letterSpacing: '-0.01em'}],
         'lg':   ['19px', { lineHeight: '26px', letterSpacing: '-0.02em'}],

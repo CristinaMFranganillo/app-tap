@@ -18,11 +18,11 @@
 }
 
 .perfil-hero__nombre {
-  @apply text-white font-extrabold text-[16px] mt-2;
+  @apply text-white font-bold text-[16px] mt-2 text-center;
 }
 
 .perfil-hero__rol {
-  @apply text-brand-yellow font-bold text-[12px] uppercase tracking-wider;
+  @apply text-brand-yellow font-medium text-[12px] uppercase tracking-wider text-center;
 }
 
 .perfil-stats {
@@ -90,7 +90,7 @@
   }
 
   &__de {
-    @apply text-xs text-neutral-300 font-medium;
+    @apply text-sm text-neutral-400 font-medium;
   }
 
   &__metas {
@@ -146,7 +146,7 @@
   border: 2px solid white;
 
   i {
-    font-size: 10px;
+    font-size: 12px;
     color: #1A1A1A;
   }
 }

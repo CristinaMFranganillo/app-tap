@@ -13,10 +13,10 @@
 }
 
 .admin-scores__section-title {
-  @apply text-base font-black text-secondary uppercase tracking-[1.5px];
+  @apply text-base font-semibold text-secondary uppercase tracking-[1.5px];
 
   &--secondary {
-    @apply text-sm font-bold text-neutral-400 uppercase tracking-[1.5px];
+    @apply text-sm font-medium text-neutral-400 uppercase tracking-[1.5px];
   }
 }
 
@@ -90,7 +90,7 @@
   }
 
   &__th {
-    @apply text-[12px] font-black uppercase tracking-widest text-neutral-400;
+    @apply text-[12px] font-semibold uppercase tracking-widest text-neutral-400;
 
     &--fecha   { @apply flex-1; }
     &--num     { @apply w-10 text-center; }
@@ -141,21 +141,21 @@
 }
 
 .competicion-item__modalidad {
-  @apply text-xs text-neutral-300 font-medium mt-0.5;
+  @apply text-sm text-neutral-400 font-medium mt-0.5;
 }
 
 .competicion-item__stats { @apply text-right ml-2; }
 
 .competicion-item__total {
-  @apply text-sm font-black text-secondary;
+  @apply text-sm font-bold text-secondary;
 }
 
 .competicion-item__total-unit {
-  @apply text-xs text-neutral-300 font-medium;
+  @apply text-sm text-neutral-400 font-medium;
 }
 
-.competicion-item__series { @apply text-xs text-neutral-300; }
+.competicion-item__series { @apply text-sm text-neutral-400; }
 
-.competicion-item__lugar { @apply text-xs text-neutral-300 mt-1; }
+.competicion-item__lugar { @apply text-sm text-neutral-400 mt-1; }
 
-.competicion-item__fecha { @apply text-xs text-neutral-300 mt-0.5; }
+.competicion-item__fecha { @apply text-sm text-neutral-400 mt-0.5; }

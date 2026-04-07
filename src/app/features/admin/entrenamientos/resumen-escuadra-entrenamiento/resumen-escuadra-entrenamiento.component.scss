@@ -14,7 +14,7 @@
   }
 
   &__total-label {
-    @apply text-xs font-bold uppercase tracking-widest text-neutral-400;
+    @apply text-sm font-bold uppercase tracking-widest text-neutral-400;
   }
 
   &__total-num {
@@ -39,7 +39,7 @@
   }
 
   &__fila-puesto {
-    @apply w-6 text-center text-xs font-bold text-neutral-300 flex-shrink-0;
+    @apply w-6 text-center text-sm font-bold text-neutral-400 flex-shrink-0;
   }
 
   &__fila-nombre {
@@ -51,15 +51,15 @@
   }
 
   &__fila-rotos {
-    @apply text-base font-extrabold text-secondary;
+    @apply text-base font-bold text-secondary;
   }
 
   &__fila-fallos {
-    @apply text-xs font-semibold text-danger;
+    @apply text-sm font-semibold text-danger;
   }
 
   &__fila-perfecto {
-    @apply text-xs font-semibold text-success;
+    @apply text-sm font-semibold text-success;
   }
 
   // ── Botón volver ───────────────────────────────────────────────

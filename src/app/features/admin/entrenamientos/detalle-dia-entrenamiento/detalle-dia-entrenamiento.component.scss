@@ -19,16 +19,16 @@
 
   &__titulo { @apply text-base font-bold text-secondary; }
 
-  &__meta { @apply text-xs text-neutral-300 font-medium mt-0.5; }
+  &__meta { @apply text-sm text-neutral-400 font-medium mt-0.5; }
 
   &__btn-editar {
     @apply bg-transparent border-0 text-neutral-300 text-[18px] p-1 cursor-pointer
            active:text-secondary transition-colors flex-shrink-0;
   }
 
-  &__cargando { @apply text-xs text-neutral-300 font-medium px-4 pb-3; }
+  &__cargando { @apply text-sm text-neutral-400 font-medium px-4 pb-3; }
 
-  &__sin-resultados { @apply text-xs text-neutral-300 font-medium italic px-4 pb-3; }
+  &__sin-resultados { @apply text-sm text-neutral-400 font-medium italic px-4 pb-3; }
 
   &__resultados { @apply flex flex-col divide-y divide-neutral-100; }
 }
@@ -36,7 +36,7 @@
 .resultado-fila {
   @apply flex items-center gap-3 px-4 py-2.5;
 
-  &__puesto { @apply w-5 text-center text-xs font-bold text-neutral-300 flex-shrink-0; }
+  &__puesto { @apply w-5 text-center text-sm font-bold text-neutral-400 flex-shrink-0; }
 
   &__nombre { @apply flex-1 text-sm font-semibold text-secondary truncate; }
 
