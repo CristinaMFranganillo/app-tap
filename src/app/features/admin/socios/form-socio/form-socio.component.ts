@@ -28,8 +28,8 @@ export class FormSocioComponent implements OnInit {
     email:       ['', [Validators.required, Validators.email]],
     rol:         ['socio' as UserRole, Validators.required],
     numeroSocio: ['', Validators.required],
-    dni:         [''],
-    telefono:    [''],
+    dni:         ['', Validators.required],
+    telefono:    ['', Validators.required],
     direccion:   [''],
   });
 

@@ -131,6 +131,18 @@
     @apply block text-sm font-medium text-neutral-400 tracking-wide mb-1;
   }
 
+  .form-required {
+    color: #EF4444;
+    margin-left: 2px;
+  }
+
+  .form-error {
+    font-size: 11px;
+    font-weight: 600;
+    color: #EF4444;
+    margin-top: 4px;
+  }
+
   // Input sobre fondo blanco (con sombra)
   .form-input {
     @apply w-full bg-neutral-white rounded-input px-3 py-2

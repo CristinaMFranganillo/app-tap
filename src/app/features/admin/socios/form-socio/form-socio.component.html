@@ -13,24 +13,37 @@
   <div class="form-socio__card">
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-socio__form">
       <div>
-        <label class="form-label">Nombre</label>
+        <label class="form-label">Nombre <span class="form-required">*</span></label>
         <input formControlName="nombre" placeholder="Nombre" class="form-input-surface" />
+        @if (form.get('nombre')?.invalid && form.get('nombre')?.touched) {
+          <p class="form-error">El nombre es obligatorio</p>
+        }
       </div>
 
       <div>
-        <label class="form-label">Apellidos</label>
+        <label class="form-label">Apellidos <span class="form-required">*</span></label>
         <input formControlName="apellidos" placeholder="Apellidos" class="form-input-surface" />
+        @if (form.get('apellidos')?.invalid && form.get('apellidos')?.touched) {
+          <p class="form-error">Los apellidos son obligatorios</p>
+        }
       </div>
 
       @if (!isEdit) {
         <div>
-          <label class="form-label">Email</label>
+          <label class="form-label">Email <span class="form-required">*</span></label>
           <input formControlName="email" type="email" placeholder="email@ejemplo.es" class="form-input-surface" />
+          @if (form.get('email')?.touched) {
+            @if (form.get('email')?.hasError('required')) {
+              <p class="form-error">El email es obligatorio</p>
+            } @else if (form.get('email')?.hasError('email')) {
+              <p class="form-error">El email no es válido</p>
+            }
+          }
         </div>
       }
 
       <div>
-        <label class="form-label">Rol</label>
+        <label class="form-label">Rol <span class="form-required">*</span></label>
         <select formControlName="rol" class="form-input-surface">
           <option value="socio">Socio</option>
           <option value="moderador">Moderador</option>
@@ -41,16 +54,25 @@
       <div>
         <label class="form-label">Número de socio <span class="form-required">*</span></label>
         <input formControlName="numeroSocio" placeholder="Nº socio" class="form-input-surface" />
+        @if (form.get('numeroSocio')?.invalid && form.get('numeroSocio')?.touched) {
+          <p class="form-error">El número de socio es obligatorio</p>
+        }
       </div>
 
       <div>
-        <label class="form-label">DNI</label>
+        <label class="form-label">DNI <span class="form-required">*</span></label>
         <input formControlName="dni" placeholder="12345678A" class="form-input-surface" />
+        @if (form.get('dni')?.invalid && form.get('dni')?.touched) {
+          <p class="form-error">El DNI es obligatorio</p>
+        }
       </div>
 
       <div>
-        <label class="form-label">Teléfono</label>
+        <label class="form-label">Teléfono <span class="form-required">*</span></label>
         <input formControlName="telefono" type="tel" placeholder="600 000 000" class="form-input-surface" />
+        @if (form.get('telefono')?.invalid && form.get('telefono')?.touched) {
+          <p class="form-error">El teléfono es obligatorio</p>
+        }
       </div>
 
       <div>
