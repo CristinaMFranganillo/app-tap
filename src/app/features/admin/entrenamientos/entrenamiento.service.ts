@@ -82,7 +82,7 @@ export class EntrenamientoService {
     const { error } = await supabase
       .from('resultados_entrenamiento')
       .upsert(rows, { onConflict: 'escuadra_id,user_id' });
-    if (error) throw new Error('Error guardando resultados');
+    if (error) throw new Error(error?.message ?? 'Error guardando resultados');
   }
 
   getByUser(userId: string, year: number): Observable<ResultadoEntrenamientoConFecha[]> {
