@@ -1,0 +1,28 @@
+<div class="detalle-entrenamiento">
+  <div class="page-header">
+    <button (click)="goBack()" class="detalle-entrenamiento__back-btn">
+      <i class="bi bi-chevron-left detalle-entrenamiento__back-icon"></i>
+    </button>
+    <h2 class="detalle-entrenamiento__title">
+      Entrenamiento {{ entrenamiento()?.fecha | date:'d MMM yyyy' : '' : 'es' }}
+    </h2>
+  </div>
+
+  @if (escuadras().length === 0) {
+    <app-empty-state icon="bi-people" mensaje="Sin escuadras todavía" />
+  } @else {
+    @for (e of escuadras(); track e.id) {
+      <div class="card escuadra-item" (click)="irResultados(e.id)">
+        <div class="escuadra-item__info">
+          <p class="escuadra-item__nombre">Escuadra {{ e.numero }}</p>
+          <p class="escuadra-item__tiradores">{{ e.tiradores?.length ?? 0 }} tiradores</p>
+        </div>
+        <i class="bi bi-chevron-right escuadra-item__arrow"></i>
+      </div>
+    }
+  }
+
+  <button (click)="nuevaEscuadra()" class="fab">
+    <i class="bi bi-plus-lg"></i>
+  </button>
+</div>

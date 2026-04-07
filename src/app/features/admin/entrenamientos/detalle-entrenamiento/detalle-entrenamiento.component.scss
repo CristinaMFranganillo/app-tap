@@ -1,0 +1,16 @@
+.detalle-entrenamiento {
+  @apply p-3;
+
+  &__back-btn { @apply text-gray-400; }
+  &__back-icon { @apply text-[15px]; }
+  &__title { @apply text-[18px] font-extrabold text-secondary; }
+}
+
+.escuadra-item {
+  @apply flex items-center justify-between cursor-pointer;
+
+  &__info { @apply flex-1 min-w-0; }
+  &__nombre { @apply text-base font-bold text-secondary; }
+  &__tiradores { @apply text-xs text-neutral-300 font-medium; }
+  &__arrow { @apply text-neutral-300 text-[14px]; }
+}
