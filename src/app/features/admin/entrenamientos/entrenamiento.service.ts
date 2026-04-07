@@ -202,11 +202,12 @@ export class EntrenamientoService {
   ): Promise<void> {
     // Borrar fallos anteriores de esta escuadra para estos usuarios
     if (userIds.length > 0) {
-      await supabase
+      const { error: deleteError } = await supabase
         .from('entrenamiento_fallos')
         .delete()
         .eq('escuadra_id', escuadraId)
         .in('user_id', userIds);
+      if (deleteError) throw new Error(deleteError.message ?? 'Error borrando fallos anteriores');
     }
     // Insertar nuevos fallos (si los hay)
     if (fallos.length > 0) {
