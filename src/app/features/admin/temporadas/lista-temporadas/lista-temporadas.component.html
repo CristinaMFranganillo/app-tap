@@ -1,0 +1,77 @@
+<div class="lista-temporadas">
+  <div class="page-header">
+    <h3 class="lista-temporadas__title">Temporadas</h3>
+  </div>
+
+  @if (error()) {
+    <p class="lista-temporadas__error">{{ error() }}</p>
+  }
+
+  @for (temporada of temporadas(); track temporada.id) {
+    <div class="card temporada-item" [class.temporada-item--activa]="temporada.activa">
+      <div class="temporada-item__row">
+        <div class="temporada-item__info">
+          <p class="temporada-item__nombre">{{ temporada.nombre }}</p>
+          <p class="temporada-item__meta">Inicio: {{ temporada.fechaInicio | date:'dd/MM/yyyy' }}</p>
+        </div>
+        @if (temporada.activa) {
+          <span class="temporada-item__badge">Activa</span>
+        }
+      </div>
+    </div>
+  }
+
+  @if (temporadas().length === 0) {
+    <p class="lista-temporadas__empty">No hay temporadas registradas.</p>
+  }
+</div>
+
+<!-- FAB -->
+<button (click)="abrirFormulario()" class="fab">
+  <i class="bi bi-plus-lg fab-icon"></i>
+</button>
+
+<!-- Diálogo nueva temporada -->
+@if (mostrarFormulario()) {
+  <div class="modal-overlay" (click)="cerrarFormulario()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h4 class="modal-card__title">Nueva temporada</h4>
+
+      @if (error()) {
+        <p class="form-error">{{ error() }}</p>
+      }
+
+      <div class="modal-card__field">
+        <label class="form-label">Nombre <span class="form-required">*</span></label>
+        <input
+          [ngModel]="nuevoNombre()"
+          (ngModelChange)="nuevoNombre.set($event)"
+          placeholder="ej: 2026-2027"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Fecha inicio de cobro <span class="form-required">*</span></label>
+        <input
+          type="date"
+          [ngModel]="nuevaFechaInicio()"
+          (ngModelChange)="nuevaFechaInicio.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__actions">
+        <button type="button" (click)="cerrarFormulario()" class="btn-secondary">Cancelar</button>
+        <button
+          type="button"
+          (click)="crearTemporada()"
+          [disabled]="saving()"
+          class="btn-primary"
+        >
+          {{ saving() ? 'Creando...' : 'Crear temporada' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,67 @@
+.lista-temporadas {
+  @apply p-3;
+}
+
+.lista-temporadas__title {
+  @apply text-[16px] font-bold text-brand-dark;
+}
+
+.lista-temporadas__error {
+  @apply text-danger text-[13px] mb-3;
+}
+
+.lista-temporadas__empty {
+  @apply text-center text-[13px] text-gray-400 mt-6;
+}
+
+.temporada-item {
+  @apply mb-2;
+
+  &__row {
+    @apply flex items-center justify-between;
+  }
+
+  &__info {
+    @apply flex flex-col gap-0.5;
+  }
+
+  &__nombre {
+    @apply text-[14px] font-bold text-brand-dark;
+  }
+
+  &__meta {
+    @apply text-[12px] text-gray-400 font-medium;
+  }
+
+  &__badge {
+    @apply text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600;
+  }
+
+  &--activa {
+    @apply border-l-4 border-emerald-400;
+  }
+}
+
+.fab-icon {
+  @apply text-[18px] font-black;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black/40 z-50 flex items-end justify-center;
+}
+
+.modal-card {
+  @apply bg-white rounded-t-2xl w-full max-w-lg p-5 flex flex-col gap-4;
+
+  &__title {
+    @apply text-[16px] font-bold text-brand-dark;
+  }
+
+  &__field {
+    @apply flex flex-col gap-1;
+  }
+
+  &__actions {
+    @apply flex gap-3 justify-end;
+  }
+}

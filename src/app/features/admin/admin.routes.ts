@@ -24,6 +24,14 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./socios/form-socio/form-socio.component').then(m => m.FormSocioComponent),
   },
+  // Temporadas (cuotas)
+  {
+    path: 'temporadas',
+    canActivate: [roleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./temporadas/lista-temporadas/lista-temporadas.component').then(m => m.ListaTemporadasComponent),
+  },
   // Noticias
   {
     path: 'noticias',
