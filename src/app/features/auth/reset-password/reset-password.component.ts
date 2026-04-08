@@ -37,33 +37,22 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   tokenValido      = signal(false);
   tokenError       = signal(false);
 
-  async ngOnInit(): Promise<void> {
-    try {
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
-      const accessToken  = params.get('access_token');
-      const refreshToken = params.get('refresh_token') ?? '';
-      const type         = params.get('type');
-
-      if (!accessToken || type !== 'recovery') {
-        this.router.navigate(['/login']);
-        return;
+  ngOnInit(): void {
+    // El SDK de Supabase consume el hash automáticamente antes de que Angular
+    // pueda leerlo. Escuchamos onAuthStateChange para capturar PASSWORD_RECOVERY.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        this.tokenValido.set(true);
+        subscription.unsubscribe();
       }
+    });
 
-      const { error } = await supabase.auth.setSession({
-        access_token:  accessToken,
-        refresh_token: refreshToken,
-      });
-
-      if (error) {
-        this.router.navigate(['/login']);
-        return;
+    // Si tras 5 segundos no llega el evento, el enlace es inválido
+    this.redirectTimeout = setTimeout(() => {
+      if (!this.tokenValido()) {
+        this.tokenError.set(true);
       }
-
-      this.tokenValido.set(true);
-    } catch {
-      this.tokenError.set(true);
-    }
+    }, 5000);
   }
 
   ngOnDestroy(): void {
