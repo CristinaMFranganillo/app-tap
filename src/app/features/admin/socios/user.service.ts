@@ -129,29 +129,9 @@ export class UserService {
     direccion?: string;
     localidad?: string;
   }): Promise<void> {
-    // Leer el token directamente de localStorage para evitar NavigatorLockAcquireTimeout.
-    // supabase.auth.getSession() y supabase.functions.invoke() usan Web Locks internamente,
-    // lo que falla si hay otro proceso de auth activo (onAuthStateChange).
-    // La clave de localStorage la indica el propio lock name que usa supabase-js
-    const raw = localStorage.getItem('sb-llaowdgdzmdgseeoctdq-auth-token');
-    const parsed = raw ? JSON.parse(raw) : null;
-    const token = parsed?.access_token ?? null;
-    if (!token) throw new Error('No hay sesión activa. Por favor, vuelve a iniciar sesión.');
-
-    const url = `${environment.supabaseUrl}/functions/v1/crear-usuario`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        'apikey': environment.supabaseAnonKey,
-      },
-      body: JSON.stringify(data),
-    });
-    const result = await response.json();
-    if (!response.ok || result?.error) {
-      throw new Error(result?.error ?? `Error ${response.status} al crear el usuario.`);
-    }
+    const { data: result, error } = await supabase.functions.invoke('crear-usuario', { body: data });
+    if (error) throw new Error(error.message ?? 'Error al crear el usuario.');
+    if (result?.error) throw new Error(result.error);
   }
 
   async eliminar(id: string): Promise<void> {
