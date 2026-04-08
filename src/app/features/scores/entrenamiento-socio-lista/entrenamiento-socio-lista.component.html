@@ -1,0 +1,19 @@
+<div class="entrena-lista">
+  @if (entrenamientos().length === 0) {
+    <app-empty-state icon="bi-bullseye" mensaje="Sin entrenamientos registrados" />
+  } @else {
+    @for (e of entrenamientos(); track e.escuadraId) {
+      <button type="button" class="entrena-lista__item card" (click)="irDetalle(e)">
+        <div class="entrena-lista__fecha">
+          <i class="bi bi-calendar3"></i>
+          {{ e.fecha | date:'d MMM yyyy' : '' : 'es' }}
+        </div>
+        <div class="entrena-lista__resultado"
+          [class.entrena-lista__resultado--bueno]="e.platosRotos >= 20"
+          [class.entrena-lista__resultado--malo]="e.platosRotos < 15">
+          {{ e.platosRotos }}/25
+        </div>
+      </button>
+    }
+  }
+</div>
