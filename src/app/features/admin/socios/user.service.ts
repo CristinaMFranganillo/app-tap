@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 import { from, Observable, map, tap, BehaviorSubject } from 'rxjs';
 import { User, UserRole } from '../../../core/models/user.model';
 import { supabase } from '../../../core/supabase/supabase.client';
@@ -128,13 +129,26 @@ export class UserService {
     direccion?: string;
     localidad?: string;
   }): Promise<void> {
-    // Usar supabase.functions.invoke en lugar de fetch manual para evitar
-    // NavigatorLockAcquireTimeout al llamar getSession() mientras hay locks activos
-    const { error: fnError, data: fnData } = await supabase.functions.invoke('crear-usuario', {
-      body: data,
+    // Leer el token directamente de localStorage para evitar NavigatorLockAcquireTimeout.
+    // supabase.auth.getSession() y supabase.functions.invoke() usan Web Locks internamente,
+    // lo que falla si hay otro proceso de auth activo (onAuthStateChange).
+    const raw = localStorage.getItem('sb-llaowdgdzmdgseeoctdq-auth-token');
+    const token = raw ? (JSON.parse(raw) as { access_token: string }).access_token : null;
+    if (!token) throw new Error('No hay sesión activa. Por favor, vuelve a iniciar sesión.');
+
+    const url = `${environment.supabaseUrl}/functions/v1/crear-usuario`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        'apikey': environment.supabaseAnonKey,
+      },
+      body: JSON.stringify(data),
     });
-    if (fnError || (fnData as any)?.error) {
-      throw new Error((fnData as any)?.error ?? fnError?.message ?? 'Error al crear el usuario.');
+    const result = await response.json();
+    if (!response.ok || result?.error) {
+      throw new Error(result?.error ?? `Error ${response.status} al crear el usuario.`);
     }
   }
 
