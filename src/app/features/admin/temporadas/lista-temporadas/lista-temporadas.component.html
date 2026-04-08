@@ -25,7 +25,12 @@
           <button class="temporada-item__btn-edit" (click)="abrirEdicion(temporada, $event)" title="Editar">
             <i class="bi bi-pencil-fill"></i>
           </button>
-          <button class="temporada-item__btn-delete" (click)="confirmarEliminarTemporada(temporada.id, $event)" title="Eliminar">
+          <button
+            class="temporada-item__btn-delete"
+            (click)="confirmarEliminarTemporada(temporada.id, $event)"
+            [disabled]="temporada.activa"
+            [title]="temporada.activa ? 'No se puede eliminar la temporada activa' : 'Eliminar'"
+          >
             <i class="bi bi-trash-fill"></i>
           </button>
         </div>
