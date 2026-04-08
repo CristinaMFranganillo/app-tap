@@ -3,6 +3,18 @@ import { from, Observable, map, tap, BehaviorSubject } from 'rxjs';
 import { User, UserRole } from '../../../core/models/user.model';
 import { supabase } from '../../../core/supabase/supabase.client';
 
+function normalizeNumeroSocio(raw: unknown): string {
+  if (raw == null) return '';
+  const s = String(raw).trim();
+  return s;
+}
+
+function normalizeRol(raw: unknown): UserRole {
+  const s = typeof raw === 'string' ? raw.trim().toLowerCase() : '';
+  if (s === 'admin' || s === 'moderador' || s === 'socio') return s;
+  return 'socio';
+}
+
 function toUser(row: Record<string, unknown>): User {
   // cuotas es un array con 0 o 1 elemento (la de la temporada activa)
   const cuotaRows = (row['cuotas'] as Record<string, unknown>[] | null) ?? [];
@@ -13,9 +25,9 @@ function toUser(row: Record<string, unknown>): User {
     nombre: row['nombre'] as string,
     apellidos: row['apellidos'] as string,
     email: (row['email'] as string) ?? '',
-    numeroSocio: row['numero_socio'] as string,
+    numeroSocio: normalizeNumeroSocio(row['numero_socio']),
     avatarUrl: (row['avatar_url'] as string) ?? undefined,
-    rol: row['rol'] as UserRole,
+    rol: normalizeRol(row['rol']),
     fechaAlta: new Date(row['fecha_alta'] as string),
     activo: row['activo'] as boolean,
     firstLogin: (row['first_login'] as boolean) ?? true,
@@ -43,10 +55,13 @@ export class UserService {
           .eq('activa', true)
           .maybeSingle();
 
+        // Columnas explícitas (literal fijado para tipos de supabase-js): evita rarezas con `*` + embed + filtro.
         // Paso 2: cargar perfiles con cuotas filtradas por temporada_id
         let query = supabase
           .from('profiles')
-          .select('*, cuotas!left(id, pagada, temporada_id)')
+          .select(
+            'id,nombre,apellidos,email,numero_socio,avatar_url,rol,fecha_alta,activo,first_login,dni,telefono,direccion,localidad,favorito,cuotas!left(id, pagada, temporada_id)'
+          )
           .order('fecha_alta', { ascending: true });
 
         if (season?.id) {

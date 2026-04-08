@@ -1,7 +1,6 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { TitleCasePipe } from '@angular/common';
 import { Subject, switchMap, startWith } from 'rxjs';
 import { UserService } from '../user.service';
 import { CuotaService } from '../cuota.service';
@@ -14,7 +13,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-lista-socios',
   standalone: true,
-  imports: [FormsModule, TitleCasePipe, AvatarComponent, ConfirmDialogComponent],
+  imports: [FormsModule, AvatarComponent, ConfirmDialogComponent],
   templateUrl: './lista-socios.component.html',
   styleUrl: './lista-socios.component.scss',
 })
@@ -148,5 +147,20 @@ export class ListaSociosComponent {
     event.stopPropagation();
     await this.userService.toggleFavorito(socio.id);
     this.refresh$.next();
+  }
+
+  /** Evita `#{{ ... }}` y valores null; el listado debe mostrar siempre texto legible. */
+  displayNumeroSocio(s: User): string {
+    const t = (s.numeroSocio ?? '').trim();
+    return t ? `#${t}` : '—';
+  }
+
+  displayRol(s: User): string {
+    const labels: Record<User['rol'], string> = {
+      socio: 'Socio',
+      moderador: 'Moderador',
+      admin: 'Admin',
+    };
+    return labels[s.rol] ?? '—';
   }
 }

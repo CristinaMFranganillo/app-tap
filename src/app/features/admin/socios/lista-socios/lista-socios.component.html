@@ -117,7 +117,7 @@
         <div class="socio-item__details">
           <div class="socio-item__detail-row">
             <span class="socio-item__detail-label">Nº socio</span>
-            <span class="socio-item__detail-value">#{{ socio.numeroSocio }}</span>
+            <span class="socio-item__detail-value">{{ displayNumeroSocio(socio) }}</span>
           </div>
           <div class="socio-item__detail-row">
             <span class="socio-item__detail-label">Email</span>
@@ -125,7 +125,7 @@
           </div>
           <div class="socio-item__detail-row">
             <span class="socio-item__detail-label">Rol</span>
-            <span class="socio-item__detail-value">{{ socio.rol | titlecase }}</span>
+            <span class="socio-item__detail-value">{{ displayRol(socio) }}</span>
           </div>
           <div class="socio-item__detail-row">
             <span class="socio-item__detail-label">DNI</span>

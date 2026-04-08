@@ -71,15 +71,15 @@
 }
 
 .socio-item__detail-row {
-  @apply flex justify-between items-center;
+  @apply flex justify-between items-start gap-3;
 }
 
 .socio-item__detail-label {
-  @apply text-[12px] font-semibold text-gray-400 uppercase tracking-wide;
+  @apply text-[12px] font-semibold text-gray-400 uppercase tracking-wide flex-shrink-0;
 }
 
 .socio-item__detail-value {
-  @apply text-[13px] font-medium text-brand-dark text-right max-w-[65%];
+  @apply text-[13px] font-medium text-brand-dark text-right max-w-[65%] min-w-0;
 
   &--wrap {
     @apply break-words whitespace-normal;
