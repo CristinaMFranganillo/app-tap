@@ -151,3 +151,43 @@
     color: #FFAE00;
   }
 }
+
+.lista-socios__filtros-toggle {
+  @apply flex items-center gap-1 text-[11px] font-semibold text-gray-400 ml-auto mb-2;
+
+  i {
+    @apply text-[13px];
+  }
+}
+
+.lista-socios__filtros-panel {
+  @apply bg-white rounded-[10px] shadow-sm px-3 py-2 mb-3 flex flex-col gap-3;
+}
+
+.filtro-row {
+  @apply flex items-center gap-2 text-[13px] font-medium text-brand-dark cursor-pointer;
+
+  input[type='checkbox'] {
+    @apply w-4 h-4 accent-amber-500 cursor-pointer flex-shrink-0;
+  }
+
+  &--pills {
+    @apply flex items-center justify-between cursor-default;
+  }
+}
+
+.filtro-label {
+  @apply text-[12px] font-semibold text-gray-400 uppercase tracking-wide;
+}
+
+.filtro-pills {
+  @apply flex gap-1;
+}
+
+.filtro-pill {
+  @apply text-[11px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 transition-colors duration-100;
+
+  &--active {
+    @apply bg-amber-50 text-amber-700;
+  }
+}
