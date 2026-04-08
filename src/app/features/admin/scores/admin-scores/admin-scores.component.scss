@@ -11,60 +11,36 @@
 .caja-acceso {
   @apply flex items-center justify-between px-4 py-3
          bg-white rounded-card shadow-card border-l-4 border-primary;
-
-  &__left  { @apply flex items-center gap-3; }
-
-  &__icon-wrap {
-    @apply w-9 h-9 rounded-card bg-primary/20
-           flex items-center justify-center flex-shrink-0;
-    i { @apply text-secondary text-[16px]; }
-  }
-
-  &__titulo { @apply text-sm font-bold text-secondary; }
-  &__sub    { @apply text-xs text-neutral-400; }
-  &__arrow  { @apply text-neutral-300 text-[13px]; }
 }
+
+.caja-acceso__left     { @apply flex items-center gap-3; }
+.caja-acceso__icon-wrap {
+  @apply w-9 h-9 rounded-card bg-primary/20 flex items-center justify-center flex-shrink-0;
+  i { @apply text-secondary text-[16px]; }
+}
+.caja-acceso__titulo   { @apply text-sm font-bold text-secondary; }
+.caja-acceso__sub      { @apply text-xs text-neutral-400; }
+.caja-acceso__arrow    { @apply text-neutral-300 text-[13px]; }
 
 // ── Secciones ──────────────────────────────────────────────────
 
 .admin-scores__section {
   @apply flex flex-col gap-3;
-
-  &--secondary {
-    @apply pt-4 border-t border-neutral-200;
-  }
+  &--secondary { @apply pt-4 border-t border-neutral-200; }
 }
 
 .admin-scores__section-title {
   @apply text-base font-semibold text-secondary uppercase tracking-[1.5px];
-
-  &--secondary {
-    @apply text-sm font-medium text-neutral-400 uppercase tracking-[1.5px];
-  }
 }
 
-// ── Botón primario de acción (entrenamientos) ──────────────────
+// ── Botones de acción ──────────────────────────────────────────
 
 .admin-scores__btn-primary {
   @apply flex items-center gap-3 bg-primary rounded-card px-4 py-3
          font-extrabold text-secondary w-full
          active:scale-[.98] transition-transform duration-fast;
-
   &-icon { @apply text-[20px]; }
-
-  span { @apply text-base; }
-}
-
-// ── Botón secundario de acción (competiciones) ─────────────────
-
-.admin-scores__btn-secondary {
-  @apply flex items-center gap-2 bg-neutral-100 rounded-card px-3 py-2.5
-         font-bold text-secondary w-full
-         active:scale-[.98] transition-transform duration-fast;
-
-  &-icon { @apply text-[16px] text-neutral-400; }
-
-  span { @apply text-sm; }
+  span   { @apply text-base; }
 }
 
 // ── Estado vacío ───────────────────────────────────────────────
@@ -72,18 +48,15 @@
 .admin-scores__empty {
   @apply flex flex-col items-center justify-center py-8 text-center;
 }
-
-.admin-scores__empty-icon    { @apply text-[40px] text-neutral-200 mb-2; }
-.admin-scores__empty-title   { @apply text-sm font-bold text-neutral-300 uppercase tracking-wider; }
+.admin-scores__empty-icon     { @apply text-[40px] text-neutral-200 mb-2; }
+.admin-scores__empty-title    { @apply text-sm font-bold text-neutral-300 uppercase tracking-wider; }
 .admin-scores__empty-subtitle { @apply text-sm text-neutral-400 mt-1; }
-.admin-scores__empty-text    { @apply text-sm text-neutral-300 font-medium; }
 
-// ── Inline date picker ────────────────────────────────────────
+// ── Inline date picker ─────────────────────────────────────────
 
 .admin-scores__picker {
   @apply bg-white rounded-card p-4 shadow-card flex flex-col gap-3;
 }
-
 .admin-scores__picker-error   { @apply text-danger text-sm font-semibold; }
 .admin-scores__picker-actions { @apply flex gap-2 pt-1; }
 
@@ -92,9 +65,7 @@
 .entrena-tabla {
   @apply rounded-card border border-neutral-100 overflow-hidden bg-white;
 
-  &__head {
-    @apply flex items-center px-3 py-2 bg-neutral-50 border-b border-neutral-100;
-  }
+  &__head { @apply flex items-center px-3 py-2 bg-neutral-50 border-b border-neutral-100; }
 
   &__th {
     @apply text-[12px] font-semibold uppercase tracking-widest text-neutral-400;
@@ -103,9 +74,7 @@
     &--acciones { @apply w-20 text-center; }
   }
 
-  &__row {
-    @apply flex items-center px-3 py-3 border-b border-neutral-100 last:border-0;
-  }
+  &__row { @apply flex items-center px-3 py-3 border-b border-neutral-100 last:border-0; }
 
   &__td {
     @apply text-sm text-secondary;
@@ -121,17 +90,3 @@
     &--danger { @apply text-danger active:text-red-700; }
   }
 }
-
-// ── Tarjeta competición ────────────────────────────────────────
-
-.competicion-item__header    { @apply flex items-start justify-between; }
-.competicion-item__info      { @apply flex-1 min-w-0; }
-.competicion-item__nombre-row { @apply flex items-center gap-2; }
-.competicion-item__nombre    { @apply text-sm font-bold text-secondary truncate; }
-.competicion-item__modalidad { @apply text-sm text-neutral-400 font-medium mt-0.5; }
-.competicion-item__stats     { @apply text-right ml-2; }
-.competicion-item__total     { @apply text-sm font-bold text-secondary; }
-.competicion-item__total-unit { @apply text-sm text-neutral-400 font-medium; }
-.competicion-item__series    { @apply text-sm text-neutral-400; }
-.competicion-item__lugar     { @apply text-sm text-neutral-400 mt-1; }
-.competicion-item__fecha     { @apply text-sm text-neutral-400 mt-0.5; }
