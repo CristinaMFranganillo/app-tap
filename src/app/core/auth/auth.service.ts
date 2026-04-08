@@ -3,19 +3,28 @@ import { BehaviorSubject, from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User, UserRole } from '../models/user.model';
 import { supabase } from '../supabase/supabase.client';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   readonly currentUser$ = this.userSubject.asObservable();
 
+  /** Token en memoria: se actualiza en cada cambio de sesión sin pasar por el lock. */
+  private _accessToken: string | null = null;
+  get accessToken(): string | null { return this._accessToken; }
+
   /** Se resuelve tras leer la sesión en almacenamiento y cargar perfil (si hay sesión). */
   private readonly sessionReady: Promise<void>;
 
   constructor() {
     supabase.auth.onAuthStateChange((_event, session) => {
+      this._accessToken = session?.access_token ?? null;
       if (session) {
-        void this.loadProfile(session.user.id);
+        // loadProfile usa fetch nativo con el token ya disponible en el objeto session,
+        // evitando cualquier llamada al SDK de Supabase (que intentaría adquirir el
+        // NavigatorLock que onAuthStateChange ya retiene en v2.x → TimeoutError).
+        void this.loadProfile(session.user.id, session.user.email ?? '', session.access_token);
       } else {
         this.userSubject.next(null);
       }
@@ -24,7 +33,12 @@ export class AuthService {
     this.sessionReady = (async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        await this.loadProfile(data.session.user.id);
+        this._accessToken = data.session.access_token;
+        await this.loadProfile(
+          data.session.user.id,
+          data.session.user.email ?? '',
+          data.session.access_token
+        );
       }
     })();
   }
@@ -38,35 +52,50 @@ export class AuthService {
   }
 
   async reloadProfile(): Promise<void> {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) await this.loadProfile(user.id);
+    // reloadProfile se llama fuera de callbacks de auth (ej. tras subir avatar).
+    const { data } = await supabase.auth.getSession();
+    if (data.session) {
+      this._accessToken = data.session.access_token;
+      await this.loadProfile(data.session.user.id, data.session.user.email ?? '', data.session.access_token);
+    }
   }
 
-  private async loadProfile(userId: string): Promise<void> {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
+  /**
+   * Carga el perfil usando fetch nativo para no pasar por el SDK de Supabase
+   * (evita NavigatorLockAcquireTimeoutError cuando se llama desde onAuthStateChange).
+   */
+  private async loadProfile(userId: string, email: string, accessToken: string): Promise<void> {
+    const res = await fetch(
+      `${environment.supabaseUrl}/rest/v1/profiles?id=eq.${encodeURIComponent(userId)}&select=*`,
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'apikey': environment.supabaseAnonKey,
+          'Accept': 'application/json',
+        },
+      }
+    );
 
-    if (data) {
-      const { data: authUser } = await supabase.auth.getUser();
-      const user: User = {
-        id: data['id'],
-        nombre: data['nombre'],
-        apellidos: data['apellidos'],
-        email: authUser.user?.email ?? '',
-        numeroSocio: data['numero_socio'],
-        avatarUrl: data['avatar_url'] ?? undefined,
-        rol: data['rol'] as UserRole,
-        fechaAlta: new Date(data['fecha_alta']),
-        activo: data['activo'],
-        firstLogin: data['first_login'] ?? true,
-        localidad: data['localidad'] ?? '',
-        favorito: (data['favorito'] as boolean) ?? false,
-      };
-      this.userSubject.next(user);
-    }
+    if (!res.ok) return;
+    const rows: Record<string, unknown>[] = await res.json();
+    const data = rows?.[0];
+    if (!data) return;
+
+    const user: User = {
+      id:          data['id'] as string,
+      nombre:      data['nombre'] as string,
+      apellidos:   data['apellidos'] as string,
+      email,
+      numeroSocio: data['numero_socio'] as number,
+      avatarUrl:   (data['avatar_url'] as string) ?? undefined,
+      rol:         data['rol'] as UserRole,
+      fechaAlta:   new Date(data['fecha_alta'] as string),
+      activo:      data['activo'] as boolean,
+      firstLogin:  (data['first_login'] as boolean) ?? true,
+      localidad:   (data['localidad'] as string) ?? '',
+      favorito:    (data['favorito'] as boolean) ?? false,
+    };
+    this.userSubject.next(user);
   }
 
   login(email: string, password: string): Observable<{ error: string | null }> {
@@ -79,11 +108,10 @@ export class AuthService {
     );
   }
 
-  logout(): void {
-    // signOut() libera el NavigatorLock de auth al completarse; onAuthStateChange emitirá
-    // session=null y el handler ya llama userSubject.next(null). No emitir null aquí antes
-    // de que signOut termine o los switchMap activos intentarán getSession() con el lock ocupado.
-    void supabase.auth.signOut();
+  async logout(): Promise<void> {
+    // Esperar a que signOut() libere el NavigatorLock antes de navegar.
+    // onAuthStateChange emitirá session=null y el handler llamará userSubject.next(null).
+    await supabase.auth.signOut();
   }
 
   isAuthenticated(): boolean {

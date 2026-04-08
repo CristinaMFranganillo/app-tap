@@ -161,8 +161,8 @@ export class PerfilComponent {
     this.router.navigate(['/admin/temporadas']);
   }
 
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+  async logout(): Promise<void> {
+    await this.authService.logout();
+    await this.router.navigate(['/login']);
   }
 }

@@ -94,26 +94,28 @@ serve(async (req: Request) => {
       )
     }
 
-    // 2. Actualizar el profile creado por el trigger
-    console.log('Actualizando profile para:', authData.user.id)
-    const { error: profileError } = await supabaseAdmin.from('profiles').update({
+    // 2. Insertar el perfil directamente (trigger desactivado)
+    console.log('Insertando profile para:', authData.user.id)
+    const { error: profileError } = await supabaseAdmin.from('profiles').insert({
+      id:           authData.user.id,
       nombre,
       apellidos,
       numero_socio: numeroSocioInt,
       rol,
       email,
-      dni:      dni      ?? null,
-      telefono: telefono ?? null,
-      direccion: direccion ?? null,
-      localidad: localidad ?? null,
-      activo:     true,
-      first_login: true,
-    }).eq('id', authData.user.id)
+      dni:          dni       ?? null,
+      telefono:     telefono  ?? null,
+      direccion:    direccion ?? null,
+      localidad:    localidad ?? null,
+      activo:       true,
+      first_login:  true,
+      favorito:     false,
+    })
 
     if (profileError) {
-      console.error('Error actualizando profile:', profileError.message, profileError.details, profileError.hint)
+      console.error('Error insertando profile:', profileError.message, profileError.details, profileError.hint)
       return new Response(
-        JSON.stringify({ error: `Error actualizando perfil: ${profileError.message} | ${profileError.hint ?? ''} | ${profileError.details ?? ''}` }),
+        JSON.stringify({ error: `Error creando perfil: ${profileError.message} | ${profileError.hint ?? ''} | ${profileError.details ?? ''}` }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }

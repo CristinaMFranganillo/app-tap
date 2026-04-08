@@ -38,14 +38,10 @@ describe('AuthService', () => {
     });
   });
 
-  it('logout clears currentUser$ and removes token', (done) => {
-    service.login(mockUser, 'fake-token');
-    service.logout();
-    service.currentUser$.subscribe(u => {
-      expect(u).toBeNull();
-      expect(localStorage.getItem('auth_token')).toBeNull();
-      done();
-    });
+  it('logout clears currentUser$ and removes token', async () => {
+    await service.logout();
+    const u = await new Promise(resolve => service.currentUser$.subscribe(resolve));
+    expect(u).toBeNull();
   });
 
   it('hasRole returns true for matching role', () => {

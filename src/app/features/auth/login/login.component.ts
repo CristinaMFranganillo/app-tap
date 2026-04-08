@@ -1,6 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { AuthService } from '../../../core/auth/auth.service';
 import { supabase } from '../../../core/supabase/supabase.client';
 
@@ -33,20 +35,25 @@ export class LoginComponent {
   recuperarMsg     = signal('');
   recuperarError   = signal('');
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.form.invalid) return;
     this.loading = true;
     this.error = '';
 
     const { email, password } = this.form.value;
-    this.auth.login(email!, password!).subscribe(({ error }) => {
+    const { error } = await firstValueFrom(this.auth.login(email!, password!));
+    if (error) {
       this.loading = false;
-      if (error) {
-        this.error = error;
-      } else {
-        this.router.navigate(['/']);
-      }
-    });
+      this.error = error;
+      return;
+    }
+
+    // Esperar a que onAuthStateChange complete loadProfile antes de navegar.
+    // Sin esto, el authGuard comprueba isAuthenticated() cuando el perfil
+    // aún no está cargado y redirige de vuelta a /login.
+    await firstValueFrom(this.auth.currentUser$.pipe(filter(u => u !== null)));
+    this.loading = false;
+    this.router.navigate(['/']);
   }
 
   abrirRecuperar(): void {

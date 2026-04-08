@@ -27,9 +27,9 @@ export class HeaderComponent {
     this.cambiarPassword.emit();
   }
 
-  logout(): void {
+  async logout(): Promise<void> {
     this.menuAbierto.set(false);
-    this.auth.logout();
-    this.router.navigate(['/login']);
+    await this.auth.logout();
+    await this.router.navigate(['/login']);
   }
 }
