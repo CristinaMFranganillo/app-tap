@@ -1,7 +1,7 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map, switchMap, startWith, Subject, firstValueFrom } from 'rxjs';
+import { switchMap, startWith, Subject, firstValueFrom } from 'rxjs';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { EntrenamientoService } from '../entrenamiento.service';
 import { EscuadraService } from '../../../../features/scores/escuadra.service';
