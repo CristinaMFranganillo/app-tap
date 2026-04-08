@@ -3,14 +3,13 @@ import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Subject, switchMap, startWith } from 'rxjs';
+import { Subject, switchMap, startWith, firstValueFrom } from 'rxjs';
 import { CompeticionService } from '../../../scores/competicion.service';
 import { EntrenamientoService } from '../../entrenamientos/entrenamiento.service';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { Competicion } from '../../../../core/models/competicion.model';
 import { EntrenamientoDia } from '../../../../core/models/entrenamiento.model';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-admin-scores',
