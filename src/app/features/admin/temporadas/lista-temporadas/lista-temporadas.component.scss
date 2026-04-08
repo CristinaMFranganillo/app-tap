@@ -15,7 +15,7 @@
 }
 
 .temporada-item {
-  @apply mb-2;
+  @apply mb-2 cursor-pointer;
 
   &__row {
     @apply flex items-center justify-between;
@@ -40,6 +40,20 @@
   &--activa {
     @apply border-l-4 border-emerald-400;
   }
+
+  &__actions {
+    @apply flex items-center gap-2;
+  }
+
+  &__btn-edit {
+    @apply text-[13px] text-gray-400 bg-transparent border-0 p-1 leading-none cursor-pointer;
+    &:hover { @apply text-brand-dark; }
+  }
+
+  &__btn-delete {
+    @apply text-[13px] text-gray-300 bg-transparent border-0 p-1 leading-none cursor-pointer;
+    &:hover { @apply text-danger; }
+  }
 }
 
 .fab-icon {
@@ -54,8 +68,25 @@
   @apply bg-white rounded-t-2xl w-full max-w-lg p-5 flex flex-col gap-4;
   padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
 
+  &--tall {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
   &__title {
     @apply text-[16px] font-bold text-brand-dark;
+  }
+
+  &__header {
+    @apply flex items-center justify-between;
+  }
+
+  &__close {
+    @apply text-gray-400 bg-transparent border-0 text-[16px] cursor-pointer p-1;
+  }
+
+  &__subtitle {
+    @apply text-[12px] text-gray-400 font-medium mt-[-8px];
   }
 
   &__field {
@@ -64,5 +95,43 @@
 
   &__actions {
     @apply flex gap-3 justify-end;
+  }
+
+  &__empty {
+    @apply text-[13px] text-gray-400 text-center py-4;
+  }
+
+  &__warning-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    background: #FEF3C7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+  }
+
+  &__warning-icon-inner {
+    font-size: 22px;
+    color: #D97706;
+  }
+}
+
+.pendientes-list {
+  @apply w-full flex flex-col gap-2 list-none p-0 m-0;
+
+  &__item {
+    @apply flex items-center justify-between py-2 border-b border-gray-100;
+    &:last-child { @apply border-0; }
+  }
+
+  &__nombre {
+    @apply text-[13px] font-semibold text-brand-dark;
+  }
+
+  &__baja-btn {
+    @apply text-[11px] font-bold text-danger bg-transparent border border-danger rounded-lg px-2 py-1 cursor-pointer;
+    &:hover { @apply bg-red-50; }
   }
 }

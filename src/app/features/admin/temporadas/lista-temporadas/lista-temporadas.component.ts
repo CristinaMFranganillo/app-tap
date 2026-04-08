@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject, switchMap, startWith } from 'rxjs';
 import { CuotaService } from '../../socios/cuota.service';
@@ -10,7 +11,7 @@ import { Temporada } from '../../../../core/models/cuota.model';
 @Component({
   selector: 'app-lista-temporadas',
   standalone: true,
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, DatePipe, ConfirmDialogComponent],
   templateUrl: './lista-temporadas.component.html',
   styleUrl: './lista-temporadas.component.scss',
 })

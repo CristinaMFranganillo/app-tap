@@ -8,15 +8,27 @@
   }
 
   @for (temporada of temporadas(); track temporada.id) {
-    <div class="card temporada-item" [class.temporada-item--activa]="temporada.activa">
+    <div
+      class="card temporada-item"
+      [class.temporada-item--activa]="temporada.activa"
+      (click)="abrirDetalle(temporada)"
+    >
       <div class="temporada-item__row">
         <div class="temporada-item__info">
           <p class="temporada-item__nombre">{{ temporada.nombre }}</p>
           <p class="temporada-item__meta">Inicio: {{ temporada.fechaInicio | date:'dd/MM/yyyy' }}</p>
         </div>
-        @if (temporada.activa) {
-          <span class="temporada-item__badge">Activa</span>
-        }
+        <div class="temporada-item__actions">
+          @if (temporada.activa) {
+            <span class="temporada-item__badge">Activa</span>
+          }
+          <button class="temporada-item__btn-edit" (click)="abrirEdicion(temporada, $event)" title="Editar">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+          <button class="temporada-item__btn-delete" (click)="confirmarEliminarTemporada(temporada.id, $event)" title="Eliminar">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+        </div>
       </div>
     </div>
   }
@@ -69,6 +81,123 @@
           [disabled]="saving()"
           class="btn-primary"
         >
+          {{ saving() ? 'Creando...' : 'Crear temporada' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Detalle temporada: socios con cuota pendiente -->
+@if (temporadaDetalle()) {
+  <div class="modal-overlay" (click)="cerrarDetalle()">
+    <div class="modal-card modal-card--tall" (click)="$event.stopPropagation()">
+      <div class="modal-card__header">
+        <h4 class="modal-card__title">{{ temporadaDetalle()!.nombre }}</h4>
+        <button class="modal-card__close" (click)="cerrarDetalle()">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <p class="modal-card__subtitle">Socios con cuota pendiente</p>
+
+      @if (loadingPendientes()) {
+        <p class="modal-card__empty">Cargando...</p>
+      } @else if (sociosPendientes().length === 0) {
+        <p class="modal-card__empty">Todos los socios han pagado la cuota.</p>
+      } @else {
+        <ul class="pendientes-list">
+          @for (socio of sociosPendientes(); track socio.id) {
+            <li class="pendientes-list__item">
+              <span class="pendientes-list__nombre">{{ socio.nombre }} {{ socio.apellidos }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+}
+
+<!-- Editar temporada -->
+@if (editandoTemporada()) {
+  <div class="modal-overlay" (click)="cerrarEdicion()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h4 class="modal-card__title">Editar temporada</h4>
+
+      @if (editError()) {
+        <p class="form-error">{{ editError() }}</p>
+      }
+
+      <div class="modal-card__field">
+        <label class="form-label">Nombre <span class="form-required">*</span></label>
+        <input
+          [ngModel]="editNombre()"
+          (ngModelChange)="editNombre.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Fecha inicio <span class="form-required">*</span></label>
+        <input
+          type="date"
+          [ngModel]="editFechaInicio()"
+          (ngModelChange)="editFechaInicio.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__actions">
+        <button type="button" (click)="cerrarEdicion()" class="btn-secondary">Cancelar</button>
+        <button
+          type="button"
+          (click)="guardarEdicion()"
+          [disabled]="editSaving()"
+          class="btn-primary"
+        >
+          {{ editSaving() ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Confirmar eliminar temporada -->
+@if (pendingDeleteTemporadaId()) {
+  <app-confirm-dialog
+    titulo="Eliminar temporada"
+    mensaje="¿Seguro que quieres eliminar esta temporada? Se eliminarán también todas sus cuotas."
+    labelConfirmar="Eliminar"
+    (confirmado)="eliminarTemporada()"
+    (cancelado)="cancelarEliminarTemporada()"
+  />
+}
+
+<!-- Modal socios sin pagar antes de crear nueva temporada -->
+@if (mostrarModalSinPagar()) {
+  <div class="modal-overlay" (click)="cerrarModalSinPagar()">
+    <div class="modal-card modal-card--tall" (click)="$event.stopPropagation()">
+      <div class="modal-card__warning-icon">
+        <i class="bi bi-exclamation-triangle-fill modal-card__warning-icon-inner"></i>
+      </div>
+      <h4 class="modal-card__title">Socios con cuota pendiente</h4>
+      <p class="modal-card__subtitle">
+        Los siguientes socios no han pagado la temporada actual. Puedes darlos de baja ahora o continuar sin hacer cambios.
+      </p>
+
+      <ul class="pendientes-list">
+        @for (socio of sociosSinPagarAnterior(); track socio.id) {
+          <li class="pendientes-list__item">
+            <span class="pendientes-list__nombre">{{ socio.nombre }} {{ socio.apellidos }}</span>
+            <button class="pendientes-list__baja-btn" (click)="darDeBajaSocio(socio.id)">
+              Dar de baja
+            </button>
+          </li>
+        }
+      </ul>
+
+      <div class="modal-card__actions">
+        <button type="button" (click)="cerrarModalSinPagar()" class="btn-secondary">Cancelar</button>
+        <button type="button" (click)="_ejecutarCrearTemporada()" [disabled]="saving()" class="btn-primary">
           {{ saving() ? 'Creando...' : 'Crear temporada' }}
         </button>
       </div>
