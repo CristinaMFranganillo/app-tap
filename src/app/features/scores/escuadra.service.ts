@@ -93,4 +93,34 @@ export class EscuadraService {
     if (error || !data) throw new Error('Error creando escuadra');
     return (data as Record<string, unknown>)['id'] as string;
   }
+
+  async deleteEscuadraEntrenamiento(id: string): Promise<void> {
+    // 1. Borrar fallos
+    const { error: fallosError } = await supabase
+      .from('entrenamiento_fallos')
+      .delete()
+      .eq('escuadra_id', id);
+    if (fallosError) throw new Error(fallosError.message ?? 'Error borrando fallos');
+
+    // 2. Borrar resultados
+    const { error: resultadosError } = await supabase
+      .from('resultados_entrenamiento')
+      .delete()
+      .eq('escuadra_id', id);
+    if (resultadosError) throw new Error(resultadosError.message ?? 'Error borrando resultados');
+
+    // 3. Borrar tiradores
+    const { error: tiradoresError } = await supabase
+      .from('escuadra_tiradores')
+      .delete()
+      .eq('escuadra_id', id);
+    if (tiradoresError) throw new Error(tiradoresError.message ?? 'Error borrando tiradores');
+
+    // 4. Borrar la escuadra
+    const { error } = await supabase
+      .from('escuadras')
+      .delete()
+      .eq('id', id);
+    if (error) throw new Error(error.message ?? 'Error borrando escuadra');
+  }
 }
