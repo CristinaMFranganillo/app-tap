@@ -54,7 +54,7 @@ export class ListaSociosComponent {
         s.nombre.toLowerCase().includes(term) ||
         s.apellidos.toLowerCase().includes(term) ||
         s.email.toLowerCase().includes(term) ||
-        s.numeroSocio.includes(term)
+        String(s.numeroSocio).includes(term)
       );
     }
 
@@ -151,7 +151,7 @@ export class ListaSociosComponent {
 
   /** Evita `#{{ ... }}` y valores null; el listado debe mostrar siempre texto legible. */
   displayNumeroSocio(s: User): string {
-    const t = (s.numeroSocio ?? '').trim();
+    const t = String(s.numeroSocio ?? '').trim();
     return t ? `#${t}` : '—';
   }
 

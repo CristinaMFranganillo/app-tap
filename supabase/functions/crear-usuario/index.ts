@@ -42,7 +42,7 @@ serve(async (req: Request) => {
       )
     }
 
-    const { nombre, apellidos, email, rol, numeroSocio, dni, telefono, direccion } = await req.json()
+    const { nombre, apellidos, email, rol, numeroSocio, dni, telefono, direccion, localidad } = await req.json()
 
     if (!nombre || !apellidos || !email || !rol || !numeroSocio) {
       return new Response(
@@ -51,16 +51,25 @@ serve(async (req: Request) => {
       )
     }
 
+    // numeroSocio debe ser entero positivo
+    const numeroSocioInt = parseInt(numeroSocio, 10)
+    if (isNaN(numeroSocioInt) || numeroSocioInt < 1) {
+      return new Response(
+        JSON.stringify({ error: 'El número de socio debe ser un entero mayor que 0' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
     // Validar que el número de socio no esté repetido
     const { data: existing } = await supabaseAdmin
       .from('profiles')
       .select('id')
-      .eq('numero_socio', numeroSocio)
+      .eq('numero_socio', numeroSocioInt)
       .maybeSingle()
 
     if (existing) {
       return new Response(
-        JSON.stringify({ error: `El número de socio ${numeroSocio} ya está en uso` }),
+        JSON.stringify({ error: `El número de socio ${numeroSocioInt} ya está en uso` }),
         { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -86,13 +95,14 @@ serve(async (req: Request) => {
     const { error: profileError } = await supabaseAdmin.from('profiles').update({
       nombre,
       apellidos,
-      numero_socio: numeroSocio,
+      numero_socio: numeroSocioInt,
       rol,
       email,
-      dni: dni ?? null,
+      dni:      dni      ?? null,
       telefono: telefono ?? null,
       direccion: direccion ?? null,
-      activo: true,
+      localidad: localidad ?? null,
+      activo:     true,
       first_login: true,
     }).eq('id', authData.user.id)
 
@@ -125,7 +135,7 @@ serve(async (req: Request) => {
     }
 
     return new Response(
-      JSON.stringify({ id: authData.user.id, numeroSocio }),
+      JSON.stringify({ id: authData.user.id, numeroSocio: numeroSocioInt }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   } catch (err) {

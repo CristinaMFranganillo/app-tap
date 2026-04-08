@@ -5,7 +5,7 @@ export interface User {
   nombre: string;
   apellidos: string;
   email: string;
-  numeroSocio: string;
+  numeroSocio: number;        // integer en BD
   avatarUrl?: string;
   rol: UserRole;
   fechaAlta: Date;
@@ -15,7 +15,7 @@ export interface User {
   telefono?: string;
   direccion?: string;
   localidad: string;
-  cuotaPagada?: boolean;   // estado en la temporada activa; undefined si no hay temporada
-  cuotaId?: string;        // id del registro cuota para poder actualizarlo directamente
+  cuotaPagada?: boolean;
+  cuotaId?: string;
   favorito: boolean;
 }

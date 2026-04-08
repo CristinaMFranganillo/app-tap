@@ -12,6 +12,7 @@
 
   <div class="form-socio__card">
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-socio__form">
+
       <div>
         <label class="form-label">Nombre <span class="form-required">*</span></label>
         <input formControlName="nombre" placeholder="Nombre" class="form-input-surface" />
@@ -51,9 +52,18 @@
 
       <div>
         <label class="form-label">Número de socio <span class="form-required">*</span></label>
-        <input formControlName="numeroSocio" placeholder="Nº socio" class="form-input-surface" />
-        @if (form.get('numeroSocio')?.invalid && form.get('numeroSocio')?.touched) {
-          <p class="form-error">El número de socio es obligatorio</p>
+        <input
+          formControlName="numeroSocio"
+          type="number"
+          min="1"
+          placeholder="Ej: 42"
+          class="form-input-surface" />
+        @if (form.get('numeroSocio')?.touched) {
+          @if (form.get('numeroSocio')?.hasError('required')) {
+            <p class="form-error">El número de socio es obligatorio</p>
+          } @else if (form.get('numeroSocio')?.hasError('min')) {
+            <p class="form-error">El número de socio debe ser mayor que 0</p>
+          }
         }
       </div>
 
@@ -92,6 +102,7 @@
           {{ saving() ? 'Guardando...' : (isEdit ? 'Guardar cambios' : 'Crear socio') }}
         </button>
       </div>
+
     </form>
   </div>
 </div>

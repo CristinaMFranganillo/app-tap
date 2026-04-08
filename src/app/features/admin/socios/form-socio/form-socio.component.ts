@@ -12,22 +12,22 @@ import { UserRole } from '../../../../core/models/user.model';
   styleUrl: './form-socio.component.scss',
 })
 export class FormSocioComponent implements OnInit {
-  private fb = inject(FormBuilder);
+  private fb          = inject(FormBuilder);
   private userService = inject(UserService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  private router      = inject(Router);
+  private route       = inject(ActivatedRoute);
 
-  isEdit = false;
+  isEdit   = false;
   private editId?: string;
-  saving = signal(false);
-  error = signal('');
+  saving   = signal(false);
+  error    = signal('');
 
   form = this.fb.group({
     nombre:      ['', Validators.required],
     apellidos:   ['', Validators.required],
     email:       ['', [Validators.required, Validators.email]],
     rol:         ['socio' as UserRole, Validators.required],
-    numeroSocio: ['', Validators.required],
+    numeroSocio: [null as number | null, [Validators.required, Validators.min(1)]],
     dni:         ['', Validators.required],
     telefono:    ['', Validators.required],
     direccion:   [''],
@@ -39,9 +39,19 @@ export class FormSocioComponent implements OnInit {
     if (id) {
       const user = this.userService.getById(id);
       if (user) {
-        this.isEdit = true;
-        this.editId = id;
-        this.form.patchValue(user);
+        this.isEdit  = true;
+        this.editId  = id;
+        this.form.patchValue({
+          nombre:      user.nombre,
+          apellidos:   user.apellidos,
+          email:       user.email,
+          rol:         user.rol,
+          numeroSocio: user.numeroSocio,
+          dni:         user.dni ?? '',
+          telefono:    user.telefono ?? '',
+          direccion:   user.direccion ?? '',
+          localidad:   user.localidad,
+        });
       }
     }
   }
@@ -55,27 +65,27 @@ export class FormSocioComponent implements OnInit {
     try {
       if (this.isEdit && this.editId) {
         await this.userService.update(this.editId, {
-          nombre: val.nombre!,
-          apellidos: val.apellidos!,
-          email: val.email!,
-          rol: val.rol as UserRole,
+          nombre:      val.nombre!,
+          apellidos:   val.apellidos!,
+          email:       val.email!,
+          rol:         val.rol as UserRole,
           numeroSocio: val.numeroSocio!,
-          dni: val.dni || undefined,
-          telefono: val.telefono || undefined,
-          direccion: val.direccion || undefined,
-          localidad: val.localidad || undefined,
+          dni:         val.dni     || undefined,
+          telefono:    val.telefono || undefined,
+          direccion:   val.direccion || undefined,
+          localidad:   val.localidad || undefined,
         });
       } else {
         await this.userService.crearEnAuth({
-          nombre: val.nombre!,
-          apellidos: val.apellidos!,
-          email: val.email!,
-          rol: val.rol!,
+          nombre:      val.nombre!,
+          apellidos:   val.apellidos!,
+          email:       val.email!,
+          rol:         val.rol!,
           numeroSocio: val.numeroSocio!,
-          dni: val.dni || undefined,
-          telefono: val.telefono || undefined,
-          direccion: val.direccion || undefined,
-          localidad: val.localidad || undefined,
+          dni:         val.dni     || undefined,
+          telefono:    val.telefono || undefined,
+          direccion:   val.direccion || undefined,
+          localidad:   val.localidad || undefined,
         });
       }
       this.router.navigate(['/admin/socios']);
