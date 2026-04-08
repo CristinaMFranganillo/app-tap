@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { from, Observable, map, tap, BehaviorSubject } from 'rxjs';
 import { User, UserRole } from '../../../core/models/user.model';
 import { supabase } from '../../../core/supabase/supabase.client';
@@ -133,13 +134,13 @@ export class UserService {
     const token = sessionData.session?.access_token;
     if (!token) throw new Error('No hay sesión activa. Por favor, vuelve a iniciar sesión.');
 
-    const url = `${supabase.supabaseUrl}/functions/v1/crear-usuario`;
+    const url = `${environment.supabaseUrl}/functions/v1/crear-usuario`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
-        'apikey': supabase.supabaseKey,
+        'apikey': environment.supabaseAnonKey,
       },
       body: JSON.stringify(data),
     });
