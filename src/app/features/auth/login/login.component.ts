@@ -68,7 +68,7 @@ export class LoginComponent {
     this.recuperarLoading.set(true);
     this.recuperarError.set('');
     const { error } = await supabase.auth.resetPasswordForEmail(this.recuperarEmail, {
-      redirectTo: `${window.location.origin}/`,
+      redirectTo: 'https://tiroalplatosanisidro.vercel.app/auth/reset-password',
     });
     this.recuperarLoading.set(false);
     if (error) {
