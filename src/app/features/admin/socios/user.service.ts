@@ -79,6 +79,7 @@ export class UserService {
     if (data.direccion !== undefined) payload['direccion'] = data.direccion;
     if (data.localidad !== undefined) payload['localidad'] = data.localidad;
     if (data.email !== undefined) payload['email'] = data.email;
+    if (data.favorito !== undefined) payload['favorito'] = data.favorito;
     const { error } = await supabase.from('profiles').update(payload).eq('id', id);
     if (error) throw new Error(error.message ?? 'Error al actualizar el perfil');
     const current = this.cache.getValue();
