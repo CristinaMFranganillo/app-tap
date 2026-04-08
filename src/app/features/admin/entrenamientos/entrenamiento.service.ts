@@ -266,7 +266,7 @@ export class EntrenamientoService {
       .from('escuadras')
       .select('id')
       .eq('entrenamiento_id', id);
-    if (escuadrasError) throw new Error(escuadrasError.message);
+    if (escuadrasError) throw new Error(escuadrasError.message ?? 'Error obteniendo escuadras');
 
     const ids = (escuadras ?? []).map((e: Record<string, unknown>) => e['id'] as string);
 
@@ -276,28 +276,28 @@ export class EntrenamientoService {
         .from('entrenamiento_fallos')
         .delete()
         .in('escuadra_id', ids);
-      if (fallosError) throw new Error(fallosError.message);
+      if (fallosError) throw new Error(fallosError.message ?? 'Error borrando fallos');
 
       // 3. Borrar resultados
       const { error: resultadosError } = await supabase
         .from('resultados_entrenamiento')
         .delete()
         .in('escuadra_id', ids);
-      if (resultadosError) throw new Error(resultadosError.message);
+      if (resultadosError) throw new Error(resultadosError.message ?? 'Error borrando resultados');
 
       // 4. Borrar tiradores
       const { error: tiradoresError } = await supabase
         .from('escuadra_tiradores')
         .delete()
         .in('escuadra_id', ids);
-      if (tiradoresError) throw new Error(tiradoresError.message);
+      if (tiradoresError) throw new Error(tiradoresError.message ?? 'Error borrando tiradores');
 
       // 5. Borrar escuadras
       const { error: escuadrasBorrarError } = await supabase
         .from('escuadras')
         .delete()
         .eq('entrenamiento_id', id);
-      if (escuadrasBorrarError) throw new Error(escuadrasBorrarError.message);
+      if (escuadrasBorrarError) throw new Error(escuadrasBorrarError.message ?? 'Error borrando escuadras');
     }
 
     // 6. Borrar el entrenamiento
@@ -305,6 +305,6 @@ export class EntrenamientoService {
       .from('entrenamientos')
       .delete()
       .eq('id', id);
-    if (error) throw new Error(error.message);
+    if (error) throw new Error(error.message ?? 'Error borrando entrenamiento');
   }
 }
