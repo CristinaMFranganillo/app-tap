@@ -163,3 +163,49 @@
     max-width: 480px;
   }
 }
+
+// ── Sección club (admin) ───────────────────────────────────────
+
+.perfil-club {
+  @apply flex flex-col gap-3 px-3 pb-2;
+
+  &__titulo {
+    @apply mt-1;
+
+    &--mt {
+      @apply mt-2;
+    }
+  }
+
+  &__entrenamientos {
+    @apply flex flex-col gap-2;
+  }
+
+  &__entrena-fila {
+    @apply flex items-center justify-between;
+  }
+
+  &__entrena-fecha {
+    @apply flex items-center gap-2 text-[14px] font-semibold text-secondary;
+
+    i { @apply text-neutral-300; }
+  }
+
+  &__entrena-badge {
+    @apply text-[12px] font-bold text-neutral-400 bg-neutral-100
+           px-2 py-0.5 rounded-full flex-shrink-0;
+  }
+
+  &__accesos {
+    @apply flex flex-col gap-2 mt-1;
+  }
+
+  &__acceso-btn {
+    @apply w-full py-3 rounded-[12px] text-[14px] font-extrabold
+           flex items-center justify-center gap-2;
+
+    &--sec {
+      @apply bg-white border border-secondary text-secondary;
+    }
+  }
+}
