@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { from, Observable, map, tap, BehaviorSubject } from 'rxjs';
 import { User, UserRole } from '../../../core/models/user.model';
 import { supabase } from '../../../core/supabase/supabase.client';
