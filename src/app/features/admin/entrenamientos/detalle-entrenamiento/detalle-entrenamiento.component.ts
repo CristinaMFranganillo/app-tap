@@ -15,6 +15,7 @@ export interface FilaResultado {
   puesto: number;
   nombre: string;
   platosRotos: number;
+  fallos: number[];
 }
 
 export interface EscuadraConResultados {
@@ -69,14 +70,27 @@ export class DetalleEntrenamientoComponent {
 
       const socios = await firstValueFrom(this.userService.getAll());
 
-      const resultados = await Promise.all(
-        escuadras.map(e =>
-          firstValueFrom(this.entrenamientoService.getResultadosByEscuadra(e.id))
-        )
-      );
+      const [resultados, fallosPorEscuadra] = await Promise.all([
+        Promise.all(
+          escuadras.map(e =>
+            firstValueFrom(this.entrenamientoService.getResultadosByEscuadra(e.id))
+          )
+        ),
+        Promise.all(
+          escuadras.map(e =>
+            firstValueFrom(this.entrenamientoService.getFallosByEscuadra(e.id))
+          )
+        ),
+      ]);
 
       this.escuadrasConResultados.set(
         escuadras.map((e, i) => {
+          const fallosMap = new Map<string, number[]>();
+          for (const f of fallosPorEscuadra[i]) {
+            if (!fallosMap.has(f.userId)) fallosMap.set(f.userId, []);
+            fallosMap.get(f.userId)!.push(f.numeroPlato);
+          }
+
           const filas: FilaResultado[] = (resultados[i] as ResultadoEntrenamiento[])
             .map(r => {
               const socio = socios.find(s => s.id === r.userId);
@@ -84,6 +98,7 @@ export class DetalleEntrenamientoComponent {
                 puesto: r.puesto,
                 nombre: socio ? `${socio.nombre} ${socio.apellidos}` : r.userId,
                 platosRotos: r.platosRotos,
+                fallos: (fallosMap.get(r.userId) ?? []).sort((a, b) => a - b),
               };
             })
             .sort((a, b) => a.puesto - b.puesto);

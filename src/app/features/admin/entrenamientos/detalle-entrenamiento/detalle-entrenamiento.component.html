@@ -47,7 +47,16 @@
             @for (fila of item.filas; track fila.puesto) {
               <div class="resultado-fila">
                 <span class="resultado-fila__puesto">{{ fila.puesto }}</span>
-                <span class="resultado-fila__nombre">{{ fila.nombre }}</span>
+                <div class="resultado-fila__info">
+                  <span class="resultado-fila__nombre">{{ fila.nombre }}</span>
+                  @if (fila.fallos.length > 0) {
+                    <div class="resultado-fila__fallos">
+                      @for (n of fila.fallos; track n) {
+                        <span class="fallo-pill">{{ n }}</span>
+                      }
+                    </div>
+                  }
+                </div>
                 <span class="resultado-fila__rotos"
                   [class.resultado-fila__rotos--bueno]="fila.platosRotos >= 20"
                   [class.resultado-fila__rotos--malo]="fila.platosRotos < 15">
