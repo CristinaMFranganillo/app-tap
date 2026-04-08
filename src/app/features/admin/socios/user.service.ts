@@ -93,6 +93,10 @@ export class UserService {
     }
   }
 
+  async desactivarSocio(id: string): Promise<void> {
+    await this.update(id, { activo: false });
+  }
+
   async toggleFavorito(id: string): Promise<void> {
     const user = this.getById(id);
     if (!user) return;

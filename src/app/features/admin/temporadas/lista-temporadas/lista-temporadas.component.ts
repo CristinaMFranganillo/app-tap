@@ -195,7 +195,7 @@ export class ListaTemporadasComponent {
 
   async darDeBajaSocio(id: string): Promise<void> {
     try {
-      await this.userService.eliminar(id);
+      await this.userService.desactivarSocio(id);
       this.sociosSinPagarAnterior.update(list => list.filter(s => s.id !== id));
     } catch {
       // silenciar — no bloquea el flujo principal
