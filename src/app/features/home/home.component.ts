@@ -1,7 +1,7 @@
 import { Component, inject, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map, switchMap } from 'rxjs';
+import { map, switchMap, EMPTY } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { NewsService } from '../noticias/news.service';
 import { AuthService } from '../../core/auth/auth.service';
@@ -32,7 +32,7 @@ export class HomeComponent {
 
   private misEntrenamientos = toSignal(
     this.authService.currentUser$.pipe(
-      switchMap(u => this.entrenamientoService.getByUser(u?.id ?? '', this.anio))
+      switchMap(u => u?.id ? this.entrenamientoService.getByUser(u.id, this.anio) : EMPTY)
     ),
     { initialValue: [] }
   );

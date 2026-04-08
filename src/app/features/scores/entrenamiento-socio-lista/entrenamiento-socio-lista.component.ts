@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
+import { switchMap, EMPTY } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../../core/auth/auth.service';
 import { EntrenamientoService } from '../../admin/entrenamientos/entrenamiento.service';
@@ -25,7 +25,7 @@ export class EntrenamientoSocioListaComponent {
   entrenamientos = toSignal(
     this.auth.currentUser$.pipe(
       switchMap(user =>
-        this.entrenamientoService.getByUser(user?.id ?? '', this.anio)
+        user?.id ? this.entrenamientoService.getByUser(user.id, this.anio) : EMPTY
       )
     ),
     { initialValue: [] as ResultadoEntrenamientoConFecha[] }

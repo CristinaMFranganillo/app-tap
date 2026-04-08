@@ -1,6 +1,6 @@
 import { Component, inject, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
+import { switchMap, EMPTY } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { ResultadoService } from '../resultado.service';
 import { CompeticionService } from '../competicion.service';
@@ -34,7 +34,7 @@ export class ScoresHistorialComponent {
 
   resultados = toSignal(
     this.auth.currentUser$.pipe(
-      switchMap(user => this.resultadoService.getByUser(user?.id ?? ''))
+      switchMap(user => user?.id ? this.resultadoService.getByUser(user.id) : EMPTY)
     ),
     { initialValue: [] as Resultado[] }
   );
@@ -42,7 +42,7 @@ export class ScoresHistorialComponent {
   entrenamientos = toSignal(
     this.auth.currentUser$.pipe(
       switchMap(user =>
-        this.entrenamientoService.getByUser(user?.id ?? '', this.anio)
+        user?.id ? this.entrenamientoService.getByUser(user.id, this.anio) : EMPTY
       )
     ),
     { initialValue: [] }

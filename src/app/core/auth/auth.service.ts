@@ -80,8 +80,10 @@ export class AuthService {
   }
 
   logout(): void {
-    supabase.auth.signOut();
-    this.userSubject.next(null);
+    // signOut() libera el NavigatorLock de auth al completarse; onAuthStateChange emitirá
+    // session=null y el handler ya llama userSubject.next(null). No emitir null aquí antes
+    // de que signOut termine o los switchMap activos intentarán getSession() con el lock ocupado.
+    void supabase.auth.signOut();
   }
 
   isAuthenticated(): boolean {

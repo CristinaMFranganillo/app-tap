@@ -1,6 +1,6 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
-import { switchMap, combineLatest, of } from 'rxjs';
+import { switchMap, combineLatest, of, EMPTY } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
@@ -44,7 +44,7 @@ export class PerfilComponent {
       toObservable(this.anioSeleccionado),
     ]).pipe(
       switchMap(([u, year]) =>
-        this.entrenamientoService.getByUser(u?.id ?? '', year)
+        u?.id ? this.entrenamientoService.getByUser(u.id, year) : EMPTY
       )
     ),
     { initialValue: [] }
