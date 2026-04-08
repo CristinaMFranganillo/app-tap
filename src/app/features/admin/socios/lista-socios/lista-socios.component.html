@@ -26,7 +26,7 @@
         <input
           type="checkbox"
           [checked]="filterFavoritos()"
-          (change)="filterFavoritos.set(!filterFavoritos())"
+          (change)="filterFavoritos.set($any($event.target).checked)"
         />
         <span>Solo favoritos</span>
       </label>
@@ -56,7 +56,7 @@
         <input
           type="checkbox"
           [checked]="sortAlfa()"
-          (change)="sortAlfa.set(!sortAlfa())"
+          (change)="sortAlfa.set($any($event.target).checked)"
         />
         <span>Orden alfabético</span>
       </label>
