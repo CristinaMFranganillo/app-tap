@@ -24,8 +24,13 @@ export class ListaSociosComponent {
   private router = inject(Router);
 
   searchTerm = signal('');
+  showFilters = signal(false);
+  filterFavoritos = signal(false);
+  filterCuota = signal<'todas' | 'pagada' | 'no-pagada'>('todas');
+  sortAlfa = signal(false);
   expandedId = signal<string | null>(null);
   pendingDeleteId = signal<string | null>(null);
+  pendingCuotaSocio = signal<User | null>(null);
   cuotasHistorial = signal<Record<string, Cuota[]>>({});
   private refresh$ = new Subject<void>();
 
@@ -34,9 +39,17 @@ export class ListaSociosComponent {
     { initialValue: [] as User[] }
   );
 
+  sinTemporada = computed(() => {
+    if (this.filterCuota() === 'todas') return false;
+    const list = this.socios();
+    return list.length > 0 && list.every(s => s.cuotaPagada === undefined);
+  });
+
   filteredSocios = computed(() => {
     const term = this.searchTerm().toLowerCase();
     let list = this.socios();
+
+    // Filtro por texto
     if (term) {
       list = list.filter(s =>
         s.nombre.toLowerCase().includes(term) ||
@@ -45,7 +58,25 @@ export class ListaSociosComponent {
         s.numeroSocio.includes(term)
       );
     }
+
+    // Filtro favoritos
+    if (this.filterFavoritos()) {
+      list = list.filter(s => s.favorito);
+    }
+
+    // Filtro cuota
+    const cuota = this.filterCuota();
+    if (cuota === 'pagada') {
+      list = list.filter(s => s.cuotaPagada === true);
+    } else if (cuota === 'no-pagada') {
+      list = list.filter(s => s.cuotaPagada === false);
+    }
+
+    // Ordenación
     return [...list].sort((a, b) => {
+      if (this.sortAlfa()) {
+        return a.apellidos.localeCompare(b.apellidos, 'es');
+      }
       if (a.favorito === b.favorito) return 0;
       return a.favorito ? -1 : 1;
     });
@@ -95,11 +126,22 @@ export class ListaSociosComponent {
     this.pendingDeleteId.set(null);
   }
 
-  async toggleCuota(socio: User, event: Event): Promise<void> {
+  confirmarCuota(socio: User, event: Event): void {
     event.stopPropagation();
     if (socio.cuotaId === undefined) return;
+    this.pendingCuotaSocio.set(socio);
+  }
+
+  async ejecutarToggleCuota(): Promise<void> {
+    const socio = this.pendingCuotaSocio();
+    if (!socio || socio.cuotaId === undefined) return;
+    this.pendingCuotaSocio.set(null);
     await this.cuotaService.toggleCuota(socio.cuotaId, !socio.cuotaPagada);
     this.refresh$.next();
+  }
+
+  cancelarCuota(): void {
+    this.pendingCuotaSocio.set(null);
   }
 
   async toggleFavorito(socio: User, event: Event): Promise<void> {
