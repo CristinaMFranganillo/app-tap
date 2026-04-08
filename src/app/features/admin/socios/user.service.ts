@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { from, Observable, map, tap, BehaviorSubject } from 'rxjs';
 import { User, UserRole } from '../../../core/models/user.model';
 import { supabase } from '../../../core/supabase/supabase.client';
@@ -129,25 +128,13 @@ export class UserService {
     direccion?: string;
     localidad?: string;
   }): Promise<void> {
-    // Obtener el token de sesión activo de forma explícita
-    const { data: sessionData } = await supabase.auth.getSession();
-    const token = sessionData.session?.access_token;
-    if (!token) throw new Error('No hay sesión activa. Por favor, vuelve a iniciar sesión.');
-
-    const url = `${environment.supabaseUrl}/functions/v1/crear-usuario`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        'apikey': environment.supabaseAnonKey,
-      },
-      body: JSON.stringify(data),
+    // Usar supabase.functions.invoke en lugar de fetch manual para evitar
+    // NavigatorLockAcquireTimeout al llamar getSession() mientras hay locks activos
+    const { error: fnError, data: fnData } = await supabase.functions.invoke('crear-usuario', {
+      body: data,
     });
-
-    const result = await response.json();
-    if (!response.ok || result?.error) {
-      throw new Error(result?.error ?? `Error ${response.status} al crear el usuario.`);
+    if (fnError || (fnData as any)?.error) {
+      throw new Error((fnData as any)?.error ?? fnError?.message ?? 'Error al crear el usuario.');
     }
   }
 
