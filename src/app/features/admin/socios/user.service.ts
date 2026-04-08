@@ -132,10 +132,10 @@ export class UserService {
     // Leer el token directamente de localStorage para evitar NavigatorLockAcquireTimeout.
     // supabase.auth.getSession() y supabase.functions.invoke() usan Web Locks internamente,
     // lo que falla si hay otro proceso de auth activo (onAuthStateChange).
-    const raw = localStorage.getItem('supabase.auth.token');
+    // La clave de localStorage la indica el propio lock name que usa supabase-js
+    const raw = localStorage.getItem('sb-llaowdgdzmdgseeoctdq-auth-token');
     const parsed = raw ? JSON.parse(raw) : null;
-    // supabase-js v2 guarda { access_token, ... } directamente bajo 'supabase.auth.token'
-    const token = parsed?.access_token ?? parsed?.currentSession?.access_token ?? null;
+    const token = parsed?.access_token ?? null;
     if (!token) throw new Error('No hay sesión activa. Por favor, vuelve a iniciar sesión.');
 
     const url = `${environment.supabaseUrl}/functions/v1/crear-usuario`;
