@@ -8,6 +8,10 @@
     </h2>
   </div>
 
+  @if (errorEliminar()) {
+    <p class="detalle-dia__error">{{ errorEliminar() }}</p>
+  }
+
   @if (escuadrasConResultados().length === 0) {
     <app-empty-state icon="bi-people" mensaje="Sin escuadras todavía" />
   } @else {
@@ -28,9 +32,14 @@
             }
           </div>
           @if (modoEdicion) {
-            <button (click)="irResultados(item.entrenamientoId, item.escuadra.id)" class="escuadra-card__btn-editar">
-              <i class="bi bi-pencil-square"></i>
-            </button>
+            <div class="escuadra-card__acciones">
+              <button (click)="irResultados(item.entrenamientoId, item.escuadra.id)" class="escuadra-card__btn-editar">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button (click)="confirmarEliminarEscuadra(item.escuadra.id)" class="escuadra-card__btn-eliminar" [disabled]="eliminando()">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
           }
         </div>
 
@@ -65,3 +74,13 @@
     </button>
   }
 </div>
+
+@if (pendingDeleteEscuadraId()) {
+  <app-confirm-dialog
+    titulo="Eliminar escuadra"
+    mensaje="¿Seguro que quieres eliminar esta escuadra? Se borrarán todos sus resultados y fallos. Esta acción no se puede deshacer."
+    labelConfirmar="Eliminar"
+    (confirmado)="eliminarEscuadra()"
+    (cancelado)="cancelarEliminarEscuadra()"
+  />
+}

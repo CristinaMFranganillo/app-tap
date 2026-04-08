@@ -1,8 +1,7 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map, switchMap } from 'rxjs';
-import { firstValueFrom } from 'rxjs';
+import { map, switchMap, startWith, Subject, firstValueFrom } from 'rxjs';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { EntrenamientoService } from '../entrenamiento.service';
 import { EscuadraService } from '../../../../features/scores/escuadra.service';
@@ -10,6 +9,7 @@ import { UserService } from '../../socios/user.service';
 import { Entrenamiento, ResultadoEntrenamiento } from '../../../../core/models/entrenamiento.model';
 import { Escuadra } from '../../../../core/models/escuadra.model';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 interface FilaResultado {
   puesto: number;
@@ -28,7 +28,7 @@ interface EscuadraConResultados {
 @Component({
   selector: 'app-detalle-dia-entrenamiento',
   standalone: true,
-  imports: [DatePipe, TitleCasePipe, EmptyStateComponent],
+  imports: [DatePipe, TitleCasePipe, EmptyStateComponent, ConfirmDialogComponent],
   templateUrl: './detalle-dia-entrenamiento.component.html',
   styleUrl: './detalle-dia-entrenamiento.component.scss',
 })
@@ -42,12 +42,22 @@ export class DetalleDiaEntrenamientoComponent {
   fecha = this.route.snapshot.paramMap.get('fecha')!;
   modoEdicion = this.route.snapshot.queryParamMap.get('modo') === 'editar';
 
+  private refresh$ = new Subject<void>();
+
   private entrenamientosDelDia = toSignal(
-    this.entrenamientoService.getByFecha(this.fecha),
+    this.refresh$.pipe(
+      startWith(null),
+      switchMap(() => this.entrenamientoService.getByFecha(this.fecha))
+    ),
     { initialValue: [] as Entrenamiento[] }
   );
 
   escuadrasConResultados = signal<EscuadraConResultados[]>([]);
+
+  // Delete state
+  pendingDeleteEscuadraId = signal<string | null>(null);
+  eliminando = signal(false);
+  errorEliminar = signal('');
 
   constructor() {
     effect(async () => {
@@ -57,7 +67,6 @@ export class DetalleDiaEntrenamientoComponent {
         return;
       }
 
-      // Cargar escuadras de todos los entrenamientos del día
       const escuadrasPorEntrenamiento = await Promise.all(
         entrenamientos.map(e =>
           firstValueFrom(this.escuadraService.getByEntrenamiento(e.id))
@@ -71,7 +80,6 @@ export class DetalleDiaEntrenamientoComponent {
         return;
       }
 
-      // Inicializar con cargando
       this.escuadrasConResultados.set(
         todasEscuadras.map(e => ({ escuadra: e, entrenamientoId: e.entrenamientoId, filas: [], total: 0, cargando: true }))
       );
@@ -117,10 +125,34 @@ export class DetalleDiaEntrenamientoComponent {
   }
 
   nuevaEscuadra(): void {
-    // Usa el primer entrenamiento del día para crear la nueva escuadra
     const primero = this.entrenamientosDelDia()[0];
     if (primero) {
       this.router.navigate(['/admin/entrenamientos', primero.id, 'escuadra', 'nueva']);
+    }
+  }
+
+  confirmarEliminarEscuadra(id: string): void {
+    this.errorEliminar.set('');
+    this.pendingDeleteEscuadraId.set(id);
+  }
+
+  cancelarEliminarEscuadra(): void {
+    this.pendingDeleteEscuadraId.set(null);
+  }
+
+  async eliminarEscuadra(): Promise<void> {
+    const id = this.pendingDeleteEscuadraId();
+    if (!id) return;
+    this.eliminando.set(true);
+    this.errorEliminar.set('');
+    this.pendingDeleteEscuadraId.set(null);
+    try {
+      await this.escuadraService.deleteEscuadraEntrenamiento(id);
+      this.refresh$.next();
+    } catch (err) {
+      this.errorEliminar.set(err instanceof Error ? err.message : 'Error al eliminar');
+    } finally {
+      this.eliminando.set(false);
     }
   }
 

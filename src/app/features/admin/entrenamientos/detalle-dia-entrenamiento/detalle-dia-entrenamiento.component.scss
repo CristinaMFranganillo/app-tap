@@ -3,10 +3,8 @@
 
   &__back-btn { @apply text-gray-400; }
   &__title { @apply text-[18px] font-extrabold text-secondary capitalize; }
+  &__error { @apply text-danger text-sm font-semibold px-1; }
 }
-
-// Reutiliza los mismos estilos de escuadra-card y resultado-fila
-// definidos en detalle-entrenamiento — aquí los redefinimos para autonomía
 
 .escuadra-card {
   @apply flex flex-col gap-2 p-0 overflow-hidden;
@@ -21,9 +19,18 @@
 
   &__meta { @apply text-sm text-neutral-400 font-medium mt-0.5; }
 
+  &__acciones {
+    @apply flex items-center gap-1 flex-shrink-0;
+  }
+
   &__btn-editar {
     @apply bg-transparent border-0 text-neutral-300 text-[18px] p-1 cursor-pointer
            active:text-secondary transition-colors flex-shrink-0;
+  }
+
+  &__btn-eliminar {
+    @apply bg-transparent border-0 text-danger text-[18px] p-1 cursor-pointer
+           active:text-red-700 transition-colors flex-shrink-0;
   }
 
   &__cargando { @apply text-sm text-neutral-400 font-medium px-4 pb-3; }
