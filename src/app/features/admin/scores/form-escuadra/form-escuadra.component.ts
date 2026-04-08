@@ -25,7 +25,10 @@ export class FormEscuadraComponent {
     this.userService.getAll().pipe(
       map(users => users
         .filter(u => u.activo && u.rol !== 'admin')
-        .sort((a, b) => `${a.apellidos} ${a.nombre}`.localeCompare(`${b.apellidos} ${b.nombre}`, 'es'))
+        .sort((a, b) => {
+          if (a.favorito !== b.favorito) return a.favorito ? -1 : 1;
+          return `${a.apellidos} ${a.nombre}`.localeCompare(`${b.apellidos} ${b.nombre}`, 'es');
+        })
       )
     ),
     { initialValue: [] as User[] }
