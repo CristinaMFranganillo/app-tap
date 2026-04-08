@@ -153,7 +153,9 @@
 }
 
 .lista-socios__filtros-toggle {
-  @apply flex items-center gap-1 text-[11px] font-semibold text-gray-400 ml-auto mb-2;
+  @apply flex items-center gap-1 text-[11px] font-semibold text-gray-400 mb-2 ml-auto;
+  display: block;
+  text-align: right;
 
   i {
     @apply text-[13px];
