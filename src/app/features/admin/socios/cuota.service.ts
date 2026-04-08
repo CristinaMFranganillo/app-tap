@@ -93,4 +93,41 @@ export class CuotaService {
     const { error } = await supabase.from('cuotas').update(payload).eq('id', cuotaId);
     if (error) throw new Error(error.message);
   }
+
+  async editarTemporada(id: string, nombre: string, fechaInicio: Date): Promise<void> {
+    const { error } = await supabase
+      .from('temporadas')
+      .update({ nombre, fecha_inicio: fechaInicio.toISOString().split('T')[0] })
+      .eq('id', id);
+    if (error) throw new Error(error.message);
+  }
+
+  async eliminarTemporada(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('temporadas')
+      .delete()
+      .eq('id', id);
+    if (error) throw new Error(error.message);
+  }
+
+  getSociosPendientesByTemporada(temporadaId: string): Observable<{ id: string; nombre: string; apellidos: string }[]> {
+    return from(
+      supabase
+        .from('cuotas')
+        .select('user_id, pagada, profiles!inner(id, nombre, apellidos)')
+        .eq('temporada_id', temporadaId)
+        .eq('pagada', false)
+    ).pipe(
+      map(({ data }) =>
+        (data ?? []).map(row => {
+          const p = (row as Record<string, unknown>)['profiles'] as Record<string, unknown>;
+          return {
+            id: p['id'] as string,
+            nombre: p['nombre'] as string,
+            apellidos: p['apellidos'] as string,
+          };
+        })
+      )
+    );
+  }
 }
