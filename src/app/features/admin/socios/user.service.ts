@@ -43,13 +43,13 @@ export class UserService {
           .maybeSingle();
 
         // Paso 2: cargar perfiles con cuotas filtradas por temporada_id
-        const query = supabase
+        let query = supabase
           .from('profiles')
           .select('*, cuotas!left(id, pagada, temporada_id)')
           .order('fecha_alta', { ascending: true });
 
         if (season?.id) {
-          query.eq('cuotas.temporada_id', season.id);
+          query = query.eq('cuotas.temporada_id', season.id);
         }
 
         const { data } = await query;

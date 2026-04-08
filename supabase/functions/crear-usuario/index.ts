@@ -103,6 +103,27 @@ serve(async (req: Request) => {
       )
     }
 
+    // 3. Insertar cuota para la temporada activa (si existe)
+    const { data: temporadaActiva } = await supabaseAdmin
+      .from('temporadas')
+      .select('id')
+      .eq('activa', true)
+      .maybeSingle()
+
+    if (temporadaActiva?.id) {
+      const { error: cuotaError } = await supabaseAdmin.from('cuotas').insert({
+        user_id: authData.user.id,
+        temporada_id: temporadaActiva.id,
+        pagada: false,
+      })
+      if (cuotaError) {
+        return new Response(
+          JSON.stringify({ error: `Error creando cuota: ${cuotaError.message}` }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        )
+      }
+    }
+
     return new Response(
       JSON.stringify({ id: authData.user.id, numeroSocio }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
