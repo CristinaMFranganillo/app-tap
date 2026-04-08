@@ -11,6 +11,59 @@
     />
   </div>
 
+  <button
+    (click)="showFilters.set(!showFilters())"
+    class="lista-socios__filtros-toggle"
+  >
+    <i class="bi bi-sliders"></i>
+    {{ showFilters() ? 'Ocultar filtros' : 'Mostrar filtros' }}
+  </button>
+
+  @if (showFilters()) {
+    <div class="lista-socios__filtros-panel">
+
+      <label class="filtro-row">
+        <input
+          type="checkbox"
+          [checked]="filterFavoritos()"
+          (change)="filterFavoritos.set(!filterFavoritos())"
+        />
+        <span>Solo favoritos</span>
+      </label>
+
+      <div class="filtro-row filtro-row--pills">
+        <span class="filtro-label">Cuota</span>
+        <div class="filtro-pills">
+          <button
+            class="filtro-pill"
+            [class.filtro-pill--active]="filterCuota() === 'todas'"
+            (click)="filterCuota.set('todas')"
+          >Todas</button>
+          <button
+            class="filtro-pill"
+            [class.filtro-pill--active]="filterCuota() === 'pagada'"
+            (click)="filterCuota.set('pagada')"
+          >Pagadas</button>
+          <button
+            class="filtro-pill"
+            [class.filtro-pill--active]="filterCuota() === 'no-pagada'"
+            (click)="filterCuota.set('no-pagada')"
+          >Pendientes</button>
+        </div>
+      </div>
+
+      <label class="filtro-row">
+        <input
+          type="checkbox"
+          [checked]="sortAlfa()"
+          (change)="sortAlfa.set(!sortAlfa())"
+        />
+        <span>Orden alfabético</span>
+      </label>
+
+    </div>
+  }
+
   <div class="lista-socios__header">
     <h3 class="section-title">Socios ({{ filteredSocios().length }})</h3>
     <button (click)="goToTemporadas()" class="lista-socios__temporadas-btn">
@@ -108,7 +161,9 @@
     </div>
   }
 
-  @if (filteredSocios().length === 0) {
+  @if (sinTemporada()) {
+    <p class="lista-socios__empty">No hay temporada de pago activa.</p>
+  } @else if (filteredSocios().length === 0) {
     <p class="lista-socios__empty">No se encontraron socios.</p>
   }
 </div>
