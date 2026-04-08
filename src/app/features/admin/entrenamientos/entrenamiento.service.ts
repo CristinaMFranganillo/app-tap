@@ -259,4 +259,52 @@ export class EntrenamientoService {
       })
     );
   }
+
+  async deleteEntrenamiento(id: string): Promise<void> {
+    // 1. Obtener IDs de escuadras del entrenamiento
+    const { data: escuadras, error: escuadrasError } = await supabase
+      .from('escuadras')
+      .select('id')
+      .eq('entrenamiento_id', id);
+    if (escuadrasError) throw new Error(escuadrasError.message);
+
+    const ids = (escuadras ?? []).map((e: Record<string, unknown>) => e['id'] as string);
+
+    if (ids.length > 0) {
+      // 2. Borrar fallos
+      const { error: fallosError } = await supabase
+        .from('entrenamiento_fallos')
+        .delete()
+        .in('escuadra_id', ids);
+      if (fallosError) throw new Error(fallosError.message);
+
+      // 3. Borrar resultados
+      const { error: resultadosError } = await supabase
+        .from('resultados_entrenamiento')
+        .delete()
+        .in('escuadra_id', ids);
+      if (resultadosError) throw new Error(resultadosError.message);
+
+      // 4. Borrar tiradores
+      const { error: tiradoresError } = await supabase
+        .from('escuadra_tiradores')
+        .delete()
+        .in('escuadra_id', ids);
+      if (tiradoresError) throw new Error(tiradoresError.message);
+
+      // 5. Borrar escuadras
+      const { error: escuadrasBorrarError } = await supabase
+        .from('escuadras')
+        .delete()
+        .eq('entrenamiento_id', id);
+      if (escuadrasBorrarError) throw new Error(escuadrasBorrarError.message);
+    }
+
+    // 6. Borrar el entrenamiento
+    const { error } = await supabase
+      .from('entrenamientos')
+      .delete()
+      .eq('id', id);
+    if (error) throw new Error(error.message);
+  }
 }
