@@ -1,0 +1,83 @@
+<div class="config-tarifas">
+
+  <div class="page-header">
+    <button (click)="goBack()" class="config-tarifas__back-btn">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <h2 class="config-tarifas__title">Configurar tarifas</h2>
+  </div>
+
+  <p class="config-tarifas__desc">
+    Precio por escuadra que paga cada tipo de tirador. Los cambios se aplican a partir de la siguiente escuadra creada.
+  </p>
+
+  @for (tarifa of tarifas(); track tarifa.id; let i = $index) {
+    <div class="tarifa-card card" [class.tarifa-card--editando]="tarifa.editando">
+
+      <div class="tarifa-card__header">
+        <div class="tarifa-card__left">
+          <div class="tarifa-card__icon-wrap" [class.tarifa-card__icon-wrap--ext]="tarifa.tipo === 'no_socio'">
+            <i class="bi {{ icon(tarifa.tipo) }}"></i>
+          </div>
+          <div>
+            <p class="tarifa-card__label">{{ label(tarifa.tipo) }}</p>
+            <p class="tarifa-card__sub">Por escuadra</p>
+          </div>
+        </div>
+
+        @if (!tarifa.editando) {
+          <div class="tarifa-card__right">
+            <span class="tarifa-card__importe"
+              [class.tarifa-card__importe--ext]="tarifa.tipo === 'no_socio'">
+              {{ tarifa.importe | number:'1.2-2' }} €
+            </span>
+            <button class="tarifa-card__btn-edit" (click)="abrirEdicion(i)" title="Editar tarifa">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+          </div>
+        }
+      </div>
+
+      <!-- Formulario de edición inline -->
+      @if (tarifa.editando) {
+        <div class="tarifa-card__form">
+          <label class="form-label">Nuevo importe (€)</label>
+          <div class="tarifa-card__input-row">
+            <input
+              type="number"
+              min="0.01"
+              step="0.50"
+              [(ngModel)]="tarifas()[$index].importeEdit"
+              class="form-input-surface tarifa-card__input"
+              placeholder="0.00"
+            />
+            <span class="tarifa-card__euro">€</span>
+          </div>
+
+          @if (tarifa.error) {
+            <p class="tarifa-card__error">{{ tarifa.error }}</p>
+          }
+
+          <div class="tarifa-card__form-actions">
+            <button type="button" (click)="cancelarEdicion(i)" class="btn-secondary btn-sm"
+              [disabled]="tarifa.guardando">
+              Cancelar
+            </button>
+            <button type="button" (click)="guardar(i)" class="btn-primary btn-sm"
+              [disabled]="tarifa.guardando">
+              {{ tarifa.guardando ? 'Guardando...' : 'Guardar' }}
+            </button>
+          </div>
+        </div>
+      }
+
+    </div>
+  }
+
+  <!-- Info adicional -->
+  <div class="config-tarifas__info">
+    <i class="bi bi-info-circle config-tarifas__info-icon"></i>
+    <p>Los movimientos de caja ya registrados no se modifican al cambiar las tarifas.</p>
+  </div>
+
+</div>

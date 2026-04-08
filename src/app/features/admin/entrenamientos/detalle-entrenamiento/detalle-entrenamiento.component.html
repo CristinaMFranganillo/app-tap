@@ -8,6 +8,20 @@
     </h2>
   </div>
 
+  <!-- Resumen de caja del día -->
+  @if (totalCajaDia() > 0) {
+    <div class="caja-dia-banner" (click)="irCaja()">
+      <div class="caja-dia-banner__left">
+        <i class="bi bi-cash-coin caja-dia-banner__icon"></i>
+        <span class="caja-dia-banner__label">Caja del día</span>
+      </div>
+      <div class="caja-dia-banner__right">
+        <span class="caja-dia-banner__total">{{ totalCajaDia() | number:'1.2-2' }} €</span>
+        <i class="bi bi-chevron-right caja-dia-banner__arrow"></i>
+      </div>
+    </div>
+  }
+
   @if (escuadrasConResultados().length === 0) {
     <app-empty-state icon="bi-people" mensaje="Sin escuadras todavía" />
     <button (click)="nuevaEscuadra()" class="detalle-entrenamiento__crear-escuadra-btn">
@@ -17,7 +31,7 @@
     @for (item of escuadrasConResultados(); track item.escuadra.id) {
       <div class="escuadra-card card">
 
-        <!-- Cabecera de escuadra -->
+        <!-- Cabecera -->
         <div class="escuadra-card__header">
           <div class="escuadra-card__header-info">
             <p class="escuadra-card__titulo">Escuadra {{ item.escuadra.numero }}</p>
@@ -30,11 +44,16 @@
               </p>
             }
           </div>
-          @if (modoEdicion) {
-            <button (click)="irResultados(item.escuadra.id)" class="escuadra-card__btn-editar">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-          }
+          <div class="escuadra-card__header-right">
+            @if (item.totalCaja > 0) {
+              <span class="escuadra-card__caja-badge">{{ item.totalCaja | number:'1.2-2' }} €</span>
+            }
+            @if (modoEdicion) {
+              <button (click)="irResultados(item.escuadra.id)" class="escuadra-card__btn-editar">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+            }
+          </div>
         </div>
 
         <!-- Resultados -->
@@ -48,7 +67,12 @@
               <div class="resultado-fila">
                 <span class="resultado-fila__puesto">{{ fila.puesto }}</span>
                 <div class="resultado-fila__info">
-                  <span class="resultado-fila__nombre">{{ fila.nombre }}</span>
+                  <div class="resultado-fila__nombre-wrap">
+                    @if (fila.esNoSocio) {
+                      <span class="badge-no-socio-sm">NS</span>
+                    }
+                    <span class="resultado-fila__nombre">{{ fila.nombre }}</span>
+                  </div>
                   @if (fila.fallos.length > 0) {
                     <div class="resultado-fila__fallos">
                       @for (n of fila.fallos; track n) {

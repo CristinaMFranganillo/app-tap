@@ -47,15 +47,15 @@
       </div>
     </div>
 
-    @for (t of tiradores(); track t.id) {
+    @for (t of tiradoresSocios(); track t.id) {
       <div class="card tirador-item">
         <div>
-          <p class="tirador-item__nombre">{{ getUserNombre(t.userId) }}</p>
+          <p class="tirador-item__nombre">{{ getUserNombre(t.userId!) }}</p>
           <p class="tirador-item__puesto">Puesto {{ t.puesto }}</p>
         </div>
         <div class="tirador-item__actions">
-          <button (click)="registrar(t.userId, 1)" [disabled]="saving()" class="btn-roto">ROTO</button>
-          <button (click)="registrar(t.userId, 0)" [disabled]="saving()" class="btn-fallo">FALLO</button>
+          <button (click)="registrar(t.userId!, 1)" [disabled]="saving()" class="btn-roto">ROTO</button>
+          <button (click)="registrar(t.userId!, 0)" [disabled]="saving()" class="btn-fallo">FALLO</button>
         </div>
       </div>
     }

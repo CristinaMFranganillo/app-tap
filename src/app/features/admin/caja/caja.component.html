@@ -1,0 +1,170 @@
+<div class="caja-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <button (click)="goBack()" class="caja-page__back-btn">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <h2 class="caja-page__title">Caja</h2>
+    @if (esAdmin()) {
+      <button class="caja-page__btn-config" (click)="irTarifas()" title="Configurar tarifas">
+        <i class="bi bi-sliders2"></i>
+      </button>
+    }
+  </div>
+
+  <!-- Tabs dia / mes / anio -->
+  <div class="caja-tabs">
+    <button [class.caja-tabs__tab--active]="vista() === 'dia'"  (click)="setVista('dia')">Dia</button>
+    <button [class.caja-tabs__tab--active]="vista() === 'mes'"  (click)="setVista('mes')">Mes</button>
+    <button [class.caja-tabs__tab--active]="vista() === 'anio'" (click)="setVista('anio')">Año</button>
+  </div>
+
+  <!-- Filtro dia -->
+  @if (vista() === 'dia') {
+    <div class="caja-filtro">
+      <label class="form-label">Fecha</label>
+      <input type="date" class="form-input-surface"
+        [value]="fechaDia()"
+        (change)="cargarDia($any($event).target.value)" />
+    </div>
+  }
+
+  <!-- Filtro mes -->
+  @if (vista() === 'mes') {
+    <div class="caja-filtro">
+      <label class="form-label">Mes</label>
+      <select class="form-input-surface"
+        [value]="mesFiltro()"
+        (change)="cargarMes($any($event).target.value)">
+        @for (m of mesesDisponibles(); track m) {
+          <option [value]="m">{{ labelMes(m) }}</option>
+        }
+      </select>
+    </div>
+  }
+
+  <!-- Filtro anio -->
+  @if (vista() === 'anio') {
+    <div class="caja-filtro">
+      <label class="form-label">Año</label>
+      <select class="form-input-surface"
+        [value]="anioFiltro()"
+        (change)="cargarAnio(+$any($event).target.value)">
+        @for (a of aniosDisponibles(); track a) {
+          <option [value]="a">{{ a }}</option>
+        }
+      </select>
+    </div>
+  }
+
+  <!-- Tarjetas resumen -->
+  @if (!cargando()) {
+    <div class="caja-resumen">
+
+      <div class="caja-resumen__total card">
+        <div class="caja-resumen__total-label">
+          <i class="bi bi-cash-coin"></i>
+          <span>Total recaudado</span>
+        </div>
+        <p class="caja-resumen__total-valor">{{ resumen().totalGeneral | number:'1.2-2' }} &euro;</p>
+      </div>
+
+      <div class="caja-resumen__doble">
+        <div class="card caja-resumen__mini">
+          <p class="caja-resumen__mini-label">Socios</p>
+          <p class="caja-resumen__mini-count">{{ pluralTiradores(resumen().countSocios) }}</p>
+          <p class="caja-resumen__mini-valor">{{ resumen().totalSocios | number:'1.2-2' }} &euro;</p>
+        </div>
+        <div class="card caja-resumen__mini">
+          <p class="caja-resumen__mini-label">No socios</p>
+          <p class="caja-resumen__mini-count">{{ pluralTiradores(resumen().countNoSocios) }}</p>
+          <p class="caja-resumen__mini-valor caja-resumen__mini-valor--ns">{{ resumen().totalNoSocios | number:'1.2-2' }} &euro;</p>
+        </div>
+      </div>
+
+    </div>
+  }
+
+  <!-- Skeleton cargando -->
+  @if (cargando()) {
+    <div class="caja-skeleton">
+      <div class="caja-skeleton__card"></div>
+      <div class="caja-skeleton__doble">
+        <div class="caja-skeleton__card caja-skeleton__card--sm"></div>
+        <div class="caja-skeleton__card caja-skeleton__card--sm"></div>
+      </div>
+    </div>
+  }
+
+  <!-- Vacio -->
+  @if (!cargando() && movimientos().length === 0) {
+    <div class="caja-empty">
+      <i class="bi bi-cash-coin caja-empty__icon"></i>
+      <p class="caja-empty__texto">Sin movimientos para este periodo</p>
+    </div>
+  }
+
+  <!-- Vista DIA: desglose por escuadra -->
+  @if (!cargando() && vista() === 'dia' && escuadras().length > 0) {
+    <p class="caja-section-label">Desglose por escuadra</p>
+
+    @for (grupo of escuadras(); track grupo.escuadraId) {
+      <div class="card caja-escuadra">
+
+        <div class="caja-escuadra__header">
+          <div>
+            <p class="caja-escuadra__titulo">Escuadra {{ grupo.numero }}</p>
+            <p class="caja-escuadra__meta">{{ pluralTiradores(grupo.movimientos.length) }}</p>
+          </div>
+          <span class="caja-escuadra__total">{{ grupo.total | number:'1.2-2' }} &euro;</span>
+        </div>
+
+        <div class="caja-escuadra__lista">
+          @for (mov of grupo.movimientos; track mov.id) {
+            <div class="caja-fila">
+              <div class="caja-fila__info">
+                @if (mov.esNoSocio) {
+                  <span class="caja-badge-ns">NS</span>
+                }
+                <span class="caja-fila__nombre">{{ mov.nombreTirador }}</span>
+              </div>
+              <span class="caja-fila__importe" [class.caja-fila__importe--ns]="mov.esNoSocio">
+                {{ mov.importe | number:'1.2-2' }} &euro;
+              </span>
+            </div>
+          }
+        </div>
+
+        <div class="caja-escuadra__footer">
+          <span>Total escuadra</span>
+          <strong>{{ grupo.total | number:'1.2-2' }} &euro;</strong>
+        </div>
+
+      </div>
+    }
+  }
+
+  <!-- Vista MES / ANIO: desglose por dia -->
+  @if (!cargando() && (vista() === 'mes' || vista() === 'anio') && agrupadoPorFecha().length > 0) {
+    <p class="caja-section-label">Desglose por dia</p>
+
+    @for (dia of agrupadoPorFecha(); track dia.fecha) {
+      <div class="card caja-dia-fila">
+        <div class="caja-dia-fila__left">
+          <p class="caja-dia-fila__fecha">
+            {{ dia.fecha | date:'EEE d MMM':'':'es' | titlecase }}
+          </p>
+          <p class="caja-dia-fila__count">
+            {{ pluralTiradores(dia.movimientos.length) }}
+            @if (dia.countNoSocios > 0) {
+              &nbsp;&middot;&nbsp;{{ pluralNoSocios(dia.countNoSocios) }}
+            }
+          </p>
+        </div>
+        <p class="caja-dia-fila__total">{{ dia.total | number:'1.2-2' }} &euro;</p>
+      </div>
+    }
+  }
+
+</div>

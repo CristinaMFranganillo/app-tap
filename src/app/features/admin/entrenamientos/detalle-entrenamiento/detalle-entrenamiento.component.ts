@@ -3,17 +3,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, switchMap } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { EntrenamientoService } from '../entrenamiento.service';
 import { EscuadraService } from '../../../../features/scores/escuadra.service';
 import { UserService } from '../../socios/user.service';
 import { Entrenamiento, ResultadoEntrenamiento } from '../../../../core/models/entrenamiento.model';
-import { Escuadra } from '../../../../core/models/escuadra.model';
+import { Escuadra, MovimientoCaja } from '../../../../core/models/escuadra.model';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 
 export interface FilaResultado {
   puesto: number;
   nombre: string;
+  esNoSocio: boolean;
   platosRotos: number;
   fallos: number[];
 }
@@ -22,22 +23,23 @@ export interface EscuadraConResultados {
   escuadra: Escuadra;
   filas: FilaResultado[];
   total: number;
+  totalCaja: number;
   cargando: boolean;
 }
 
 @Component({
   selector: 'app-detalle-entrenamiento',
   standalone: true,
-  imports: [DatePipe, EmptyStateComponent],
+  imports: [DatePipe, DecimalPipe, EmptyStateComponent],
   templateUrl: './detalle-entrenamiento.component.html',
   styleUrl: './detalle-entrenamiento.component.scss',
 })
 export class DetalleEntrenamientoComponent {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private route               = inject(ActivatedRoute);
+  private router              = inject(Router);
   private entrenamientoService = inject(EntrenamientoService);
-  private escuadraService = inject(EscuadraService);
-  private userService = inject(UserService);
+  private escuadraService     = inject(EscuadraService);
+  private userService         = inject(UserService);
 
   private id$ = this.route.paramMap.pipe(map(p => p.get('id')!));
 
@@ -54,63 +56,80 @@ export class DetalleEntrenamientoComponent {
   );
 
   escuadrasConResultados = signal<EscuadraConResultados[]>([]);
+  totalCajaDia           = signal(0);
 
   constructor() {
     effect(async () => {
       const escuadras = this.escuadrasRaw();
       if (escuadras.length === 0) {
         this.escuadrasConResultados.set([]);
+        this.totalCajaDia.set(0);
         return;
       }
 
-      // Inicializar con spinner por escuadra
       this.escuadrasConResultados.set(
-        escuadras.map(e => ({ escuadra: e, filas: [], total: 0, cargando: true }))
+        escuadras.map(e => ({ escuadra: e, filas: [], total: 0, totalCaja: 0, cargando: true }))
       );
 
       const socios = await firstValueFrom(this.userService.getAll());
+      const entrenamientoId = this.route.snapshot.paramMap.get('id')!;
 
-      const [resultados, fallosPorEscuadra] = await Promise.all([
-        Promise.all(
-          escuadras.map(e =>
-            firstValueFrom(this.entrenamientoService.getResultadosByEscuadra(e.id))
-          )
-        ),
-        Promise.all(
-          escuadras.map(e =>
-            firstValueFrom(this.entrenamientoService.getFallosByEscuadra(e.id))
-          )
-        ),
+      const [resultados, fallosPorEscuadra, movCaja] = await Promise.all([
+        Promise.all(escuadras.map(e =>
+          firstValueFrom(this.entrenamientoService.getResultadosByEscuadra(e.id))
+        )),
+        Promise.all(escuadras.map(e =>
+          firstValueFrom(this.entrenamientoService.getFallosByEscuadra(e.id))
+        )),
+        firstValueFrom(this.escuadraService.getMovimientosCajaByEntrenamiento(entrenamientoId)),
       ]);
 
-      this.escuadrasConResultados.set(
-        escuadras.map((e, i) => {
-          const fallosMap = new Map<string, number[]>();
-          for (const f of fallosPorEscuadra[i]) {
-            if (!fallosMap.has(f.userId)) fallosMap.set(f.userId, []);
-            fallosMap.get(f.userId)!.push(f.numeroPlato);
-          }
+      // Mapa caja por escuadra
+      const cajaMap = new Map<string, number>();
+      for (const m of movCaja as MovimientoCaja[]) {
+        cajaMap.set(m.escuadraId, (cajaMap.get(m.escuadraId) ?? 0) + m.importe);
+      }
 
-          const filas: FilaResultado[] = (resultados[i] as ResultadoEntrenamiento[])
-            .map(r => {
-              const socio = socios.find(s => s.id === r.userId);
-              return {
-                puesto: r.puesto,
-                nombre: socio ? `${socio.nombre} ${socio.apellidos}` : r.userId,
-                platosRotos: r.platosRotos,
-                fallos: (fallosMap.get(r.userId) ?? []).sort((a, b) => a - b),
-              };
-            })
-            .sort((a, b) => a.puesto - b.puesto);
+      let totalGeneral = 0;
 
-          return {
-            escuadra: e,
-            filas,
-            total: filas.reduce((s, f) => s + f.platosRotos, 0),
-            cargando: false,
-          };
-        })
-      );
+      const items = escuadras.map((e, i) => {
+        const fallosMap = new Map<string, number[]>();
+        for (const f of fallosPorEscuadra[i]) {
+          if (!fallosMap.has(f.userId)) fallosMap.set(f.userId, []);
+          fallosMap.get(f.userId)!.push(f.numeroPlato);
+        }
+
+        const filas: FilaResultado[] = (resultados[i] as ResultadoEntrenamiento[])
+          .map(r => {
+            const nombre = r.esNoSocio
+              ? (r.nombreExterno ?? 'No socio')
+              : (socios.find(s => s.id === r.userId)
+                  ? `${socios.find(s => s.id === r.userId)!.nombre} ${socios.find(s => s.id === r.userId)!.apellidos}`
+                  : r.userId ?? '—');
+            return {
+              puesto:      r.puesto,
+              nombre,
+              esNoSocio:   r.esNoSocio,
+              platosRotos: r.platosRotos,
+              fallos:      (r.userId ? fallosMap.get(r.userId) ?? [] : []).sort((a, b) => a - b),
+            };
+          })
+          .sort((a, b) => a.puesto - b.puesto);
+
+        const totalCaja = cajaMap.get(e.id) ?? 0;
+        totalGeneral += totalCaja;
+
+        return {
+          escuadra: e,
+          filas,
+          total:     filas.reduce((s, f) => s + f.platosRotos, 0),
+          totalCaja,
+          cargando:  false,
+        };
+      });
+
+      this.escuadrasConResultados.set(items);
+      this.totalCajaDia.set(totalGeneral);
     });
   }
 
@@ -122,6 +141,10 @@ export class DetalleEntrenamientoComponent {
   irResultados(escuadraId: string): void {
     const id = this.route.snapshot.paramMap.get('id')!;
     this.router.navigate(['/admin/entrenamientos', id, 'escuadra', escuadraId, 'resultados']);
+  }
+
+  irCaja(): void {
+    this.router.navigate(['/admin/caja']);
   }
 
   goBack(): void {

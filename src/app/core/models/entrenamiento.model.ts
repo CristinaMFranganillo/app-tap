@@ -10,7 +10,9 @@ export interface Entrenamiento {
 export interface ResultadoEntrenamiento {
   id: string;
   escuadraId: string;
-  userId: string;
+  userId?: string;           // null si es no socio
+  nombreExterno?: string;    // nombre del no socio
+  esNoSocio: boolean;
   puesto: number;
   platosRotos: number;
 }
@@ -19,7 +21,9 @@ export interface ResultadoEntrenamientoConFecha {
   id: string;
   escuadraId: string;
   entrenamientoId: string;
-  userId: string;
+  userId?: string;
+  nombreExterno?: string;
+  esNoSocio: boolean;
   puesto: number;
   platosRotos: number;
   fecha: string;  // YYYY-MM-DD, de entrenamientos.fecha

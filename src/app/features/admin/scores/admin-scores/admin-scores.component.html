@@ -1,6 +1,22 @@
 <div class="admin-scores">
 
-  <!-- ── ENTRENAMIENTOS (sección principal) ───────────────────── -->
+  <!-- ── ACCESO RÁPIDO A CAJA ──────────────────────────────────── -->
+  <section class="admin-scores__section admin-scores__section--caja" (click)="irCaja()">
+    <div class="caja-acceso">
+      <div class="caja-acceso__left">
+        <div class="caja-acceso__icon-wrap">
+          <i class="bi bi-cash-coin"></i>
+        </div>
+        <div>
+          <p class="caja-acceso__titulo">Caja</p>
+          <p class="caja-acceso__sub">Consultar recaudación</p>
+        </div>
+      </div>
+      <i class="bi bi-chevron-right caja-acceso__arrow"></i>
+    </div>
+  </section>
+
+  <!-- ── ENTRENAMIENTOS ───────────────────────────────────────── -->
   <section class="admin-scores__section">
     <h2 class="admin-scores__section-title">Entrenamientos</h2>
 
@@ -42,14 +58,12 @@
       </div>
     } @else {
       <div class="entrena-tabla">
-        <!-- Cabecera -->
         <div class="entrena-tabla__head">
           <span class="entrena-tabla__th entrena-tabla__th--fecha">Entrenamientos</span>
           <span class="entrena-tabla__th entrena-tabla__th--num">Esc.</span>
           <span class="entrena-tabla__th entrena-tabla__th--num">Tir.</span>
           <span class="entrena-tabla__th entrena-tabla__th--acciones">Acciones</span>
         </div>
-        <!-- Filas (una por día) -->
         @for (e of entrenamientos(); track e.fecha) {
           <div class="entrena-tabla__row">
             <span class="entrena-tabla__td entrena-tabla__td--fecha">
@@ -73,12 +87,6 @@
       </div>
     }
   </section>
-
-  <!-- ── COMPETICIONES (oculto temporalmente, pendiente de implementar) ───
-  <section class="admin-scores__section admin-scores__section--secondary">
-    ...
-  </section>
-  ─────────────────────────────────────────────────────────────────────── -->
 
 </div>
 

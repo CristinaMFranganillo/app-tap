@@ -18,20 +18,18 @@ import { Escuadra, EscuadraTirador } from '../../../../core/models/escuadra.mode
   styleUrl: './registrar-resultado.component.scss',
 })
 export class RegistrarResultadoComponent {
-  private resultadoService = inject(ResultadoService);
-  private escuadraService = inject(EscuadraService);
+  private resultadoService  = inject(ResultadoService);
+  private escuadraService   = inject(EscuadraService);
   private competicionService = inject(CompeticionService);
-  private userService = inject(UserService);
-  private auth = inject(AuthService);
+  private userService       = inject(UserService);
+  private auth              = inject(AuthService);
 
   competiciones = toSignal(this.competicionService.getAll(), { initialValue: [] as Competicion[] });
-
-  // Asegurar que el cache de socios está cargado
   private _socios = toSignal(this.userService.getAll(), { initialValue: [] });
 
   competicionId = signal('');
-  serieActual = signal(1);
-  platoActual = signal(1);
+  serieActual   = signal(1);
+  platoActual   = signal(1);
 
   escuadras = toSignal(
     toObservable(this.competicionId).pipe(
@@ -49,6 +47,11 @@ export class RegistrarResultadoComponent {
     { initialValue: [] as EscuadraTirador[] }
   );
 
+  // Solo socios reales en el flujo de competición (no socios no compiten)
+  tiradoresSocios = computed(() =>
+    this.tiradores().filter(t => !t.esNoSocio && !!t.userId)
+  );
+
   competicionActual = computed(() =>
     this.competiciones().find(c => c.id === this.competicionId())
   );
@@ -56,14 +59,14 @@ export class RegistrarResultadoComponent {
   saving = signal(false);
 
   getUserNombre(userId: string): string {
-    const u = this.userService.getById(userId);
+    const u = this._socios().find(s => s.id === userId);
     return u ? `${u.nombre} ${u.apellidos}` : userId;
   }
 
-  incrementSerie(): void { this.serieActual.update(s => s + 1); }
-  decrementSerie(): void { this.serieActual.update(s => Math.max(1, s - 1)); }
-  incrementPlato(): void { this.platoActual.update(p => p + 1); }
-  decrementPlato(): void { this.platoActual.update(p => Math.max(1, p - 1)); }
+  incrementSerie(): void  { this.serieActual.update(s => s + 1); }
+  decrementSerie(): void  { this.serieActual.update(s => Math.max(1, s - 1)); }
+  incrementPlato(): void  { this.platoActual.update(p => p + 1); }
+  decrementPlato(): void  { this.platoActual.update(p => Math.max(1, p - 1)); }
 
   async registrar(userId: string, resultado: 0 | 1): Promise<void> {
     const adminId = this.auth.currentUser?.id ?? '';
@@ -72,15 +75,13 @@ export class RegistrarResultadoComponent {
       await this.resultadoService.upsert({
         competicionId: this.competicionId(),
         userId,
-        serie: this.serieActual(),
-        plato: this.platoActual(),
+        serie:   this.serieActual(),
+        plato:   this.platoActual(),
         resultado,
       }, adminId);
       const comp = this.competicionActual();
       const maxPlatos = comp?.platosPorSerie ?? 25;
-      if (this.platoActual() < maxPlatos) {
-        this.platoActual.update(p => p + 1);
-      }
+      if (this.platoActual() < maxPlatos) this.platoActual.update(p => p + 1);
     } finally {
       this.saving.set(false);
     }

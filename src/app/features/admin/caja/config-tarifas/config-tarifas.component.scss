@@ -1,0 +1,109 @@
+.config-tarifas {
+  @apply p-3 flex flex-col gap-3;
+
+  &__back-btn { @apply text-gray-400; }
+  &__title    { @apply text-[18px] font-extrabold text-secondary; }
+
+  &__desc {
+    @apply text-sm text-neutral-400 leading-relaxed;
+  }
+
+  &__info {
+    @apply flex items-start gap-2 mt-2 px-3 py-2.5
+           bg-neutral-800/50 rounded-card border border-neutral-700;
+
+    &-icon { @apply text-neutral-500 text-[14px] mt-0.5 flex-shrink-0; }
+
+    p { @apply text-xs text-neutral-400 leading-relaxed; }
+  }
+}
+
+// ── Tarjeta de tarifa ──────────────────────────────────────────
+
+.tarifa-card {
+  @apply p-4 transition-all duration-150;
+
+  &--editando {
+    @apply border-primary/40;
+  }
+
+  &__header {
+    @apply flex items-center justify-between;
+  }
+
+  &__left {
+    @apply flex items-center gap-3;
+  }
+
+  &__icon-wrap {
+    @apply w-10 h-10 rounded-full bg-primary/15 border border-primary/30
+           flex items-center justify-center flex-shrink-0;
+
+    i { @apply text-primary text-[16px]; }
+
+    &--ext {
+      @apply bg-warning/15 border-warning/30;
+      i { @apply text-warning; }
+    }
+  }
+
+  &__label {
+    @apply text-sm font-bold text-secondary;
+  }
+
+  &__sub {
+    @apply text-xs text-neutral-400;
+  }
+
+  &__right {
+    @apply flex items-center gap-3;
+  }
+
+  &__importe {
+    @apply text-xl font-extrabold text-primary;
+
+    &--ext { @apply text-warning; }
+  }
+
+  &__btn-edit {
+    @apply w-8 h-8 rounded-full bg-neutral-800 border border-neutral-700
+           text-neutral-400 text-[13px] flex items-center justify-center
+           cursor-pointer hover:text-secondary hover:border-neutral-500
+           transition-all duration-150;
+  }
+
+  // ── Formulario inline ──────────────────────────────────────────
+
+  &__form {
+    @apply mt-4 flex flex-col gap-3;
+  }
+
+  &__input-row {
+    @apply flex items-center gap-2;
+  }
+
+  &__input {
+    @apply flex-1;
+    // Quitar flechas numéricas
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    &[type=number] { -moz-appearance: textfield; }
+  }
+
+  &__euro {
+    @apply text-base font-bold text-neutral-400;
+  }
+
+  &__error {
+    @apply text-danger text-xs font-semibold;
+  }
+
+  &__form-actions {
+    @apply flex gap-2 justify-end;
+  }
+}
+
+// Botones pequeños
+.btn-sm {
+  @apply px-4 py-1.5 text-sm;
+}

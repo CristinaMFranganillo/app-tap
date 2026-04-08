@@ -9,9 +9,10 @@ import { ResultadoEntrenamiento } from '../../../../core/models/entrenamiento.mo
 interface FilaResumen {
   puesto: number;
   nombre: string;
+  esNoSocio: boolean;
   platosRotos: number;
   fallos: number;
-  numerosFallos: number[];  // platos que falló, ej: [3, 11, 19]
+  numerosFallos: number[];
 }
 
 @Component({
@@ -22,16 +23,16 @@ interface FilaResumen {
   styleUrl: './resumen-escuadra-entrenamiento.component.scss',
 })
 export class ResumenEscuadraEntrenamientoComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private route                = inject(ActivatedRoute);
+  private router               = inject(Router);
   private entrenamientoService = inject(EntrenamientoService);
-  private userService = inject(UserService);
+  private userService          = inject(UserService);
 
-  private escuadraId = this.route.snapshot.paramMap.get('escuadraId')!;
+  private escuadraId     = this.route.snapshot.paramMap.get('escuadraId')!;
   private entrenamientoId = this.route.snapshot.paramMap.get('entrenamientoId')!;
-  private fechaDia = this.route.snapshot.queryParamMap.get('fecha');
+  private fechaDia        = this.route.snapshot.queryParamMap.get('fecha');
 
-  filas = signal<FilaResumen[]>([]);
+  filas    = signal<FilaResumen[]>([]);
   cargando = signal(true);
 
   async ngOnInit(): Promise<void> {
@@ -41,35 +42,42 @@ export class ResumenEscuadraEntrenamientoComponent implements OnInit {
       firstValueFrom(this.entrenamientoService.getFallosByEscuadra(this.escuadraId)),
     ]);
 
-    // Agrupar fallos por userId
+    // Fallos indexados por userId (solo socios)
     const fallosPorUser = new Map<string, number[]>();
     for (const f of fallos) {
       if (!fallosPorUser.has(f.userId)) fallosPorUser.set(f.userId, []);
       fallosPorUser.get(f.userId)!.push(f.numeroPlato);
     }
 
-    const filas: FilaResumen[] = resultados.map((r: ResultadoEntrenamiento) => {
-      const socio = socios.find(s => s.id === r.userId);
-      return {
-        puesto: r.puesto,
-        nombre: socio ? `${socio.nombre} ${socio.apellidos}` : r.userId,
-        platosRotos: r.platosRotos,
-        fallos: 25 - r.platosRotos,
-        numerosFallos: (fallosPorUser.get(r.userId) ?? []).sort((a, b) => a - b),
-      };
-    }).sort((a, b) => a.puesto - b.puesto);
+    const filas: FilaResumen[] = (resultados as ResultadoEntrenamiento[])
+      .map(r => {
+        const nombre = r.esNoSocio
+          ? (r.nombreExterno ?? 'No socio')
+          : (socios.find(s => s.id === r.userId)
+              ? `${socios.find(s => s.id === r.userId)!.nombre} ${socios.find(s => s.id === r.userId)!.apellidos}`
+              : (r.userId ?? '—'));
+
+        const numerosFallos = (!r.esNoSocio && r.userId)
+          ? (fallosPorUser.get(r.userId) ?? []).sort((a, b) => a - b)
+          : [];
+
+        return {
+          puesto:       r.puesto,
+          nombre,
+          esNoSocio:    r.esNoSocio,
+          platosRotos:  r.platosRotos,
+          fallos:       25 - r.platosRotos,
+          numerosFallos,
+        };
+      })
+      .sort((a, b) => a.puesto - b.puesto);
 
     this.filas.set(filas);
     this.cargando.set(false);
   }
 
-  get total(): number {
-    return this.filas().reduce((s, f) => s + f.platosRotos, 0);
-  }
-
-  get totalPosible(): number {
-    return this.filas().length * 25;
-  }
+  get total(): number        { return this.filas().reduce((s, f) => s + f.platosRotos, 0); }
+  get totalPosible(): number { return this.filas().length * 25; }
 
   volverEntrenamiento(): void {
     if (this.fechaDia) {

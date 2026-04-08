@@ -1,13 +1,31 @@
 .detalle-entrenamiento {
   @apply p-3 flex flex-col gap-3;
 
-  &__back-btn { @apply text-gray-400; }
+  &__back-btn  { @apply text-neutral-400; }
   &__back-icon { @apply text-[15px]; }
-  &__title { @apply text-[18px] font-extrabold text-secondary; }
+  &__title     { @apply text-[18px] font-extrabold text-secondary; }
 
   &__crear-escuadra-btn {
-    @apply flex items-center gap-1 text-[13px] font-semibold text-amber-700 bg-amber-50 px-4 py-2 rounded-full mx-auto;
+    @apply flex items-center gap-1 text-[13px] font-semibold
+           text-warning-dark bg-warning-light px-4 py-2 rounded-badge mx-auto;
   }
+}
+
+// ── Banner caja del día ────────────────────────────────────────
+
+.caja-dia-banner {
+  @apply flex items-center justify-between px-4 py-3
+         bg-white rounded-card shadow-card border-l-4 border-primary
+         cursor-pointer active:opacity-80 transition-opacity;
+
+  &__left  { @apply flex items-center gap-2; }
+
+  &__icon  { @apply text-secondary text-[16px]; }
+  &__label { @apply text-sm font-bold text-secondary; }
+
+  &__right { @apply flex items-center gap-2; }
+  &__total { @apply text-base font-extrabold text-secondary; }
+  &__arrow { @apply text-neutral-300 text-[13px]; }
 }
 
 // ── Tarjeta de escuadra ────────────────────────────────────────
@@ -19,30 +37,26 @@
     @apply flex items-center justify-between px-4 pt-4 pb-2;
   }
 
-  &__header-info {
-    @apply flex-1 min-w-0;
-  }
+  &__header-info  { @apply flex-1 min-w-0; }
 
-  &__titulo {
-    @apply text-base font-bold text-secondary;
-  }
+  &__header-right { @apply flex items-center gap-2 flex-shrink-0; }
 
-  &__meta {
-    @apply text-sm text-neutral-400 font-medium mt-0.5;
+  &__titulo { @apply text-base font-bold text-secondary; }
+
+  &__meta   { @apply text-sm text-neutral-400 font-medium mt-0.5; }
+
+  &__caja-badge {
+    @apply text-xs font-bold text-secondary
+           bg-primary/30 px-2 py-0.5 rounded-badge;
   }
 
   &__btn-editar {
-    @apply bg-transparent border-0 text-neutral-300 text-[18px] p-1 cursor-pointer
-           active:text-secondary transition-colors flex-shrink-0;
+    @apply bg-transparent border-0 text-neutral-400 text-[18px] p-1 cursor-pointer
+           active:text-secondary transition-colors;
   }
 
-  &__cargando {
-    @apply text-sm text-neutral-400 font-medium px-4 pb-3;
-  }
-
-  &__sin-resultados {
-    @apply text-sm text-neutral-400 font-medium italic px-4 pb-3;
-  }
+  &__cargando       { @apply text-sm text-neutral-400 font-medium px-4 pb-3; }
+  &__sin-resultados { @apply text-sm text-neutral-400 font-medium italic px-4 pb-3; }
 
   &__resultados {
     @apply flex flex-col divide-y divide-neutral-100;
@@ -54,38 +68,35 @@
 .resultado-fila {
   @apply flex items-center gap-3 px-4 py-2.5;
 
-  &__puesto {
-    @apply w-5 text-center text-sm font-bold text-neutral-400 flex-shrink-0;
-  }
+  &__puesto { @apply w-5 text-center text-sm font-bold text-neutral-400 flex-shrink-0; }
 
-  &__info {
-    @apply flex-1 min-w-0 flex flex-col gap-1;
-  }
+  &__info   { @apply flex-1 min-w-0 flex flex-col gap-1; }
 
-  &__nombre {
-    @apply text-sm font-semibold text-secondary truncate;
-  }
+  &__nombre-wrap { @apply flex items-center gap-1.5; }
 
-  &__fallos {
-    @apply flex flex-wrap gap-1;
-  }
+  &__nombre { @apply text-sm font-semibold text-secondary truncate; }
+
+  &__fallos { @apply flex flex-wrap gap-1; }
 
   &__rotos {
     @apply text-sm font-bold text-secondary flex-shrink-0;
-
-    &--bueno {
-      @apply text-success;
-    }
-
-    &--malo {
-      @apply text-danger;
-    }
+    &--bueno { @apply text-success; }
+    &--malo  { @apply text-danger; }
   }
 }
 
 .fallo-pill {
   @apply inline-flex items-center justify-center
          w-5 h-5 rounded-full
-         bg-red-50 text-danger
+         bg-danger-light text-danger
          text-[11px] font-bold leading-none flex-shrink-0;
+}
+
+// ── Badge no socio pequeño ─────────────────────────────────────
+
+.badge-no-socio-sm {
+  @apply inline-flex items-center px-1.5 py-0.5 rounded-badge
+         text-[9px] font-bold uppercase tracking-wide
+         bg-warning-light text-warning-dark border border-warning/40
+         flex-shrink-0;
 }

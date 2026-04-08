@@ -54,7 +54,7 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./noticias/form-noticia/form-noticia.component').then(m => m.FormNoticiaComponent),
   },
-  // Scores — panel principal
+  // Scores
   {
     path: 'scores',
     canActivate: [roleGuard],
@@ -62,7 +62,6 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./scores/admin-scores/admin-scores.component').then(m => m.AdminScoresComponent),
   },
-  // Scores — legacy form
   {
     path: 'scores/nuevo',
     canActivate: [roleGuard],
@@ -86,7 +85,6 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./scores/form-escuadra/form-escuadra.component').then(m => m.FormEscuadraComponent),
   },
-  // Registrar resultados
   {
     path: 'scores/resultados',
     canActivate: [roleGuard],
@@ -94,7 +92,22 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./scores/registrar-resultado/registrar-resultado.component').then(m => m.RegistrarResultadoComponent),
   },
-  // Entrenamientos — vista agrupada por día
+  // ── Caja ─────────────────────────────────────────────────────────────────
+  {
+    path: 'caja',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./caja/caja.component').then(m => m.CajaComponent),
+  },
+  {
+    path: 'caja/tarifas',
+    canActivate: [roleGuard],
+    data: { roles: ['admin'] },   // solo admin puede cambiar precios
+    loadComponent: () =>
+      import('./caja/config-tarifas/config-tarifas.component').then(m => m.ConfigTarifasComponent),
+  },
+  // ── Entrenamientos ───────────────────────────────────────────────────────
   {
     path: 'entrenamientos/dia/:fecha',
     canActivate: [roleGuard],
@@ -103,7 +116,6 @@ export const adminRoutes: Routes = [
       import('./entrenamientos/detalle-dia-entrenamiento/detalle-dia-entrenamiento.component')
         .then(m => m.DetalleDiaEntrenamientoComponent),
   },
-  // Entrenamientos
   {
     path: 'entrenamientos/nuevo',
     canActivate: [roleGuard],

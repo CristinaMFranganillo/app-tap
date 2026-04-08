@@ -14,6 +14,7 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 interface FilaResultado {
   puesto: number;
   nombre: string;
+  esNoSocio: boolean;
   platosRotos: number;
 }
 
@@ -33,13 +34,13 @@ interface EscuadraConResultados {
   styleUrl: './detalle-dia-entrenamiento.component.scss',
 })
 export class DetalleDiaEntrenamientoComponent {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
+  private route                = inject(ActivatedRoute);
+  private router               = inject(Router);
   private entrenamientoService = inject(EntrenamientoService);
-  private escuadraService = inject(EscuadraService);
-  private userService = inject(UserService);
+  private escuadraService      = inject(EscuadraService);
+  private userService          = inject(UserService);
 
-  fecha = this.route.snapshot.paramMap.get('fecha')!;
+  fecha       = this.route.snapshot.paramMap.get('fecha')!;
   modoEdicion = this.route.snapshot.queryParamMap.get('modo') === 'editar';
 
   private refresh$ = new Subject<void>();
@@ -52,12 +53,10 @@ export class DetalleDiaEntrenamientoComponent {
     { initialValue: [] as Entrenamiento[] }
   );
 
-  escuadrasConResultados = signal<EscuadraConResultados[]>([]);
-
-  // Delete state
-  pendingDeleteEscuadraId = signal<string | null>(null);
-  eliminando = signal(false);
-  errorEliminar = signal('');
+  escuadrasConResultados   = signal<EscuadraConResultados[]>([]);
+  pendingDeleteEscuadraId  = signal<string | null>(null);
+  eliminando               = signal(false);
+  errorEliminar            = signal('');
 
   constructor() {
     effect(async () => {
@@ -74,18 +73,16 @@ export class DetalleDiaEntrenamientoComponent {
         )
       );
       const todasEscuadras = escuadrasPorEntrenamiento.flat();
-
-      if (todasEscuadras.length === 0) {
-        this.escuadrasConResultados.set([]);
-        return;
-      }
+      if (todasEscuadras.length === 0) { this.escuadrasConResultados.set([]); return; }
 
       this.escuadrasConResultados.set(
-        todasEscuadras.map(e => ({ escuadra: e, entrenamientoId: e.entrenamientoId, filas: [], total: 0, cargando: true }))
+        todasEscuadras.map(e => ({
+          escuadra: e, entrenamientoId: e.entrenamientoId,
+          filas: [], total: 0, cargando: true,
+        }))
       );
 
-      const socios = await firstValueFrom(this.userService.getAll());
-
+      const socios    = await firstValueFrom(this.userService.getAll());
       const resultados = await Promise.all(
         todasEscuadras.map(e =>
           firstValueFrom(this.entrenamientoService.getResultadosByEscuadra(e.id))
@@ -95,21 +92,21 @@ export class DetalleDiaEntrenamientoComponent {
       this.escuadrasConResultados.set(
         todasEscuadras.map((e, i) => {
           const filas: FilaResultado[] = (resultados[i] as ResultadoEntrenamiento[])
-            .map(r => {
-              const socio = socios.find(s => s.id === r.userId);
-              return {
-                puesto: r.puesto,
-                nombre: socio ? `${socio.nombre} ${socio.apellidos}` : r.userId,
-                platosRotos: r.platosRotos,
-              };
-            })
+            .map(r => ({
+              puesto:      r.puesto,
+              esNoSocio:   r.esNoSocio,
+              nombre:      r.esNoSocio
+                ? (r.nombreExterno ?? 'No socio')
+                : (socios.find(s => s.id === r.userId)
+                    ? `${socios.find(s => s.id === r.userId)!.nombre} ${socios.find(s => s.id === r.userId)!.apellidos}`
+                    : (r.userId ?? '—')),
+              platosRotos: r.platosRotos,
+            }))
             .sort((a, b) => a.puesto - b.puesto);
 
           return {
-            escuadra: e,
-            entrenamientoId: e.entrenamientoId,
-            filas,
-            total: filas.reduce((s, f) => s + f.platosRotos, 0),
+            escuadra: e, entrenamientoId: e.entrenamientoId,
+            filas, total: filas.reduce((s, f) => s + f.platosRotos, 0),
             cargando: false,
           };
         })
@@ -118,27 +115,19 @@ export class DetalleDiaEntrenamientoComponent {
   }
 
   irResultados(entrenamientoId: string, escuadraId: string): void {
-    this.router.navigate([
-      '/admin/entrenamientos', entrenamientoId,
-      'escuadra', escuadraId, 'resultados',
-    ], { queryParams: { fecha: this.fecha } });
+    this.router.navigate(
+      ['/admin/entrenamientos', entrenamientoId, 'escuadra', escuadraId, 'resultados'],
+      { queryParams: { fecha: this.fecha } }
+    );
   }
 
   nuevaEscuadra(): void {
     const primero = this.entrenamientosDelDia()[0];
-    if (primero) {
-      this.router.navigate(['/admin/entrenamientos', primero.id, 'escuadra', 'nueva']);
-    }
+    if (primero) this.router.navigate(['/admin/entrenamientos', primero.id, 'escuadra', 'nueva']);
   }
 
-  confirmarEliminarEscuadra(id: string): void {
-    this.errorEliminar.set('');
-    this.pendingDeleteEscuadraId.set(id);
-  }
-
-  cancelarEliminarEscuadra(): void {
-    this.pendingDeleteEscuadraId.set(null);
-  }
+  confirmarEliminarEscuadra(id: string): void { this.errorEliminar.set(''); this.pendingDeleteEscuadraId.set(id); }
+  cancelarEliminarEscuadra(): void { this.pendingDeleteEscuadraId.set(null); }
 
   async eliminarEscuadra(): Promise<void> {
     const id = this.pendingDeleteEscuadraId();
@@ -156,7 +145,5 @@ export class DetalleDiaEntrenamientoComponent {
     }
   }
 
-  goBack(): void {
-    this.router.navigate(['/admin/scores']);
-  }
+  goBack(): void { this.router.navigate(['/admin/scores']); }
 }

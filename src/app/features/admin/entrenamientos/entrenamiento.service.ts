@@ -17,7 +17,9 @@ function toResultado(row: Record<string, unknown>): ResultadoEntrenamiento {
   return {
     id: row['id'] as string,
     escuadraId: row['escuadra_id'] as string,
-    userId: row['user_id'] as string,
+    userId: row['user_id'] as string | undefined,
+    nombreExterno: row['nombre_externo'] as string | undefined,
+    esNoSocio: (row['es_no_socio'] as boolean) ?? false,
     puesto: row['puesto'] as number,
     platosRotos: row['platos_rotos'] as number,
   };
@@ -120,21 +122,55 @@ export class EntrenamientoService {
     ).pipe(map(({ data }) => (data ?? []).map(toResultado)));
   }
 
+  /**
+   * Upsert de resultados soportando socios y no socios.
+   * Para socios usa el conflicto por (escuadra_id, user_id).
+   * Para no socios usa el conflicto por (escuadra_id, nombre_externo).
+   * Los separa y llama a Supabase dos veces.
+   */
   async upsertResultados(
-    resultados: { escuadraId: string; userId: string; puesto: number; platosRotos: number }[],
+    resultados: {
+      escuadraId: string;
+      userId?: string;
+      nombreExterno?: string;
+      esNoSocio: boolean;
+      puesto: number;
+      platosRotos: number;
+    }[],
     registradoPor: string
   ): Promise<void> {
-    const rows = resultados.map(r => ({
-      escuadra_id: r.escuadraId,
-      user_id: r.userId,
-      puesto: r.puesto,
-      platos_rotos: r.platosRotos,
-      registrado_por: registradoPor,
-    }));
-    const { error } = await supabase
-      .from('resultados_entrenamiento')
-      .upsert(rows, { onConflict: 'escuadra_id,user_id' });
-    if (error) throw new Error(error?.message ?? 'Error guardando resultados');
+    const socios = resultados.filter(r => !r.esNoSocio);
+    const noSocios = resultados.filter(r => r.esNoSocio);
+
+    if (socios.length > 0) {
+      const rows = socios.map(r => ({
+        escuadra_id: r.escuadraId,
+        user_id: r.userId,
+        es_no_socio: false,
+        puesto: r.puesto,
+        platos_rotos: r.platosRotos,
+        registrado_por: registradoPor,
+      }));
+      const { error } = await supabase
+        .from('resultados_entrenamiento')
+        .upsert(rows, { onConflict: 'escuadra_id,user_id' });
+      if (error) throw new Error(error.message ?? 'Error guardando resultados socios');
+    }
+
+    if (noSocios.length > 0) {
+      const rows = noSocios.map(r => ({
+        escuadra_id: r.escuadraId,
+        nombre_externo: r.nombreExterno,
+        es_no_socio: true,
+        puesto: r.puesto,
+        platos_rotos: r.platosRotos,
+        registrado_por: registradoPor,
+      }));
+      const { error } = await supabase
+        .from('resultados_entrenamiento')
+        .upsert(rows, { onConflict: 'escuadra_id,nombre_externo' });
+      if (error) throw new Error(error.message ?? 'Error guardando resultados no socios');
+    }
   }
 
   getByUser(userId: string, year: number): Observable<ResultadoEntrenamientoConFecha[]> {
@@ -153,7 +189,8 @@ export class EntrenamientoService {
           id: row['id'] as string,
           escuadraId: row['escuadra_id'] as string,
           entrenamientoId: row['escuadras']['entrenamiento_id'] as string,
-          userId: row['user_id'] as string,
+          userId: row['user_id'] as string | undefined,
+          esNoSocio: false,
           puesto: row['puesto'] as number,
           platosRotos: row['platos_rotos'] as number,
           fecha: row['escuadras']['entrenamientos']['fecha'] as string,
@@ -171,6 +208,7 @@ export class EntrenamientoService {
       supabase
         .from('resultados_entrenamiento')
         .select('user_id, platos_rotos, escuadras!inner(entrenamientos!inner(fecha))')
+        .eq('es_no_socio', false)   // solo socios en el ranking
         .gte('escuadras.entrenamientos.fecha', fromDate)
         .lte('escuadras.entrenamientos.fecha', toDate)
     ).pipe(
@@ -200,7 +238,6 @@ export class EntrenamientoService {
     escuadraId: string,
     userIds: string[]
   ): Promise<void> {
-    // Borrar fallos anteriores de esta escuadra para estos usuarios
     if (userIds.length > 0) {
       const { error: deleteError } = await supabase
         .from('entrenamiento_fallos')
@@ -209,7 +246,6 @@ export class EntrenamientoService {
         .in('user_id', userIds);
       if (deleteError) throw new Error(deleteError.message ?? 'Error borrando fallos anteriores');
     }
-    // Insertar nuevos fallos (si los hay)
     if (fallos.length > 0) {
       const rows = fallos.map(f => ({
         escuadra_id: f.escuadraId,
@@ -261,50 +297,22 @@ export class EntrenamientoService {
   }
 
   async deleteEntrenamiento(id: string): Promise<void> {
-    // 1. Obtener IDs de escuadras del entrenamiento
     const { data: escuadras, error: escuadrasError } = await supabase
-      .from('escuadras')
-      .select('id')
-      .eq('entrenamiento_id', id);
-    if (escuadrasError) throw new Error(escuadrasError.message ?? 'Error obteniendo escuadras');
+      .from('escuadras').select('id').eq('entrenamiento_id', id);
+    if (escuadrasError) throw new Error(escuadrasError.message);
 
     const ids = (escuadras ?? []).map((e: Record<string, unknown>) => e['id'] as string);
 
     if (ids.length > 0) {
-      // 2. Borrar fallos
-      const { error: fallosError } = await supabase
-        .from('entrenamiento_fallos')
-        .delete()
-        .in('escuadra_id', ids);
-      if (fallosError) throw new Error(fallosError.message ?? 'Error borrando fallos');
-
-      // 3. Borrar resultados
-      const { error: resultadosError } = await supabase
-        .from('resultados_entrenamiento')
-        .delete()
-        .in('escuadra_id', ids);
-      if (resultadosError) throw new Error(resultadosError.message ?? 'Error borrando resultados');
-
-      // 4. Borrar tiradores
-      const { error: tiradoresError } = await supabase
-        .from('escuadra_tiradores')
-        .delete()
-        .in('escuadra_id', ids);
-      if (tiradoresError) throw new Error(tiradoresError.message ?? 'Error borrando tiradores');
-
-      // 5. Borrar escuadras
-      const { error: escuadrasBorrarError } = await supabase
-        .from('escuadras')
-        .delete()
-        .eq('entrenamiento_id', id);
-      if (escuadrasBorrarError) throw new Error(escuadrasBorrarError.message ?? 'Error borrando escuadras');
+      for (const tabla of ['entrenamiento_fallos', 'resultados_entrenamiento', 'movimientos_caja', 'escuadra_tiradores']) {
+        const { error } = await supabase.from(tabla).delete().in('escuadra_id', ids);
+        if (error) throw new Error(error.message);
+      }
+      const { error } = await supabase.from('escuadras').delete().eq('entrenamiento_id', id);
+      if (error) throw new Error(error.message);
     }
 
-    // 6. Borrar el entrenamiento
-    const { error } = await supabase
-      .from('entrenamientos')
-      .delete()
-      .eq('id', id);
-    if (error) throw new Error(error.message ?? 'Error borrando entrenamiento');
+    const { error } = await supabase.from('entrenamientos').delete().eq('id', id);
+    if (error) throw new Error(error.message);
   }
 }

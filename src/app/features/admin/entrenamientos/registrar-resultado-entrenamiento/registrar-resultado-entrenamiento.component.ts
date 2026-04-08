@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
@@ -7,12 +7,15 @@ import { FalloEntrenamiento } from '../../../../core/models/entrenamiento.model'
 import { EscuadraService } from '../../../../features/scores/escuadra.service';
 import { UserService } from '../../socios/user.service';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { EscuadraTirador } from '../../../../core/models/escuadra.model';
 
 interface TiradorSession {
-  userId: string;
+  userId?: string;
+  nombreExterno?: string;
+  esNoSocio: boolean;
   nombre: string;
   puesto: number;
-  platos: boolean[];   // 25 elementos, true = roto
+  platos: boolean[];
 }
 
 @Component({
@@ -22,58 +25,66 @@ interface TiradorSession {
   templateUrl: './registrar-resultado-entrenamiento.component.html',
   styleUrl: './registrar-resultado-entrenamiento.component.scss',
 })
-export class RegistrarResultadoEntrenamientoComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
+export class RegistrarResultadoEntrenamientoComponent {
+  private route                = inject(ActivatedRoute);
+  private router               = inject(Router);
   private entrenamientoService = inject(EntrenamientoService);
-  private escuadraService = inject(EscuadraService);
-  private userService = inject(UserService);
-  private authService = inject(AuthService);
+  private escuadraService      = inject(EscuadraService);
+  private userService          = inject(UserService);
+  private authService          = inject(AuthService);
 
-  private escuadraId = this.route.snapshot.paramMap.get('escuadraId')!;
+  private escuadraId      = this.route.snapshot.paramMap.get('escuadraId')!;
   private entrenamientoId = this.route.snapshot.paramMap.get('entrenamientoId')!;
-  private fechaDia = this.route.snapshot.queryParamMap.get('fecha');
+  private fechaDia        = this.route.snapshot.queryParamMap.get('fecha');
 
   private socios = toSignal(this.userService.getAll(), { initialValue: [] });
   private tiradores = toSignal(
     this.escuadraService.getTiradoresByEscuadra(this.escuadraId),
-    { initialValue: [] }
+    { initialValue: [] as EscuadraTirador[] }
   );
 
-  session = signal<TiradorSession[]>([]);
-  tiradorAbierto = signal<number | null>(null);  // índice del tirador expandido
-  saving = signal(false);
-  error = signal('');
+  session        = signal<TiradorSession[]>([]);
+  tiradorAbierto = signal<number | null>(null);
+  saving         = signal(false);
+  error          = signal('');
 
   readonly indices = Array.from({ length: 25 }, (_, i) => i);
 
-  ngOnInit(): void {
-    const init = () => {
-      const socios = this.socios();
+  constructor() {
+    // Effect reactivo: se ejecuta cada vez que socios o tiradores cambian.
+    // Solo construye la sesión cuando AMBOS tienen datos, evitando mostrar UUIDs.
+    effect(() => {
+      const socios    = this.socios();
       const tiradores = this.tiradores();
-      if (tiradores.length === 0) return;
+
+      // Esperar a que ambos estén cargados
+      if (tiradores.length === 0 || socios.length === 0) return;
+      // No reconstruir si ya está inicializado
+      if (this.session().length > 0) return;
+
       this.session.set(
-        tiradores.map(t => {
-          const socio = socios.find(s => s.id === t.userId);
+        tiradores.map((t: EscuadraTirador) => {
+          let nombre: string;
+          if (t.esNoSocio) {
+            nombre = t.nombreExterno?.trim() || 'No socio';
+          } else {
+            const socio = socios.find(s => s.id === t.userId);
+            nombre = socio
+              ? `${socio.nombre} ${socio.apellidos}`
+              : (t.userId ?? '—');
+          }
           return {
-            userId: t.userId,
-            nombre: socio ? `${socio.nombre} ${socio.apellidos}` : t.userId,
-            puesto: t.puesto,
-            platos: Array(25).fill(true),
+            userId:        t.userId,
+            nombreExterno: t.nombreExterno,
+            esNoSocio:     t.esNoSocio,
+            nombre,
+            puesto:        t.puesto,
+            platos:        Array(25).fill(true),
           };
         })
       );
-      // Abrir el primero por defecto
       this.tiradorAbierto.set(0);
-    };
-
-    init();
-    if (this.session().length === 0) {
-      const interval = setInterval(() => {
-        init();
-        if (this.session().length > 0) clearInterval(interval);
-      }, 200);
-    }
+    });
   }
 
   toggleTirador(idx: number): void {
@@ -102,38 +113,35 @@ export class RegistrarResultadoEntrenamientoComponent implements OnInit {
       const user = await firstValueFrom(this.authService.currentUser$);
       if (!user) throw new Error('No autenticado');
 
-      // 1. Guardar totales (igual que antes)
       await this.entrenamientoService.upsertResultados(
         this.session().map(t => ({
-          escuadraId: this.escuadraId,
-          userId: t.userId,
-          puesto: t.puesto,
-          platosRotos: t.platos.filter(Boolean).length,
+          escuadraId:    this.escuadraId,
+          userId:        t.userId,
+          nombreExterno: t.nombreExterno,
+          esNoSocio:     t.esNoSocio,
+          puesto:        t.puesto,
+          platosRotos:   t.platos.filter(Boolean).length,
         })),
         user.id
       );
 
-      // 2. Guardar fallos individuales (nuevo)
       const fallos: FalloEntrenamiento[] = [];
       for (const t of this.session()) {
+        if (t.esNoSocio || !t.userId) continue;
         for (let i = 0; i < t.platos.length; i++) {
           if (!t.platos[i]) {
-            fallos.push({
-              escuadraId: this.escuadraId,
-              userId: t.userId,
-              numeroPlato: i + 1,
-            });
+            fallos.push({ escuadraId: this.escuadraId, userId: t.userId, numeroPlato: i + 1 });
           }
         }
       }
-      const userIds = this.session().map(t => t.userId);
+      const userIds = this.session().filter(t => !t.esNoSocio && !!t.userId).map(t => t.userId!);
       await this.entrenamientoService.upsertFallos(fallos, this.escuadraId, userIds);
 
       const extras = this.fechaDia ? { queryParams: { fecha: this.fechaDia } } : {};
-      this.router.navigate([
-        '/admin/entrenamientos', this.entrenamientoId,
-        'escuadra', this.escuadraId, 'resumen',
-      ], extras);
+      this.router.navigate(
+        ['/admin/entrenamientos', this.entrenamientoId, 'escuadra', this.escuadraId, 'resumen'],
+        extras
+      );
     } catch (err) {
       this.error.set(err instanceof Error ? err.message : 'Error al guardar');
       this.saving.set(false);

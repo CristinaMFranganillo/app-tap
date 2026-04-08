@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, map } from 'rxjs';
-import { Escuadra, EscuadraTirador } from '../../core/models/escuadra.model';
+import { Escuadra, EscuadraTirador, Tarifa, MovimientoCaja } from '../../core/models/escuadra.model';
 import { supabase } from '../../core/supabase/supabase.client';
 
 function toEscuadra(row: Record<string, unknown>): Escuadra {
   return {
     id: row['id'] as string,
-    competicionId: row['competicion_id'] as string,
+    competicionId: row['competicion_id'] as string | undefined,
     numero: row['numero'] as number,
   };
 }
@@ -15,49 +15,37 @@ function toEscuadraTirador(row: Record<string, unknown>): EscuadraTirador {
   return {
     id: row['id'] as string,
     escuadraId: row['escuadra_id'] as string,
-    userId: row['user_id'] as string,
+    userId: row['user_id'] as string | undefined,
+    nombreExterno: row['nombre_externo'] as string | undefined,
+    esNoSocio: (row['es_no_socio'] as boolean) ?? false,
     puesto: row['puesto'] as number,
+  };
+}
+
+function toMovimiento(row: any): MovimientoCaja {
+  return {
+    id:              row['id'] as string,
+    entrenamientoId: row['entrenamiento_id'] as string | undefined,
+    escuadraId:      row['escuadra_id'] as string,
+    userId:          row['user_id'] as string | undefined,
+    nombreTirador:   row['nombre_tirador'] as string,
+    esNoSocio:       row['es_no_socio'] as boolean,
+    importe:         row['importe'] as number,
+    fecha:           row['fecha'] as string,
+    registradoPor:   row['registrado_por'] as string | undefined,
   };
 }
 
 @Injectable({ providedIn: 'root' })
 export class EscuadraService {
+
+  // ── Escuadras ─────────────────────────────────────────────────────────────
+
   getByCompeticion(competicionId: string | null): Observable<Escuadra[]> {
     const query = competicionId === null
       ? supabase.from('escuadras').select('*').is('competicion_id', null).order('numero')
       : supabase.from('escuadras').select('*').eq('competicion_id', competicionId).order('numero');
     return from(query).pipe(map(({ data }) => (data ?? []).map(toEscuadra)));
-  }
-
-  getTiradoresByEscuadra(escuadraId: string): Observable<EscuadraTirador[]> {
-    return from(
-      supabase.from('escuadra_tiradores').select('*').eq('escuadra_id', escuadraId).order('puesto')
-    ).pipe(map(({ data }) => (data ?? []).map(toEscuadraTirador)));
-  }
-
-  async createEscuadra(competicionId: string | null, numero: number): Promise<string> {
-    const { data, error } = await supabase
-      .from('escuadras')
-      .insert({ competicion_id: competicionId, numero })
-      .select('id')
-      .single();
-    if (error || !data) throw new Error('Error creando escuadra');
-    return (data as Record<string, unknown>)['id'] as string;
-  }
-
-  async addTirador(escuadraId: string, userId: string, puesto: number): Promise<void> {
-    const { error } = await supabase
-      .from('escuadra_tiradores')
-      .insert({ escuadra_id: escuadraId, user_id: userId, puesto });
-    if (error) throw new Error('Error añadiendo tirador');
-  }
-
-  async removeTirador(id: string): Promise<void> {
-    await supabase.from('escuadra_tiradores').delete().eq('id', id);
-  }
-
-  async deleteEscuadra(id: string): Promise<void> {
-    await supabase.from('escuadras').delete().eq('id', id);
   }
 
   getByEntrenamiento(entrenamientoId: string): Observable<Escuadra[]> {
@@ -73,54 +61,134 @@ export class EscuadraService {
           id: (row as any)['id'] as string,
           entrenamientoId: (row as any)['entrenamiento_id'] as string,
           numero: (row as any)['numero'] as number,
-          tiradores: ((row as any)['escuadra_tiradores'] ?? []).map((t: Record<string, unknown>) => ({
-            id: t['id'] as string,
-            escuadraId: t['escuadra_id'] as string,
-            userId: t['user_id'] as string,
-            puesto: t['puesto'] as number,
-          })),
+          tiradores: ((row as any)['escuadra_tiradores'] ?? []).map(toEscuadraTirador),
         }))
       )
     );
   }
 
-  async createEscuadraEntrenamiento(entrenamientoId: string, numero: number): Promise<string> {
+  getTiradoresByEscuadra(escuadraId: string): Observable<EscuadraTirador[]> {
+    return from(
+      supabase.from('escuadra_tiradores').select('*').eq('escuadra_id', escuadraId).order('puesto')
+    ).pipe(map(({ data }) => (data ?? []).map(toEscuadraTirador)));
+  }
+
+  async createEscuadra(competicionId: string | null, numero: number): Promise<string> {
     const { data, error } = await supabase
-      .from('escuadras')
-      .insert({ entrenamiento_id: entrenamientoId, numero })
-      .select('id')
-      .single();
+      .from('escuadras').insert({ competicion_id: competicionId, numero }).select('id').single();
     if (error || !data) throw new Error('Error creando escuadra');
     return (data as Record<string, unknown>)['id'] as string;
   }
 
+  async createEscuadraEntrenamiento(entrenamientoId: string, numero: number): Promise<string> {
+    const { data, error } = await supabase
+      .from('escuadras').insert({ entrenamiento_id: entrenamientoId, numero }).select('id').single();
+    if (error || !data) throw new Error('Error creando escuadra');
+    return (data as Record<string, unknown>)['id'] as string;
+  }
+
+  async addTirador(escuadraId: string, userId: string, puesto: number): Promise<void> {
+    const { error } = await supabase.from('escuadra_tiradores')
+      .insert({ escuadra_id: escuadraId, user_id: userId, puesto, es_no_socio: false });
+    if (error) throw new Error('Error añadiendo tirador: ' + error.message);
+  }
+
+  async addNoSocio(escuadraId: string, nombreExterno: string, puesto: number): Promise<void> {
+    const { error } = await supabase.from('escuadra_tiradores')
+      .insert({ escuadra_id: escuadraId, nombre_externo: nombreExterno, puesto, es_no_socio: true });
+    if (error) throw new Error('Error añadiendo no socio: ' + error.message);
+  }
+
+  async removeTirador(id: string): Promise<void> {
+    await supabase.from('escuadra_tiradores').delete().eq('id', id);
+  }
+
+  async deleteEscuadra(id: string): Promise<void> {
+    await supabase.from('escuadras').delete().eq('id', id);
+  }
+
   async deleteEscuadraEntrenamiento(id: string): Promise<void> {
-    // 1. Borrar fallos
-    const { error: fallosError } = await supabase
-      .from('entrenamiento_fallos')
-      .delete()
-      .eq('escuadra_id', id);
-    if (fallosError) throw new Error(fallosError.message ?? 'Error borrando fallos');
+    for (const tabla of ['entrenamiento_fallos', 'resultados_entrenamiento', 'movimientos_caja', 'escuadra_tiradores']) {
+      const { error } = await supabase.from(tabla).delete().eq('escuadra_id', id);
+      if (error) throw new Error(error.message);
+    }
+    const { error } = await supabase.from('escuadras').delete().eq('id', id);
+    if (error) throw new Error(error.message);
+  }
 
-    // 2. Borrar resultados
-    const { error: resultadosError } = await supabase
-      .from('resultados_entrenamiento')
-      .delete()
-      .eq('escuadra_id', id);
-    if (resultadosError) throw new Error(resultadosError.message ?? 'Error borrando resultados');
+  // ── Tarifas ───────────────────────────────────────────────────────────────
 
-    // 3. Borrar tiradores
-    const { error: tiradoresError } = await supabase
-      .from('escuadra_tiradores')
-      .delete()
-      .eq('escuadra_id', id);
-    if (tiradoresError) throw new Error(tiradoresError.message ?? 'Error borrando tiradores');
+  getTarifas(): Observable<Tarifa[]> {
+    return from(supabase.from('tarifas').select('*')).pipe(
+      map(({ data }) => (data ?? []).map(row => ({
+        id:      row['id'] as string,
+        tipo:    row['tipo'] as 'socio' | 'no_socio',
+        importe: row['importe'] as number,
+      })))
+    );
+  }
 
-    // 4. Borrar la escuadra
-    const { error } = await supabase
-      .from('escuadras')
-      .delete()
-      .eq('id', id);
-    if (error) throw new Error(error.message ?? 'Error borrando escuadra');
+  async updateTarifa(id: string, importe: number): Promise<void> {
+    const { error } = await supabase.from('tarifas')
+      .update({ importe, updated_at: new Date().toISOString() }).eq('id', id);
+    if (error) throw new Error('Error actualizando tarifa: ' + error.message);
+  }
+
+  // ── Caja — escritura ──────────────────────────────────────────────────────
+
+  async registrarCajaEscuadra(
+    escuadraId: string,
+    entrenamientoId: string,
+    fecha: string,
+    registradoPor: string,
+    tiradores: { userId?: string; nombreTirador: string; esNoSocio: boolean; importe: number }[]
+  ): Promise<void> {
+    const rows = tiradores.map(t => ({
+      escuadra_id:      escuadraId,
+      entrenamiento_id: entrenamientoId,
+      user_id:          t.userId ?? null,
+      nombre_tirador:   t.nombreTirador,
+      es_no_socio:      t.esNoSocio,
+      importe:          t.importe,
+      fecha,
+      registrado_por:   registradoPor,
+    }));
+    const { error } = await supabase.from('movimientos_caja').insert(rows);
+    if (error) throw new Error('Error registrando caja: ' + error.message);
+  }
+
+  // ── Caja — lectura ────────────────────────────────────────────────────────
+
+  getMovimientosCajaByEntrenamiento(entrenamientoId: string): Observable<MovimientoCaja[]> {
+    return from(
+      supabase.from('movimientos_caja').select('*')
+        .eq('entrenamiento_id', entrenamientoId).order('created_at')
+    ).pipe(map(({ data }) => (data ?? []).map(toMovimiento)));
+  }
+
+  getMovimientosCajaByFecha(fecha: string): Observable<MovimientoCaja[]> {
+    return from(
+      supabase.from('movimientos_caja').select('*')
+        .eq('fecha', fecha).order('created_at')
+    ).pipe(map(({ data }) => (data ?? []).map(toMovimiento)));
+  }
+
+  getMovimientosCajaByMes(mes: string): Observable<MovimientoCaja[]> {
+    const [y, m] = mes.split('-');
+    const desde  = `${y}-${m}-01`;
+    const hasta  = new Date(Number(y), Number(m), 0).toISOString().split('T')[0];
+    return from(
+      supabase.from('movimientos_caja').select('*')
+        .gte('fecha', desde).lte('fecha', hasta)
+        .order('fecha').order('created_at')
+    ).pipe(map(({ data }) => (data ?? []).map(toMovimiento)));
+  }
+
+  getMovimientosCajaByAno(anio: number): Observable<MovimientoCaja[]> {
+    return from(
+      supabase.from('movimientos_caja').select('*')
+        .gte('fecha', `${anio}-01-01`).lte('fecha', `${anio}-12-31`)
+        .order('fecha').order('created_at')
+    ).pipe(map(({ data }) => (data ?? []).map(toMovimiento)));
   }
 }

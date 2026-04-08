@@ -19,29 +19,27 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
   styleUrl: './admin-scores.component.scss',
 })
 export class AdminScoresComponent {
-  private competicionService = inject(CompeticionService);
+  private competicionService   = inject(CompeticionService);
   private entrenamientoService = inject(EntrenamientoService);
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  private authService          = inject(AuthService);
+  private router               = inject(Router);
 
   private refresh$ = new Subject<void>();
 
-  competiciones = toSignal(this.competicionService.getAll(), { initialValue: [] as Competicion[] });
+  competiciones  = toSignal(this.competicionService.getAll(), { initialValue: [] as Competicion[] });
   entrenamientos = toSignal(
     this.refresh$.pipe(startWith(null), switchMap(() => this.entrenamientoService.getAllAgrupado())),
     { initialValue: [] as EntrenamientoDia[] }
   );
 
-  // Inline date picker state
-  mostrarPicker = signal(false);
-  fechaNueva = signal(new Date().toISOString().split('T')[0]);
-  creando = signal(false);
-  errorCrear = signal('');
+  mostrarPicker  = signal(false);
+  fechaNueva     = signal(new Date().toISOString().split('T')[0]);
+  creando        = signal(false);
+  errorCrear     = signal('');
 
-  // Delete state
   pendingDeleteFecha = signal<string | null>(null);
-  eliminando = signal(false);
-  errorEliminar = signal('');
+  eliminando         = signal(false);
+  errorEliminar      = signal('');
 
   abrirPicker(): void {
     this.fechaNueva.set(new Date().toISOString().split('T')[0]);
@@ -105,6 +103,10 @@ export class AdminScoresComponent {
     } finally {
       this.eliminando.set(false);
     }
+  }
+
+  irCaja(): void {
+    this.router.navigate(['/admin/caja']);
   }
 
   nuevaCompeticion(): void {

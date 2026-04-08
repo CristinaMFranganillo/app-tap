@@ -1,0 +1,24 @@
+
+## Última migración aplicada
+
+`011_favorito_socio.sql` → Añade campo `favorito` a profiles
+`012_no_socio.sql`       → Añade `es_no_socio` + `nombre_externo` a `escuadra_tiradores` y `resultados_entrenamiento`
+`013_movimientos_caja.sql` → Crea tablas `tarifas` (6€ socio / 7€ no socio) y `movimientos_caja`
+
+## Figura "No Socio"
+
+- Un no socio NO tiene cuenta en Supabase Auth ni en `profiles`
+- Se identifica por `es_no_socio = true` + `nombre_externo` (texto libre)
+- Tarifa diferenciada: socio 6€ / no socio 7€ por escuadra (configurable en tabla `tarifas`)
+- Al crear una escuadra el sistema registra automáticamente los `movimientos_caja`
+
+## Módulo de Caja (`admin/caja`)
+
+- **Ruta** `/admin/caja` — resumen económico por fecha (accesible a admin y moderador)
+- **Ruta** `/admin/caja/tarifas` — configurar tarifas (solo admin)
+- Acceso desde el panel `/admin/scores` (banner en la parte superior)
+- En `/admin/entrenamientos/:id` aparece un banner "Caja del día" con total e importe por escuadra
+
+## Pipes nuevos
+
+- `PuestosCountPipe` (`shared/pipes/puestos-count.pipe.ts`) — cuenta puestos de un tipo en el formulario de escuadra
