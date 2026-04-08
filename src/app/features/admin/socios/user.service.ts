@@ -25,6 +25,7 @@ function toUser(row: Record<string, unknown>): User {
     localidad: (row['localidad'] as string) ?? '',
     cuotaPagada: cuota ? (cuota['pagada'] as boolean) : undefined,
     cuotaId: cuota ? (cuota['id'] as string) : undefined,
+    favorito: (row['favorito'] as boolean) ?? false,
   };
 }
 
@@ -89,6 +90,19 @@ export class UserService {
     if (user) {
       await this.update(id, { activo: !user.activo });
     }
+  }
+
+  async toggleFavorito(id: string): Promise<void> {
+    const user = this.getById(id);
+    if (!user) return;
+    const nuevoValor = !user.favorito;
+    const { error } = await supabase
+      .from('profiles')
+      .update({ favorito: nuevoValor })
+      .eq('id', id);
+    if (error) throw new Error(error.message);
+    const current = this.cache.getValue();
+    this.cache.next(current.map(u => u.id === id ? { ...u, favorito: nuevoValor } : u));
   }
 
   async crearEnAuth(data: {

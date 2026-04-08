@@ -17,4 +17,5 @@ export interface User {
   localidad: string;
   cuotaPagada?: boolean;   // estado en la temporada activa; undefined si no hay temporada
   cuotaId?: string;        // id del registro cuota para poder actualizarlo directamente
+  favorito: boolean;
 }
