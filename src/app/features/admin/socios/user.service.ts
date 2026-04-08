@@ -128,12 +128,26 @@ export class UserService {
     direccion?: string;
     localidad?: string;
   }): Promise<void> {
-    const { data: result, error } = await supabase.functions.invoke('crear-usuario', { body: data });
-    if (error) {
-      const msg = result?.error ?? error.message ?? 'Error al crear el usuario.';
-      throw new Error(msg);
+    // Obtener el token de sesión activo de forma explícita
+    const { data: sessionData } = await supabase.auth.getSession();
+    const token = sessionData.session?.access_token;
+    if (!token) throw new Error('No hay sesión activa. Por favor, vuelve a iniciar sesión.');
+
+    const url = `${supabase.supabaseUrl}/functions/v1/crear-usuario`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        'apikey': supabase.supabaseKey,
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    if (!response.ok || result?.error) {
+      throw new Error(result?.error ?? `Error ${response.status} al crear el usuario.`);
     }
-    if (result?.error) throw new Error(result.error);
   }
 
   async eliminar(id: string): Promise<void> {
