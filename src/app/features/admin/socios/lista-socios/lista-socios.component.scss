@@ -106,12 +106,24 @@
   @apply text-[18px] font-black;
 }
 
+.lista-socios__header {
+  @apply flex items-center justify-between mb-3;
+
+  .section-title {
+    @apply mb-0 flex-1;
+  }
+}
+
+.lista-socios__temporadas-btn {
+  @apply flex items-center gap-1 text-[11px] font-semibold text-gray-600 bg-amber-50 px-2 py-1 rounded-full flex-shrink-0;
+}
+
 .section-title {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 10px;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -129,5 +141,13 @@
 
   &--pagada {
     @apply bg-emerald-50 text-emerald-600;
+  }
+}
+
+.socio-item__favorito-btn {
+  @apply flex items-center justify-center p-1 text-gray-300 text-[18px];
+
+  .bi-star-fill {
+    color: #FFAE00;
   }
 }

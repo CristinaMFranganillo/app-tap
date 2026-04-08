@@ -36,13 +36,19 @@ export class ListaSociosComponent {
 
   filteredSocios = computed(() => {
     const term = this.searchTerm().toLowerCase();
-    if (!term) return this.socios();
-    return this.socios().filter(s =>
-      s.nombre.toLowerCase().includes(term) ||
-      s.apellidos.toLowerCase().includes(term) ||
-      s.email.toLowerCase().includes(term) ||
-      s.numeroSocio.includes(term)
-    );
+    let list = this.socios();
+    if (term) {
+      list = list.filter(s =>
+        s.nombre.toLowerCase().includes(term) ||
+        s.apellidos.toLowerCase().includes(term) ||
+        s.email.toLowerCase().includes(term) ||
+        s.numeroSocio.includes(term)
+      );
+    }
+    return [...list].sort((a, b) => {
+      if (a.favorito === b.favorito) return 0;
+      return a.favorito ? -1 : 1;
+    });
   });
 
   async toggleActivo(id: string): Promise<void> {
@@ -63,6 +69,10 @@ export class ListaSociosComponent {
 
   goToCreate(): void {
     this.router.navigate(['/admin/socios/nuevo']);
+  }
+
+  goToTemporadas(): void {
+    this.router.navigate(['/admin/temporadas']);
   }
 
   goToEdit(id: string): void {
@@ -89,6 +99,12 @@ export class ListaSociosComponent {
     event.stopPropagation();
     if (socio.cuotaId === undefined) return;
     await this.cuotaService.toggleCuota(socio.cuotaId, !socio.cuotaPagada);
+    this.refresh$.next();
+  }
+
+  async toggleFavorito(socio: User, event: Event): Promise<void> {
+    event.stopPropagation();
+    await this.userService.toggleFavorito(socio.id);
     this.refresh$.next();
   }
 }

@@ -11,7 +11,12 @@
     />
   </div>
 
-  <h3 class="section-title">Socios ({{ filteredSocios().length }})</h3>
+  <div class="lista-socios__header">
+    <h3 class="section-title">Socios ({{ filteredSocios().length }})</h3>
+    <button (click)="goToTemporadas()" class="lista-socios__temporadas-btn">
+      <i class="bi bi-calendar2-check"></i> Temporadas
+    </button>
+  </div>
 
   @for (socio of filteredSocios(); track socio.id) {
     <div class="card socio-item" [class.socio-item--expanded]="expandedId() === socio.id">
@@ -35,6 +40,13 @@
             ></span>
           </button>
         }
+        <button
+          (click)="toggleFavorito(socio, $event)"
+          class="socio-item__favorito-btn"
+          [title]="socio.favorito ? 'Quitar de favoritos' : 'Marcar como favorito'"
+        >
+          <i class="bi" [class.bi-star-fill]="socio.favorito" [class.bi-star]="!socio.favorito"></i>
+        </button>
         <div class="socio-item__actions">
           <button (click)="toggleExpanded(socio.id)" class="socio-item__btn-info" [class.socio-item__btn-info--active]="expandedId() === socio.id">
             <i class="bi bi-info-circle-fill socio-item__btn-icon"></i>
