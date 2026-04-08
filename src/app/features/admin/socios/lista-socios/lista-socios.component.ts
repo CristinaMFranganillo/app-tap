@@ -1,7 +1,7 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { TitleCasePipe, DatePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { Subject, switchMap, startWith } from 'rxjs';
 import { UserService } from '../user.service';
 import { CuotaService } from '../cuota.service';
@@ -14,7 +14,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-lista-socios',
   standalone: true,
-  imports: [FormsModule, TitleCasePipe, DatePipe, AvatarComponent, ConfirmDialogComponent],
+  imports: [FormsModule, TitleCasePipe, AvatarComponent, ConfirmDialogComponent],
   templateUrl: './lista-socios.component.html',
   styleUrl: './lista-socios.component.scss',
 })

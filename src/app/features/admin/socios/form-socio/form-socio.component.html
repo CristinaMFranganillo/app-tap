@@ -28,19 +28,17 @@
         }
       </div>
 
-      @if (!isEdit) {
-        <div>
-          <label class="form-label">Email <span class="form-required">*</span></label>
-          <input formControlName="email" type="email" placeholder="email@ejemplo.es" class="form-input-surface" />
-          @if (form.get('email')?.touched) {
-            @if (form.get('email')?.hasError('required')) {
-              <p class="form-error">El email es obligatorio</p>
-            } @else if (form.get('email')?.hasError('email')) {
-              <p class="form-error">El email no es válido</p>
-            }
+      <div>
+        <label class="form-label">Email <span class="form-required">*</span></label>
+        <input formControlName="email" type="email" placeholder="email@ejemplo.es" class="form-input-surface" />
+        @if (form.get('email')?.touched) {
+          @if (form.get('email')?.hasError('required')) {
+            <p class="form-error">El email es obligatorio</p>
+          } @else if (form.get('email')?.hasError('email')) {
+            <p class="form-error">El email no es válido</p>
           }
-        </div>
-      }
+        }
+      </div>
 
       <div>
         <label class="form-label">Rol <span class="form-required">*</span></label>

@@ -19,7 +19,9 @@
         <app-avatar [nombre]="socio.nombre" [apellidos]="socio.apellidos" [avatarUrl]="socio.avatarUrl" [size]="34" />
         <div class="socio-item__info">
           <p class="socio-item__nombre">{{ socio.nombre }} {{ socio.apellidos }}</p>
-          <p class="socio-item__meta">{{ socio.email }} · {{ socio.rol | titlecase }}</p>
+          @if (!socio.activo) {
+            <p class="socio-item__meta socio-item__meta--inactive">Inactivo</p>
+          }
         </div>
         @if (socio.cuotaId !== undefined) {
           <button
@@ -34,7 +36,6 @@
           </button>
         }
         <div class="socio-item__actions">
-          <span class="socio-item__numero">#{{ socio.numeroSocio }}</span>
           <button (click)="toggleExpanded(socio.id)" class="socio-item__btn-info" [class.socio-item__btn-info--active]="expandedId() === socio.id">
             <i class="bi bi-info-circle-fill socio-item__btn-icon"></i>
           </button>
@@ -50,6 +51,18 @@
       @if (expandedId() === socio.id) {
         <div class="socio-item__details">
           <div class="socio-item__detail-row">
+            <span class="socio-item__detail-label">Nº socio</span>
+            <span class="socio-item__detail-value">#{{ socio.numeroSocio }}</span>
+          </div>
+          <div class="socio-item__detail-row">
+            <span class="socio-item__detail-label">Email</span>
+            <span class="socio-item__detail-value socio-item__detail-value--wrap">{{ socio.email || '—' }}</span>
+          </div>
+          <div class="socio-item__detail-row">
+            <span class="socio-item__detail-label">Rol</span>
+            <span class="socio-item__detail-value">{{ socio.rol | titlecase }}</span>
+          </div>
+          <div class="socio-item__detail-row">
             <span class="socio-item__detail-label">DNI</span>
             <span class="socio-item__detail-value">{{ socio.dni || '—' }}</span>
           </div>
@@ -59,11 +72,11 @@
           </div>
           <div class="socio-item__detail-row">
             <span class="socio-item__detail-label">Dirección</span>
-            <span class="socio-item__detail-value">{{ socio.direccion || '—' }}</span>
+            <span class="socio-item__detail-value socio-item__detail-value--wrap">{{ socio.direccion || '—' }}</span>
           </div>
           <div class="socio-item__detail-row">
-            <span class="socio-item__detail-label">Alta</span>
-            <span class="socio-item__detail-value">{{ socio.fechaAlta | date:'dd/MM/yyyy' }}</span>
+            <span class="socio-item__detail-label">Localidad</span>
+            <span class="socio-item__detail-value socio-item__detail-value--wrap">{{ socio.localidad || '—' }}</span>
           </div>
           @if (cuotasHistorial()[socio.id] && cuotasHistorial()[socio.id].length) {
             <div class="socio-item__detail-row socio-item__detail-row--header">

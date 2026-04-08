@@ -8,7 +8,8 @@ describe('authGuard', () => {
   let router: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    authService = jasmine.createSpyObj('AuthService', ['isAuthenticated']);
+    authService = jasmine.createSpyObj('AuthService', ['isAuthenticated', 'whenSessionReady']);
+    authService.whenSessionReady.and.returnValue(Promise.resolve());
     router = jasmine.createSpyObj('Router', ['createUrlTree']);
     router.createUrlTree.and.returnValue({} as any);
 
@@ -20,17 +21,18 @@ describe('authGuard', () => {
     });
   });
 
-  it('returns true when authenticated', () => {
+  it('returns true when authenticated', async () => {
     authService.isAuthenticated.and.returnValue(true);
-    const result = TestBed.runInInjectionContext(() =>
+    const result = await TestBed.runInInjectionContext(() =>
       authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot)
     );
     expect(result).toBeTrue();
+    expect(authService.whenSessionReady).toHaveBeenCalled();
   });
 
-  it('redirects to /login when not authenticated', () => {
+  it('redirects to /login when not authenticated', async () => {
     authService.isAuthenticated.and.returnValue(false);
-    TestBed.runInInjectionContext(() =>
+    await TestBed.runInInjectionContext(() =>
       authGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot)
     );
     expect(router.createUrlTree).toHaveBeenCalledWith(['/login']);

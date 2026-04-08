@@ -3,9 +3,10 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { UserRole } from '../models/user.model';
 
-export const roleGuard: CanActivateFn = (route) => {
+export const roleGuard: CanActivateFn = async (route) => {
   const auth = inject(AuthService);
   const router = inject(Router);
+  await auth.whenSessionReady();
   const roles: UserRole[] = route.data?.['roles'] ?? [];
   return auth.hasRole(roles) ? true : router.createUrlTree(['/']);
 };

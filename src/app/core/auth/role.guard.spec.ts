@@ -8,7 +8,8 @@ describe('roleGuard', () => {
   let router: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    authService = jasmine.createSpyObj('AuthService', ['hasRole']);
+    authService = jasmine.createSpyObj('AuthService', ['hasRole', 'whenSessionReady']);
+    authService.whenSessionReady.and.returnValue(Promise.resolve());
     router = jasmine.createSpyObj('Router', ['createUrlTree']);
     router.createUrlTree.and.returnValue({} as any);
 
@@ -20,19 +21,19 @@ describe('roleGuard', () => {
     });
   });
 
-  it('returns true when user has required role', () => {
+  it('returns true when user has required role', async () => {
     authService.hasRole.and.returnValue(true);
     const route = { data: { roles: ['admin'] } } as any as ActivatedRouteSnapshot;
-    const result = TestBed.runInInjectionContext(() =>
+    const result = await TestBed.runInInjectionContext(() =>
       roleGuard(route, {} as RouterStateSnapshot)
     );
     expect(result).toBeTrue();
   });
 
-  it('redirects to / when user lacks required role', () => {
+  it('redirects to / when user lacks required role', async () => {
     authService.hasRole.and.returnValue(false);
     const route = { data: { roles: ['admin'] } } as any as ActivatedRouteSnapshot;
-    TestBed.runInInjectionContext(() =>
+    await TestBed.runInInjectionContext(() =>
       roleGuard(route, {} as RouterStateSnapshot)
     );
     expect(router.createUrlTree).toHaveBeenCalledWith(['/']);

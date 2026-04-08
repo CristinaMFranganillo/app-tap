@@ -9,22 +9,32 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   readonly currentUser$ = this.userSubject.asObservable();
 
-  constructor() {
-    // Restaurar sesión al iniciar la app
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        this.loadProfile(data.session.user.id);
-      }
-    });
+  /** Se resuelve tras leer la sesión en almacenamiento y cargar perfil (si hay sesión). */
+  private readonly sessionReady: Promise<void>;
 
-    // Escuchar cambios de sesión (login/logout)
-    supabase.auth.onAuthStateChange((event, session) => {
+  constructor() {
+    supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
-        this.loadProfile(session.user.id);
+        void this.loadProfile(session.user.id);
       } else {
         this.userSubject.next(null);
       }
     });
+
+    this.sessionReady = (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        await this.loadProfile(data.session.user.id);
+      }
+    })();
+  }
+
+  /**
+   * Esperar antes de guards/navegación: sin esto, al refrescar, `isAuthenticated()` es false
+   * hasta que termine getSession/loadProfile y se redirige por error al login.
+   */
+  whenSessionReady(): Promise<void> {
+    return this.sessionReady;
   }
 
   async reloadProfile(): Promise<void> {

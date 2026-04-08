@@ -42,7 +42,6 @@ export class FormSocioComponent implements OnInit {
         this.isEdit = true;
         this.editId = id;
         this.form.patchValue(user);
-        this.form.get('email')?.disable();
       }
     }
   }
@@ -58,6 +57,7 @@ export class FormSocioComponent implements OnInit {
         await this.userService.update(this.editId, {
           nombre: val.nombre!,
           apellidos: val.apellidos!,
+          email: val.email!,
           rol: val.rol as UserRole,
           numeroSocio: val.numeroSocio!,
           dni: val.dni || undefined,
