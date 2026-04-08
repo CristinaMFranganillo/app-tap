@@ -1,0 +1,36 @@
+<div class="entrena-detalle">
+
+  <div class="page-header">
+    <button (click)="goBack()" class="entrena-detalle__back-btn">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <h2 class="entrena-detalle__title">
+      {{ fecha | date:'d MMM yyyy' : '' : 'es' }}
+    </h2>
+  </div>
+
+  <div class="card entrena-detalle__card">
+
+    <div class="entrena-detalle__resultado"
+      [class.entrena-detalle__resultado--bueno]="platosRotos >= 20"
+      [class.entrena-detalle__resultado--malo]="platosRotos < 15">
+      {{ platosRotos }}/25
+    </div>
+    <p class="entrena-detalle__label">platos rotos</p>
+
+    <div class="entrena-detalle__fallos-titulo">
+      @if (fallos().length === 0) {
+        <p class="entrena-detalle__sin-fallos">Sin fallos registrados</p>
+      } @else {
+        <p class="entrena-detalle__fallos-label">Platos fallados</p>
+        <div class="entrena-detalle__pills">
+          @for (n of fallos(); track n) {
+            <span class="fallo-pill">{{ n }}</span>
+          }
+        </div>
+      }
+    </div>
+
+  </div>
+
+</div>

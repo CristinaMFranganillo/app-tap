@@ -1,0 +1,45 @@
+.entrena-detalle {
+  @apply p-3 flex flex-col gap-3;
+
+  &__back-btn { @apply text-gray-400; }
+
+  &__title { @apply text-[18px] font-extrabold text-secondary; }
+
+  &__card {
+    @apply flex flex-col items-center gap-1 py-6;
+  }
+
+  &__resultado {
+    @apply text-[48px] font-black text-secondary leading-none;
+
+    &--bueno { @apply text-success; }
+    &--malo  { @apply text-danger; }
+  }
+
+  &__label {
+    @apply text-[13px] font-medium text-neutral-400 mb-4;
+  }
+
+  &__fallos-titulo {
+    @apply w-full px-2 flex flex-col items-center gap-3;
+  }
+
+  &__sin-fallos {
+    @apply text-[13px] text-neutral-400 italic;
+  }
+
+  &__fallos-label {
+    @apply text-[12px] font-bold text-neutral-400 uppercase tracking-wide;
+  }
+
+  &__pills {
+    @apply flex flex-wrap justify-center gap-2;
+  }
+}
+
+.fallo-pill {
+  @apply inline-flex items-center justify-center
+         w-7 h-7 rounded-full
+         bg-red-50 text-danger
+         text-[13px] font-bold leading-none flex-shrink-0;
+}
