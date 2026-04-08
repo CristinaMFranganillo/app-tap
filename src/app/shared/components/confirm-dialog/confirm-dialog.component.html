@@ -5,8 +5,8 @@
 <div class="cd-sheet" role="alertdialog" aria-modal="true" [attr.aria-label]="titulo()">
 
   <!-- Icono -->
-  <div class="cd-icon-wrap">
-    <i class="bi bi-trash3-fill cd-icon"></i>
+  <div class="cd-icon-wrap" [style.background]="colorIconoFondo()">
+    <i class="bi cd-icon" [ngClass]="icono()" [style.color]="colorIcono()"></i>
   </div>
 
   <!-- Texto -->
@@ -16,7 +16,7 @@
   <!-- Acciones -->
   <div class="cd-actions">
     <button class="cd-btn cd-btn--cancel" (click)="cancelado.emit()">Cancelar</button>
-    <button class="cd-btn cd-btn--confirm" (click)="confirmado.emit()">{{ labelConfirmar() }}</button>
+    <button class="cd-btn cd-btn--confirm" [style.background]="colorConfirmar()" (click)="confirmado.emit()">{{ labelConfirmar() }}</button>
   </div>
 
 </div>
