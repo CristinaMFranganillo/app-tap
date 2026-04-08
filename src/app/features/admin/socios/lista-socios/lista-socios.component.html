@@ -30,7 +30,7 @@
         </div>
         @if (socio.cuotaId !== undefined) {
           <button
-            (click)="toggleCuota(socio, $event)"
+            (click)="confirmarCuota(socio, $event)"
             class="socio-item__cuota-btn"
             [title]="socio.cuotaPagada ? 'Cuota pagada — click para desmarcar' : 'Cuota pendiente — click para marcar'"
           >
@@ -125,5 +125,21 @@
     labelConfirmar="Eliminar"
     (confirmado)="eliminar()"
     (cancelado)="cancelarEliminar()"
+  />
+}
+
+@if (pendingCuotaSocio(); as socio) {
+  <app-confirm-dialog
+    [titulo]="socio.cuotaPagada ? 'Desmarcar cuota' : 'Confirmar pago'"
+    [mensaje]="socio.cuotaPagada
+      ? '¿Desmarcar la cuota de ' + socio.nombre + ' ' + socio.apellidos + '?'
+      : '¿Confirmar el pago de cuota de ' + socio.nombre + ' ' + socio.apellidos + '?'"
+    [labelConfirmar]="socio.cuotaPagada ? 'Desmarcar' : 'Confirmar pago'"
+    [icono]="socio.cuotaPagada ? 'bi-x-circle-fill' : 'bi-check-circle-fill'"
+    [colorIconoFondo]="socio.cuotaPagada ? '#F3F4F6' : '#D1FAE5'"
+    [colorIcono]="socio.cuotaPagada ? '#6B7280' : '#059669'"
+    [colorConfirmar]="socio.cuotaPagada ? '#6B7280' : '#059669'"
+    (confirmado)="ejecutarToggleCuota()"
+    (cancelado)="cancelarCuota()"
   />
 }
