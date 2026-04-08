@@ -30,6 +30,10 @@
       </div>
     }
 
+    @if (errorEliminar()) {
+      <p class="admin-scores__picker-error">{{ errorEliminar() }}</p>
+    }
+
     @if (entrenamientos().length === 0) {
       <div class="admin-scores__empty">
         <i class="bi bi-bullseye admin-scores__empty-icon"></i>
@@ -60,6 +64,9 @@
               <button (click)="editarEntrenamiento(e.fecha)" class="entrena-tabla__btn" title="Editar">
                 <i class="bi bi-pencil-square"></i>
               </button>
+              <button (click)="confirmarEliminarEntrenamiento(e.fecha)" class="entrena-tabla__btn entrena-tabla__btn--danger" title="Eliminar" [disabled]="eliminando()">
+                <i class="bi bi-trash"></i>
+              </button>
             </span>
           </div>
         }
@@ -74,3 +81,13 @@
   ─────────────────────────────────────────────────────────────────────── -->
 
 </div>
+
+@if (pendingDeleteFecha()) {
+  <app-confirm-dialog
+    titulo="Eliminar entrenamiento"
+    [mensaje]="'¿Seguro que quieres eliminar el entrenamiento del día ' + (pendingDeleteFecha() | date:'d MMM yyyy' : '' : 'es') + '? Se borrarán todas las escuadras y resultados. Esta acción no se puede deshacer.'"
+    labelConfirmar="Eliminar"
+    (confirmado)="eliminarEntrenamiento()"
+    (cancelado)="cancelarEliminarEntrenamiento()"
+  />
+}

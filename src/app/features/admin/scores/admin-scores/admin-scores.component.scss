@@ -121,6 +121,10 @@
     @apply bg-transparent border-0 p-1 cursor-pointer
            text-neutral-400 text-[18px] leading-none
            active:text-secondary transition-colors;
+
+    &--danger {
+      @apply text-danger active:text-red-700;
+    }
   }
 }
 
