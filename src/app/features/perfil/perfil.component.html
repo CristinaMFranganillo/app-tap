@@ -30,100 +30,149 @@
     </div>
   }
 
-  <!-- ── Sección entrenamientos ─────────────────────────────── -->
-  <div class="perfil-entrena">
+  <!-- ── Sección según rol ──────────────────────────────────── -->
 
-    <!-- Cabecera con selector de año -->
-    <div class="perfil-entrena__header">
-      <h3 class="page-title">Mis Entrenamientos</h3>
-      <select
-        class="perfil-entrena__anio-select"
-        [value]="anioSeleccionado()"
-        (change)="anioSeleccionado.set(+$any($event.target).value)"
-      >
-        @for (a of anios; track a) {
-          <option [value]="a">{{ a }}</option>
-        }
-      </select>
-    </div>
+  @if (esAdmin()) {
 
-    @if (totalEntrenamientos() === 0) {
-      <app-empty-state icon="bi-bullseye" mensaje="Sin entrenamientos este año" />
-    } @else {
+    <!-- ADMIN: Resumen del club -->
+    <div class="perfil-club">
 
-      <!-- Stats entrenamientos -->
-      <div class="perfil-stats perfil-stats--entrena">
+      <h3 class="page-title perfil-club__titulo">Resumen del club</h3>
+
+      <!-- 3 stat cards -->
+      <div class="perfil-stats">
         <div class="perfil-stat perfil-stat--border">
-          <p class="perfil-stat__value">{{ totalEntrenamientos() }}</p>
-          <p class="perfil-stat__label">Sesiones</p>
+          <p class="perfil-stat__value">{{ totalActivos() }}</p>
+          <p class="perfil-stat__label">Socios activos</p>
         </div>
         <div class="perfil-stat perfil-stat--border">
-          <p class="perfil-stat__value">{{ mediaEntrenamientos() }}</p>
-          <p class="perfil-stat__label">Media</p>
+          @if (cuotaPct() !== null) {
+            <p class="perfil-stat__value">{{ cuotaPct() }}%</p>
+          } @else {
+            <p class="perfil-stat__value">—</p>
+          }
+          <p class="perfil-stat__label">Cuota pagada</p>
         </div>
         <div class="perfil-stat">
-          <p class="perfil-stat__value">{{ mejorResultado() }}</p>
-          <p class="perfil-stat__label">Mejor</p>
+          <p class="perfil-stat__value">{{ entrenamientosMes() }}</p>
+          <p class="perfil-stat__label">Este mes</p>
         </div>
       </div>
 
-      <!-- Posición en el club -->
-      @if (posicionClub(); as pos) {
-        <div class="perfil-posicion card">
-          <div class="perfil-posicion__puesto">
-            <span class="perfil-posicion__num">{{ pos.posicion }}º</span>
-            <span class="perfil-posicion__de">de {{ pos.total }}</span>
-          </div>
-          <div class="perfil-posicion__metas">
-            <p class="perfil-posicion__linea">Tu media: <strong>{{ mediaEntrenamientos() }}</strong></p>
-            <p class="perfil-posicion__linea">Media club: <strong>{{ mediaClub() }}</strong></p>
-          </div>
+      <!-- Últimos entrenamientos -->
+      <h3 class="page-title perfil-club__titulo perfil-club__titulo--mt">Últimos entrenamientos</h3>
+
+      @if (ultimos5().length === 0) {
+        <app-empty-state icon="bi-bullseye" mensaje="Sin entrenamientos registrados" />
+      } @else {
+        <div class="perfil-club__entrenamientos">
+          @for (e of ultimos5(); track e.id) {
+            <div class="perfil-club__entrena-fila card">
+              <span class="perfil-club__entrena-fecha">
+                <i class="bi bi-calendar3"></i>
+                {{ e.fecha | date:'d MMM yyyy' : '' : 'es' }}
+              </span>
+              <span class="perfil-club__entrena-badge">
+                {{ e.numTiradores ?? 0 }} tirador{{ (e.numTiradores ?? 0) !== 1 ? 'es' : '' }}
+              </span>
+            </div>
+          }
         </div>
       }
 
-      <!-- Gráfico de evolución SVG -->
-      @if (puntosSvg().dots.length >= 2) {
-        <div class="perfil-grafico card">
-          <p class="perfil-grafico__titulo">Evolución {{ anioSeleccionado() }}</p>
-          <svg
-            class="perfil-grafico__svg"
-            viewBox="0 0 300 80"
-            preserveAspectRatio="none"
-          >
-            <line x1="8" y1="8" x2="292" y2="8" stroke="#E5E7EB" stroke-width="0.5"/>
-            <line x1="8" y1="40" x2="292" y2="40" stroke="#E5E7EB" stroke-width="0.5"/>
-            <line x1="8" y1="72" x2="292" y2="72" stroke="#E5E7EB" stroke-width="0.5"/>
+      <!-- Accesos rápidos -->
+      <div class="perfil-club__accesos">
+        <button (click)="irSocios()" class="btn-primary perfil-club__acceso-btn">
+          <i class="bi bi-people-fill"></i> Gestionar Socios
+        </button>
+        <button (click)="irTemporadas()" class="perfil-club__acceso-btn perfil-club__acceso-btn--sec">
+          <i class="bi bi-calendar-check"></i> Temporadas
+        </button>
+      </div>
 
-            <polyline
-              [attr.points]="puntosSvg().points"
-              fill="none"
-              stroke="#FFAE00"
-              stroke-width="2"
-              stroke-linejoin="round"
-              stroke-linecap="round"
-            />
+    </div>
 
-            @for (d of puntosSvg().dots; track $index) {
-              <circle
-                [attr.cx]="d.x"
-                [attr.cy]="d.y"
-                r="3"
-                fill="#FFAE00"
-                stroke="white"
-                stroke-width="1.5"
+  } @else {
+
+    <!-- SOCIO: Mis entrenamientos -->
+    <div class="perfil-entrena">
+
+      <div class="perfil-entrena__header">
+        <h3 class="page-title">Mis Entrenamientos</h3>
+        <select
+          class="perfil-entrena__anio-select"
+          [value]="anioSeleccionado()"
+          (change)="anioSeleccionado.set(+$any($event.target).value)"
+        >
+          @for (a of anios; track a) {
+            <option [value]="a">{{ a }}</option>
+          }
+        </select>
+      </div>
+
+      @if (totalEntrenamientos() === 0) {
+        <app-empty-state icon="bi-bullseye" mensaje="Sin entrenamientos este año" />
+      } @else {
+
+        <div class="perfil-stats perfil-stats--entrena">
+          <div class="perfil-stat perfil-stat--border">
+            <p class="perfil-stat__value">{{ totalEntrenamientos() }}</p>
+            <p class="perfil-stat__label">Sesiones</p>
+          </div>
+          <div class="perfil-stat perfil-stat--border">
+            <p class="perfil-stat__value">{{ mediaEntrenamientos() }}</p>
+            <p class="perfil-stat__label">Media</p>
+          </div>
+          <div class="perfil-stat">
+            <p class="perfil-stat__value">{{ mejorResultado() }}</p>
+            <p class="perfil-stat__label">Mejor</p>
+          </div>
+        </div>
+
+        @if (posicionClub(); as pos) {
+          <div class="perfil-posicion card">
+            <div class="perfil-posicion__puesto">
+              <span class="perfil-posicion__num">{{ pos.posicion }}º</span>
+              <span class="perfil-posicion__de">de {{ pos.total }}</span>
+            </div>
+            <div class="perfil-posicion__metas">
+              <p class="perfil-posicion__linea">Tu media: <strong>{{ mediaEntrenamientos() }}</strong></p>
+              <p class="perfil-posicion__linea">Media club: <strong>{{ mediaClub() }}</strong></p>
+            </div>
+          </div>
+        }
+
+        @if (puntosSvg().dots.length >= 2) {
+          <div class="perfil-grafico card">
+            <p class="perfil-grafico__titulo">Evolución {{ anioSeleccionado() }}</p>
+            <svg class="perfil-grafico__svg" viewBox="0 0 300 80" preserveAspectRatio="none">
+              <line x1="8" y1="8" x2="292" y2="8" stroke="#E5E7EB" stroke-width="0.5"/>
+              <line x1="8" y1="40" x2="292" y2="40" stroke="#E5E7EB" stroke-width="0.5"/>
+              <line x1="8" y1="72" x2="292" y2="72" stroke="#E5E7EB" stroke-width="0.5"/>
+              <polyline
+                [attr.points]="puntosSvg().points"
+                fill="none"
+                stroke="#FFAE00"
+                stroke-width="2"
+                stroke-linejoin="round"
+                stroke-linecap="round"
               />
-            }
-          </svg>
-          <div class="perfil-grafico__leyenda">
-            <span>0</span>
-            <span>12</span>
-            <span>25</span>
+              @for (d of puntosSvg().dots; track $index) {
+                <circle [attr.cx]="d.x" [attr.cy]="d.y" r="3" fill="#FFAE00" stroke="white" stroke-width="1.5"/>
+              }
+            </svg>
+            <div class="perfil-grafico__leyenda">
+              <span>0</span>
+              <span>12</span>
+              <span>25</span>
+            </div>
           </div>
-        </div>
-      }
+        }
 
-    }
-  </div>
+      }
+    </div>
+
+  }
 
   <!-- Logout -->
   <div class="perfil-logout">
