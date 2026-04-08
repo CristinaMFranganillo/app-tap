@@ -23,7 +23,7 @@
       <div class="socio-item__row">
         <app-avatar [nombre]="socio.nombre" [apellidos]="socio.apellidos" [avatarUrl]="socio.avatarUrl" [size]="34" />
         <div class="socio-item__info">
-          <p class="socio-item__nombre">{{ socio.nombre }} {{ socio.apellidos }}</p>
+          <p class="socio-item__nombre">{{ socio.apellidos }}, {{ socio.nombre }}</p>
           @if (!socio.activo) {
             <p class="socio-item__meta socio-item__meta--inactive">Inactivo</p>
           }
