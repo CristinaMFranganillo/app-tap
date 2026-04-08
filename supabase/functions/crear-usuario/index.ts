@@ -78,6 +78,8 @@ serve(async (req: Request) => {
     const password = email.split('@')[0]
 
     // 1. Crear usuario en Auth
+    console.log('Creando usuario:', { email, nombre, apellidos, rol, numeroSocioInt })
+
     const { data: authData, error: createError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
@@ -85,6 +87,7 @@ serve(async (req: Request) => {
     })
 
     if (createError || !authData.user) {
+      console.error('Error creando en auth:', createError?.message)
       return new Response(
         JSON.stringify({ error: `Error creando usuario: ${createError?.message}` }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -92,6 +95,7 @@ serve(async (req: Request) => {
     }
 
     // 2. Actualizar el profile creado por el trigger
+    console.log('Actualizando profile para:', authData.user.id)
     const { error: profileError } = await supabaseAdmin.from('profiles').update({
       nombre,
       apellidos,
@@ -107,8 +111,9 @@ serve(async (req: Request) => {
     }).eq('id', authData.user.id)
 
     if (profileError) {
+      console.error('Error actualizando profile:', profileError.message, profileError.details, profileError.hint)
       return new Response(
-        JSON.stringify({ error: `Error actualizando perfil: ${profileError.message}` }),
+        JSON.stringify({ error: `Error actualizando perfil: ${profileError.message} | ${profileError.hint ?? ''} | ${profileError.details ?? ''}` }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -139,6 +144,7 @@ serve(async (req: Request) => {
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   } catch (err) {
+    console.error('Error interno catch:', err)
     return new Response(
       JSON.stringify({ error: `Error interno: ${err}` }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

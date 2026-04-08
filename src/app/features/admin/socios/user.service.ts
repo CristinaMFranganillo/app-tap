@@ -128,8 +128,12 @@ export class UserService {
     direccion?: string;
     localidad?: string;
   }): Promise<void> {
-    const { error } = await supabase.functions.invoke('crear-usuario', { body: data });
-    if (error) throw new Error('Error al crear el usuario.');
+    const { data: result, error } = await supabase.functions.invoke('crear-usuario', { body: data });
+    if (error) {
+      const msg = result?.error ?? error.message ?? 'Error al crear el usuario.';
+      throw new Error(msg);
+    }
+    if (result?.error) throw new Error(result.error);
   }
 
   async eliminar(id: string): Promise<void> {
