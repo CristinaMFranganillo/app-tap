@@ -10,6 +10,9 @@
 
   @if (escuadrasConResultados().length === 0) {
     <app-empty-state icon="bi-people" mensaje="Sin escuadras todavía" />
+    <button (click)="nuevaEscuadra()" class="detalle-entrenamiento__crear-escuadra-btn">
+      <i class="bi bi-plus-circle"></i> Crear Escuadra
+    </button>
   } @else {
     @for (item of escuadrasConResultados(); track item.escuadra.id) {
       <div class="escuadra-card card">
