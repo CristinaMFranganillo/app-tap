@@ -1,0 +1,16 @@
+.scores-shell {
+  @apply flex flex-col h-full;
+
+  &__tabs {
+    @apply flex border-b border-neutral-100 bg-white px-3;
+  }
+
+  &__tab {
+    @apply flex-1 text-center py-3 text-[13px] font-semibold text-neutral-400
+           border-b-2 border-transparent transition-colors;
+
+    &--active {
+      @apply text-secondary border-secondary;
+    }
+  }
+}

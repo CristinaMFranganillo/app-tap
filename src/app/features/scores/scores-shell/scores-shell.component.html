@@ -1,0 +1,21 @@
+<div class="scores-shell">
+  <div class="scores-shell__tabs">
+    <a
+      routerLink="/scores"
+      routerLinkActive="scores-shell__tab--active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="scores-shell__tab"
+    >Ranking</a>
+    <a
+      routerLink="/scores/historial"
+      routerLinkActive="scores-shell__tab--active"
+      class="scores-shell__tab"
+    >Historial</a>
+    <a
+      routerLink="/scores/entrenamientos"
+      routerLinkActive="scores-shell__tab--active"
+      class="scores-shell__tab"
+    >Entrenamientos</a>
+  </div>
+  <router-outlet />
+</div>
