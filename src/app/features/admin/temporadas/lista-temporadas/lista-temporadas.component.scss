@@ -47,7 +47,7 @@
 }
 
 .modal-overlay {
-  @apply fixed inset-0 bg-black/40 z-50 flex items-end justify-center;
+  @apply fixed inset-0 bg-black/40 z-[60] flex items-end justify-center;
 }
 
 .modal-card {
