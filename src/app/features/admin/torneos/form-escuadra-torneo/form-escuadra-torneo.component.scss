@@ -1,0 +1,80 @@
+.form-escuadra-e {
+  @apply p-3 flex flex-col gap-1;
+
+  &__back-btn   { @apply text-neutral-400; }
+  &__back-icon  { @apply text-[15px]; }
+  &__title      { @apply text-[18px] font-extrabold text-secondary; }
+
+  &__section-label {
+    @apply text-xs font-semibold text-neutral-400 uppercase tracking-[1.5px] mt-2 mb-1;
+  }
+
+  &__puesto {
+    @apply mb-3;
+  }
+
+  // Cabecera del puesto: label + toggle en la misma fila
+  &__puesto-header {
+    @apply flex items-center justify-between mb-1;
+
+    .form-label { @apply mb-0; }
+  }
+
+  &__input-row {
+    @apply flex items-center gap-2;
+
+    .form-input-surface { @apply flex-1 min-w-0; }
+  }
+
+  // ── Tarifa inline ──────────────────────────────────────────────
+
+  &__tarifa {
+    @apply text-sm font-extrabold text-secondary flex-shrink-0;
+    &--ext { @apply text-warning-dark; }
+  }
+
+  // ── Resumen total ──────────────────────────────────────────────
+
+  &__total {
+    @apply mt-2 mb-1 rounded-card border border-neutral-200
+           bg-neutral-50 px-4 py-3 flex flex-col gap-2;
+  }
+
+  &__total-detalle { @apply flex flex-col gap-0.5; }
+
+  &__total-item {
+    @apply text-xs font-medium text-neutral-400;
+    &--ext { @apply text-warning-dark; }
+  }
+
+  &__total-suma {
+    @apply flex items-center justify-between;
+    span   { @apply text-sm font-semibold text-neutral-400; }
+    strong { @apply text-lg font-extrabold text-secondary; }
+  }
+
+  &__error   { @apply text-danger text-sm font-semibold mt-2; }
+  &__actions { @apply flex gap-2 mt-4; }
+}
+
+// ── Toggle socio / no socio ────────────────────────────────────
+
+.form-escuadra-e__tipo-tabs {
+  @apply flex gap-1;
+
+  button {
+    @apply px-2.5 py-1 rounded-badge
+           text-xs font-semibold border border-neutral-200
+           text-neutral-400 bg-white
+           transition-all duration-150 cursor-pointer;
+
+    &.active {
+      @apply border-secondary bg-secondary text-white;
+    }
+
+    // No socio activo: fondo ámbar suave
+    &:last-child.active {
+      @apply border-warning-dark bg-warning-light text-warning-dark;
+    }
+  }
+}

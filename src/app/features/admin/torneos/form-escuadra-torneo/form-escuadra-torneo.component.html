@@ -1,0 +1,98 @@
+<div class="form-escuadra-e">
+  <div class="page-header">
+    <button (click)="cancel()" class="form-escuadra-e__back-btn">
+      <i class="bi bi-chevron-left form-escuadra-e__back-icon"></i>
+    </button>
+    <h2 class="form-escuadra-e__title">Nueva escuadra</h2>
+  </div>
+
+  <p class="form-escuadra-e__section-label">Tiradores por puesto</p>
+
+  @for (puesto of puestos; track $index) {
+    <div class="form-escuadra-e__puesto">
+      <div class="form-escuadra-e__puesto-header">
+        <label class="form-label">Puesto {{ $index + 1 }}</label>
+
+        <!-- Toggle socio / no socio -->
+        <div class="form-escuadra-e__tipo-tabs">
+          <button type="button"
+            [class.active]="puesto.tipo === 'socio'"
+            (click)="onTipoChange($index, 'socio')">
+            Socio
+          </button>
+          <button type="button"
+            [class.active]="puesto.tipo === 'no_socio'"
+            (click)="onTipoChange($index, 'no_socio')">
+            No socio
+          </button>
+        </div>
+      </div>
+
+      <!-- Socio: desplegable -->
+      @if (puesto.tipo === 'socio') {
+        <div class="form-escuadra-e__input-row">
+          <select [(ngModel)]="puestos[$index].userId" class="form-input-surface">
+            <option value="">— Vacío —</option>
+            @for (s of sociosDisponibles($index); track s.id) {
+              <option [value]="s.id">
+                {{ s.apellidos }}, {{ s.nombre }} (#{{ s.numeroSocio }})
+              </option>
+            }
+          </select>
+          @if (puesto.userId) {
+            <span class="form-escuadra-e__tarifa">{{ tarifaSocio }}&euro;</span>
+          }
+        </div>
+      }
+
+      <!-- No socio: nombre opcional -->
+      @if (puesto.tipo === 'no_socio') {
+        <div class="form-escuadra-e__input-row">
+          <input
+            type="text"
+            [(ngModel)]="puestos[$index].nombreExterno"
+            placeholder="Nombre (opcional)"
+            class="form-input-surface" />
+          @if (puesto.nombreExterno?.trim()) {
+            <span class="form-escuadra-e__tarifa form-escuadra-e__tarifa--ext">{{ tarifaNoSocio }}&euro;</span>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Resumen total — solo si hay alguien asignado -->
+  @if (totalEscuadra > 0) {
+    <div class="form-escuadra-e__total">
+      <div class="form-escuadra-e__total-detalle">
+        @if (countSocios > 0) {
+          <span class="form-escuadra-e__total-item">
+            {{ countSocios }} socio{{ countSocios !== 1 ? 's' : '' }}
+            &times; {{ tarifaSocio }}&euro;
+          </span>
+        }
+        @if (countNoSocios > 0) {
+          <span class="form-escuadra-e__total-item form-escuadra-e__total-item--ext">
+            {{ countNoSocios }} no socio{{ countNoSocios !== 1 ? 's' : '' }}
+            &times; {{ tarifaNoSocio }}&euro;
+          </span>
+        }
+      </div>
+      <div class="form-escuadra-e__total-suma">
+        <span>Total</span>
+        <strong>{{ totalEscuadra }}&euro;</strong>
+      </div>
+    </div>
+  }
+
+  @if (error) {
+    <p class="form-escuadra-e__error">{{ error }}</p>
+  }
+
+  <div class="form-escuadra-e__actions">
+    <button (click)="cancel()" class="btn-secondary">Cancelar</button>
+    <button (click)="onSubmit()" [disabled]="loading" class="btn-primary">
+      {{ loading ? 'Guardando...' : 'Crear escuadra' }}
+    </button>
+  </div>
+</div>
