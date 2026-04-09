@@ -1,0 +1,150 @@
+<div class="detalle-torneo">
+  <div class="page-header">
+    <button (click)="goBack()" class="detalle-torneo__back-btn">
+      <i class="bi bi-chevron-left detalle-torneo__back-icon"></i>
+    </button>
+    <div class="detalle-torneo__header-info">
+      <h2 class="detalle-torneo__title">{{ torneo()?.nombre }}</h2>
+      <p class="detalle-torneo__fecha">{{ torneo()?.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
+    </div>
+  </div>
+
+  <!-- Ranking -->
+  @if (ranking().length > 0) {
+    <div class="ranking-card card">
+      <div class="ranking-card__header">
+        <i class="bi bi-trophy-fill ranking-card__icon"></i>
+        <span class="ranking-card__titulo">Ranking</span>
+      </div>
+      <div class="ranking-card__table">
+        @for (entry of ranking(); track entry.userId) {
+          <div class="ranking-fila" [class.ranking-fila--top3]="entry.posicion <= 3">
+            <span class="ranking-fila__pos">
+              @switch (entry.posicion) {
+                @case (1) { <span class="ranking-fila__medal">&#129351;</span> }
+                @case (2) { <span class="ranking-fila__medal">&#129352;</span> }
+                @case (3) { <span class="ranking-fila__medal">&#129353;</span> }
+                @default  { {{ entry.posicion }} }
+              }
+            </span>
+            <span class="ranking-fila__nombre">{{ entry.nombre }} {{ entry.apellidos }}</span>
+            <span class="ranking-fila__platos">{{ entry.platosRotos }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Resumen de caja del día -->
+  @if (totalCajaDia() > 0) {
+    <div class="caja-dia-banner" (click)="irCaja()">
+      <div class="caja-dia-banner__left">
+        <i class="bi bi-cash-coin caja-dia-banner__icon"></i>
+        <span class="caja-dia-banner__label">Caja del torneo</span>
+      </div>
+      <div class="caja-dia-banner__right">
+        <span class="caja-dia-banner__total">{{ totalCajaDia() | number:'1.2-2' }} &euro;</span>
+        <i class="bi bi-chevron-right caja-dia-banner__arrow"></i>
+      </div>
+    </div>
+  }
+
+  @if (escuadrasConResultados().length === 0) {
+    <app-empty-state icon="bi-people" mensaje="Sin escuadras todavía" />
+    <button (click)="nuevaEscuadra()" class="detalle-torneo__crear-escuadra-btn">
+      <i class="bi bi-plus-circle"></i> Crear Escuadra
+    </button>
+  } @else {
+    @for (item of escuadrasConResultados(); track item.escuadra.id; let idx = $index) {
+      <div class="escuadra-card card">
+
+        <!-- Cabecera (click para expandir/colapsar) -->
+        <div class="escuadra-card__header" (click)="toggleEscuadra(idx)">
+          <div class="escuadra-card__header-info">
+            <p class="escuadra-card__titulo">Escuadra {{ item.escuadra.numero }}</p>
+            @if (!item.cargando) {
+              <p class="escuadra-card__meta">
+                {{ item.filas.length }} tirador{{ item.filas.length !== 1 ? 'es' : '' }}
+                @if (item.filas.length > 0) {
+                  &nbsp;&middot;&nbsp; {{ item.total }}/{{ item.filas.length * 25 }} platos
+                }
+              </p>
+            }
+          </div>
+          <div class="escuadra-card__header-right">
+            @if (item.totalCaja > 0) {
+              <span class="escuadra-card__caja-badge">{{ item.totalCaja | number:'1.2-2' }} &euro;</span>
+            }
+            <i class="bi escuadra-card__chevron"
+               [class.bi-chevron-down]="!item.expandida"
+               [class.bi-chevron-up]="item.expandida"></i>
+          </div>
+        </div>
+
+        <!-- Acciones -->
+        @if (item.expandida) {
+          <div class="escuadra-card__acciones">
+            <button (click)="irResultados(item.escuadra.id)" class="escuadra-card__btn-accion">
+              <i class="bi bi-pencil-square"></i> Registrar resultados
+            </button>
+            <button (click)="pedirEliminar(item.escuadra.id)" class="escuadra-card__btn-eliminar">
+              <i class="bi bi-trash3"></i>
+            </button>
+          </div>
+        }
+
+        <!-- Resultados -->
+        @if (item.expandida) {
+          @if (item.cargando) {
+            <p class="escuadra-card__cargando">Cargando resultados...</p>
+          } @else if (item.filas.length === 0) {
+            <p class="escuadra-card__sin-resultados">Sin resultados registrados</p>
+          } @else {
+            <div class="escuadra-card__resultados">
+              @for (fila of item.filas; track fila.puesto) {
+                <div class="resultado-fila">
+                  <span class="resultado-fila__puesto">{{ fila.puesto }}</span>
+                  <div class="resultado-fila__info">
+                    <div class="resultado-fila__nombre-wrap">
+                      @if (fila.esNoSocio) {
+                        <span class="badge-no-socio-sm">NS</span>
+                      }
+                      <span class="resultado-fila__nombre">{{ fila.nombre }}</span>
+                    </div>
+                    @if (fila.fallos.length > 0) {
+                      <div class="resultado-fila__fallos">
+                        @for (n of fila.fallos; track n) {
+                          <span class="fallo-pill">{{ n }}</span>
+                        }
+                      </div>
+                    }
+                  </div>
+                  <span class="resultado-fila__rotos"
+                    [class.resultado-fila__rotos--bueno]="fila.platosRotos >= 20"
+                    [class.resultado-fila__rotos--malo]="fila.platosRotos < 15">
+                    {{ fila.platosRotos }}/25
+                  </span>
+                </div>
+              }
+            </div>
+          }
+        }
+
+      </div>
+    }
+  }
+
+  <button (click)="nuevaEscuadra()" class="fab">
+    <i class="bi bi-plus-lg"></i>
+  </button>
+</div>
+
+<!-- Diálogo de confirmación -->
+@if (mostrarConfirm()) {
+  <app-confirm-dialog
+    titulo="Eliminar escuadra"
+    mensaje="Se eliminarán los resultados, fallos y movimientos de caja asociados."
+    (confirmado)="confirmarEliminar()"
+    (cancelado)="cancelarEliminar()"
+  />
+}
