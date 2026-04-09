@@ -4,6 +4,7 @@
     <a
       routerLink="/scores/historial"
       routerLinkActive="scores-shell__tab--active"
+      [routerLinkActiveOptions]="{ exact: true }"
       class="scores-shell__tab"
     >Historial</a>
     <a
@@ -19,7 +20,6 @@
     <a
     routerLink="/scores"
     routerLinkActive="scores-shell__tab--active"
-    [routerLinkActiveOptions]="{ exact: true }"
     class="scores-shell__tab"
   >Ranking</a>
   </div>
