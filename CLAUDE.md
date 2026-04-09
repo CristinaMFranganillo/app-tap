@@ -1,6 +1,6 @@
-# CLAUDE.md — AppTap
+# CLAUDE.md
 
-Contexto del proyecto para Claude Code. Lee este archivo al inicio de cada sesión.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Descripción del proyecto
 
@@ -153,13 +153,18 @@ Todas las tablas tienen RLS activado. Helper: `get_my_rol()` devuelve el rol del
 
 ```bash
 npm start          # ng serve (dev en localhost:4200)
-npm run build      # build producción
+npm run build      # build producción → dist/app-tap/
+npm run watch      # build incremental en modo development
+npm test           # ejecutar todos los tests (Karma + Jasmine, Chrome)
 ```
+
+### Ejecutar un solo test
+No hay flag directo en Karma. Para ejecutar un test específico, cambiar `describe(` por `fdescribe(` o `it(` por `fit(` en el `.spec.ts` deseado y ejecutar `npm test`. **Revertir antes de commit.**
 
 ### Supabase Edge Functions (desde raíz del proyecto)
 ```bash
-supabase functions serve crear-usuario   # probar localmente
-supabase functions deploy crear-usuario  # desplegar
+supabase functions serve <nombre>   # probar localmente (crear-usuario, eliminar-usuario)
+supabase functions deploy <nombre>  # desplegar
 ```
 
 ---
@@ -187,3 +192,11 @@ supabase functions deploy crear-usuario  # desplegar
 - `first_login: true` indica que el socio debe cambiar contraseña en su primer acceso
 - Las cuotas se gestionan por temporada; `cuotaPagada` en el modelo User es calculado
 - Los planes en `docs/superpowers/plans/` documentan decisiones técnicas tomadas
+
+## Patrones críticos
+
+### AuthService y NavigatorLock de Supabase v2
+`AuthService.loadProfile()` usa `fetch` nativo con el access token en lugar del cliente Supabase SDK. Esto es intencional: `onAuthStateChange` de supabase-js v2 retiene un `NavigatorLock`, y llamar al SDK dentro del callback provoca `TimeoutError`. Mantener este patrón al modificar la carga de perfil.
+
+### Tests (Karma + Jasmine)
+Los spec files están en `src/app/` junto a sus archivos fuente. Tests actuales cubren: auth guards, auth service, pipes. El builder de tests es `@angular-devkit/build-angular:karma` (configurado en `angular.json`).

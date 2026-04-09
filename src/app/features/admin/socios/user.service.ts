@@ -63,13 +63,33 @@ export class UserService {
           query = query.eq('cuotas.temporada_id', season.id);
         }
 
-        const { data } = await query;
-        return data ?? [];
+        const [{ data }, idsConHistorial] = await Promise.all([
+          query,
+          this._getIdsConHistorial(),
+        ]);
+        return { rows: data ?? [], idsConHistorial };
       })()
     ).pipe(
-      map(data => data.map(row => toUser(row as Record<string, unknown>))),
+      map(({ rows, idsConHistorial }) =>
+        rows.map(row => {
+          const user = toUser(row as Record<string, unknown>);
+          user.tieneHistorial = idsConHistorial.has(user.id);
+          return user;
+        })
+      ),
       tap(users => this.cache.next(users))
     );
+  }
+
+  private async _getIdsConHistorial(): Promise<Set<string>> {
+    const [{ data: d1 }, { data: d2 }] = await Promise.all([
+      supabase.from('escuadra_tiradores').select('user_id'),
+      supabase.from('resultados_entrenamiento').select('user_id'),
+    ]);
+    const ids = new Set<string>();
+    (d1 ?? []).forEach((r: { user_id: string }) => ids.add(r.user_id));
+    (d2 ?? []).forEach((r: { user_id: string }) => ids.add(r.user_id));
+    return ids;
   }
 
   getById(id: string): User | undefined {

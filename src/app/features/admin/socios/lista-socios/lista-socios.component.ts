@@ -26,9 +26,12 @@ export class ListaSociosComponent {
   showFilters = signal(false);
   filterFavoritos = signal(false);
   filterCuota = signal<'todas' | 'pagada' | 'no-pagada'>('todas');
+  filterBaja = signal(false);
   sortAlfa = signal(false);
   expandedId = signal<string | null>(null);
   pendingDeleteId = signal<string | null>(null);
+  pendingBajaId = signal<string | null>(null);
+  pendingAltaId = signal<string | null>(null);
   pendingCuotaSocio = signal<User | null>(null);
   cuotasHistorial = signal<Record<string, Cuota[]>>({});
   private refresh$ = new Subject<void>();
@@ -71,8 +74,14 @@ export class ListaSociosComponent {
       list = list.filter(s => s.cuotaPagada === false);
     }
 
-    // Ordenación
+    // Filtro baja
+    if (this.filterBaja()) {
+      list = list.filter(s => !s.activo);
+    }
+
+    // Ordenación: inactivos siempre al final
     return [...list].sort((a, b) => {
+      if (a.activo !== b.activo) return a.activo ? -1 : 1;
       if (this.sortAlfa()) {
         return a.apellidos.localeCompare(b.apellidos, 'es');
       }
@@ -123,6 +132,30 @@ export class ListaSociosComponent {
 
   cancelarEliminar(): void {
     this.pendingDeleteId.set(null);
+  }
+
+  confirmarDarDeBaja(id: string): void {
+    this.pendingBajaId.set(id);
+  }
+
+  async ejecutarDarDeBaja(): Promise<void> {
+    const id = this.pendingBajaId();
+    if (!id) return;
+    this.pendingBajaId.set(null);
+    await this.userService.desactivarSocio(id);
+    this.refresh$.next();
+  }
+
+  confirmarDarDeAlta(id: string): void {
+    this.pendingAltaId.set(id);
+  }
+
+  async ejecutarDarDeAlta(): Promise<void> {
+    const id = this.pendingAltaId();
+    if (!id) return;
+    this.pendingAltaId.set(null);
+    await this.userService.update(id, { activo: true });
+    this.refresh$.next();
   }
 
   confirmarCuota(socio: User, event: Event): void {

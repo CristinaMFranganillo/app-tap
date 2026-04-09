@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -32,11 +32,13 @@ export class ListaTemporadasComponent {
   // Campos del formulario nueva temporada
   nuevoNombre = signal('');
   nuevaFechaInicio = signal('');
+  nuevaFechaFin = signal('');
 
   // Edición
   editandoTemporada = signal<Temporada | null>(null);
   editNombre = signal('');
   editFechaInicio = signal('');
+  editFechaFin = signal('');
   editSaving = signal(false);
   editError = signal('');
 
@@ -48,6 +50,13 @@ export class ListaTemporadasComponent {
   sociosPendientes = signal<{ id: string; nombre: string; apellidos: string }[]>([]);
   loadingPendientes = signal(false);
 
+  // Computed: la temporada del detalle es la última creada (primera del array ordenado desc)
+  esUltimaTemporada = computed(() => {
+    const detalle = this.temporadaDetalle();
+    const lista = this.temporadas();
+    return detalle != null && lista.length > 0 && lista[0].id === detalle.id;
+  });
+
   // Modal socios sin pagar al crear nueva temporada
   sociosSinPagarAnterior = signal<{ id: string; nombre: string; apellidos: string }[]>([]);
   mostrarModalSinPagar = signal(false);
@@ -58,6 +67,7 @@ export class ListaTemporadasComponent {
     const year = hoy.getMonth() >= 3 ? hoy.getFullYear() : hoy.getFullYear() - 1;
     this.nuevoNombre.set(`${year}-${year + 1}`);
     this.nuevaFechaInicio.set('');
+    this.nuevaFechaFin.set('');
     this.error.set('');
     this.mostrarFormulario.set(true);
   }
@@ -105,7 +115,8 @@ export class ListaTemporadasComponent {
     try {
       await this.cuotaService.crearTemporada(
         this.nuevoNombre(),
-        new Date(this.nuevaFechaInicio())
+        new Date(this.nuevaFechaInicio()),
+        this.nuevaFechaFin() ? new Date(this.nuevaFechaFin()) : undefined
       );
       this.mostrarFormulario.set(false);
       this.mostrarModalSinPagar.set(false);
@@ -140,6 +151,7 @@ export class ListaTemporadasComponent {
     this.editNombre.set(temporada.nombre);
     const yyyy = temporada.fechaInicio.toISOString().split('T')[0];
     this.editFechaInicio.set(yyyy);
+    this.editFechaFin.set(temporada.fechaFin ? temporada.fechaFin.toISOString().split('T')[0] : '');
     this.editError.set('');
   }
 
@@ -157,7 +169,12 @@ export class ListaTemporadasComponent {
     this.editSaving.set(true);
     this.editError.set('');
     try {
-      await this.cuotaService.editarTemporada(t.id, this.editNombre(), new Date(this.editFechaInicio()));
+      await this.cuotaService.editarTemporada(
+        t.id,
+        this.editNombre(),
+        new Date(this.editFechaInicio()),
+        this.editFechaFin() ? new Date(this.editFechaFin()) : undefined
+      );
       this.editandoTemporada.set(null);
       this.refresh$.next();
     } catch (err: unknown) {
@@ -197,6 +214,15 @@ export class ListaTemporadasComponent {
     try {
       await this.userService.desactivarSocio(id);
       this.sociosSinPagarAnterior.update(list => list.filter(s => s.id !== id));
+    } catch {
+      // silenciar — no bloquea el flujo principal
+    }
+  }
+
+  async darDeBajaSocioDetalle(id: string): Promise<void> {
+    try {
+      await this.userService.desactivarSocio(id);
+      this.sociosPendientes.update(list => list.filter(s => s.id !== id));
     } catch {
       // silenciar — no bloquea el flujo principal
     }

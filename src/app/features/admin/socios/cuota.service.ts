@@ -8,6 +8,7 @@ function toTemporada(row: Record<string, unknown>): Temporada {
     id: row['id'] as string,
     nombre: row['nombre'] as string,
     fechaInicio: new Date(row['fecha_inicio'] as string),
+    fechaFin: row['fecha_fin'] ? new Date(row['fecha_fin'] as string) : undefined,
     activa: row['activa'] as boolean,
   };
 }
@@ -54,14 +55,22 @@ export class CuotaService {
     );
   }
 
-  async crearTemporada(nombre: string, fechaInicio: Date): Promise<void> {
+  async crearTemporada(nombre: string, fechaInicio: Date, fechaFin?: Date): Promise<void> {
     // Desactivar temporada actual
     await supabase.from('temporadas').update({ activa: false }).eq('activa', true);
 
     // Crear nueva temporada activa
+    const insertPayload: Record<string, unknown> = {
+      nombre,
+      fecha_inicio: fechaInicio.toISOString().split('T')[0],
+      activa: true,
+    };
+    if (fechaFin) {
+      insertPayload['fecha_fin'] = fechaFin.toISOString().split('T')[0];
+    }
     const { data: nuevaTemporada, error: errT } = await supabase
       .from('temporadas')
-      .insert({ nombre, fecha_inicio: fechaInicio.toISOString().split('T')[0], activa: true })
+      .insert(insertPayload)
       .select()
       .single();
     if (errT) throw new Error(errT.message);
@@ -94,10 +103,15 @@ export class CuotaService {
     if (error) throw new Error(error.message);
   }
 
-  async editarTemporada(id: string, nombre: string, fechaInicio: Date): Promise<void> {
+  async editarTemporada(id: string, nombre: string, fechaInicio: Date, fechaFin?: Date): Promise<void> {
+    const payload: Record<string, unknown> = {
+      nombre,
+      fecha_inicio: fechaInicio.toISOString().split('T')[0],
+      fecha_fin: fechaFin ? fechaFin.toISOString().split('T')[0] : null,
+    };
     const { error } = await supabase
       .from('temporadas')
-      .update({ nombre, fecha_inicio: fechaInicio.toISOString().split('T')[0] })
+      .update(payload)
       .eq('id', id);
     if (error) throw new Error(error.message);
   }

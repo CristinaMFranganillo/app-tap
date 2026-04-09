@@ -2,6 +2,7 @@ export interface Temporada {
   id: string;
   nombre: string;
   fechaInicio: Date;
+  fechaFin?: Date;
   activa: boolean;
 }
 

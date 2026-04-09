@@ -16,7 +16,7 @@
       <div class="temporada-item__row">
         <div class="temporada-item__info">
           <p class="temporada-item__nombre">{{ temporada.nombre }}</p>
-          <p class="temporada-item__meta">Inicio: {{ temporada.fechaInicio | date:'dd/MM/yyyy' }}</p>
+          <p class="temporada-item__meta">Inicio: {{ temporada.fechaInicio | date:'dd/MM/yyyy' }}@if (temporada.fechaFin) { — Fin: {{ temporada.fechaFin | date:'dd/MM/yyyy' }}}</p>
         </div>
         <div class="temporada-item__actions">
           @if (temporada.activa) {
@@ -78,6 +78,16 @@
         />
       </div>
 
+      <div class="modal-card__field">
+        <label class="form-label">Fecha fin</label>
+        <input
+          type="date"
+          [ngModel]="nuevaFechaFin()"
+          (ngModelChange)="nuevaFechaFin.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
       <div class="modal-card__actions">
         <button type="button" (click)="cerrarFormulario()" class="btn-secondary">Cancelar</button>
         <button
@@ -114,6 +124,11 @@
           @for (socio of sociosPendientes(); track socio.id) {
             <li class="pendientes-list__item">
               <span class="pendientes-list__nombre">{{ socio.nombre }} {{ socio.apellidos }}</span>
+              @if (esUltimaTemporada()) {
+                <button class="pendientes-list__baja-btn" (click)="darDeBajaSocioDetalle(socio.id)">
+                  Dar de baja
+                </button>
+              }
             </li>
           }
         </ul>
@@ -147,6 +162,16 @@
           type="date"
           [ngModel]="editFechaInicio()"
           (ngModelChange)="editFechaInicio.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Fecha fin</label>
+        <input
+          type="date"
+          [ngModel]="editFechaFin()"
+          (ngModelChange)="editFechaFin.set($event)"
           class="form-input-surface"
         />
       </div>

@@ -39,11 +39,19 @@
 }
 
 .socio-item__actions {
-  @apply flex items-center gap-2 ml-1;
+  @apply flex items-center gap-0 ml-1;
 }
 
 .socio-item__estado {
   @apply w-2 h-2 rounded-full flex-shrink-0;
+}
+
+.socio-item__btn-info,
+.socio-item__btn-edit,
+.socio-item__btn-delete,
+.socio-item__btn-baja,
+.socio-item__btn-alta {
+  @apply flex items-center justify-center w-10 h-10 rounded-full;
 }
 
 .socio-item__btn-info {
@@ -60,6 +68,14 @@
 
 .socio-item__btn-delete {
   @apply text-danger;
+}
+
+.socio-item__btn-baja {
+  @apply text-amber-500;
+}
+
+.socio-item__btn-alta {
+  @apply text-emerald-500;
 }
 
 .socio-item__btn-icon {

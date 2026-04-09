@@ -27,6 +27,7 @@
 
 .perfil-stats {
   @apply flex bg-white rounded-[14px] shadow-sm overflow-hidden mx-3;
+  
 }
 
 .perfil-stat {
@@ -41,7 +42,7 @@
   }
 
   &__label {
-    @apply text-[12px] font-bold text-gray-400 uppercase tracking-wide;
+    @apply text-[12px] font-bold text-center text-gray-400 uppercase tracking-wide;
   }
 }
 

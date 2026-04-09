@@ -18,4 +18,5 @@ export interface User {
   cuotaPagada?: boolean;
   cuotaId?: string;
   favorito: boolean;
+  tieneHistorial?: boolean;
 }

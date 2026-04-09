@@ -22,15 +22,6 @@
   @if (showFilters()) {
     <div class="lista-socios__filtros-panel">
 
-      <label class="filtro-row">
-        <input
-          type="checkbox"
-          [checked]="filterFavoritos()"
-          (change)="filterFavoritos.set($any($event.target).checked)"
-        />
-        <span>Solo favoritos</span>
-      </label>
-
       <div class="filtro-row filtro-row--pills">
         <span class="filtro-label">Cuota</span>
         <div class="filtro-pills">
@@ -51,6 +42,24 @@
           >Pendientes</button>
         </div>
       </div>
+
+      <label class="filtro-row">
+        <input
+          type="checkbox"
+          [checked]="filterFavoritos()"
+          (change)="filterFavoritos.set($any($event.target).checked)"
+        />
+        <span>Solo favoritos</span>
+      </label>
+
+      <label class="filtro-row">
+        <input
+          type="checkbox"
+          [checked]="filterBaja()"
+          (change)="filterBaja.set($any($event.target).checked)"
+        />
+        <span>Solo dados de baja</span>
+      </label>
 
       <label class="filtro-row">
         <input
@@ -107,9 +116,19 @@
           <button (click)="goToEdit(socio.id)" class="socio-item__btn-edit">
             <i class="bi bi-pencil-fill socio-item__btn-icon"></i>
           </button>
-          <button (click)="confirmarEliminar(socio.id)" class="socio-item__btn-delete">
-            <i class="bi bi-trash-fill socio-item__btn-icon"></i>
-          </button>
+          @if (!socio.tieneHistorial) {
+            <button (click)="confirmarEliminar(socio.id)" class="socio-item__btn-delete">
+              <i class="bi bi-trash-fill socio-item__btn-icon"></i>
+            </button>
+          } @else if (socio.activo) {
+            <button (click)="confirmarDarDeBaja(socio.id)" class="socio-item__btn-baja" title="Dar de baja">
+              <i class="bi bi-toggle-on socio-item__btn-icon"></i>
+            </button>
+          } @else {
+            <button (click)="confirmarDarDeAlta(socio.id)" class="socio-item__btn-alta" title="Dar de alta">
+              <i class="bi bi-toggle-off socio-item__btn-icon"></i>
+            </button>
+          }
         </div>
       </div>
 
@@ -180,6 +199,26 @@
     labelConfirmar="Eliminar"
     (confirmado)="eliminar()"
     (cancelado)="cancelarEliminar()"
+  />
+}
+
+@if (pendingBajaId()) {
+  <app-confirm-dialog
+    titulo="Dar de baja"
+    mensaje="¿Seguro que quieres dar de baja a este socio? Se marcará como inactivo."
+    labelConfirmar="Dar de baja"
+    (confirmado)="ejecutarDarDeBaja()"
+    (cancelado)="pendingBajaId.set(null)"
+  />
+}
+
+@if (pendingAltaId()) {
+  <app-confirm-dialog
+    titulo="Dar de alta"
+    mensaje="¿Seguro que quieres dar de alta a este socio? Se marcará como activo."
+    labelConfirmar="Dar de alta"
+    (confirmado)="ejecutarDarDeAlta()"
+    (cancelado)="pendingAltaId.set(null)"
   />
 }
 
