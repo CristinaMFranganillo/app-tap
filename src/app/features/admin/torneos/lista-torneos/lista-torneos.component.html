@@ -1,0 +1,145 @@
+<div class="lista-torneos">
+  <div class="page-header">
+    <h3 class="lista-torneos__title">Torneos</h3>
+  </div>
+
+  @if (error()) {
+    <p class="lista-torneos__error">{{ error() }}</p>
+  }
+
+  @for (torneo of torneos(); track torneo.id) {
+    <div class="card torneo-item" (click)="irADetalle(torneo)">
+      <div class="torneo-item__row">
+        <div class="torneo-item__info">
+          <p class="torneo-item__nombre">{{ torneo.nombre }}</p>
+          <p class="torneo-item__meta">
+            {{ torneo.fecha | date:'dd/MM/yyyy' }}
+            — {{ torneo.numEscuadras ?? 0 }} escuadras
+            · {{ torneo.numTiradores ?? 0 }} tiradores
+          </p>
+        </div>
+        <div class="torneo-item__actions">
+          <button class="torneo-item__btn-edit" (click)="abrirEdicion(torneo, $event)" title="Editar">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+          <button
+            class="torneo-item__btn-delete"
+            (click)="confirmarEliminarTorneo(torneo.id, $event)"
+            title="Eliminar"
+          >
+            <i class="bi bi-trash-fill"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (torneos().length === 0) {
+    <p class="lista-torneos__empty">No hay torneos registrados.</p>
+  }
+</div>
+
+<!-- FAB -->
+<button (click)="abrirFormulario()" class="fab">
+  <i class="bi bi-plus-lg fab-icon"></i>
+</button>
+
+<!-- Dialogo nuevo torneo -->
+@if (mostrarFormulario()) {
+  <div class="modal-overlay" (click)="cerrarFormulario()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h4 class="modal-card__title">Nuevo torneo</h4>
+
+      @if (error()) {
+        <p class="form-error">{{ error() }}</p>
+      }
+
+      <div class="modal-card__field">
+        <label class="form-label">Nombre <span class="form-required">*</span></label>
+        <input
+          [ngModel]="nuevoNombre()"
+          (ngModelChange)="nuevoNombre.set($event)"
+          placeholder="ej: Torneo Apertura 2026"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Fecha <span class="form-required">*</span></label>
+        <input
+          type="date"
+          [ngModel]="nuevaFecha()"
+          (ngModelChange)="nuevaFecha.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__actions">
+        <button type="button" (click)="cerrarFormulario()" class="btn-secondary">Cancelar</button>
+        <button
+          type="button"
+          (click)="crearTorneo()"
+          [disabled]="saving()"
+          class="btn-primary"
+        >
+          {{ saving() ? 'Creando...' : 'Crear torneo' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Editar torneo -->
+@if (editandoTorneo()) {
+  <div class="modal-overlay" (click)="cerrarEdicion()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <h4 class="modal-card__title">Editar torneo</h4>
+
+      @if (editError()) {
+        <p class="form-error">{{ editError() }}</p>
+      }
+
+      <div class="modal-card__field">
+        <label class="form-label">Nombre <span class="form-required">*</span></label>
+        <input
+          [ngModel]="editNombre()"
+          (ngModelChange)="editNombre.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Fecha <span class="form-required">*</span></label>
+        <input
+          type="date"
+          [ngModel]="editFecha()"
+          (ngModelChange)="editFecha.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__actions">
+        <button type="button" (click)="cerrarEdicion()" class="btn-secondary">Cancelar</button>
+        <button
+          type="button"
+          (click)="guardarEdicion()"
+          [disabled]="editSaving()"
+          class="btn-primary"
+        >
+          {{ editSaving() ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Confirmar eliminar torneo -->
+@if (pendingDeleteTorneoId()) {
+  <app-confirm-dialog
+    titulo="Eliminar torneo"
+    mensaje="Se eliminarán todas las escuadras y resultados de este torneo. Esta acción no se puede deshacer."
+    labelConfirmar="Eliminar"
+    (confirmado)="eliminarTorneo()"
+    (cancelado)="cancelarEliminarTorneo()"
+  />
+}

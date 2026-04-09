@@ -1,0 +1,49 @@
+.lista-torneos {
+  @apply p-3;
+}
+
+.lista-torneos__title {
+  @apply text-[16px] font-bold text-brand-dark;
+}
+
+.lista-torneos__error {
+  @apply text-danger text-[13px] mb-3;
+}
+
+.lista-torneos__empty {
+  @apply text-center text-[13px] text-gray-400 mt-6;
+}
+
+.torneo-item {
+  @apply mb-2 cursor-pointer;
+
+  &__row {
+    @apply flex items-center justify-between;
+  }
+
+  &__info {
+    @apply flex flex-col gap-0.5;
+  }
+
+  &__nombre {
+    @apply text-[14px] font-bold text-brand-dark;
+  }
+
+  &__meta {
+    @apply text-[12px] text-gray-400 font-medium;
+  }
+
+  &__actions {
+    @apply flex items-center gap-2;
+  }
+
+  &__btn-edit {
+    @apply text-[13px] text-gray-400 bg-transparent border-0 p-1 leading-none cursor-pointer;
+    &:hover { @apply text-brand-dark; }
+  }
+
+  &__btn-delete {
+    @apply text-[13px] text-gray-300 bg-transparent border-0 p-1 leading-none cursor-pointer;
+    &:hover { @apply text-danger; }
+  }
+}
