@@ -145,8 +145,7 @@ export class EntrenamientoService {
     if (socios.length > 0) {
       const rows = socios.map(r => ({
         escuadra_id: r.escuadraId,
-        user_id: r.userId,
-        es_no_socio: false,
+        user_id: r.userId!,
         puesto: r.puesto,
         platos_rotos: r.platosRotos,
         registrado_por: registradoPor,
