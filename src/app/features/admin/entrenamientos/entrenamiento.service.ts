@@ -139,10 +139,18 @@ export class EntrenamientoService {
     }[],
     registradoPor: string
   ): Promise<void> {
-    const socios = resultados.filter(r => !r.esNoSocio);
-    const noSocios = resultados.filter(r => r.esNoSocio);
+    // Solo guardar resultados de socios (no socios solo se usan para contabilidad)
+    const socios = resultados.filter(r => !r.esNoSocio && r.userId);
 
     if (socios.length > 0) {
+      // Borrar resultados previos de esta escuadra y reinsertar
+      const escuadraId = socios[0].escuadraId;
+      await supabase
+        .from('resultados_entrenamiento')
+        .delete()
+        .eq('escuadra_id', escuadraId)
+        .not('user_id', 'is', null);
+
       const rows = socios.map(r => ({
         escuadra_id: r.escuadraId,
         user_id: r.userId!,
@@ -152,23 +160,8 @@ export class EntrenamientoService {
       }));
       const { error } = await supabase
         .from('resultados_entrenamiento')
-        .upsert(rows, { onConflict: 'escuadra_id,user_id' });
-      if (error) throw new Error(error.message ?? 'Error guardando resultados socios');
-    }
-
-    if (noSocios.length > 0) {
-      const rows = noSocios.map(r => ({
-        escuadra_id: r.escuadraId,
-        nombre_externo: r.nombreExterno,
-        es_no_socio: true,
-        puesto: r.puesto,
-        platos_rotos: r.platosRotos,
-        registrado_por: registradoPor,
-      }));
-      const { error } = await supabase
-        .from('resultados_entrenamiento')
-        .upsert(rows, { onConflict: 'escuadra_id,nombre_externo' });
-      if (error) throw new Error(error.message ?? 'Error guardando resultados no socios');
+        .insert(rows);
+      if (error) throw new Error(error.message ?? 'Error guardando resultados');
     }
   }
 
