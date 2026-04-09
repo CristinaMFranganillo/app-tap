@@ -141,6 +141,10 @@
       @if (expandedId() === socio.id) {
         <div class="socio-item__details">
           <div class="socio-item__detail-row">
+            <span class="socio-item__detail-label">Nombre</span>
+            <span class="socio-item__detail-value socio-item__detail-value--wrap">{{ socio.apellidos }}, {{ socio.nombre }}</span>
+          </div>
+          <div class="socio-item__detail-row">
             <span class="socio-item__detail-label">Nº socio</span>
             <span class="socio-item__detail-value">{{ displayNumeroSocio(socio) }}</span>
           </div>

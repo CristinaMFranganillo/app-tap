@@ -47,7 +47,7 @@
 }
 
 .socio-item__btn-action {
-  @apply flex items-center justify-center w-9 h-9 rounded-full text-gray-400 text-[16px];
+  @apply flex items-center justify-center w-8 h-8 rounded-full text-gray-400 text-[16px];
 
   &--active {
     @apply text-primary;
