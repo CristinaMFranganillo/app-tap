@@ -199,12 +199,13 @@
 
   // Floating Action Button
   .fab {
-    @apply fixed bottom-[60px] right-4
+    @apply fixed right-4
            w-[42px] h-[42px] rounded-badge
            bg-primary text-secondary
            flex items-center justify-center
            shadow-fab z-40
            active:scale-95 transition-transform duration-fast;
+    bottom: calc(70px + env(safe-area-inset-bottom, 0px));
   }
 
   // ── Navegación ────────────────────────────────────────────────────
