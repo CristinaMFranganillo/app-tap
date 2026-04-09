@@ -1,0 +1,23 @@
+<div class="torneo-lista">
+  @if (torneos().length === 0) {
+    <app-empty-state icon="bi-trophy" mensaje="Sin torneos registrados" />
+  } @else {
+    @for (t of torneos(); track t.id) {
+      <button type="button" class="torneo-lista__item card" (click)="irDetalle(t)">
+        <div class="torneo-lista__info">
+          <span class="torneo-lista__nombre">{{ t.nombre }}</span>
+          <span class="torneo-lista__fecha">
+            <i class="bi bi-calendar3"></i>
+            {{ t.fecha | date:'d MMM yyyy' : '' : 'es' }}
+          </span>
+        </div>
+        <div class="torneo-lista__meta">
+          @if (t.numTiradores) {
+            <span class="torneo-lista__badge">{{ t.numTiradores }} tir.</span>
+          }
+          <i class="bi bi-chevron-right torneo-lista__arrow"></i>
+        </div>
+      </button>
+    }
+  }
+</div>

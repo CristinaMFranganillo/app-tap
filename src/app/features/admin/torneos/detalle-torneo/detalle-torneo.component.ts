@@ -51,9 +51,9 @@ export class DetalleTorneoComponent {
     { initialValue: null }
   );
 
-  ranking = toSignal<RankingTorneo[]>(
+  ranking = toSignal(
     this.id$.pipe(switchMap(id => this.torneoService.getRanking(id))),
-    { initialValue: [] }
+    { initialValue: [] as RankingTorneo[] }
   );
 
   private escuadrasRaw = toSignal(

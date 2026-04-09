@@ -1,0 +1,38 @@
+<div class="torneo-detalle">
+  <div class="page-header">
+    <button (click)="goBack()" class="torneo-detalle__back-btn">
+      <i class="bi bi-chevron-left torneo-detalle__back-icon"></i>
+    </button>
+    <div class="torneo-detalle__header-info">
+      <h2 class="torneo-detalle__title">{{ torneo()?.nombre }}</h2>
+      <p class="torneo-detalle__fecha">{{ torneo()?.fecha | date:'d MMM yyyy' : '' : 'es' }}</p>
+    </div>
+  </div>
+
+  @if (!hayRanking()) {
+    <app-empty-state icon="bi-trophy" mensaje="Sin resultados todavía" />
+  } @else {
+    <div class="ranking-card card">
+      <div class="ranking-card__header">
+        <i class="bi bi-trophy-fill ranking-card__icon"></i>
+        <span class="ranking-card__titulo">Ranking</span>
+      </div>
+      <div class="ranking-card__table">
+        @for (entry of ranking(); track entry.userId) {
+          <div class="ranking-fila" [class.ranking-fila--top3]="entry.posicion <= 3">
+            <span class="ranking-fila__pos">
+              @switch (entry.posicion) {
+                @case (1) { <span class="ranking-fila__medal">&#129351;</span> }
+                @case (2) { <span class="ranking-fila__medal">&#129352;</span> }
+                @case (3) { <span class="ranking-fila__medal">&#129353;</span> }
+                @default  { {{ entry.posicion }} }
+              }
+            </span>
+            <span class="ranking-fila__nombre">{{ entry.nombre }} {{ entry.apellidos }}</span>
+            <span class="ranking-fila__platos">{{ entry.platosRotos }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

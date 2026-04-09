@@ -28,6 +28,18 @@ export const scoresRoutes: Routes = [
           import('./entrenamiento-socio-detalle/entrenamiento-socio-detalle.component')
             .then(m => m.EntrenamientoSocioDetalleComponent),
       },
+      {
+        path: 'torneos',
+        loadComponent: () =>
+          import('./torneo-socio-lista/torneo-socio-lista.component')
+            .then(m => m.TorneoSocioListaComponent),
+      },
+      {
+        path: 'torneos/:id',
+        loadComponent: () =>
+          import('./torneo-socio-detalle/torneo-socio-detalle.component')
+            .then(m => m.TorneoSocioDetalleComponent),
+      },
     ],
   },
 ];

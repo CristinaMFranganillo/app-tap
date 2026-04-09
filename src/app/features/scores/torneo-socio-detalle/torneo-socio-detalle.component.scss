@@ -1,0 +1,25 @@
+.torneo-detalle {
+  @apply p-3 flex flex-col gap-3;
+  &__back-btn  { @apply text-neutral-400; }
+  &__back-icon { @apply text-[15px]; }
+  &__header-info { @apply flex flex-col; }
+  &__title       { @apply text-[18px] font-extrabold text-secondary; }
+  &__fecha       { @apply text-sm text-neutral-400 font-medium; }
+}
+
+.ranking-card {
+  @apply flex flex-col gap-0 p-0 overflow-hidden;
+  &__header { @apply flex items-center gap-2 px-4 pt-3 pb-2; }
+  &__icon   { @apply text-primary text-[16px]; }
+  &__titulo { @apply text-base font-bold text-secondary; }
+  &__table  { @apply flex flex-col divide-y divide-neutral-100; }
+}
+
+.ranking-fila {
+  @apply flex items-center gap-3 px-4 py-2;
+  &--top3    { @apply bg-primary/5; }
+  &__pos     { @apply w-8 text-center text-sm font-bold text-neutral-400 flex-shrink-0; }
+  &__medal   { @apply text-[18px]; }
+  &__nombre  { @apply flex-1 text-sm font-semibold text-secondary truncate; }
+  &__platos  { @apply text-sm font-bold text-secondary flex-shrink-0; }
+}

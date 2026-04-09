@@ -10,7 +10,7 @@
 
   &__info {
     @apply flex items-start gap-2 mt-2 px-3 py-2.5
-           bg-neutral-800/50 rounded-card border border-neutral-700;
+           rounded-card border border-neutral-700;
 
     &-icon { @apply text-neutral-500 text-[14px] mt-0.5 flex-shrink-0; }
 

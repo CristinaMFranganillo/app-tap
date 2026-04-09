@@ -102,26 +102,26 @@
           } @else {
             <div class="escuadra-card__resultados">
               @for (fila of item.filas; track fila.puesto) {
-                <div class="resultado-fila">
-                  <span class="resultado-fila__puesto">{{ fila.puesto }}</span>
-                  <div class="resultado-fila__info">
-                    <div class="resultado-fila__nombre-wrap">
+                <div class="flex items-center gap-3 px-4 py-2.5">
+                  <span class="w-5 text-center text-sm font-bold text-neutral-400 flex-shrink-0">{{ fila.puesto }}</span>
+                  <div class="flex-1 min-w-0 flex flex-col gap-1">
+                    <div class="flex items-center gap-1.5">
                       @if (fila.esNoSocio) {
-                        <span class="badge-no-socio-sm">NS</span>
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded-badge text-[9px] font-bold uppercase tracking-wide bg-warning-light text-warning-dark border border-warning/40 flex-shrink-0">NS</span>
                       }
-                      <span class="resultado-fila__nombre">{{ fila.nombre }}</span>
+                      <span class="text-sm font-semibold text-secondary truncate">{{ fila.nombre }}</span>
                     </div>
                     @if (fila.fallos.length > 0) {
-                      <div class="resultado-fila__fallos">
+                      <div class="flex flex-wrap gap-1">
                         @for (n of fila.fallos; track n) {
-                          <span class="fallo-pill">{{ n }}</span>
+                          <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-danger-light text-danger text-[11px] font-bold leading-none flex-shrink-0">{{ n }}</span>
                         }
                       </div>
                     }
                   </div>
-                  <span class="resultado-fila__rotos"
-                    [class.resultado-fila__rotos--bueno]="fila.platosRotos >= 20"
-                    [class.resultado-fila__rotos--malo]="fila.platosRotos < 15">
+                  <span class="text-sm font-bold text-secondary flex-shrink-0"
+                    [class.text-success]="fila.platosRotos >= 20"
+                    [class.text-danger]="fila.platosRotos < 15">
                     {{ fila.platosRotos }}/25
                   </span>
                 </div>

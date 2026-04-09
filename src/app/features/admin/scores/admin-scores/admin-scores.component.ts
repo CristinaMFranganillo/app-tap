@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject, switchMap, startWith, firstValueFrom } from 'rxjs';
-import { CompeticionService } from '../../../scores/competicion.service';
 import { EntrenamientoService } from '../../entrenamientos/entrenamiento.service';
+import { TorneoService } from '../../torneos/torneo.service';
 import { AuthService } from '../../../../core/auth/auth.service';
-import { Competicion } from '../../../../core/models/competicion.model';
+import { Torneo } from '../../../../core/models/torneo.model';
 import { EntrenamientoDia } from '../../../../core/models/entrenamiento.model';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
@@ -19,14 +19,14 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
   styleUrl: './admin-scores.component.scss',
 })
 export class AdminScoresComponent {
-  private competicionService   = inject(CompeticionService);
   private entrenamientoService = inject(EntrenamientoService);
+  private torneoService        = inject(TorneoService);
   private authService          = inject(AuthService);
   private router               = inject(Router);
 
   private refresh$ = new Subject<void>();
 
-  competiciones  = toSignal(this.competicionService.getAll(), { initialValue: [] as Competicion[] });
+  torneos        = toSignal(this.torneoService.getAll(), { initialValue: [] as Torneo[] });
   entrenamientos = toSignal(
     this.refresh$.pipe(startWith(null), switchMap(() => this.entrenamientoService.getAllAgrupado())),
     { initialValue: [] as EntrenamientoDia[] }
@@ -109,11 +109,7 @@ export class AdminScoresComponent {
     this.router.navigate(['/admin/caja']);
   }
 
-  nuevaCompeticion(): void {
-    this.router.navigate(['/admin/competiciones/nueva']);
-  }
-
-  totalPlatos(c: Competicion): number {
-    return c.platosPorSerie * c.numSeries;
+  irTorneos(): void {
+    this.router.navigate(['/admin/torneos']);
   }
 }

@@ -54,7 +54,7 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./noticias/form-noticia/form-noticia.component').then(m => m.FormNoticiaComponent),
   },
-  // Scores
+  // Scores (entrenamientos admin)
   {
     path: 'scores',
     canActivate: [roleGuard],
@@ -62,35 +62,34 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./scores/admin-scores/admin-scores.component').then(m => m.AdminScoresComponent),
   },
+  // ── Torneos ──────────────────────────────────────────────────────────
   {
-    path: 'scores/nuevo',
+    path: 'torneos',
     canActivate: [roleGuard],
     data: { roles: ['admin', 'moderador'] },
     loadComponent: () =>
-      import('./scores/form-score/form-score.component').then(m => m.FormScoreComponent),
-  },
-  // Competiciones
-  {
-    path: 'competiciones/nueva',
-    canActivate: [roleGuard],
-    data: { roles: ['admin', 'moderador'] },
-    loadComponent: () =>
-      import('./competiciones/form-competicion/form-competicion.component').then(m => m.FormCompeticionComponent),
-  },
-  // Escuadras
-  {
-    path: 'scores/escuadra/nueva',
-    canActivate: [roleGuard],
-    data: { roles: ['admin', 'moderador'] },
-    loadComponent: () =>
-      import('./scores/form-escuadra/form-escuadra.component').then(m => m.FormEscuadraComponent),
+      import('./torneos/lista-torneos/lista-torneos.component').then(m => m.ListaTorneosComponent),
   },
   {
-    path: 'scores/resultados',
+    path: 'torneos/:id',
     canActivate: [roleGuard],
     data: { roles: ['admin', 'moderador'] },
     loadComponent: () =>
-      import('./scores/registrar-resultado/registrar-resultado.component').then(m => m.RegistrarResultadoComponent),
+      import('./torneos/detalle-torneo/detalle-torneo.component').then(m => m.DetalleTorneoComponent),
+  },
+  {
+    path: 'torneos/:id/escuadra/nueva',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./torneos/form-escuadra-torneo/form-escuadra-torneo.component').then(m => m.FormEscuadraTorneoComponent),
+  },
+  {
+    path: 'torneos/:torneoId/escuadra/:escuadraId/resultados',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./torneos/registrar-resultado-torneo/registrar-resultado-torneo.component').then(m => m.RegistrarResultadoTorneoComponent),
   },
   // ── Caja ─────────────────────────────────────────────────────────────────
   {
