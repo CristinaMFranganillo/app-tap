@@ -1,0 +1,88 @@
+.registrar-e {
+  @apply p-3 flex flex-col gap-4;
+
+  &__back-btn { @apply text-gray-400 text-[15px]; }
+  &__title { @apply text-[18px] font-extrabold text-secondary; }
+
+  &__loading {
+    @apply flex items-center justify-center py-16 text-neutral-300 text-sm;
+  }
+
+  &__lista {
+    @apply flex flex-col rounded-card border border-neutral-100 overflow-hidden bg-white;
+  }
+
+  &__error {
+    @apply text-danger text-sm font-semibold text-center;
+  }
+
+  &__btn-guardar {
+    @apply mt-1;
+  }
+}
+
+// ── Tirador acordeon ───────────────────────────────────────────
+
+.tirador-item {
+  @apply border-b border-neutral-100 last:border-0;
+
+  &--abierto {
+    @apply bg-neutral-50;
+  }
+
+  &__fila {
+    @apply flex items-center gap-3 w-full px-4 py-3
+           bg-transparent border-0 text-left cursor-pointer
+           active:bg-neutral-100 transition-colors;
+  }
+
+  &__puesto {
+    @apply w-5 text-center text-sm font-bold text-neutral-400 flex-shrink-0;
+  }
+
+  &__nombre {
+    @apply flex-1 text-sm font-bold text-secondary truncate;
+  }
+
+  &__contador {
+    @apply text-sm font-bold text-secondary flex-shrink-0;
+
+    &--ok  { @apply text-success; }
+    &--mal { @apply text-danger; }
+  }
+
+  &__chevron {
+    @apply text-neutral-300 text-[13px] flex-shrink-0 ml-1;
+  }
+
+  &__grid-wrap {
+    @apply px-4 pb-4 flex flex-col gap-2;
+  }
+
+  &__fallos {
+    @apply text-sm font-semibold text-neutral-400 text-right;
+  }
+}
+
+// ── Cuadricula de platos ───────────────────────────────────────
+
+.platos-grid {
+  @apply grid gap-1.5;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.plato-btn {
+  @apply w-full h-11 rounded-[8px]
+         font-bold text-sm leading-none
+         flex items-center justify-center
+         active:scale-95 transition-all duration-fast
+         select-none;
+
+  &--roto {
+    @apply bg-primary text-secondary shadow-sm;
+  }
+
+  &--fallo {
+    @apply bg-neutral-100 text-danger;
+  }
+}
