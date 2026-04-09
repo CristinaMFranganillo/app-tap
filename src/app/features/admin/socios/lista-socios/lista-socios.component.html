@@ -102,33 +102,39 @@
             ></span>
           </button>
         }
-        <button
-          (click)="toggleFavorito(socio, $event)"
-          class="socio-item__favorito-btn"
-          [title]="socio.favorito ? 'Quitar de favoritos' : 'Marcar como favorito'"
-        >
-          <i class="bi" [class.bi-star-fill]="socio.favorito" [class.bi-star]="!socio.favorito"></i>
-        </button>
         <div class="socio-item__actions">
-          <button (click)="toggleExpanded(socio.id)" class="socio-item__btn-info" [class.socio-item__btn-info--active]="expandedId() === socio.id">
-            <i class="bi bi-info-circle-fill socio-item__btn-icon"></i>
+          <button (click)="toggleExpanded(socio.id)" class="socio-item__btn-action" [class.socio-item__btn-action--active]="expandedId() === socio.id">
+            <i class="bi bi-info-circle-fill"></i>
           </button>
-          <button (click)="goToEdit(socio.id)" class="socio-item__btn-edit">
-            <i class="bi bi-pencil-fill socio-item__btn-icon"></i>
-          </button>
-          @if (!socio.tieneHistorial) {
-            <button (click)="confirmarEliminar(socio.id)" class="socio-item__btn-delete">
-              <i class="bi bi-trash-fill socio-item__btn-icon"></i>
+          <div class="socio-item__menu-wrapper">
+            <button (click)="toggleMenu(socio.id, $event)" class="socio-item__btn-action">
+              <i class="bi bi-three-dots-vertical"></i>
             </button>
-          } @else if (socio.activo) {
-            <button (click)="confirmarDarDeBaja(socio.id)" class="socio-item__btn-baja" title="Dar de baja">
-              <i class="bi bi-toggle-on socio-item__btn-icon"></i>
-            </button>
-          } @else {
-            <button (click)="confirmarDarDeAlta(socio.id)" class="socio-item__btn-alta" title="Dar de alta">
-              <i class="bi bi-toggle-off socio-item__btn-icon"></i>
-            </button>
-          }
+            @if (menuAbierto() === socio.id) {
+              <div class="socio-item__menu">
+                <button class="socio-item__menu-item" (click)="goToEdit(socio.id)">
+                  <i class="bi bi-pencil-fill"></i> Editar
+                </button>
+                <button class="socio-item__menu-item" (click)="toggleFavoritoFromMenu(socio)">
+                  <i class="bi" [class.bi-star-fill]="socio.favorito" [class.bi-star]="!socio.favorito"></i>
+                  {{ socio.favorito ? 'Quitar favorito' : 'Favorito' }}
+                </button>
+                @if (!socio.tieneHistorial) {
+                  <button class="socio-item__menu-item socio-item__menu-item--danger" (click)="confirmarEliminarFromMenu(socio.id)">
+                    <i class="bi bi-trash-fill"></i> Eliminar
+                  </button>
+                } @else if (socio.activo) {
+                  <button class="socio-item__menu-item socio-item__menu-item--warning" (click)="confirmarDarDeBajaFromMenu(socio.id)">
+                    <i class="bi bi-toggle-on"></i> Dar de baja
+                  </button>
+                } @else {
+                  <button class="socio-item__menu-item socio-item__menu-item--success" (click)="confirmarDarDeAltaFromMenu(socio.id)">
+                    <i class="bi bi-toggle-off"></i> Dar de alta
+                  </button>
+                }
+              </div>
+            }
+          </div>
         </div>
       </div>
 

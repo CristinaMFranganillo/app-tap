@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal } from '@angular/core';
+import { Component, HostListener, inject, computed, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Subject, switchMap, startWith } from 'rxjs';
@@ -22,6 +22,11 @@ export class ListaSociosComponent {
   private cuotaService = inject(CuotaService);
   private router = inject(Router);
 
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.menuAbierto.set(null);
+  }
+
   searchTerm = signal('');
   showFilters = signal(false);
   filterFavoritos = signal(false);
@@ -29,6 +34,7 @@ export class ListaSociosComponent {
   filterBaja = signal(false);
   sortAlfa = signal(false);
   expandedId = signal<string | null>(null);
+  menuAbierto = signal<string | null>(null);
   pendingDeleteId = signal<string | null>(null);
   pendingBajaId = signal<string | null>(null);
   pendingAltaId = signal<string | null>(null);
@@ -115,7 +121,33 @@ export class ListaSociosComponent {
   }
 
   goToEdit(id: string): void {
+    this.menuAbierto.set(null);
     this.router.navigate(['/admin/socios', id]);
+  }
+
+  toggleMenu(id: string, event: Event): void {
+    event.stopPropagation();
+    this.menuAbierto.set(this.menuAbierto() === id ? null : id);
+  }
+
+  toggleFavoritoFromMenu(socio: User): void {
+    this.menuAbierto.set(null);
+    this.toggleFavorito(socio, new Event('click'));
+  }
+
+  confirmarEliminarFromMenu(id: string): void {
+    this.menuAbierto.set(null);
+    this.confirmarEliminar(id);
+  }
+
+  confirmarDarDeBajaFromMenu(id: string): void {
+    this.menuAbierto.set(null);
+    this.confirmarDarDeBaja(id);
+  }
+
+  confirmarDarDeAltaFromMenu(id: string): void {
+    this.menuAbierto.set(null);
+    this.confirmarDarDeAlta(id);
   }
 
   confirmarEliminar(id: string): void {
