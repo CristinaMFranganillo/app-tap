@@ -87,6 +87,32 @@ export class EscuadraService {
     return (data as Record<string, unknown>)['id'] as string;
   }
 
+  async createEscuadraTorneo(torneoId: string, numero: number): Promise<string> {
+    const { data, error } = await supabase
+      .from('escuadras').insert({ torneo_id: torneoId, numero }).select('id').single();
+    if (error || !data) throw new Error('Error creando escuadra');
+    return (data as Record<string, unknown>)['id'] as string;
+  }
+
+  getByTorneo(torneoId: string): Observable<Escuadra[]> {
+    return from(
+      supabase
+        .from('escuadras')
+        .select('*, escuadra_tiradores(*)')
+        .eq('torneo_id', torneoId)
+        .order('numero')
+    ).pipe(
+      map(({ data }) =>
+        (data ?? []).map(row => ({
+          id: (row as any)['id'] as string,
+          torneoId: (row as any)['torneo_id'] as string,
+          numero: (row as any)['numero'] as number,
+          tiradores: ((row as any)['escuadra_tiradores'] ?? []).map(toEscuadraTirador),
+        }))
+      )
+    );
+  }
+
   async addTirador(escuadraId: string, userId: string, puesto: number): Promise<void> {
     const { error } = await supabase.from('escuadra_tiradores')
       .insert({ escuadra_id: escuadraId, user_id: userId, puesto, es_no_socio: false });
