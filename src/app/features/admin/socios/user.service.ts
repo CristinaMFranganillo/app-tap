@@ -57,7 +57,8 @@ export class UserService {
           .select(
             'id,nombre,apellidos,email,numero_socio,avatar_url,rol,fecha_alta,activo,first_login,dni,telefono,direccion,localidad,favorito,cuotas!left(id, pagada, temporada_id)'
           )
-          .order('numero_socio', { ascending: true });  // ordenar por número de socio
+          .eq('rol', 'socio')
+          .order('numero_socio', { ascending: true });
 
         if (season?.id) {
           query = query.or(`temporada_id.eq.${season.id},temporada_id.is.null`, { referencedTable: 'cuotas' });

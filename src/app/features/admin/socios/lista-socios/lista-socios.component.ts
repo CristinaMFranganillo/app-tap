@@ -214,6 +214,10 @@ export class ListaSociosComponent {
     this.refresh$.next();
   }
 
+  hayFiltrosActivos(): boolean {
+    return this.filterFavoritos() || this.filterCuota() !== 'todas' || this.filterBaja();
+  }
+
   /** Evita `#{{ ... }}` y valores null; el listado debe mostrar siempre texto legible. */
   displayNumeroSocio(s: User): string {
     const t = String(s.numeroSocio ?? '').trim();

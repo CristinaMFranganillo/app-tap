@@ -11,17 +11,33 @@
     />
   </div>
 
-  <button
-    (click)="showFilters.set(!showFilters())"
-    class="lista-socios__filtros-toggle"
-  >
-    <i class="bi bi-sliders"></i>
-    {{ showFilters() ? 'Ocultar filtros' : 'Mostrar filtros' }}
-  </button>
+  <!-- Toolbar: filtro, orden, temporadas -->
+  <div class="lista-socios__toolbar">
+    <button
+      (click)="showFilters.set(!showFilters())"
+      class="toolbar-btn"
+      [class.toolbar-btn--active]="showFilters() || hayFiltrosActivos()"
+    >
+      <i class="bi bi-funnel"></i>
+      @if (hayFiltrosActivos()) {
+        <span class="toolbar-btn__badge"></span>
+      }
+    </button>
+    <button
+      (click)="sortAlfa.set(!sortAlfa())"
+      class="toolbar-btn"
+      [class.toolbar-btn--active]="sortAlfa()"
+    >
+      <i class="bi bi-sort-alpha-down"></i>
+    </button>
+    <div class="toolbar-spacer"></div>
+    <button (click)="goToTemporadas()" class="toolbar-link">
+      <i class="bi bi-calendar2-check"></i> Temporadas
+    </button>
+  </div>
 
   @if (showFilters()) {
     <div class="lista-socios__filtros-panel">
-
       <div class="filtro-row filtro-row--pills">
         <span class="filtro-label">Cuota</span>
         <div class="filtro-pills">
@@ -42,41 +58,19 @@
           >Pendientes</button>
         </div>
       </div>
-
       <label class="filtro-row">
-        <input
-          type="checkbox"
-          [checked]="filterFavoritos()"
-          (change)="filterFavoritos.set($any($event.target).checked)"
-        />
+        <input type="checkbox" [checked]="filterFavoritos()" (change)="filterFavoritos.set($any($event.target).checked)" />
         <span>Solo favoritos</span>
       </label>
-
       <label class="filtro-row">
-        <input
-          type="checkbox"
-          [checked]="filterBaja()"
-          (change)="filterBaja.set($any($event.target).checked)"
-        />
+        <input type="checkbox" [checked]="filterBaja()" (change)="filterBaja.set($any($event.target).checked)" />
         <span>Solo dados de baja</span>
       </label>
-
     </div>
   }
 
   <div class="lista-socios__header">
     <h3 class="section-title">Socios ({{ filteredSocios().length }})</h3>
-    <button
-      (click)="sortAlfa.set(!sortAlfa())"
-      class="lista-socios__sort-btn"
-      [class.lista-socios__sort-btn--active]="sortAlfa()"
-      title="Ordenar alfabéticamente"
-    >
-      <i class="bi bi-sort-alpha-down"></i>
-    </button>
-    <button (click)="goToTemporadas()" class="lista-socios__temporadas-btn">
-      <i class="bi bi-calendar2-check"></i> Temporadas
-    </button>
   </div>
 
   @for (socio of filteredSocios(); track socio.id) {
