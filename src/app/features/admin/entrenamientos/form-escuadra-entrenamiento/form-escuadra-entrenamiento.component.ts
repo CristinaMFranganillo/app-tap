@@ -63,7 +63,7 @@ export class FormEscuadraEntrenamientoComponent {
   get asignados(): PuestoVM[] {
     return this.puestos.filter(p =>
       (p.tipo === 'socio'    && !!p.userId?.trim()) ||
-      (p.tipo === 'no_socio' && !!p.nombreExterno?.trim())
+      (p.tipo === 'no_socio')
     );
   }
 
@@ -115,8 +115,9 @@ export class FormEscuadraEntrenamientoComponent {
         const p = this.puestos[i];
         if (p.tipo === 'socio' && p.userId?.trim()) {
           await this.escuadraService.addTirador(escuadraId, p.userId.trim(), i + 1);
-        } else if (p.tipo === 'no_socio' && p.nombreExterno?.trim()) {
-          await this.escuadraService.addNoSocio(escuadraId, p.nombreExterno.trim(), i + 1);
+        } else if (p.tipo === 'no_socio') {
+          const nombre = p.nombreExterno?.trim() || `No socio ${i + 1}`;
+          await this.escuadraService.addNoSocio(escuadraId, nombre, i + 1);
         }
       }
 
@@ -137,7 +138,7 @@ export class FormEscuadraEntrenamientoComponent {
         }
         return {
           userId:        undefined,
-          nombreTirador: p.nombreExterno!.trim(),
+          nombreTirador: p.nombreExterno?.trim() || 'No socio',
           esNoSocio:     true,
           importe:       this.tarifaNoSocio,
         };

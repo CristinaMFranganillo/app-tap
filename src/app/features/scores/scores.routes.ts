@@ -8,8 +8,8 @@ export const scoresRoutes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () =>
-          import('./ranking/scores-ranking.component').then(m => m.ScoresRankingComponent),
+        redirectTo: 'historial',
+        pathMatch: 'full',
       },
       {
         path: 'historial',
