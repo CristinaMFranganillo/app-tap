@@ -60,7 +60,7 @@ export class UserService {
           .order('numero_socio', { ascending: true });  // ordenar por número de socio
 
         if (season?.id) {
-          query = query.eq('cuotas.temporada_id', season.id);
+          query = query.or(`temporada_id.eq.${season.id},temporada_id.is.null`, { referencedTable: 'cuotas' });
         }
 
         const [{ data }, idsConHistorial] = await Promise.all([
