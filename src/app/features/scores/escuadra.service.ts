@@ -164,7 +164,7 @@ export class EscuadraService {
 
   async registrarCajaEscuadra(
     escuadraId: string,
-    entrenamientoId: string,
+    entrenamientoId: string | null,
     fecha: string,
     registradoPor: string,
     tiradores: { userId?: string; nombreTirador: string; esNoSocio: boolean; importe: number }[]

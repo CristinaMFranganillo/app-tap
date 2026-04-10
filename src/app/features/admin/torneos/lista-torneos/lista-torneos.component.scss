@@ -39,11 +39,34 @@
 
   &__btn-edit {
     @apply text-[13px] text-gray-400 bg-transparent border-0 p-1 leading-none cursor-pointer;
-    &:hover { @apply text-brand-dark; }
   }
 
   &__btn-delete {
     @apply text-[13px] text-gray-300 bg-transparent border-0 p-1 leading-none cursor-pointer;
-    &:hover { @apply text-danger; }
+  }
+}
+
+.fab-icon {
+  @apply text-[18px] font-black;
+}
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black/40 z-[60] flex items-end justify-center;
+}
+
+.modal-card {
+  @apply bg-white rounded-t-2xl w-full max-w-lg p-5 flex flex-col gap-4;
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
+
+  &__title {
+    @apply text-[16px] font-bold text-brand-dark;
+  }
+
+  &__field {
+    @apply flex flex-col gap-1;
+  }
+
+  &__actions {
+    @apply flex gap-3 justify-end;
   }
 }

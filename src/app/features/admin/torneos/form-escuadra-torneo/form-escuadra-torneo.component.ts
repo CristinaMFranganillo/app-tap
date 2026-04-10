@@ -147,7 +147,7 @@ export class FormEscuadraTorneoComponent {
       });
 
       await this.escuadraService.registrarCajaEscuadra(
-        escuadraId, torneoId, fecha, registrador, movimientos
+        escuadraId, null, fecha, registrador, movimientos
       );
 
       this.router.navigate([
