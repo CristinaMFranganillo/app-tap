@@ -125,6 +125,10 @@
     @apply flex items-center gap-2 mb-4;
   }
 
+  .page-header__back {
+    @apply flex items-center justify-center w-8 h-8 rounded-full text-brand-dark text-[18px];
+  }
+
   // ── Formularios ───────────────────────────────────────────────────
 
   .form-label {

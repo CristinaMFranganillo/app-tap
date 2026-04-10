@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject, switchMap, startWith } from 'rxjs';
@@ -18,6 +19,11 @@ import { Temporada } from '../../../../core/models/cuota.model';
 export class ListaTemporadasComponent {
   private cuotaService = inject(CuotaService);
   private userService = inject(UserService);
+  private router = inject(Router);
+
+  goToSocios(): void {
+    this.router.navigate(['/admin/socios']);
+  }
 
   private refresh$ = new Subject<void>();
   temporadas = toSignal(
