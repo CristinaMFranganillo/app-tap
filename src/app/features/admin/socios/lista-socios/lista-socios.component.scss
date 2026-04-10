@@ -42,10 +42,6 @@
   @apply flex items-center gap-0 ml-1;
 }
 
-.socio-item__estado {
-  @apply w-2 h-2 rounded-full flex-shrink-0;
-}
-
 .socio-item__btn-action {
   @apply flex items-center justify-center w-8 h-8 rounded-full text-gray-400 text-[16px];
 
@@ -118,7 +114,7 @@
 }
 
 .socio-item__cuota-dot {
-  @apply w-5 h-5 rounded-full bg-gray-300 flex-shrink-0 transition-colors duration-150;
+  @apply w-5 h-5 rounded-full bg-gray-300 flex-shrink-0;
 
   &--pagada {
     background-color: #10B981;
@@ -138,11 +134,9 @@
 }
 
 .lista-socios__sort-btn {
-  @apply flex items-center justify-center w-7 h-7 rounded-full text-gray-400 text-[16px] transition-colors duration-100;
+  @apply flex items-center justify-center w-7 h-7 rounded-full text-gray-400 text-[16px];
 
-  &--active {
-    @apply text-amber-600 bg-amber-50;
-  }
+  &--active { @apply text-amber-600 bg-amber-50; }
 }
 
 .lista-socios__temporadas-btn {
@@ -180,13 +174,9 @@
 }
 
 .lista-socios__filtros-toggle {
-  @apply flex items-center gap-1 text-[11px] font-semibold text-gray-400 mb-2 ml-auto;
-  display: block;
-  text-align: right;
+  @apply text-[11px] font-semibold text-gray-400 mb-2 block text-right ml-auto;
 
-  i {
-    @apply text-[13px];
-  }
+  i { @apply text-[13px]; }
 }
 
 .lista-socios__filtros-panel {
@@ -214,7 +204,7 @@
 }
 
 .filtro-pill {
-  @apply text-[11px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500 transition-colors duration-100;
+  @apply text-[11px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500;
 
   &--active {
     @apply bg-amber-50 text-amber-700;
