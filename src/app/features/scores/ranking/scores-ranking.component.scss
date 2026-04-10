@@ -43,7 +43,11 @@
 }
 
 .ranking-row__posicion {
-  @apply text-[14px] w-6 text-center;
+  @apply text-[14px] font-bold w-6 text-center text-gray-400;
+
+  &--gold { color: #D4A017; }
+  &--silver { color: #8E8E8E; }
+  &--bronze { color: #B5651D; }
 }
 
 .ranking-row__info {

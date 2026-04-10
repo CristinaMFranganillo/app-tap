@@ -19,14 +19,11 @@
       <div class="ranking-card__table">
         @for (entry of ranking(); track entry.userId) {
           <div class="ranking-fila" [class.ranking-fila--top3]="entry.posicion <= 3">
-            <span class="ranking-fila__pos">
-              @switch (entry.posicion) {
-                @case (1) { <span class="ranking-fila__medal">&#129351;</span> }
-                @case (2) { <span class="ranking-fila__medal">&#129352;</span> }
-                @case (3) { <span class="ranking-fila__medal">&#129353;</span> }
-                @default  { {{ entry.posicion }} }
-              }
-            </span>
+            <span class="ranking-fila__pos"
+              [class.ranking-fila__pos--gold]="entry.posicion === 1"
+              [class.ranking-fila__pos--silver]="entry.posicion === 2"
+              [class.ranking-fila__pos--bronze]="entry.posicion === 3"
+            >{{ entry.posicion }}º</span>
             <span class="ranking-fila__nombre">{{ entry.nombre }} {{ entry.apellidos }}</span>
             <span class="ranking-fila__platos">{{ entry.platosRotos }}</span>
           </div>

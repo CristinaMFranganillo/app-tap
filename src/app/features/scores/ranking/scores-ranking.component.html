@@ -21,7 +21,11 @@
   } @else {
     @for (entry of ranking(); track entry.userId; let posicion = $index) {
       <div class="ranking-row" [class.ranking-row--podio]="posicion < 3">
-        <span class="ranking-row__posicion">{{ getMedalIcon(posicion + 1) }}</span>
+        <span class="ranking-row__posicion"
+          [class.ranking-row__posicion--gold]="posicion === 0"
+          [class.ranking-row__posicion--silver]="posicion === 1"
+          [class.ranking-row__posicion--bronze]="posicion === 2"
+        >{{ getMedalIcon(posicion + 1) }}</span>
         <app-avatar
           [nombre]="getUserNombre(entry.userId)"
           [apellidos]="getUserApellidos(entry.userId)"

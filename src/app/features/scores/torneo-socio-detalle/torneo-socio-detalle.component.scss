@@ -18,8 +18,12 @@
 .ranking-fila {
   @apply flex items-center gap-3 px-4 py-2;
   &--top3    { @apply bg-primary/5; }
-  &__pos     { @apply w-8 text-center text-sm font-bold text-neutral-400 flex-shrink-0; }
-  &__medal   { @apply text-[18px]; }
+  &__pos     {
+    @apply w-8 text-center text-sm font-bold text-neutral-400 flex-shrink-0;
+    &--gold   { color: #D4A017; }
+    &--silver { color: #8E8E8E; }
+    &--bronze { color: #B5651D; }
+  }
   &__nombre  { @apply flex-1 text-sm font-semibold text-secondary truncate; }
   &__platos  { @apply text-sm font-bold text-secondary flex-shrink-0; }
 }

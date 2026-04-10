@@ -53,9 +53,6 @@ export class ScoresRankingComponent {
   }
 
   getMedalIcon(posicion: number): string {
-    if (posicion === 1) return '🥇';
-    if (posicion === 2) return '🥈';
-    if (posicion === 3) return '🥉';
     return `${posicion}º`;
   }
 }
