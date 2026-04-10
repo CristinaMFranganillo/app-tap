@@ -28,17 +28,44 @@
         </div>
       </div>
 
-      <!-- Socio: desplegable -->
+      <!-- Socio: buscador con dropdown -->
       @if (puesto.tipo === 'socio') {
         <div class="form-escuadra-e__input-row">
-          <select [(ngModel)]="puestos[$index].userId" class="form-input-surface">
-            <option value="">— Vacío —</option>
-            @for (s of sociosDisponibles($index); track s.id) {
-              <option [value]="s.id">
-                {{ s.apellidos }}, {{ s.nombre }} (#{{ s.numeroSocio }})
-              </option>
+          <div class="socio-search">
+            <div class="socio-search__input-wrap">
+              <i class="bi bi-search socio-search__icon"></i>
+              <input
+                type="text"
+                [ngModel]="searchText[$index]"
+                (ngModelChange)="searchText[$index] = $event; dropdownOpen[$index] = true"
+                (focus)="onSearchFocus($index)"
+                (blur)="onSearchBlur($index)"
+                placeholder="Buscar socio..."
+                class="form-input-surface socio-search__input"
+                autocomplete="off" />
+              @if (puesto.userId) {
+                <button type="button" class="socio-search__clear" (mousedown)="clearSocio($index)">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+              }
+            </div>
+            @if (dropdownOpen[$index]) {
+              <div class="socio-search__dropdown">
+                @for (s of sociosFiltrados($index); track s.id) {
+                  <button type="button"
+                    class="socio-search__option"
+                    [class.socio-search__option--fav]="s.favorito"
+                    (mousedown)="selectSocio($index, s)">
+                    @if (s.favorito) { <i class="bi bi-star-fill socio-search__fav-icon"></i> }
+                    <span>{{ s.apellidos }}, {{ s.nombre }}</span>
+                    <span class="socio-search__num">#{{ s.numeroSocio }}</span>
+                  </button>
+                } @empty {
+                  <div class="socio-search__empty">Sin resultados</div>
+                }
+              </div>
             }
-          </select>
+          </div>
           @if (puesto.userId) {
             <span class="form-escuadra-e__tarifa">{{ tarifaSocio }}&euro;</span>
           }
@@ -53,9 +80,7 @@
             [(ngModel)]="puestos[$index].nombreExterno"
             placeholder="Nombre (opcional)"
             class="form-input-surface" />
-          @if (puesto.nombreExterno?.trim()) {
-            <span class="form-escuadra-e__tarifa form-escuadra-e__tarifa--ext">{{ tarifaNoSocio }}&euro;</span>
-          }
+          <span class="form-escuadra-e__tarifa form-escuadra-e__tarifa--ext">{{ tarifaNoSocio }}&euro;</span>
         </div>
       }
     </div>

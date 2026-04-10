@@ -49,6 +49,9 @@ export class FormEscuadraTorneoComponent {
 
   puestos: PuestoVM[] = Array.from({ length: 6 }, () => ({ tipo: 'socio' as const }));
 
+  searchText: string[] = Array(6).fill('');
+  dropdownOpen: boolean[] = Array(6).fill(false);
+
   loading = false;
   error   = '';
 
@@ -90,8 +93,38 @@ export class FormEscuadraTorneoComponent {
     return this.socios().filter(s => !ocupados.includes(s.id));
   }
 
+  sociosFiltrados(index: number): User[] {
+    const term = this.searchText[index]?.toLowerCase().trim() || '';
+    const disponibles = this.sociosDisponibles(index);
+    if (!term) return disponibles;
+    return disponibles.filter(s =>
+      `${s.apellidos} ${s.nombre} ${s.numeroSocio}`.toLowerCase().includes(term)
+    );
+  }
+
+  onSearchFocus(index: number): void {
+    this.dropdownOpen[index] = true;
+  }
+
+  onSearchBlur(index: number): void {
+    setTimeout(() => this.dropdownOpen[index] = false, 200);
+  }
+
+  selectSocio(index: number, socio: User): void {
+    this.puestos[index].userId = socio.id;
+    this.searchText[index] = `${socio.apellidos}, ${socio.nombre}`;
+    this.dropdownOpen[index] = false;
+  }
+
+  clearSocio(index: number): void {
+    this.puestos[index].userId = undefined;
+    this.searchText[index] = '';
+  }
+
   onTipoChange(index: number, tipo: 'socio' | 'no_socio'): void {
     this.puestos[index] = { tipo };
+    this.searchText[index] = '';
+    this.dropdownOpen[index] = false;
   }
 
   // ── Submit ───────────────────────────────────────────────────────────────
