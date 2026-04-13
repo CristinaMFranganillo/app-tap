@@ -1,10 +1,11 @@
 import { Component, inject, signal, effect } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map, switchMap } from 'rxjs';
 import { firstValueFrom } from 'rxjs';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { TorneoService } from '../torneo.service';
+import { InscripcionTorneoService } from '../inscripcion-torneo.service';
 import { EscuadraService } from '../../../../features/scores/escuadra.service';
 import { UserService } from '../../socios/user.service';
 import { Torneo, ResultadoTorneo, RankingTorneo } from '../../../../core/models/torneo.model';
@@ -33,7 +34,7 @@ export interface EscuadraConResultados {
 @Component({
   selector: 'app-detalle-torneo',
   standalone: true,
-  imports: [DatePipe, DecimalPipe, EmptyStateComponent, ConfirmDialogComponent],
+  imports: [DatePipe, DecimalPipe, RouterLink, EmptyStateComponent, ConfirmDialogComponent],
   templateUrl: './detalle-torneo.component.html',
   styleUrl: './detalle-torneo.component.scss',
 })
@@ -43,6 +44,7 @@ export class DetalleTorneoComponent {
   private torneoService   = inject(TorneoService);
   private escuadraService = inject(EscuadraService);
   private userService     = inject(UserService);
+  private inscService     = inject(InscripcionTorneoService);
 
   private id$ = this.route.paramMap.pipe(map(p => p.get('id')!));
 
@@ -63,12 +65,29 @@ export class DetalleTorneoComponent {
 
   escuadrasConResultados = signal<EscuadraConResultados[]>([]);
   totalCajaDia           = signal(0);
+  numInscritos           = signal(0);
+  totalRecaudadoInscripciones = signal(0);
 
   // Confirm dialog
   mostrarConfirm    = signal(false);
   escuadraAEliminar = signal<string | null>(null);
 
   constructor() {
+    effect(async () => {
+      const t = this.torneo();
+      if (!t) return;
+      try {
+        const inscritos = await this.inscService.listarInscritos(t.id);
+        this.numInscritos.set(inscritos.length);
+        this.totalRecaudadoInscripciones.set(
+          inscritos.reduce((s, i) => s + i.precioPagado, 0)
+        );
+      } catch {
+        this.numInscritos.set(0);
+        this.totalRecaudadoInscripciones.set(0);
+      }
+    });
+
     effect(async () => {
       const escuadras = this.escuadrasRaw();
       if (escuadras.length === 0) {

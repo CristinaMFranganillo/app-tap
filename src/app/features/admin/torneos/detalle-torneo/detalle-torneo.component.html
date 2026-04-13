@@ -9,6 +9,20 @@
     </div>
   </div>
 
+  @if (torneo(); as t) {
+    <div class="inscripciones-resumen">
+      <div class="inscripciones-resumen__info">
+        <span><strong>{{ numInscritos() }}</strong> inscritos</span>
+        <span>·</span>
+        <span><strong>{{ totalRecaudadoInscripciones() | number:'1.2-2' }} €</strong> recaudado</span>
+      </div>
+      <a [routerLink]="['/admin/torneos', t.id, 'inscripciones']"
+         class="inscripciones-resumen__link">
+        Gestionar inscritos
+      </a>
+    </div>
+  }
+
   <!-- Ranking -->
   @if (ranking().length > 0) {
     <div class="ranking-card card">
@@ -17,7 +31,7 @@
         <span class="ranking-card__titulo">Ranking</span>
       </div>
       <div class="ranking-card__table">
-        @for (entry of ranking(); track entry.userId) {
+        @for (entry of ranking(); track entry.userId || entry.nombre + entry.apellidos) {
           <div class="ranking-fila" [class.ranking-fila--top3]="entry.posicion <= 3">
             <span class="ranking-fila__pos"
               [class.ranking-fila__pos--gold]="entry.posicion === 1"
