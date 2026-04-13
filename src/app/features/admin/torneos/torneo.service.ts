@@ -192,37 +192,9 @@ export class TorneoService {
     return from(
       supabase
         .from('resultados_torneo')
-        .select('user_id, platos_rotos, escuadras!inner(torneo_id), profiles:user_id(nombre, apellidos)')
+        .select('user_id, nombre_externo, es_no_socio, platos_rotos, escuadras!inner(torneo_id), profiles:user_id(nombre, apellidos)')
         .eq('escuadras.torneo_id', torneoId)
-        .eq('es_no_socio', false)
-    ).pipe(
-      map(({ data }) => {
-        const agg = new Map<string, { nombre: string; apellidos: string; platos: number }>();
-        for (const row of (data ?? []) as any[]) {
-          const uid = row['user_id'] as string;
-          const platos = row['platos_rotos'] as number;
-          const profile = row['profiles'] as any;
-          if (!agg.has(uid)) {
-            agg.set(uid, {
-              nombre: profile?.nombre ?? '',
-              apellidos: profile?.apellidos ?? '',
-              platos: 0,
-            });
-          }
-          agg.get(uid)!.platos += platos;
-        }
-        return Array.from(agg.entries())
-          .map(([userId, v]) => ({
-            userId,
-            nombre: v.nombre,
-            apellidos: v.apellidos,
-            platosRotos: v.platos,
-            posicion: 0,
-          }))
-          .sort((a, b) => b.platosRotos - a.platosRotos)
-          .map((entry, i) => ({ ...entry, posicion: i + 1 }));
-      })
-    );
+    ).pipe(map(({ data }) => agruparRanking((data ?? []) as any[])));
   }
 
   // ── Fallos ──────────────────────────────────────────────────────────
@@ -280,4 +252,49 @@ export class TorneoService {
     const { error } = await supabase.from('escuadras').delete().eq('id', id);
     if (error) throw new Error(error.message);
   }
+}
+
+export function agruparRanking(rows: any[]): RankingTorneo[] {
+  const agg = new Map<string, { nombre: string; apellidos: string; platos: number; userId: string }>();
+
+  for (const row of rows) {
+    const platos = row['platos_rotos'] as number;
+    const esNoSocio = row['es_no_socio'] === true;
+
+    let key: string;
+    let nombre: string;
+    let apellidos: string;
+    let userId: string;
+
+    if (esNoSocio) {
+      const ext = String(row['nombre_externo'] ?? '').trim();
+      key = `inv:${ext}`;
+      const partes = ext.split(/\s+/);
+      nombre = partes[0] ?? '';
+      apellidos = partes.slice(1).join(' ');
+      userId = '';
+    } else {
+      userId = row['user_id'] as string;
+      key = `soc:${userId}`;
+      const profile = row['profiles'] as { nombre?: string; apellidos?: string } | null;
+      nombre = profile?.nombre ?? '';
+      apellidos = profile?.apellidos ?? '';
+    }
+
+    if (!agg.has(key)) {
+      agg.set(key, { nombre, apellidos, platos: 0, userId });
+    }
+    agg.get(key)!.platos += platos;
+  }
+
+  return Array.from(agg.values())
+    .map(v => ({
+      userId: v.userId,
+      nombre: v.nombre,
+      apellidos: v.apellidos,
+      platosRotos: v.platos,
+      posicion: 0,
+    }))
+    .sort((a, b) => b.platosRotos - a.platosRotos)
+    .map((e, i) => ({ ...e, posicion: i + 1 }));
 }
