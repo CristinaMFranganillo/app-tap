@@ -40,13 +40,27 @@
 
     <div class="perfil-admin">
 
+      <!-- Tabs -->
+      <div class="perfil-admin__tabs">
+        <button
+          [class.perfil-admin__tab--active]="tabAdmin() === 'admin'"
+          (click)="tabAdmin.set('admin')"
+          class="perfil-admin__tab">
+          Administración
+        </button>
+        <button
+          [class.perfil-admin__tab--active]="tabAdmin() === 'stats'"
+          (click)="tabAdmin.set('stats')"
+          class="perfil-admin__tab">
+          Estadísticas
+        </button>
+      </div>
+
       @if (errorAdmin()) {
         <p class="perfil-admin__error">{{ errorAdmin() }}</p>
       }
 
-      <h3 class="perfil-admin__section-title">
-        <i class="bi bi-bar-chart-line"></i> Administración
-      </h3>
+      @if (tabAdmin() === 'admin') {
 
       <!-- Resumen financiero -->
       @if (cargandoResumen()) {
@@ -226,13 +240,9 @@
         </div>
       }
 
-      <!-- ════════════════════════════════════════════════════════ -->
-      <!-- ADMIN: Estadísticas / Accesos rápidos                   -->
-      <!-- ════════════════════════════════════════════════════════ -->
+      } @else {
 
-      <h3 class="perfil-admin__section-title perfil-admin__section-title--mt">
-        <i class="bi bi-gear"></i> Gestión
-      </h3>
+      <!-- Tab Estadísticas -->
 
       <div class="perfil-admin__links">
         <button (click)="irSocios()" class="perfil-admin__link card">
@@ -280,6 +290,8 @@
           <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
         </button>
       </div>
+
+      }
 
     </div>
 
