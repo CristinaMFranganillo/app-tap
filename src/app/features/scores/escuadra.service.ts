@@ -167,11 +167,14 @@ export class EscuadraService {
     entrenamientoId: string | null,
     fecha: string,
     registradoPor: string,
-    tiradores: { userId?: string; nombreTirador: string; esNoSocio: boolean; importe: number }[]
+    tiradores: { userId?: string; nombreTirador: string; esNoSocio: boolean; importe: number }[],
+    torneoId: string | null = null
   ): Promise<void> {
+    if (tiradores.length === 0) return;
     const rows = tiradores.map(t => ({
       escuadra_id:      escuadraId,
       entrenamiento_id: entrenamientoId,
+      torneo_id:        torneoId,
       user_id:          t.userId ?? null,
       nombre_tirador:   t.nombreTirador,
       es_no_socio:      t.esNoSocio,

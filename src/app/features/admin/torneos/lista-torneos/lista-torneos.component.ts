@@ -33,11 +33,15 @@ export class ListaTorneosComponent {
   error = signal('');
   nuevoNombre = signal('');
   nuevaFecha = signal('');
+  nuevoPrecioSocio = signal(0);
+  nuevoPrecioNoSocio = signal(0);
 
   // Edicion
   editandoTorneo = signal<Torneo | null>(null);
   editNombre = signal('');
   editFecha = signal('');
+  editPrecioSocio = signal(0);
+  editPrecioNoSocio = signal(0);
   editSaving = signal(false);
   editError = signal('');
 
@@ -47,6 +51,8 @@ export class ListaTorneosComponent {
   abrirFormulario(): void {
     this.nuevoNombre.set('');
     this.nuevaFecha.set('');
+    this.nuevoPrecioSocio.set(0);
+    this.nuevoPrecioNoSocio.set(0);
     this.error.set('');
     this.mostrarFormulario.set(true);
   }
@@ -67,7 +73,13 @@ export class ListaTorneosComponent {
       const userId = this.authService.currentUser?.id;
       if (!userId) throw new Error('No se pudo obtener el usuario actual.');
 
-      const id = await this.torneoService.create(this.nuevoNombre(), this.nuevaFecha(), userId);
+      const id = await this.torneoService.create(
+        this.nuevoNombre(),
+        this.nuevaFecha(),
+        userId,
+        this.nuevoPrecioSocio(),
+        this.nuevoPrecioNoSocio()
+      );
       this.mostrarFormulario.set(false);
       this.router.navigate(['/admin/torneos', id]);
     } catch (err: unknown) {
@@ -86,6 +98,8 @@ export class ListaTorneosComponent {
     this.editandoTorneo.set(torneo);
     this.editNombre.set(torneo.nombre);
     this.editFecha.set(torneo.fecha);
+    this.editPrecioSocio.set(torneo.precioInscripcionSocio);
+    this.editPrecioNoSocio.set(torneo.precioInscripcionNoSocio);
     this.editError.set('');
   }
 
@@ -103,7 +117,13 @@ export class ListaTorneosComponent {
     this.editSaving.set(true);
     this.editError.set('');
     try {
-      await this.torneoService.update(t.id, this.editNombre(), this.editFecha());
+      await this.torneoService.update(
+        t.id,
+        this.editNombre(),
+        this.editFecha(),
+        this.editPrecioSocio(),
+        this.editPrecioNoSocio()
+      );
       this.editandoTorneo.set(null);
       this.refresh$.next();
     } catch (err: unknown) {

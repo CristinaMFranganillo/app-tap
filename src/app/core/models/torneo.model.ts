@@ -6,6 +6,8 @@ export interface Torneo {
   createdAt?: string;
   numEscuadras?: number;
   numTiradores?: number;
+  precioInscripcionSocio: number;
+  precioInscripcionNoSocio: number;
 }
 
 export interface ResultadoTorneo {

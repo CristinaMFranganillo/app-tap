@@ -1,5 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
@@ -9,18 +8,12 @@ import { UserService } from '../../socios/user.service';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { TorneoService } from '../torneo.service';
 import { User } from '../../../../core/models/user.model';
-import { Tarifa } from '../../../../core/models/escuadra.model';
-
-export interface PuestoVM {
-  tipo: 'socio' | 'no_socio';
-  userId?: string;
-  nombreExterno?: string;
-}
+import { Torneo } from '../../../../core/models/torneo.model';
 
 @Component({
   selector: 'app-form-escuadra-torneo',
   standalone: true,
-  imports: [FormsModule],
+  imports: [],
   templateUrl: './form-escuadra-torneo.component.html',
   styleUrl: './form-escuadra-torneo.component.scss',
 })
@@ -45,128 +38,84 @@ export class FormEscuadraTorneoComponent {
     { initialValue: [] as User[] }
   );
 
-  tarifas = toSignal(this.escuadraService.getTarifas(), { initialValue: [] as Tarifa[] });
+  torneo = signal<Torneo | null>(null);
+  sociosInscritos = signal<Set<string>>(new Set());
 
-  puestos = signal<PuestoVM[]>(Array.from({ length: 6 }, () => ({ tipo: 'socio' as const })));
-  searchText = signal<string[]>(Array(6).fill(''));
-  dropdownOpen = signal<boolean[]>(Array(6).fill(false));
+  // Arrays mutables — sin signal, sin @for, para evitar re-render
+  userIds: string[] = ['', '', '', '', '', ''];
+  tipos: ('socio' | 'no_socio')[] = ['socio', 'socio', 'socio', 'socio', 'socio', 'socio'];
+  nombresExternos: string[] = ['', '', '', '', '', ''];
 
   loading = false;
   error   = '';
 
+  constructor() {
+    const torneoId = this.route.snapshot.paramMap.get('id')!;
+    firstValueFrom(this.torneoService.getById(torneoId)).then(t => this.torneo.set(t));
+    this.torneoService.getSociosInscritos(torneoId).then(s => this.sociosInscritos.set(s));
+  }
+
   // ── Helpers ──────────────────────────────────────────────────────────────
 
-  tarifaSocio = computed(() => this.tarifas().find(t => t.tipo === 'socio')?.importe ?? 6);
-  tarifaNoSocio = computed(() => this.tarifas().find(t => t.tipo === 'no_socio')?.importe ?? 7);
+  get tarifaSocio(): number { return this.torneo()?.precioInscripcionSocio ?? 0; }
+  get tarifaNoSocio(): number { return this.torneo()?.precioInscripcionNoSocio ?? 0; }
 
-  asignados = computed(() => this.puestos().filter(p =>
-    (p.tipo === 'socio' && !!p.userId?.trim()) || (p.tipo === 'no_socio')
-  ));
-
-  totalEscuadra = computed(() =>
-    this.asignados().reduce((sum, p) =>
-      sum + (p.tipo === 'socio' ? this.tarifaSocio() : this.tarifaNoSocio()), 0
-    )
-  );
-
-  countSocios = computed(() => this.asignados().filter(p => p.tipo === 'socio').length);
-  countNoSocios = computed(() => this.asignados().filter(p => p.tipo === 'no_socio').length);
-
-  // Listas filtradas memoizadas por índice para que el @for interno no reciba
-  // un array nuevo en cada detección de cambios.
-  private sociosFiltradosSignals = Array.from({ length: 6 }, (_, i) =>
-    computed<User[]>(() => {
-      const ocupados = this.puestos()
-        .filter((p, j) => j !== i && p.tipo === 'socio' && !!p.userId)
-        .map(p => p.userId);
-      const disponibles = this.socios().filter(s => !ocupados.includes(s.id));
-      const term = (this.searchText()[i] ?? '').toLowerCase().trim();
-      if (!term) return disponibles;
-      return disponibles.filter(s =>
-        `${s.apellidos} ${s.nombre} ${s.numeroSocio}`.toLowerCase().includes(term)
-      );
-    })
-  );
-
-  sociosFiltrados(index: number): User[] {
-    return this.sociosFiltradosSignals[index]();
+  sociosDisponibles(index: number): User[] {
+    return this.socios().filter(s =>
+      !this.userIds.some((id, j) => j !== index && id === s.id)
+    );
   }
 
-  private updatePuesto(index: number, patch: Partial<PuestoVM> | PuestoVM, replace = false): void {
-    this.puestos.update(arr => {
-      const next = arr.slice();
-      next[index] = replace ? (patch as PuestoVM) : { ...next[index], ...patch };
-      return next;
-    });
+  yaInscrito(userId: string): boolean {
+    return !!userId && this.sociosInscritos().has(userId);
   }
 
-  private updateSearch(index: number, value: string): void {
-    this.searchText.update(arr => {
-      const next = arr.slice();
-      next[index] = value;
-      return next;
-    });
+  onSelectSocio(index: number, event: Event): void {
+    this.userIds[index] = (event.target as HTMLSelectElement).value;
   }
 
-  private updateDropdown(index: number, open: boolean): void {
-    this.dropdownOpen.update(arr => {
-      const next = arr.slice();
-      next[index] = open;
-      return next;
-    });
-  }
-
-  onSearchFocus(index: number): void {
-    // Si hay socio asignado, limpiar el texto para permitir buscar otro
-    if (this.puestos()[index].userId) {
-      this.updateSearch(index, '');
-    }
-    this.updateDropdown(index, true);
-  }
-
-  onSearchBlur(index: number): void {
-    // Retraso para permitir que el mousedown de la opción llegue antes de cerrar
-    setTimeout(() => {
-      this.updateDropdown(index, false);
-      const p = this.puestos()[index];
-      if (p.userId && !this.searchText()[index]) {
-        const socio = this.socios().find(s => s.id === p.userId);
-        if (socio) this.updateSearch(index, `${socio.apellidos}, ${socio.nombre}`);
-      }
-    }, 200);
-  }
-
-  onSearchChange(index: number, value: string): void {
-    this.updateSearch(index, value);
-    this.updateDropdown(index, true);
-  }
-
-  selectSocio(index: number, socio: User): void {
-    this.updatePuesto(index, { userId: socio.id });
-    this.updateSearch(index, `${socio.apellidos}, ${socio.nombre}`);
-    this.updateDropdown(index, false);
-  }
-
-  clearSocio(index: number): void {
-    this.updatePuesto(index, { userId: undefined });
-    this.updateSearch(index, '');
-    this.updateDropdown(index, false);
+  onNombreExterno(index: number, event: Event): void {
+    this.nombresExternos[index] = (event.target as HTMLInputElement).value;
   }
 
   onTipoChange(index: number, tipo: 'socio' | 'no_socio'): void {
-    this.updatePuesto(index, { tipo }, true);
-    this.updateSearch(index, '');
-    this.updateDropdown(index, false);
+    this.tipos[index] = tipo;
+    this.userIds[index] = '';
+    this.nombresExternos[index] = '';
   }
 
-  onNombreExternoChange(index: number, nombre: string): void {
-    this.updatePuesto(index, { nombreExterno: nombre });
+  get asignadosCount(): number {
+    let c = 0;
+    for (let i = 0; i < 6; i++) {
+      if ((this.tipos[i] === 'socio' && this.userIds[i]) || this.tipos[i] === 'no_socio') c++;
+    }
+    return c;
+  }
+
+  get countSocios(): number {
+    let c = 0;
+    for (let i = 0; i < 6; i++) {
+      if (this.tipos[i] === 'socio' && this.userIds[i] && !this.yaInscrito(this.userIds[i])) c++;
+    }
+    return c;
+  }
+
+  get countNoSocios(): number {
+    let c = 0;
+    for (let i = 0; i < 6; i++) {
+      if (this.tipos[i] === 'no_socio') c++;
+    }
+    return c;
+  }
+
+  get totalEscuadra(): number {
+    return this.countSocios * this.tarifaSocio + this.countNoSocios * this.tarifaNoSocio;
   }
 
   // ── Submit ───────────────────────────────────────────────────────────────
 
   async onSubmit(): Promise<void> {
-    if (this.asignados().length === 0) {
+    if (this.asignadosCount === 0) {
       this.error = 'Asigna al menos un tirador';
       return;
     }
@@ -176,49 +125,51 @@ export class FormEscuadraTorneoComponent {
 
     try {
       const torneoId  = this.route.snapshot.paramMap.get('id')!;
-      const torneo    = await firstValueFrom(this.torneoService.getById(torneoId));
+      const torneo    = this.torneo() ?? await firstValueFrom(this.torneoService.getById(torneoId));
       const escuadras = await firstValueFrom(this.escuadraService.getByTorneo(torneoId));
       const escuadraId = await this.escuadraService.createEscuadraTorneo(
         torneoId, escuadras.length + 1
       );
 
-      // 1. Añadir tiradores — puestos vacíos se saltan
-      const puestosActuales = this.puestos();
-      for (let i = 0; i < puestosActuales.length; i++) {
-        const p = puestosActuales[i];
-        if (p.tipo === 'socio' && p.userId?.trim()) {
-          await this.escuadraService.addTirador(escuadraId, p.userId.trim(), i + 1);
-        } else if (p.tipo === 'no_socio') {
-          const nombre = p.nombreExterno?.trim() || `No socio ${i + 1}`;
+      // 1. Añadir tiradores
+      for (let i = 0; i < 6; i++) {
+        if (this.tipos[i] === 'socio' && this.userIds[i]) {
+          await this.escuadraService.addTirador(escuadraId, this.userIds[i], i + 1);
+        } else if (this.tipos[i] === 'no_socio') {
+          const nombre = this.nombresExternos[i]?.trim() || `No socio ${i + 1}`;
           await this.escuadraService.addNoSocio(escuadraId, nombre, i + 1);
         }
       }
 
-      // 2. Registrar caja solo con los asignados
+      // 2. Registrar caja
       const fecha       = torneo.fecha;
       const registrador = this.authService.currentUser!.id;
       const sociosMap   = new Map(this.socios().map(s => [s.id, s]));
+      const inscritos   = this.sociosInscritos();
 
-      const movimientos = this.asignados().map(p => {
-        if (p.tipo === 'socio') {
-          const socio = sociosMap.get(p.userId!);
-          return {
-            userId:        p.userId,
-            nombreTirador: socio ? `${socio.apellidos}, ${socio.nombre}` : p.userId!,
+      const movimientos: { userId?: string; nombreTirador: string; esNoSocio: boolean; importe: number }[] = [];
+
+      for (let i = 0; i < 6; i++) {
+        if (this.tipos[i] === 'socio' && this.userIds[i] && !inscritos.has(this.userIds[i])) {
+          const socio = sociosMap.get(this.userIds[i]);
+          movimientos.push({
+            userId:        this.userIds[i],
+            nombreTirador: socio ? `${socio.apellidos}, ${socio.nombre}` : this.userIds[i],
             esNoSocio:     false,
-            importe:       this.tarifaSocio(),
-          };
+            importe:       this.tarifaSocio,
+          });
+        } else if (this.tipos[i] === 'no_socio') {
+          movimientos.push({
+            userId:        undefined,
+            nombreTirador: this.nombresExternos[i]?.trim() || 'No socio',
+            esNoSocio:     true,
+            importe:       this.tarifaNoSocio,
+          });
         }
-        return {
-          userId:        undefined,
-          nombreTirador: p.nombreExterno?.trim() || 'No socio',
-          esNoSocio:     true,
-          importe:       this.tarifaNoSocio(),
-        };
-      });
+      }
 
       await this.escuadraService.registrarCajaEscuadra(
-        escuadraId, null, fecha, registrador, movimientos
+        escuadraId, null, fecha, registrador, movimientos, torneoId
       );
 
       this.router.navigate([

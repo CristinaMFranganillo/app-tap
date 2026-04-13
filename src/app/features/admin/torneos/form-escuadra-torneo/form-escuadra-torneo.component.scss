@@ -23,8 +23,7 @@
   &__input-row {
     @apply flex items-center gap-2;
 
-    .form-input-surface { @apply flex-1 min-w-0; }
-    .socio-search { @apply flex-1 min-w-0; }
+    .form-input-surface, select.form-input-surface { @apply flex-1 min-w-0; }
   }
 
   // ── Tarifa inline ──────────────────────────────────────────────
@@ -58,53 +57,6 @@
   &__actions { @apply flex gap-2 mt-4; }
 }
 
-// ── Buscador de socios ─────────────────────────────────────
-
-.socio-search {
-  position: relative;
-
-  &__input-wrap {
-    @apply relative flex items-center;
-  }
-
-  &__icon {
-    @apply absolute left-2.5 text-neutral-300 text-[13px] pointer-events-none;
-  }
-
-  &__input {
-    @apply pl-8 pr-8;
-  }
-
-  &__clear {
-    @apply absolute right-2 text-neutral-300 text-[13px] bg-transparent border-0 cursor-pointer p-0;
-  }
-
-  &__dropdown {
-    @apply absolute z-10 left-0 right-0 mt-1 bg-white border border-neutral-200
-           rounded-lg shadow-lg max-h-48 overflow-y-auto;
-  }
-
-  &__option {
-    @apply w-full flex items-center gap-2 px-3 py-2 text-left text-sm
-           text-secondary bg-transparent border-0 cursor-pointer;
-
-    &:active { @apply bg-neutral-50; }
-    &--fav { @apply bg-primary/5; }
-  }
-
-  &__fav-icon {
-    @apply text-[11px] flex-shrink-0;
-    color: #D4A017;
-  }
-
-  &__num {
-    @apply ml-auto text-xs text-neutral-400 flex-shrink-0;
-  }
-
-  &__empty {
-    @apply px-3 py-3 text-sm text-neutral-400 italic text-center;
-  }
-}
 
 // ── Toggle socio / no socio ────────────────────────────────────
 

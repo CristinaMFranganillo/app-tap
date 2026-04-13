@@ -10,6 +10,8 @@ function toTorneo(row: Record<string, unknown>): Torneo {
     fecha: row['fecha'] as string,
     creadoPor: row['creado_por'] as string,
     createdAt: row['created_at'] as string,
+    precioInscripcionSocio: Number(row['precio_inscripcion_socio'] ?? 0),
+    precioInscripcionNoSocio: Number(row['precio_inscripcion_no_socio'] ?? 0),
   };
 }
 
@@ -58,22 +60,55 @@ export class TorneoService {
     ).pipe(map(({ data }) => toTorneo(data as Record<string, unknown>)));
   }
 
-  async create(nombre: string, fecha: string, creadoPor: string): Promise<string> {
+  async create(
+    nombre: string,
+    fecha: string,
+    creadoPor: string,
+    precioInscripcionSocio: number,
+    precioInscripcionNoSocio: number
+  ): Promise<string> {
     const { data, error } = await supabase
       .from('torneos')
-      .insert({ nombre, fecha, creado_por: creadoPor })
+      .insert({
+        nombre,
+        fecha,
+        creado_por: creadoPor,
+        precio_inscripcion_socio: precioInscripcionSocio,
+        precio_inscripcion_no_socio: precioInscripcionNoSocio,
+      })
       .select('id')
       .single();
     if (error || !data) throw new Error(error?.message ?? 'Error creando torneo');
     return (data as Record<string, unknown>)['id'] as string;
   }
 
-  async update(id: string, nombre: string, fecha: string): Promise<void> {
+  async update(
+    id: string,
+    nombre: string,
+    fecha: string,
+    precioInscripcionSocio?: number,
+    precioInscripcionNoSocio?: number
+  ): Promise<void> {
+    const payload: Record<string, unknown> = { nombre, fecha };
+    if (precioInscripcionSocio != null) payload['precio_inscripcion_socio'] = precioInscripcionSocio;
+    if (precioInscripcionNoSocio != null) payload['precio_inscripcion_no_socio'] = precioInscripcionNoSocio;
     const { error } = await supabase
       .from('torneos')
-      .update({ nombre, fecha })
+      .update(payload)
       .eq('id', id);
     if (error) throw new Error(error.message);
+  }
+
+  // Devuelve los user_id de socios que ya tienen inscripción registrada en el torneo
+  async getSociosInscritos(torneoId: string): Promise<Set<string>> {
+    const { data, error } = await supabase
+      .from('movimientos_caja')
+      .select('user_id')
+      .eq('torneo_id', torneoId)
+      .eq('es_no_socio', false)
+      .not('user_id', 'is', null);
+    if (error) throw new Error(error.message);
+    return new Set((data ?? []).map((r: { user_id: string }) => r.user_id));
   }
 
   async deleteTorneo(id: string): Promise<void> {

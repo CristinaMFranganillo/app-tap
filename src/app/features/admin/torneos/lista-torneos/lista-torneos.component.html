@@ -74,6 +74,30 @@
         />
       </div>
 
+      <div class="modal-card__field">
+        <label class="form-label">Precio inscripción socio (&euro;)</label>
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          [ngModel]="nuevoPrecioSocio()"
+          (ngModelChange)="nuevoPrecioSocio.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Precio inscripción no socio (&euro;)</label>
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          [ngModel]="nuevoPrecioNoSocio()"
+          (ngModelChange)="nuevoPrecioNoSocio.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
       <div class="modal-card__actions">
         <button type="button" (click)="cerrarFormulario()" class="btn-secondary">Cancelar</button>
         <button
@@ -114,6 +138,30 @@
           type="date"
           [ngModel]="editFecha()"
           (ngModelChange)="editFecha.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Precio inscripción socio (&euro;)</label>
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          [ngModel]="editPrecioSocio()"
+          (ngModelChange)="editPrecioSocio.set($event)"
+          class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Precio inscripción no socio (&euro;)</label>
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          [ngModel]="editPrecioNoSocio()"
+          (ngModelChange)="editPrecioNoSocio.set($event)"
           class="form-input-surface"
         />
       </div>
