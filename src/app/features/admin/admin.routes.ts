@@ -78,6 +78,13 @@ export const adminRoutes: Routes = [
       import('./torneos/detalle-torneo/detalle-torneo.component').then(m => m.DetalleTorneoComponent),
   },
   {
+    path: 'torneos/:id/inscripciones',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./torneos/inscripciones-torneo/inscripciones-torneo.component').then(m => m.InscripcionesTorneoComponent),
+  },
+  {
     path: 'torneos/:id/escuadra/nueva',
     canActivate: [roleGuard],
     data: { roles: ['admin', 'moderador'] },
