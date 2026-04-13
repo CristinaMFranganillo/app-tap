@@ -26,6 +26,7 @@ export interface ResultadoEntrenamientoConFecha {
   esNoSocio: boolean;
   puesto: number;
   platosRotos: number;
+  esquema?: number;  // 1-12, esquema de platos foso universal
   fecha: string;  // YYYY-MM-DD, de entrenamientos.fecha
 }
 

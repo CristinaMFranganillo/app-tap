@@ -18,6 +18,19 @@
     </div>
     <p class="entrena-detalle__label">platos rotos</p>
 
+    <div class="entrena-detalle__badges">
+      @if (esquema) {
+        <span class="entrena-detalle__badge">
+          <i class="bi bi-bullseye"></i> Esquema {{ esquema }}
+        </span>
+      }
+      @if (puesto) {
+        <span class="entrena-detalle__badge">
+          <i class="bi bi-geo-alt"></i> Puesto {{ puesto }}
+        </span>
+      }
+    </div>
+
     <div class="entrena-detalle__fallos-titulo">
       @if (fallos().length === 0) {
         <p class="entrena-detalle__sin-fallos">Sin fallos registrados</p>

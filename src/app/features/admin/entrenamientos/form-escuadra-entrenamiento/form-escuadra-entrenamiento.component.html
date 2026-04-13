@@ -6,6 +6,19 @@
     <h2 class="form-escuadra-e__title">Nueva escuadra</h2>
   </div>
 
+  <div class="form-escuadra-e__esquema">
+    <label class="form-label">Esquema de platos</label>
+    <select
+      class="form-input-surface"
+      [value]="esquemaSeleccionado"
+      (change)="esquemaSeleccionado = +$any($event.target).value">
+      <option [value]="0">— Sin esquema —</option>
+      @for (e of esquemas; track e) {
+        <option [value]="e">Esquema {{ e }}</option>
+      }
+    </select>
+  </div>
+
   <p class="form-escuadra-e__section-label">Tiradores por puesto</p>
 
   <!-- Puesto 1 -->

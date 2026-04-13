@@ -5,6 +5,13 @@
   &__back-icon  { @apply text-[15px]; }
   &__title      { @apply text-[18px] font-extrabold text-secondary; }
 
+  &__esquema {
+    @apply mt-2 mb-1;
+
+    .form-label { @apply mb-1; }
+    select { @apply w-full; }
+  }
+
   &__section-label {
     @apply text-xs font-semibold text-neutral-400 uppercase tracking-[1.5px] mt-2 mb-1;
   }

@@ -4,6 +4,7 @@ export interface Escuadra {
   entrenamientoId?: string;
   torneoId?: string;
   numero: number;
+  esquema?: number;          // 1-12, esquema de platos foso universal
   tiradores?: EscuadraTirador[];
 }
 

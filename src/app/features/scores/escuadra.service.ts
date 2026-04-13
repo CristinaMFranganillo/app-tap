@@ -62,6 +62,7 @@ export class EscuadraService {
           id: (row as any)['id'] as string,
           entrenamientoId: (row as any)['entrenamiento_id'] as string,
           numero: (row as any)['numero'] as number,
+          esquema: (row as any)['esquema'] as number | undefined,
           tiradores: ((row as any)['escuadra_tiradores'] ?? []).map(toEscuadraTirador),
         }))
       )
@@ -81,9 +82,11 @@ export class EscuadraService {
     return (data as Record<string, unknown>)['id'] as string;
   }
 
-  async createEscuadraEntrenamiento(entrenamientoId: string, numero: number): Promise<string> {
+  async createEscuadraEntrenamiento(entrenamientoId: string, numero: number, esquema?: number): Promise<string> {
+    const payload: Record<string, unknown> = { entrenamiento_id: entrenamientoId, numero };
+    if (esquema != null) payload['esquema'] = esquema;
     const { data, error } = await supabase
-      .from('escuadras').insert({ entrenamiento_id: entrenamientoId, numero }).select('id').single();
+      .from('escuadras').insert(payload).select('id').single();
     if (error || !data) throw new Error('Error creando escuadra');
     return (data as Record<string, unknown>)['id'] as string;
   }

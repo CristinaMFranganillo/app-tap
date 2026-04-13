@@ -4,9 +4,17 @@
   } @else {
     @for (e of entrenamientos(); track e.escuadraId) {
       <button type="button" class="entrena-lista__item card" (click)="irDetalle(e)">
-        <div class="entrena-lista__fecha">
-          <i class="bi bi-calendar3"></i>
-          {{ e.fecha | date:'d MMM yyyy' : '' : 'es' }}
+        <div class="entrena-lista__left">
+          <div class="entrena-lista__fecha">
+            <i class="bi bi-calendar3"></i>
+            {{ e.fecha | date:'d MMM yyyy' : '' : 'es' }}
+          </div>
+          <div class="entrena-lista__meta">
+            @if (e.esquema) {
+              <span class="entrena-lista__badge">Esq. {{ e.esquema }}</span>
+            }
+            <span class="entrena-lista__badge">Puesto {{ e.puesto }}</span>
+          </div>
         </div>
         <div class="entrena-lista__resultado"
           [class.entrena-lista__resultado--bueno]="e.platosRotos >= 20"

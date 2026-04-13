@@ -20,6 +20,8 @@ export class EntrenamientoSocioDetalleComponent {
 
   fecha = this.route.snapshot.queryParamMap.get('fecha') ?? '';
   platosRotos = Number(this.route.snapshot.queryParamMap.get('platosRotos') ?? 0);
+  puesto = Number(this.route.snapshot.queryParamMap.get('puesto') ?? 0);
+  esquema = Number(this.route.snapshot.queryParamMap.get('esquema') ?? 0);
   escuadraId = this.route.snapshot.paramMap.get('escuadraId')!;
 
   fallos = signal<number[]>([]);

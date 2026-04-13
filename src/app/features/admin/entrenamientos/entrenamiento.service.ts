@@ -171,7 +171,7 @@ export class EntrenamientoService {
     return from(
       supabase
         .from('resultados_entrenamiento')
-        .select('*, escuadras!inner(entrenamiento_id, entrenamientos!inner(fecha))')
+        .select('*, escuadras!inner(entrenamiento_id, esquema, entrenamientos!inner(fecha))')
         .eq('user_id', userId)
         .gte('escuadras.entrenamientos.fecha', fromDate)
         .lte('escuadras.entrenamientos.fecha', toDate)
@@ -185,6 +185,7 @@ export class EntrenamientoService {
           esNoSocio: false,
           puesto: row['puesto'] as number,
           platosRotos: row['platos_rotos'] as number,
+          esquema: row['escuadras']['esquema'] as number | undefined,
           fecha: row['escuadras']['entrenamientos']['fecha'] as string,
         })).sort((a: ResultadoEntrenamientoConFecha, b: ResultadoEntrenamientoConFecha) =>
           b.fecha.localeCompare(a.fecha)

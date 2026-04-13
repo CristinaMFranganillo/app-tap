@@ -38,6 +38,9 @@ export class FormEscuadraEntrenamientoComponent {
 
   tarifas = toSignal(this.escuadraService.getTarifas(), { initialValue: [] as Tarifa[] });
 
+  esquemaSeleccionado = 0;  // 0 = sin esquema
+  esquemas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
   userIds: string[] = ['', '', '', '', '', ''];
   tipos: ('socio' | 'no_socio')[] = ['socio', 'socio', 'socio', 'socio', 'socio', 'socio'];
   nombresExternos: string[] = ['', '', '', '', '', ''];
@@ -112,8 +115,9 @@ export class FormEscuadraEntrenamientoComponent {
     try {
       const entrenamientoId = this.route.snapshot.paramMap.get('id')!;
       const escuadras  = await firstValueFrom(this.escuadraService.getByEntrenamiento(entrenamientoId));
+      const esquema = this.esquemaSeleccionado > 0 ? this.esquemaSeleccionado : undefined;
       const escuadraId = await this.escuadraService.createEscuadraEntrenamiento(
-        entrenamientoId, escuadras.length + 1
+        entrenamientoId, escuadras.length + 1, esquema
       );
 
       // 1. Añadir tiradores

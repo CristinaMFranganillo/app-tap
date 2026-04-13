@@ -32,9 +32,15 @@ export class EntrenamientoSocioListaComponent {
   );
 
   irDetalle(e: ResultadoEntrenamientoConFecha): void {
+    const queryParams: Record<string, string | number> = {
+      fecha: e.fecha,
+      platosRotos: e.platosRotos,
+      puesto: e.puesto,
+    };
+    if (e.esquema) queryParams['esquema'] = e.esquema;
     this.router.navigate(
       ['/scores/entrenamientos', e.escuadraId],
-      { queryParams: { fecha: e.fecha, platosRotos: e.platosRotos } }
+      { queryParams }
     );
   }
 }

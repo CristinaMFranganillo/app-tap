@@ -17,7 +17,18 @@
   }
 
   &__label {
-    @apply text-[13px] font-medium text-neutral-400 mb-4;
+    @apply text-[13px] font-medium text-neutral-400 mb-2;
+  }
+
+  &__badges {
+    @apply flex gap-2 mb-4;
+  }
+
+  &__badge {
+    @apply flex items-center gap-1 text-[12px] font-bold text-neutral-500
+           bg-neutral-100 px-2.5 py-1 rounded-badge;
+
+    i { @apply text-[11px] text-neutral-400; }
   }
 
   &__fallos-titulo {
