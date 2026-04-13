@@ -10,6 +10,9 @@ function toTemporada(row: Record<string, unknown>): Temporada {
     fechaInicio: new Date(row['fecha_inicio'] as string),
     fechaFin: row['fecha_fin'] ? new Date(row['fecha_fin'] as string) : undefined,
     activa: row['activa'] as boolean,
+    importeSocio: Number(row['importe_socio'] ?? 25),
+    importeDirectivo: Number(row['importe_directivo'] ?? 25),
+    importeHonor: Number(row['importe_honor'] ?? 0),
   };
 }
 
@@ -55,7 +58,14 @@ export class CuotaService {
     );
   }
 
-  async crearTemporada(nombre: string, fechaInicio: Date, fechaFin?: Date): Promise<void> {
+  async crearTemporada(
+    nombre: string,
+    fechaInicio: Date,
+    fechaFin?: Date,
+    importeSocio = 25,
+    importeDirectivo = 25,
+    importeHonor = 0
+  ): Promise<void> {
     // Desactivar temporada actual
     await supabase.from('temporadas').update({ activa: false }).eq('activa', true);
 
@@ -64,6 +74,9 @@ export class CuotaService {
       nombre,
       fecha_inicio: fechaInicio.toISOString().split('T')[0],
       activa: true,
+      importe_socio: importeSocio,
+      importe_directivo: importeDirectivo,
+      importe_honor: importeHonor,
     };
     if (fechaFin) {
       insertPayload['fecha_fin'] = fechaFin.toISOString().split('T')[0];
@@ -103,12 +116,23 @@ export class CuotaService {
     if (error) throw new Error(error.message);
   }
 
-  async editarTemporada(id: string, nombre: string, fechaInicio: Date, fechaFin?: Date): Promise<void> {
+  async editarTemporada(
+    id: string,
+    nombre: string,
+    fechaInicio: Date,
+    fechaFin?: Date,
+    importeSocio?: number,
+    importeDirectivo?: number,
+    importeHonor?: number
+  ): Promise<void> {
     const payload: Record<string, unknown> = {
       nombre,
       fecha_inicio: fechaInicio.toISOString().split('T')[0],
       fecha_fin: fechaFin ? fechaFin.toISOString().split('T')[0] : null,
     };
+    if (importeSocio != null) payload['importe_socio'] = importeSocio;
+    if (importeDirectivo != null) payload['importe_directivo'] = importeDirectivo;
+    if (importeHonor != null) payload['importe_honor'] = importeHonor;
     const { error } = await supabase
       .from('temporadas')
       .update(payload)
@@ -122,6 +146,35 @@ export class CuotaService {
       .delete()
       .eq('id', id);
     if (error) throw new Error(error.message);
+  }
+
+  getResumenCuotasTemporada(temporadaId: string): Observable<{
+    socio: { total: number; pagadas: number };
+    directivo: { total: number; pagadas: number };
+    honor: { total: number; pagadas: number };
+  }> {
+    return from(
+      supabase
+        .from('cuotas')
+        .select('pagada, profiles!inner(tipo_cuota)')
+        .eq('temporada_id', temporadaId)
+    ).pipe(
+      map(({ data }) => {
+        const acc = {
+          socio: { total: 0, pagadas: 0 },
+          directivo: { total: 0, pagadas: 0 },
+          honor: { total: 0, pagadas: 0 },
+        };
+        for (const row of (data ?? []) as Record<string, unknown>[]) {
+          const pagada = row['pagada'] as boolean;
+          const profile = row['profiles'] as Record<string, unknown>;
+          const tipo = (profile?.['tipo_cuota'] as 'socio' | 'directivo' | 'honor') ?? 'socio';
+          acc[tipo].total++;
+          if (pagada) acc[tipo].pagadas++;
+        }
+        return acc;
+      })
+    );
   }
 
   getSociosPendientesByTemporada(temporadaId: string): Observable<{ id: string; nombre: string; apellidos: string }[]> {

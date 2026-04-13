@@ -1,5 +1,7 @@
 export type UserRole = 'socio' | 'moderador' | 'admin';
 
+export type TipoCuota = 'socio' | 'directivo' | 'honor';
+
 export interface User {
   id: string;
   nombre: string;
@@ -15,6 +17,7 @@ export interface User {
   telefono?: string;
   direccion?: string;
   localidad: string;
+  tipoCuota: TipoCuota;
   cuotaPagada?: boolean;
   cuotaId?: string;
   favorito: boolean;

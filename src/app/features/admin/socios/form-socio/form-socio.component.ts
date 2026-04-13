@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from '../user.service';
-import { UserRole } from '../../../../core/models/user.model';
+import { UserRole, TipoCuota } from '../../../../core/models/user.model';
 
 @Component({
   selector: 'app-form-socio',
@@ -32,6 +32,7 @@ export class FormSocioComponent implements OnInit {
     telefono:    ['', Validators.required],
     direccion:   [''],
     localidad:   ['', Validators.required],
+    tipoCuota:   ['socio' as TipoCuota, Validators.required],
   });
 
   ngOnInit(): void {
@@ -51,6 +52,7 @@ export class FormSocioComponent implements OnInit {
           telefono:    user.telefono ?? '',
           direccion:   user.direccion ?? '',
           localidad:   user.localidad,
+          tipoCuota:   user.tipoCuota ?? 'socio',
         });
       }
     }
@@ -74,6 +76,7 @@ export class FormSocioComponent implements OnInit {
           telefono:    val.telefono || undefined,
           direccion:   val.direccion || undefined,
           localidad:   val.localidad || undefined,
+          tipoCuota:   (val.tipoCuota as TipoCuota) ?? 'socio',
         });
       } else {
         await this.userService.crearEnAuth({
@@ -86,6 +89,7 @@ export class FormSocioComponent implements OnInit {
           telefono:    val.telefono || undefined,
           direccion:   val.direccion || undefined,
           localidad:   val.localidad || undefined,
+          tipoCuota:   (val.tipoCuota as TipoCuota) ?? 'socio',
         });
       }
       this.router.navigate(['/admin/socios']);

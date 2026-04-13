@@ -42,7 +42,7 @@ serve(async (req: Request) => {
       )
     }
 
-    const { nombre, apellidos, email, rol, numeroSocio, dni, telefono, direccion, localidad } = await req.json()
+    const { nombre, apellidos, email, rol, numeroSocio, dni, telefono, direccion, localidad, tipoCuota } = await req.json()
 
     if (!nombre || !apellidos || !email || !rol || !numeroSocio) {
       return new Response(
@@ -107,6 +107,7 @@ serve(async (req: Request) => {
       telefono:     telefono  ?? null,
       direccion:    direccion ?? null,
       localidad:    localidad ?? null,
+      tipo_cuota:   tipoCuota ?? 'socio',
       activo:       true,
       first_login:  true,
       favorito:     false,

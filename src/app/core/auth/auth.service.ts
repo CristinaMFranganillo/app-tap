@@ -93,6 +93,7 @@ export class AuthService {
       activo:      data['activo'] as boolean,
       firstLogin:  (data['first_login'] as boolean) ?? true,
       localidad:   (data['localidad'] as string) ?? '',
+      tipoCuota:   (data['tipo_cuota'] as 'socio' | 'directivo' | 'honor') ?? 'socio',
       favorito:    (data['favorito'] as boolean) ?? false,
     };
     this.userSubject.next(user);

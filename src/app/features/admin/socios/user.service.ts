@@ -33,6 +33,7 @@ function toUser(row: Record<string, unknown>): User {
     telefono:    (row['telefono'] as string) ?? undefined,
     direccion:   (row['direccion'] as string) ?? undefined,
     localidad:   (row['localidad'] as string) ?? '',
+    tipoCuota:   (row['tipo_cuota'] as 'socio' | 'directivo' | 'honor') ?? 'socio',
     cuotaPagada: cuota ? (cuota['pagada'] as boolean) : undefined,
     cuotaId:     cuota ? (cuota['id'] as string) : undefined,
     favorito:    (row['favorito'] as boolean) ?? false,
@@ -55,7 +56,7 @@ export class UserService {
         let query = supabase
           .from('profiles')
           .select(
-            'id,nombre,apellidos,email,numero_socio,avatar_url,rol,fecha_alta,activo,first_login,dni,telefono,direccion,localidad,favorito,cuotas!left(id, pagada, temporada_id)'
+            'id,nombre,apellidos,email,numero_socio,avatar_url,rol,fecha_alta,activo,first_login,dni,telefono,direccion,localidad,tipo_cuota,favorito,cuotas!left(id, pagada, temporada_id)'
           )
           .eq('rol', 'socio')
           .order('numero_socio', { ascending: true });
@@ -109,6 +110,7 @@ export class UserService {
     if (data.telefono    !== undefined) payload['telefono']     = data.telefono;
     if (data.direccion   !== undefined) payload['direccion']    = data.direccion;
     if (data.localidad   !== undefined) payload['localidad']    = data.localidad;
+    if (data.tipoCuota   !== undefined) payload['tipo_cuota']   = data.tipoCuota;
     if (data.email       !== undefined) payload['email']        = data.email;
     if (data.favorito    !== undefined) payload['favorito']     = data.favorito;
 
@@ -148,6 +150,7 @@ export class UserService {
     telefono?: string;
     direccion?: string;
     localidad?: string;
+    tipoCuota?: 'socio' | 'directivo' | 'honor';
   }): Promise<void> {
     const { data: result, error } = await supabase.functions.invoke('crear-usuario', { body: data });
     if (error) throw new Error(error.message ?? 'Error al crear el usuario.');

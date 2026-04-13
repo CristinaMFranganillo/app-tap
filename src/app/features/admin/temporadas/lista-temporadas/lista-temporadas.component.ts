@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -12,7 +12,7 @@ import { Temporada } from '../../../../core/models/cuota.model';
 @Component({
   selector: 'app-lista-temporadas',
   standalone: true,
-  imports: [FormsModule, DatePipe, ConfirmDialogComponent],
+  imports: [FormsModule, DatePipe, DecimalPipe, ConfirmDialogComponent],
   templateUrl: './lista-temporadas.component.html',
   styleUrl: './lista-temporadas.component.scss',
 })
@@ -39,12 +39,18 @@ export class ListaTemporadasComponent {
   nuevoNombre = signal('');
   nuevaFechaInicio = signal('');
   nuevaFechaFin = signal('');
+  nuevoImporteSocio = signal(25);
+  nuevoImporteDirectivo = signal(25);
+  nuevoImporteHonor = signal(0);
 
   // Edición
   editandoTemporada = signal<Temporada | null>(null);
   editNombre = signal('');
   editFechaInicio = signal('');
   editFechaFin = signal('');
+  editImporteSocio = signal(25);
+  editImporteDirectivo = signal(25);
+  editImporteHonor = signal(0);
   editSaving = signal(false);
   editError = signal('');
 
@@ -55,6 +61,35 @@ export class ListaTemporadasComponent {
   temporadaDetalle = signal<Temporada | null>(null);
   sociosPendientes = signal<{ id: string; nombre: string; apellidos: string }[]>([]);
   loadingPendientes = signal(false);
+  detalleResumen = signal<{
+    socio: { total: number; pagadas: number };
+    directivo: { total: number; pagadas: number };
+    honor: { total: number; pagadas: number };
+  }>({
+    socio: { total: 0, pagadas: 0 },
+    directivo: { total: 0, pagadas: 0 },
+    honor: { total: 0, pagadas: 0 },
+  });
+
+  detalleTotalCobrado = computed(() => {
+    const t = this.temporadaDetalle();
+    const r = this.detalleResumen();
+    if (!t) return 0;
+    return r.socio.pagadas * t.importeSocio
+      + r.directivo.pagadas * t.importeDirectivo
+      + r.honor.pagadas * t.importeHonor;
+  });
+
+  detalleTotalEsperado = computed(() => {
+    const t = this.temporadaDetalle();
+    const r = this.detalleResumen();
+    if (!t) return 0;
+    return r.socio.total * t.importeSocio
+      + r.directivo.total * t.importeDirectivo
+      + r.honor.total * t.importeHonor;
+  });
+
+  detalleTotalPendiente = computed(() => this.detalleTotalEsperado() - this.detalleTotalCobrado());
 
   // Computed: la temporada del detalle es la última creada (primera del array ordenado desc)
   esUltimaTemporada = computed(() => {
@@ -74,6 +109,10 @@ export class ListaTemporadasComponent {
     this.nuevoNombre.set(`${year}-${year + 1}`);
     this.nuevaFechaInicio.set('');
     this.nuevaFechaFin.set('');
+    const activa = this.temporadas().find(t => t.activa);
+    this.nuevoImporteSocio.set(activa?.importeSocio ?? 25);
+    this.nuevoImporteDirectivo.set(activa?.importeDirectivo ?? 25);
+    this.nuevoImporteHonor.set(activa?.importeHonor ?? 0);
     this.error.set('');
     this.mostrarFormulario.set(true);
   }
@@ -122,7 +161,10 @@ export class ListaTemporadasComponent {
       await this.cuotaService.crearTemporada(
         this.nuevoNombre(),
         new Date(this.nuevaFechaInicio()),
-        this.nuevaFechaFin() ? new Date(this.nuevaFechaFin()) : undefined
+        this.nuevaFechaFin() ? new Date(this.nuevaFechaFin()) : undefined,
+        this.nuevoImporteSocio(),
+        this.nuevoImporteDirectivo(),
+        this.nuevoImporteHonor()
       );
       this.mostrarFormulario.set(false);
       this.mostrarModalSinPagar.set(false);
@@ -137,13 +179,25 @@ export class ListaTemporadasComponent {
   abrirDetalle(temporada: Temporada): void {
     this.temporadaDetalle.set(temporada);
     this.sociosPendientes.set([]);
+    this.detalleResumen.set({
+      socio: { total: 0, pagadas: 0 },
+      directivo: { total: 0, pagadas: 0 },
+      honor: { total: 0, pagadas: 0 },
+    });
     this.loadingPendientes.set(true);
+
+    // Cargar socios pendientes
     this.cuotaService.getSociosPendientesByTemporada(temporada.id).subscribe({
       next: (socios) => {
         this.sociosPendientes.set(socios);
         this.loadingPendientes.set(false);
       },
       error: () => this.loadingPendientes.set(false),
+    });
+
+    // Cargar resumen económico desglosado por tipo
+    this.cuotaService.getResumenCuotasTemporada(temporada.id).subscribe({
+      next: (resumen) => this.detalleResumen.set(resumen),
     });
   }
 
@@ -158,6 +212,9 @@ export class ListaTemporadasComponent {
     const yyyy = temporada.fechaInicio.toISOString().split('T')[0];
     this.editFechaInicio.set(yyyy);
     this.editFechaFin.set(temporada.fechaFin ? temporada.fechaFin.toISOString().split('T')[0] : '');
+    this.editImporteSocio.set(temporada.importeSocio);
+    this.editImporteDirectivo.set(temporada.importeDirectivo);
+    this.editImporteHonor.set(temporada.importeHonor);
     this.editError.set('');
   }
 
@@ -179,7 +236,10 @@ export class ListaTemporadasComponent {
         t.id,
         this.editNombre(),
         new Date(this.editFechaInicio()),
-        this.editFechaFin() ? new Date(this.editFechaFin()) : undefined
+        this.editFechaFin() ? new Date(this.editFechaFin()) : undefined,
+        this.editImporteSocio(),
+        this.editImporteDirectivo(),
+        this.editImporteHonor()
       );
       this.editandoTemporada.set(null);
       this.refresh$.next();

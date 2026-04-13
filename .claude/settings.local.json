@@ -19,7 +19,8 @@
       "Bash(xargs grep:*)",
       "Bash(npm start:*)",
       "Bash(git push:*)",
-      "Bash(rtk npx:*)"
+      "Bash(rtk npx:*)",
+      "Bash(grep:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

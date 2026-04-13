@@ -20,6 +20,11 @@
         <div class="temporada-item__info">
           <p class="temporada-item__nombre">{{ temporada.nombre }}</p>
           <p class="temporada-item__meta">Inicio: {{ temporada.fechaInicio | date:'dd/MM/yyyy' }}@if (temporada.fechaFin) { — Fin: {{ temporada.fechaFin | date:'dd/MM/yyyy' }}}</p>
+          <p class="temporada-item__meta">
+            Socio: {{ temporada.importeSocio | number:'1.2-2' }} € ·
+            Directivo: {{ temporada.importeDirectivo | number:'1.2-2' }} € ·
+            Honor: {{ temporada.importeHonor | number:'1.2-2' }} €
+          </p>
         </div>
         <div class="temporada-item__actions">
           @if (temporada.activa) {
@@ -91,6 +96,45 @@
         />
       </div>
 
+      <div class="modal-card__field">
+        <label class="form-label">Cuota socio (€) <span class="form-required">*</span></label>
+        <input
+          type="number"
+          min="0"
+          step="0.50"
+          [ngModel]="nuevoImporteSocio()"
+          (ngModelChange)="nuevoImporteSocio.set($event)"
+          class="form-input-surface"
+          placeholder="25.00"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Cuota directivo (€) <span class="form-required">*</span></label>
+        <input
+          type="number"
+          min="0"
+          step="0.50"
+          [ngModel]="nuevoImporteDirectivo()"
+          (ngModelChange)="nuevoImporteDirectivo.set($event)"
+          class="form-input-surface"
+          placeholder="25.00"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Cuota socio de honor (€) <span class="form-required">*</span></label>
+        <input
+          type="number"
+          min="0"
+          step="0.50"
+          [ngModel]="nuevoImporteHonor()"
+          (ngModelChange)="nuevoImporteHonor.set($event)"
+          class="form-input-surface"
+          placeholder="0.00"
+        />
+      </div>
+
       <div class="modal-card__actions">
         <button type="button" (click)="cerrarFormulario()" class="btn-secondary">Cancelar</button>
         <button
@@ -116,6 +160,34 @@
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
+      <!-- Resumen económico -->
+      <div class="resumen-economico">
+        <div class="resumen-economico__row">
+          <span class="resumen-economico__label">Socios ({{ temporadaDetalle()!.importeSocio | number:'1.2-2' }} €)</span>
+          <span class="resumen-economico__value">{{ detalleResumen().socio.pagadas }} / {{ detalleResumen().socio.total }}</span>
+        </div>
+        <div class="resumen-economico__row">
+          <span class="resumen-economico__label">Directivos ({{ temporadaDetalle()!.importeDirectivo | number:'1.2-2' }} €)</span>
+          <span class="resumen-economico__value">{{ detalleResumen().directivo.pagadas }} / {{ detalleResumen().directivo.total }}</span>
+        </div>
+        <div class="resumen-economico__row">
+          <span class="resumen-economico__label">Honor ({{ temporadaDetalle()!.importeHonor | number:'1.2-2' }} €)</span>
+          <span class="resumen-economico__value">{{ detalleResumen().honor.pagadas }} / {{ detalleResumen().honor.total }}</span>
+        </div>
+        <div class="resumen-economico__row">
+          <span class="resumen-economico__label">Cobrado</span>
+          <span class="resumen-economico__value resumen-economico__value--ok">{{ detalleTotalCobrado() | number:'1.2-2' }} €</span>
+        </div>
+        <div class="resumen-economico__row">
+          <span class="resumen-economico__label">Pendiente</span>
+          <span class="resumen-economico__value resumen-economico__value--warn">{{ detalleTotalPendiente() | number:'1.2-2' }} €</span>
+        </div>
+        <div class="resumen-economico__row resumen-economico__row--total">
+          <span class="resumen-economico__label">Total esperado</span>
+          <span class="resumen-economico__value">{{ detalleTotalEsperado() | number:'1.2-2' }} €</span>
+        </div>
+      </div>
+
       <p class="modal-card__subtitle">Socios con cuota pendiente</p>
 
       @if (loadingPendientes()) {
@@ -176,6 +248,45 @@
           [ngModel]="editFechaFin()"
           (ngModelChange)="editFechaFin.set($event)"
           class="form-input-surface"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Cuota socio (€) <span class="form-required">*</span></label>
+        <input
+          type="number"
+          min="0"
+          step="0.50"
+          [ngModel]="editImporteSocio()"
+          (ngModelChange)="editImporteSocio.set($event)"
+          class="form-input-surface"
+          placeholder="25.00"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Cuota directivo (€) <span class="form-required">*</span></label>
+        <input
+          type="number"
+          min="0"
+          step="0.50"
+          [ngModel]="editImporteDirectivo()"
+          (ngModelChange)="editImporteDirectivo.set($event)"
+          class="form-input-surface"
+          placeholder="25.00"
+        />
+      </div>
+
+      <div class="modal-card__field">
+        <label class="form-label">Cuota socio de honor (€) <span class="form-required">*</span></label>
+        <input
+          type="number"
+          min="0"
+          step="0.50"
+          [ngModel]="editImporteHonor()"
+          (ngModelChange)="editImporteHonor.set($event)"
+          class="form-input-surface"
+          placeholder="0.00"
         />
       </div>
 

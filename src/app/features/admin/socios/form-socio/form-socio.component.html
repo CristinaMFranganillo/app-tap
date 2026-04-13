@@ -96,6 +96,15 @@
         }
       </div>
 
+      <div>
+        <label class="form-label">Tipo de cuota <span class="form-required">*</span></label>
+        <select formControlName="tipoCuota" class="form-input-surface">
+          <option value="socio">Socio</option>
+          <option value="directivo">Directivo</option>
+          <option value="honor">Socio de honor</option>
+        </select>
+      </div>
+
       <div class="form-socio__actions">
         <button type="button" (click)="cancel()" class="btn-secondary">Cancelar</button>
         <button type="submit" [disabled]="form.invalid || saving()" class="btn-primary">
