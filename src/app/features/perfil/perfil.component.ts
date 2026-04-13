@@ -1,13 +1,9 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
-import { switchMap, combineLatest, of, EMPTY } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { switchMap, combineLatest, EMPTY } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { EntrenamientoService } from '../admin/entrenamientos/entrenamiento.service';
-import { UserService } from '../admin/socios/user.service';
-import { Entrenamiento } from '../../core/models/entrenamiento.model';
-import { User } from '../../core/models/user.model';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { AvatarEditorComponent } from '../../shared/components/avatar-editor/avatar-editor.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
@@ -15,7 +11,7 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [AvatarComponent, AvatarEditorComponent, EmptyStateComponent, DatePipe],
+  imports: [AvatarComponent, AvatarEditorComponent, EmptyStateComponent],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss',
 })
@@ -32,12 +28,18 @@ export class PerfilComponent {
   onAvatarCompletado(): void { this.mostrarEditorAvatar.set(false); }
   onAvatarOmitido(): void { this.mostrarEditorAvatar.set(false); }
 
-  // ── Año seleccionado ───────────────────────────────────────────
+  // ── Bifurcación por rol ────────────────────────────────────────
+  esAdmin = computed(() => {
+    const rol = this.user()?.rol;
+    return rol === 'admin' || rol === 'moderador';
+  });
+
+  // ── Año seleccionado (socio) ───────────────────────────────────
   anioActual = new Date().getFullYear();
   anioSeleccionado = signal(this.anioActual);
   anios = Array.from({ length: 3 }, (_, i) => this.anioActual - i);
 
-  // ── Entrenamientos del año ─────────────────────────────────────
+  // ── Entrenamientos del año (socio) ─────────────────────────────
   misEntrenamientos = toSignal(
     combineLatest([
       this.authService.currentUser$,
@@ -97,69 +99,6 @@ export class PerfilComponent {
     const dots = xs.map((x, i) => ({ x, y: ys[i], platos: list[i].platosRotos }));
     return { points, dots };
   });
-
-  private userService = inject(UserService);
-
-  // ── Bifurcación por rol ────────────────────────────────────────
-  esAdmin = computed(() => {
-    const rol = this.user()?.rol;
-    return rol === 'admin' || rol === 'moderador';
-  });
-
-  // ── Datos del club (solo admin) ────────────────────────────────
-  private todosLosSocios = toSignal(
-    this.authService.currentUser$.pipe(
-      switchMap(u => u && (u.rol === 'admin' || u.rol === 'moderador')
-        ? this.userService.getAll()
-        : of([] as User[])
-      )
-    ),
-    { initialValue: [] as User[] }
-  );
-
-  private todosLosEntrenamientos = toSignal(
-    this.authService.currentUser$.pipe(
-      switchMap(u => u && (u.rol === 'admin' || u.rol === 'moderador')
-        ? this.entrenamientoService.getAll()
-        : of([] as Entrenamiento[])
-      )
-    ),
-    { initialValue: [] as Entrenamiento[] }
-  );
-
-  sociosActivos = computed(() =>
-    this.todosLosSocios().filter(s => s.activo)
-  );
-
-  totalActivos = computed(() => this.sociosActivos().length);
-
-  cuotaPct = computed(() => {
-    const activos = this.sociosActivos();
-    if (activos.length === 0) return null;
-    if (activos.every(s => s.cuotaPagada === undefined)) return null;
-    const pagados = activos.filter(s => s.cuotaPagada === true).length;
-    return Math.round((pagados / activos.length) * 100);
-  });
-
-  entrenamientosMes = computed(() => {
-    const hoy = new Date();
-    return this.todosLosEntrenamientos().filter(e => {
-      const d = new Date(e.fecha);
-      return d.getFullYear() === hoy.getFullYear() && d.getMonth() === hoy.getMonth();
-    }).length;
-  });
-
-  ultimos5 = computed(() =>
-    this.todosLosEntrenamientos().slice(0, 5)
-  );
-
-  irSocios(): void {
-    this.router.navigate(['/admin/socios']);
-  }
-
-  irTemporadas(): void {
-    this.router.navigate(['/admin/temporadas']);
-  }
 
   async logout(): Promise<void> {
     await this.authService.logout();

@@ -7,6 +7,10 @@
 
   &__section-label {
     @apply text-sm font-bold text-neutral-400 uppercase tracking-wider mb-2;
+
+    &--mt {
+      @apply mt-4;
+    }
   }
 
   &__noticia-btn {
@@ -14,7 +18,66 @@
   }
 }
 
-// ── Tarjeta entrenamientos ─────────────────────────────────────
+// ── Admin: Stats ──────────────────────────────────────────────────
+
+.home-stats {
+  @apply flex bg-white rounded-[14px] shadow-sm overflow-hidden;
+}
+
+.home-stat {
+  @apply flex-1 flex flex-col items-center py-3;
+
+  &--border {
+    @apply border-r border-gray-100;
+  }
+
+  &__value {
+    @apply text-[22px] font-black text-brand-dark;
+  }
+
+  &__label {
+    @apply text-[12px] font-bold text-center text-gray-400 uppercase tracking-wide;
+  }
+}
+
+// ── Admin: Últimos entrenamientos ─────────────────────────────────
+
+.home-entrenamientos {
+  @apply flex flex-col gap-2;
+
+  &__fila {
+    @apply flex items-center justify-between cursor-pointer
+           active:scale-[.99] transition-transform duration-fast;
+  }
+
+  &__fecha {
+    @apply flex items-center gap-2 text-[14px] font-semibold text-secondary;
+
+    i { @apply text-neutral-300; }
+  }
+
+  &__badge {
+    @apply text-[12px] font-bold text-neutral-400 bg-neutral-100
+           px-2 py-0.5 rounded-full flex-shrink-0;
+  }
+}
+
+// ── Admin: Accesos rápidos ────────────────────────────────────────
+
+.home-accesos {
+  @apply flex flex-col gap-2 mt-4;
+
+  &__btn {
+    @apply w-full py-3 rounded-[12px] text-[14px] font-extrabold
+           flex items-center justify-center gap-2;
+
+    &--sec {
+      @apply bg-white border border-secondary text-secondary;
+    }
+  }
+}
+
+// ── Socio: Tarjeta entrenamientos ─────────────────────────────────
 
 .home-entrena {
   @apply flex flex-col gap-1 cursor-pointer
@@ -53,7 +116,7 @@
   }
 }
 
-// ── Botón juego ────────────────────────────────────────────────
+// ── Socio: Botón juego ────────────────────────────────────────────
 
 .home-juego {
   @apply w-full flex items-center justify-between

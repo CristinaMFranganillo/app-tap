@@ -38,6 +38,14 @@
   &__btn-add {
     @apply flex items-center justify-center w-10 h-10 p-0 flex-shrink-0;
     i { @apply text-[16px]; }
+
+    &--text {
+      @apply w-auto h-auto px-4 py-2 text-sm font-semibold;
+    }
+  }
+
+  &__btn-aceptar {
+    @apply w-full text-center py-3 rounded-card text-base font-bold mt-1;
   }
 
   // ── Lista de inscritos ─────────────────────────────────────────

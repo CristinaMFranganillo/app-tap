@@ -32,67 +32,7 @@
 
   <!-- ── Sección según rol ──────────────────────────────────── -->
 
-  @if (esAdmin()) {
-
-    <!-- ADMIN: Resumen del club -->
-    <div class="perfil-club">
-
-      <h3 class="page-title perfil-club__titulo">Resumen del club</h3>
-
-      <!-- 3 stat cards -->
-      <div class="perfil-stats">
-        <div class="perfil-stat perfil-stat--border">
-          <p class="perfil-stat__value">{{ totalActivos() }}</p>
-          <p class="perfil-stat__label">Socios activos</p>
-        </div>
-        <div class="perfil-stat perfil-stat--border">
-          @if (cuotaPct() !== null) {
-            <p class="perfil-stat__value">{{ cuotaPct() }}%</p>
-          } @else {
-            <p class="perfil-stat__value">—</p>
-          }
-          <p class="perfil-stat__label">Cuota pagada</p>
-        </div>
-        <div class="perfil-stat">
-          <p class="perfil-stat__value">{{ entrenamientosMes() }}</p>
-          <p class="perfil-stat__label">Este mes</p>
-        </div>
-      </div>
-
-      <!-- Últimos entrenamientos -->
-      <h3 class="page-title perfil-club__titulo perfil-club__titulo--mt">Últimos entrenamientos</h3>
-
-      @if (ultimos5().length === 0) {
-        <app-empty-state icon="bi-bullseye" mensaje="Sin entrenamientos registrados" />
-      } @else {
-        <div class="perfil-club__entrenamientos">
-          @for (e of ultimos5(); track e.id) {
-            <div class="perfil-club__entrena-fila card">
-              <span class="perfil-club__entrena-fecha">
-                <i class="bi bi-calendar3"></i>
-                {{ e.fecha | date:'d MMM yyyy' : '' : 'es' }}
-              </span>
-              <span class="perfil-club__entrena-badge">
-                {{ e.numTiradores ?? 0 }} tirador{{ (e.numTiradores ?? 0) !== 1 ? 'es' : '' }}
-              </span>
-            </div>
-          }
-        </div>
-      }
-
-      <!-- Accesos rápidos -->
-      <div class="perfil-club__accesos">
-        <button (click)="irSocios()" class="btn-primary perfil-club__acceso-btn">
-          <i class="bi bi-people-fill"></i> Gestionar Socios
-        </button>
-        <button (click)="irTemporadas()" class="perfil-club__acceso-btn perfil-club__acceso-btn--sec">
-          <i class="bi bi-calendar-check"></i> Temporadas
-        </button>
-      </div>
-
-    </div>
-
-  } @else {
+  @if (!esAdmin()) {
 
     <!-- SOCIO: Mis entrenamientos -->
     <div class="perfil-entrena">

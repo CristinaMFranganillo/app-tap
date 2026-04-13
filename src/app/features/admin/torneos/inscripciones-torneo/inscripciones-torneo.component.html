@@ -33,8 +33,8 @@
         <button
           (click)="inscribirSocio()"
           [disabled]="!nuevoSocioId"
-          class="btn-primary inscripciones__btn-add">
-          <i class="bi bi-plus-lg"></i>
+          class="btn-primary inscripciones__btn-add inscripciones__btn-add--text">
+          Añadir
         </button>
       </div>
     </div>
@@ -53,8 +53,8 @@
         <button
           (click)="inscribirInvitado()"
           [disabled]="!nuevoNombre.trim() || !nuevoApellidos.trim()"
-          class="btn-primary inscripciones__btn-add">
-          <i class="bi bi-plus-lg"></i>
+          class="btn-primary inscripciones__btn-add inscripciones__btn-add--text">
+          Añadir
         </button>
       </div>
     </div>
@@ -100,5 +100,11 @@
         </div>
       }
     </div>
+
+    <a
+      [routerLink]="['/admin/torneos', t.id]"
+      class="btn-primary inscripciones__btn-aceptar">
+      Volver
+    </a>
   </div>
 }

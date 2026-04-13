@@ -10,11 +10,12 @@ import { UserService } from '../admin/socios/user.service';
 import { Entrenamiento } from '../../core/models/entrenamiento.model';
 import { User } from '../../core/models/user.model';
 import { CardNoticiaComponent } from '../../shared/components/card-noticia/card-noticia.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CardNoticiaComponent, DatePipe],
+  imports: [CardNoticiaComponent, EmptyStateComponent, DatePipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -22,16 +23,24 @@ export class HomeComponent {
   private newsService = inject(NewsService);
   private authService = inject(AuthService);
   private entrenamientoService = inject(EntrenamientoService);
+  private userService = inject(UserService);
   private router = inject(Router);
 
   private anio = new Date().getFullYear();
 
   user = toSignal(this.authService.currentUser$, { initialValue: null });
 
+  esAdmin = computed(() => {
+    const rol = this.user()?.rol;
+    return rol === 'admin' || rol === 'moderador';
+  });
+
   ultimasNoticias = toSignal(
     this.newsService.getPublicadas().pipe(map(news => news.slice(0, 1))),
     { initialValue: [] }
   );
+
+  // ── Datos de socio ──────────────────────────────────────────────
 
   private misEntrenamientos = toSignal(
     this.authService.currentUser$.pipe(
@@ -62,6 +71,56 @@ export class HomeComponent {
     return pos === -1 ? null : { posicion: pos + 1, total: ranking.length };
   });
 
+  // ── Datos de admin ──────────────────────────────────────────────
+
+  private todosLosSocios = toSignal(
+    this.authService.currentUser$.pipe(
+      switchMap(u => u && (u.rol === 'admin' || u.rol === 'moderador')
+        ? this.userService.getAll()
+        : of([] as User[])
+      )
+    ),
+    { initialValue: [] as User[] }
+  );
+
+  private todosLosEntrenamientos = toSignal(
+    this.authService.currentUser$.pipe(
+      switchMap(u => u && (u.rol === 'admin' || u.rol === 'moderador')
+        ? this.entrenamientoService.getAll()
+        : of([] as Entrenamiento[])
+      )
+    ),
+    { initialValue: [] as Entrenamiento[] }
+  );
+
+  sociosActivos = computed(() =>
+    this.todosLosSocios().filter(s => s.activo)
+  );
+
+  totalActivos = computed(() => this.sociosActivos().length);
+
+  cuotaPct = computed(() => {
+    const activos = this.sociosActivos();
+    if (activos.length === 0) return null;
+    if (activos.every(s => s.cuotaPagada === undefined)) return null;
+    const pagados = activos.filter(s => s.cuotaPagada === true).length;
+    return Math.round((pagados / activos.length) * 100);
+  });
+
+  entrenamientosMes = computed(() => {
+    const hoy = new Date();
+    return this.todosLosEntrenamientos().filter(e => {
+      const d = new Date(e.fecha);
+      return d.getFullYear() === hoy.getFullYear() && d.getMonth() === hoy.getMonth();
+    }).length;
+  });
+
+  ultimos5 = computed(() =>
+    this.todosLosEntrenamientos().slice(0, 5)
+  );
+
+  // ── Navegación ──────────────────────────────────────────────────
+
   goToNoticia(id: string): void {
     this.router.navigate(['/noticias', id]);
   }
@@ -72,5 +131,17 @@ export class HomeComponent {
 
   goToJuego(): void {
     this.router.navigate(['/juego']);
+  }
+
+  irSocios(): void {
+    this.router.navigate(['/admin/socios']);
+  }
+
+  irTemporadas(): void {
+    this.router.navigate(['/admin/temporadas']);
+  }
+
+  irEntrenamientos(): void {
+    this.router.navigate(['/admin/scores']);
   }
 }
