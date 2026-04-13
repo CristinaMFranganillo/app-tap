@@ -1,10 +1,10 @@
 import { Component, inject, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map, switchMap, EMPTY, of } from 'rxjs';
+import { switchMap, EMPTY, of, map } from 'rxjs';
 import { DatePipe } from '@angular/common';
-import { NewsService } from '../noticias/news.service';
 import { AuthService } from '../../core/auth/auth.service';
+import { NewsService } from '../noticias/news.service';
 import { EntrenamientoService } from '../admin/entrenamientos/entrenamiento.service';
 import { UserService } from '../admin/socios/user.service';
 import { Entrenamiento } from '../../core/models/entrenamiento.model';

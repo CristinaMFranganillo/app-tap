@@ -46,15 +46,6 @@
       </div>
     }
 
-    <div class="home-accesos">
-      <button (click)="irSocios()" class="btn-primary home-accesos__btn">
-        <i class="bi bi-people-fill"></i> Gestionar Socios
-      </button>
-      <button (click)="irTemporadas()" class="home-accesos__btn home-accesos__btn--sec">
-        <i class="bi bi-calendar-check"></i> Temporadas
-      </button>
-    </div>
-
   } @else {
 
     <!-- ── SOCIO: Entrenamiento personal + juego ──────────────── -->
@@ -96,12 +87,4 @@
 
   }
 
-  <!-- Última noticia (todos los roles) -->
-  <p class="home__section-label">Última noticia</p>
-
-  @for (n of ultimasNoticias(); track n.id) {
-    <button class="home__noticia-btn" (click)="goToNoticia(n.id)">
-      <app-card-noticia [noticia]="n" />
-    </button>
-  }
 </div>
