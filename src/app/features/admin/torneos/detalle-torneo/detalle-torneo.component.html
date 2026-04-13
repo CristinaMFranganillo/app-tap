@@ -46,15 +46,15 @@
     </div>
   }
 
-  <!-- Resumen de caja del día -->
-  @if (totalCajaDia() > 0) {
+  <!-- Resumen de caja del torneo (total = inscripciones) -->
+  @if (totalRecaudadoInscripciones() > 0) {
     <div class="caja-dia-banner" (click)="irCaja()">
       <div class="caja-dia-banner__left">
         <i class="bi bi-cash-coin caja-dia-banner__icon"></i>
         <span class="caja-dia-banner__label">Caja del torneo</span>
       </div>
       <div class="caja-dia-banner__right">
-        <span class="caja-dia-banner__total">{{ totalCajaDia() | number:'1.2-2' }} &euro;</span>
+        <span class="caja-dia-banner__total">{{ totalRecaudadoInscripciones() | number:'1.2-2' }} &euro;</span>
         <i class="bi bi-chevron-right caja-dia-banner__arrow"></i>
       </div>
     </div>
@@ -83,9 +83,6 @@
             }
           </div>
           <div class="escuadra-card__header-right">
-            @if (item.totalCaja > 0) {
-              <span class="escuadra-card__caja-badge">{{ item.totalCaja | number:'1.2-2' }} &euro;</span>
-            }
             <i class="bi escuadra-card__chevron"
                [class.bi-chevron-down]="!item.expandida"
                [class.bi-chevron-up]="item.expandida"></i>

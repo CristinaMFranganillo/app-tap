@@ -30,39 +30,9 @@
               </option>
             }
           </select>
-          @if (inscritoDe(slot); as ins) {
-            <span
-              class="form-escuadra-e__tarifa"
-              [class.form-escuadra-e__tarifa--ext]="ins.esNoSocio">
-              {{ ins.precioPagado }}&euro;
-            </span>
-          }
         </div>
       </div>
     }
-  }
-
-  @if (totalEscuadra > 0) {
-    <div class="form-escuadra-e__total">
-      <div class="form-escuadra-e__total-detalle">
-        @if (countSocios > 0) {
-          <span class="form-escuadra-e__total-item">
-            {{ countSocios }} socio{{ countSocios !== 1 ? 's' : '' }}
-            &times; {{ tarifaSocio }}&euro;
-          </span>
-        }
-        @if (countNoSocios > 0) {
-          <span class="form-escuadra-e__total-item form-escuadra-e__total-item--ext">
-            {{ countNoSocios }} no socio{{ countNoSocios !== 1 ? 's' : '' }}
-            &times; {{ tarifaNoSocio }}&euro;
-          </span>
-        }
-      </div>
-      <div class="form-escuadra-e__total-suma">
-        <span>Total</span>
-        <strong>{{ totalEscuadra }}&euro;</strong>
-      </div>
-    </div>
   }
 
   @if (error) {

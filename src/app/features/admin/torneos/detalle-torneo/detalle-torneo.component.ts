@@ -9,10 +9,9 @@ import { InscripcionTorneoService } from '../inscripcion-torneo.service';
 import { EscuadraService } from '../../../../features/scores/escuadra.service';
 import { UserService } from '../../socios/user.service';
 import { Torneo, ResultadoTorneo, RankingTorneo } from '../../../../core/models/torneo.model';
-import { Escuadra, MovimientoCaja } from '../../../../core/models/escuadra.model';
+import { Escuadra } from '../../../../core/models/escuadra.model';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { supabase } from '../../../../core/supabase/supabase.client';
 
 export interface FilaResultado {
   puesto: number;
@@ -26,7 +25,6 @@ export interface EscuadraConResultados {
   escuadra: Escuadra;
   filas: FilaResultado[];
   total: number;
-  totalCaja: number;
   cargando: boolean;
   expandida: boolean;
 }
@@ -64,7 +62,6 @@ export class DetalleTorneoComponent {
   );
 
   escuadrasConResultados = signal<EscuadraConResultados[]>([]);
-  totalCajaDia           = signal(0);
   numInscritos           = signal(0);
   totalRecaudadoInscripciones = signal(0);
 
@@ -92,50 +89,25 @@ export class DetalleTorneoComponent {
       const escuadras = this.escuadrasRaw();
       if (escuadras.length === 0) {
         this.escuadrasConResultados.set([]);
-        this.totalCajaDia.set(0);
         return;
       }
 
       this.escuadrasConResultados.set(
         escuadras.map(e => ({
-          escuadra: e, filas: [], total: 0, totalCaja: 0, cargando: true, expandida: false,
+          escuadra: e, filas: [], total: 0, cargando: true, expandida: false,
         }))
       );
 
       const socios = await firstValueFrom(this.userService.getAll());
-      const escuadraIds = escuadras.map(e => e.id);
 
-      const [resultados, fallosPorEscuadra, movCajaRes] = await Promise.all([
+      const [resultados, fallosPorEscuadra] = await Promise.all([
         Promise.all(escuadras.map(e =>
           firstValueFrom(this.torneoService.getResultadosByEscuadra(e.id))
         )),
         Promise.all(escuadras.map(e =>
           firstValueFrom(this.torneoService.getFallosByEscuadra(e.id))
         )),
-        supabase
-          .from('movimientos_caja')
-          .select('*')
-          .in('escuadra_id', escuadraIds)
-          .order('created_at'),
       ]);
-
-      // Mapa caja por escuadra
-      const cajaMap = new Map<string, number>();
-      for (const row of (movCajaRes.data ?? []) as any[]) {
-        const mov: MovimientoCaja = {
-          id: row['id'],
-          escuadraId: row['escuadra_id'],
-          userId: row['user_id'],
-          nombreTirador: row['nombre_tirador'],
-          esNoSocio: row['es_no_socio'],
-          importe: row['importe'],
-          fecha: row['fecha'],
-          registradoPor: row['registrado_por'],
-        };
-        cajaMap.set(mov.escuadraId, (cajaMap.get(mov.escuadraId) ?? 0) + mov.importe);
-      }
-
-      let totalGeneral = 0;
 
       const items = escuadras.map((e, i) => {
         const fallosMap = new Map<string, number[]>();
@@ -162,21 +134,16 @@ export class DetalleTorneoComponent {
           })
           .sort((a, b) => a.puesto - b.puesto);
 
-        const totalCaja = cajaMap.get(e.id) ?? 0;
-        totalGeneral += totalCaja;
-
         return {
           escuadra: e,
           filas,
           total:     filas.reduce((s, f) => s + f.platosRotos, 0),
-          totalCaja,
           cargando:  false,
           expandida: false,
         };
       });
 
       this.escuadrasConResultados.set(items);
-      this.totalCajaDia.set(totalGeneral);
     });
   }
 

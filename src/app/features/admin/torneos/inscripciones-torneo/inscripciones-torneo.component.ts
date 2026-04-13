@@ -106,7 +106,7 @@ export class InscripcionesTorneoComponent {
     }
     if (!confirm(`¿Eliminar la inscripción de ${i.nombre} ${i.apellidos}?`)) return;
     try {
-      await this.inscService.eliminarInscripcion(i);
+      await this.inscService.eliminarInscripcion(i, this.torneo()!.id);
       await this.recargar();
     } catch (e: any) {
       this.error.set(e.message);

@@ -1,1 +1,102 @@
 :host { display: block; }
+
+.inscripciones {
+  @apply p-3 flex flex-col gap-3;
+
+  &__cargando { @apply p-4 text-sm text-neutral-400 font-medium; }
+
+  &__back-btn  { @apply text-neutral-400; }
+  &__back-icon { @apply text-[15px]; }
+
+  &__header-info { @apply flex flex-col; }
+  &__title    { @apply text-[18px] font-extrabold text-secondary; }
+  &__subtitle { @apply text-sm text-neutral-400 font-medium; }
+
+  &__error {
+    @apply text-[13px] text-danger font-semibold bg-danger-light
+           border border-danger/30 rounded-card px-3 py-2;
+  }
+
+  &__card {
+    @apply flex flex-col gap-2 p-3;
+  }
+
+  &__section-label {
+    @apply text-xs font-semibold text-neutral-400 uppercase tracking-[1.5px];
+  }
+
+  &__row {
+    @apply flex items-center gap-2;
+
+    .form-input-surface { @apply flex-1 min-w-0; }
+
+    &--invitado {
+      @apply grid grid-cols-[1fr_1fr_auto] gap-2;
+    }
+  }
+
+  &__btn-add {
+    @apply flex items-center justify-center w-10 h-10 p-0 flex-shrink-0;
+    i { @apply text-[16px]; }
+  }
+
+  // ── Lista de inscritos ─────────────────────────────────────────
+
+  &__lista {
+    @apply flex flex-col gap-0 p-0 overflow-hidden;
+  }
+
+  &__lista-header {
+    @apply flex items-center justify-between px-4 pt-3 pb-2;
+  }
+
+  &__total {
+    @apply text-base font-extrabold text-secondary;
+  }
+
+  &__vacio {
+    @apply text-sm text-neutral-400 font-medium italic px-4 pb-3;
+  }
+
+  &__filas {
+    @apply flex flex-col divide-y divide-neutral-100;
+  }
+
+  &__fila {
+    @apply flex items-center gap-3 px-4 py-2.5;
+  }
+
+  &__fila-info {
+    @apply flex items-center gap-1.5 flex-1 min-w-0;
+  }
+
+  &__fila-nombre {
+    @apply text-sm font-semibold text-secondary truncate;
+  }
+
+  &__badge {
+    @apply inline-flex items-center px-1.5 py-0.5 rounded-badge
+           text-[9px] font-bold uppercase tracking-wide flex-shrink-0;
+
+    &--ns {
+      @apply bg-warning-light text-warning-dark border border-warning/40;
+    }
+  }
+
+  &__fila-right {
+    @apply flex items-center gap-3 flex-shrink-0;
+  }
+
+  &__fila-precio {
+    @apply text-sm font-bold text-secondary;
+  }
+
+  &__btn-eliminar {
+    @apply bg-transparent border-0 text-danger text-[16px] p-1 cursor-pointer
+           active:opacity-60 transition-opacity;
+
+    &:disabled {
+      @apply text-neutral-300 cursor-not-allowed active:opacity-100;
+    }
+  }
+}

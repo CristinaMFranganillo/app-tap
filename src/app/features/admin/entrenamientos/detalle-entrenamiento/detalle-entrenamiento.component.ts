@@ -87,6 +87,7 @@ export class DetalleEntrenamientoComponent {
       // Mapa caja por escuadra
       const cajaMap = new Map<string, number>();
       for (const m of movCaja as MovimientoCaja[]) {
+        if (!m.escuadraId) continue;
         cajaMap.set(m.escuadraId, (cajaMap.get(m.escuadraId) ?? 0) + m.importe);
       }
 

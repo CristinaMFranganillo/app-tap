@@ -70,6 +70,15 @@ export class InscripcionTorneoService {
 
     const precio = Number((torneo as any).precio_inscripcion_socio ?? 0);
 
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('nombre, apellidos')
+      .eq('id', userId)
+      .single();
+    const nombreTirador = profile
+      ? `${(profile as any).apellidos}, ${(profile as any).nombre}`
+      : '';
+
     const { data, error } = await supabase
       .from('inscripciones_torneo')
       .insert({
@@ -90,6 +99,16 @@ export class InscripcionTorneoService {
       }
       throw new Error(error.message);
     }
+
+    await this.registrarMovimientoCaja({
+      torneoId,
+      userId,
+      nombreTirador,
+      esNoSocio: false,
+      importe: precio,
+      registradoPor: creadoPor,
+    });
+
     return (data as any).id as string;
   }
 
@@ -132,18 +151,63 @@ export class InscripcionTorneoService {
       }
       throw new Error(error.message);
     }
+
+    await this.registrarMovimientoCaja({
+      torneoId,
+      userId: undefined,
+      nombreTirador: `${a}, ${n}`,
+      esNoSocio: true,
+      importe: precio,
+      registradoPor: creadoPor,
+    });
+
     return (data as any).id as string;
   }
 
-  async eliminarInscripcion(inscrito: InscritoVista): Promise<void> {
+  async eliminarInscripcion(inscrito: InscritoVista, torneoId: string): Promise<void> {
     if (inscrito.enEscuadra) {
       throw new Error('No se puede eliminar: el inscrito ya está asignado a una escuadra');
     }
+
+    let delMov = supabase
+      .from('movimientos_caja')
+      .delete()
+      .eq('torneo_id', torneoId)
+      .is('escuadra_id', null);
+    delMov = inscrito.esNoSocio
+      ? delMov.is('user_id', null).eq('nombre_tirador', `${inscrito.apellidos}, ${inscrito.nombre}`)
+      : delMov.eq('user_id', inscrito.userId!);
+    const { error: mErr } = await delMov;
+    if (mErr) throw new Error(mErr.message);
+
     const { error } = await supabase
       .from('inscripciones_torneo')
       .delete()
       .eq('id', inscrito.id);
     if (error) throw new Error(error.message);
+  }
+
+  private async registrarMovimientoCaja(m: {
+    torneoId: string;
+    userId?: string;
+    nombreTirador: string;
+    esNoSocio: boolean;
+    importe: number;
+    registradoPor: string;
+  }): Promise<void> {
+    const fecha = new Date().toISOString().split('T')[0];
+    const { error } = await supabase.from('movimientos_caja').insert({
+      escuadra_id:      null,
+      entrenamiento_id: null,
+      torneo_id:        m.torneoId,
+      user_id:          m.userId ?? null,
+      nombre_tirador:   m.nombreTirador,
+      es_no_socio:      m.esNoSocio,
+      importe:          m.importe,
+      fecha,
+      registrado_por:   m.registradoPor,
+    });
+    if (error) throw new Error('Error registrando caja: ' + error.message);
   }
 
   private normaliza(s: string): string {

@@ -78,14 +78,16 @@ export class CajaComponent {
     return Array.from(mapa.values()).sort((a, b) => b.fecha.localeCompare(a.fecha));
   });
 
-  // Desglose por escuadra para vista dia
+  // Desglose por escuadra para vista dia. Inscripciones a torneo (sin escuadra)
+  // se agrupan por torneo_id.
   escuadras = computed<GrupoEscuadra[]>(() => {
     const mapa = new Map<string, GrupoEscuadra>();
     let n = 1;
     for (const m of this.movimientos()) {
-      if (!mapa.has(m.escuadraId))
-        mapa.set(m.escuadraId, { escuadraId: m.escuadraId, numero: n++, movimientos: [], total: 0 });
-      const g = mapa.get(m.escuadraId)!;
+      const key = m.escuadraId ?? `torneo:${m.torneoId ?? 'sin'}`;
+      if (!mapa.has(key))
+        mapa.set(key, { escuadraId: key, numero: n++, movimientos: [], total: 0 });
+      const g = mapa.get(key)!;
       g.movimientos.push(m);
       g.total += m.importe;
     }

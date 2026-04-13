@@ -27,7 +27,8 @@ export interface Tarifa {
 export interface MovimientoCaja {
   id: string;
   entrenamientoId?: string;
-  escuadraId: string;
+  escuadraId?: string;
+  torneoId?: string;
   userId?: string;
   nombreTirador: string;
   esNoSocio: boolean;

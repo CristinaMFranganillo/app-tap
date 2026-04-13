@@ -26,7 +26,8 @@ function toMovimiento(row: any): MovimientoCaja {
   return {
     id:              row['id'] as string,
     entrenamientoId: row['entrenamiento_id'] as string | undefined,
-    escuadraId:      row['escuadra_id'] as string,
+    escuadraId:      row['escuadra_id'] as string | undefined,
+    torneoId:        row['torneo_id'] as string | undefined,
     userId:          row['user_id'] as string | undefined,
     nombreTirador:   row['nombre_tirador'] as string,
     esNoSocio:       row['es_no_socio'] as boolean,
