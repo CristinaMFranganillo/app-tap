@@ -1,6 +1,7 @@
 @if (loading()) {
   <p class="p-4">Cargando…</p>
-} @else if (torneo(); as t) {
+} @else if (torneo()) {
+  @let t = torneo()!;
   <div class="p-4 max-w-3xl mx-auto">
     <header class="flex items-center justify-between mb-4">
       <div>

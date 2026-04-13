@@ -1,14 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { EscuadraService } from '../../../../features/scores/escuadra.service';
-import { UserService } from '../../socios/user.service';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { TorneoService } from '../torneo.service';
-import { User } from '../../../../core/models/user.model';
+import { InscripcionTorneoService } from '../inscripcion-torneo.service';
 import { Torneo } from '../../../../core/models/torneo.model';
+import { InscritoVista } from '../../../../core/models/inscripcion-torneo.model';
 
 @Component({
   selector: 'app-form-escuadra-torneo',
@@ -19,32 +17,17 @@ import { Torneo } from '../../../../core/models/torneo.model';
 })
 export class FormEscuadraTorneoComponent {
   private escuadraService = inject(EscuadraService);
-  private userService     = inject(UserService);
   private authService     = inject(AuthService);
   private torneoService   = inject(TorneoService);
+  private inscService     = inject(InscripcionTorneoService);
   private route           = inject(ActivatedRoute);
   private router          = inject(Router);
 
-  socios = toSignal(
-    this.userService.getAll().pipe(
-      map(users => users
-        .filter(u => u.activo && u.rol !== 'admin')
-        .sort((a, b) => {
-          if (a.favorito !== b.favorito) return a.favorito ? -1 : 1;
-          return `${a.apellidos} ${a.nombre}`.localeCompare(`${b.apellidos} ${b.nombre}`, 'es');
-        })
-      )
-    ),
-    { initialValue: [] as User[] }
-  );
-
   torneo = signal<Torneo | null>(null);
-  sociosInscritos = signal<Set<string>>(new Set());
+  inscritosLibres = signal<InscritoVista[]>([]);
 
-  // Arrays mutables — sin signal, sin @for, para evitar re-render
-  userIds: string[] = ['', '', '', '', '', ''];
-  tipos: ('socio' | 'no_socio')[] = ['socio', 'socio', 'socio', 'socio', 'socio', 'socio'];
-  nombresExternos: string[] = ['', '', '', '', '', ''];
+  // Array de ids de inscripciones por puesto ('' = vacío)
+  inscripcionIds: string[] = ['', '', '', '', '', ''];
 
   loading = false;
   error   = '';
@@ -52,7 +35,9 @@ export class FormEscuadraTorneoComponent {
   constructor() {
     const torneoId = this.route.snapshot.paramMap.get('id')!;
     firstValueFrom(this.torneoService.getById(torneoId)).then(t => this.torneo.set(t));
-    this.torneoService.getSociosInscritos(torneoId).then(s => this.sociosInscritos.set(s));
+    this.inscService.listarInscritos(torneoId).then(all => {
+      this.inscritosLibres.set(all.filter(i => !i.enEscuadra));
+    });
   }
 
   // ── Helpers ──────────────────────────────────────────────────────────────
@@ -60,52 +45,38 @@ export class FormEscuadraTorneoComponent {
   get tarifaSocio(): number { return this.torneo()?.precioInscripcionSocio ?? 0; }
   get tarifaNoSocio(): number { return this.torneo()?.precioInscripcionNoSocio ?? 0; }
 
-  sociosDisponibles(index: number): User[] {
-    return this.socios().filter(s =>
-      !this.userIds.some((id, j) => j !== index && id === s.id)
+  opcionesPara(index: number): InscritoVista[] {
+    return this.inscritosLibres().filter(i =>
+      !this.inscripcionIds.some((id, j) => j !== index && id === i.id)
     );
   }
 
-  yaInscrito(userId: string): boolean {
-    return !!userId && this.sociosInscritos().has(userId);
+  inscritoDe(index: number): InscritoVista | null {
+    const id = this.inscripcionIds[index];
+    if (!id) return null;
+    return this.inscritosLibres().find(i => i.id === id) ?? null;
   }
 
-  onSelectSocio(index: number, event: Event): void {
-    this.userIds[index] = (event.target as HTMLSelectElement).value;
-  }
-
-  onNombreExterno(index: number, event: Event): void {
-    this.nombresExternos[index] = (event.target as HTMLInputElement).value;
-  }
-
-  onTipoChange(index: number, tipo: 'socio' | 'no_socio'): void {
-    this.tipos[index] = tipo;
-    this.userIds[index] = '';
-    this.nombresExternos[index] = '';
+  onSelectInscrito(index: number, event: Event): void {
+    this.inscripcionIds[index] = (event.target as HTMLSelectElement).value;
   }
 
   get asignadosCount(): number {
-    let c = 0;
-    for (let i = 0; i < 6; i++) {
-      if ((this.tipos[i] === 'socio' && this.userIds[i]) || this.tipos[i] === 'no_socio') c++;
-    }
-    return c;
+    return this.inscripcionIds.filter(id => !!id).length;
   }
 
   get countSocios(): number {
-    let c = 0;
-    for (let i = 0; i < 6; i++) {
-      if (this.tipos[i] === 'socio' && this.userIds[i] && !this.yaInscrito(this.userIds[i])) c++;
-    }
-    return c;
+    return this.inscripcionIds
+      .map((_, i) => this.inscritoDe(i))
+      .filter((i): i is InscritoVista => i !== null && !i.esNoSocio)
+      .length;
   }
 
   get countNoSocios(): number {
-    let c = 0;
-    for (let i = 0; i < 6; i++) {
-      if (this.tipos[i] === 'no_socio') c++;
-    }
-    return c;
+    return this.inscripcionIds
+      .map((_, i) => this.inscritoDe(i))
+      .filter((i): i is InscritoVista => i !== null && i.esNoSocio)
+      .length;
   }
 
   get totalEscuadra(): number {
@@ -131,42 +102,30 @@ export class FormEscuadraTorneoComponent {
         torneoId, escuadras.length + 1
       );
 
+      const seleccionados: (InscritoVista | null)[] = this.inscripcionIds.map((_, i) => this.inscritoDe(i));
+
       // 1. Añadir tiradores
       for (let i = 0; i < 6; i++) {
-        if (this.tipos[i] === 'socio' && this.userIds[i]) {
-          await this.escuadraService.addTirador(escuadraId, this.userIds[i], i + 1);
-        } else if (this.tipos[i] === 'no_socio') {
-          const nombre = this.nombresExternos[i]?.trim() || `No socio ${i + 1}`;
-          await this.escuadraService.addNoSocio(escuadraId, nombre, i + 1);
+        const sel = seleccionados[i];
+        if (!sel) continue;
+        if (sel.esNoSocio) {
+          await this.escuadraService.addNoSocio(escuadraId, `${sel.nombre} ${sel.apellidos}`, i + 1);
+        } else {
+          await this.escuadraService.addTirador(escuadraId, sel.userId!, i + 1);
         }
       }
 
-      // 2. Registrar caja
+      // 2. Registrar caja (una fila por tirador con su precio snapshot)
       const fecha       = torneo.fecha;
       const registrador = this.authService.currentUser!.id;
-      const sociosMap   = new Map(this.socios().map(s => [s.id, s]));
-      const inscritos   = this.sociosInscritos();
-
-      const movimientos: { userId?: string; nombreTirador: string; esNoSocio: boolean; importe: number }[] = [];
-
-      for (let i = 0; i < 6; i++) {
-        if (this.tipos[i] === 'socio' && this.userIds[i] && !inscritos.has(this.userIds[i])) {
-          const socio = sociosMap.get(this.userIds[i]);
-          movimientos.push({
-            userId:        this.userIds[i],
-            nombreTirador: socio ? `${socio.apellidos}, ${socio.nombre}` : this.userIds[i],
-            esNoSocio:     false,
-            importe:       this.tarifaSocio,
-          });
-        } else if (this.tipos[i] === 'no_socio') {
-          movimientos.push({
-            userId:        undefined,
-            nombreTirador: this.nombresExternos[i]?.trim() || 'No socio',
-            esNoSocio:     true,
-            importe:       this.tarifaNoSocio,
-          });
-        }
-      }
+      const movimientos = seleccionados
+        .filter((s): s is InscritoVista => s !== null)
+        .map(s => ({
+          userId:        s.esNoSocio ? undefined : s.userId,
+          nombreTirador: `${s.apellidos}, ${s.nombre}`,
+          esNoSocio:     s.esNoSocio,
+          importe:       s.precioPagado,
+        }));
 
       await this.escuadraService.registrarCajaEscuadra(
         escuadraId, null, fecha, registrador, movimientos, torneoId

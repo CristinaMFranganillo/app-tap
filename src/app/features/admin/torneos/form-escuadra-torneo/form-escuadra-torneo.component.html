@@ -6,187 +6,41 @@
     <h2 class="form-escuadra-e__title">Nueva escuadra</h2>
   </div>
 
-  <p class="form-escuadra-e__section-label">Tiradores por puesto</p>
+  @if (inscritosLibres().length === 0) {
+    <p class="form-escuadra-e__section-label">
+      No hay inscritos disponibles. Inscribe participantes desde la pantalla del torneo.
+    </p>
+  } @else {
+    <p class="form-escuadra-e__section-label">Tiradores por puesto</p>
 
-  <!-- Puesto 1 -->
-  <div class="form-escuadra-e__puesto">
-    <div class="form-escuadra-e__puesto-header">
-      <label class="form-label">Puesto 1</label>
-      <div class="form-escuadra-e__tipo-tabs">
-        <button type="button" [class.active]="tipos[0] === 'socio'" (click)="onTipoChange(0, 'socio')">Socio</button>
-        <button type="button" [class.active]="tipos[0] === 'no_socio'" (click)="onTipoChange(0, 'no_socio')">No socio</button>
-      </div>
-    </div>
-    @if (tipos[0] === 'socio') {
-      <div class="form-escuadra-e__input-row">
-        <select class="form-input-surface" [value]="userIds[0]" (change)="onSelectSocio(0, $event)">
-          <option value="">— Sin asignar —</option>
-          @for (s of sociosDisponibles(0); track s.id) {
-            <option [value]="s.id">{{ s.favorito ? '★ ' : '' }}{{ s.apellidos }}, {{ s.nombre }} (#{{ s.numeroSocio }})</option>
+    @for (slot of [0,1,2,3,4,5]; track slot) {
+      <div class="form-escuadra-e__puesto">
+        <div class="form-escuadra-e__puesto-header">
+          <label class="form-label">Puesto {{ slot + 1 }}</label>
+        </div>
+        <div class="form-escuadra-e__input-row">
+          <select
+            class="form-input-surface"
+            [value]="inscripcionIds[slot]"
+            (change)="onSelectInscrito(slot, $event)">
+            <option value="">— Sin asignar —</option>
+            @for (ins of opcionesPara(slot); track ins.id) {
+              <option [value]="ins.id">
+                {{ ins.apellidos }}, {{ ins.nombre }} ({{ ins.esNoSocio ? 'Invitado' : 'Socio' }})
+              </option>
+            }
+          </select>
+          @if (inscritoDe(slot); as ins) {
+            <span
+              class="form-escuadra-e__tarifa"
+              [class.form-escuadra-e__tarifa--ext]="ins.esNoSocio">
+              {{ ins.precioPagado }}&euro;
+            </span>
           }
-        </select>
-        @if (userIds[0]) {
-          <span class="form-escuadra-e__tarifa">{{ yaInscrito(userIds[0]) ? 'Ya inscrito' : tarifaSocio + '€' }}</span>
-        }
+        </div>
       </div>
     }
-    @if (tipos[0] === 'no_socio') {
-      <div class="form-escuadra-e__input-row">
-        <input type="text" [value]="nombresExternos[0]" (input)="onNombreExterno(0, $event)" placeholder="Nombre (opcional)" class="form-input-surface" />
-        <span class="form-escuadra-e__tarifa form-escuadra-e__tarifa--ext">{{ tarifaNoSocio }}&euro;</span>
-      </div>
-    }
-  </div>
-
-  <!-- Puesto 2 -->
-  <div class="form-escuadra-e__puesto">
-    <div class="form-escuadra-e__puesto-header">
-      <label class="form-label">Puesto 2</label>
-      <div class="form-escuadra-e__tipo-tabs">
-        <button type="button" [class.active]="tipos[1] === 'socio'" (click)="onTipoChange(1, 'socio')">Socio</button>
-        <button type="button" [class.active]="tipos[1] === 'no_socio'" (click)="onTipoChange(1, 'no_socio')">No socio</button>
-      </div>
-    </div>
-    @if (tipos[1] === 'socio') {
-      <div class="form-escuadra-e__input-row">
-        <select class="form-input-surface" [value]="userIds[1]" (change)="onSelectSocio(1, $event)">
-          <option value="">— Sin asignar —</option>
-          @for (s of sociosDisponibles(1); track s.id) {
-            <option [value]="s.id">{{ s.favorito ? '★ ' : '' }}{{ s.apellidos }}, {{ s.nombre }} (#{{ s.numeroSocio }})</option>
-          }
-        </select>
-        @if (userIds[1]) {
-          <span class="form-escuadra-e__tarifa">{{ yaInscrito(userIds[1]) ? 'Ya inscrito' : tarifaSocio + '€' }}</span>
-        }
-      </div>
-    }
-    @if (tipos[1] === 'no_socio') {
-      <div class="form-escuadra-e__input-row">
-        <input type="text" [value]="nombresExternos[1]" (input)="onNombreExterno(1, $event)" placeholder="Nombre (opcional)" class="form-input-surface" />
-        <span class="form-escuadra-e__tarifa form-escuadra-e__tarifa--ext">{{ tarifaNoSocio }}&euro;</span>
-      </div>
-    }
-  </div>
-
-  <!-- Puesto 3 -->
-  <div class="form-escuadra-e__puesto">
-    <div class="form-escuadra-e__puesto-header">
-      <label class="form-label">Puesto 3</label>
-      <div class="form-escuadra-e__tipo-tabs">
-        <button type="button" [class.active]="tipos[2] === 'socio'" (click)="onTipoChange(2, 'socio')">Socio</button>
-        <button type="button" [class.active]="tipos[2] === 'no_socio'" (click)="onTipoChange(2, 'no_socio')">No socio</button>
-      </div>
-    </div>
-    @if (tipos[2] === 'socio') {
-      <div class="form-escuadra-e__input-row">
-        <select class="form-input-surface" [value]="userIds[2]" (change)="onSelectSocio(2, $event)">
-          <option value="">— Sin asignar —</option>
-          @for (s of sociosDisponibles(2); track s.id) {
-            <option [value]="s.id">{{ s.favorito ? '★ ' : '' }}{{ s.apellidos }}, {{ s.nombre }} (#{{ s.numeroSocio }})</option>
-          }
-        </select>
-        @if (userIds[2]) {
-          <span class="form-escuadra-e__tarifa">{{ yaInscrito(userIds[2]) ? 'Ya inscrito' : tarifaSocio + '€' }}</span>
-        }
-      </div>
-    }
-    @if (tipos[2] === 'no_socio') {
-      <div class="form-escuadra-e__input-row">
-        <input type="text" [value]="nombresExternos[2]" (input)="onNombreExterno(2, $event)" placeholder="Nombre (opcional)" class="form-input-surface" />
-        <span class="form-escuadra-e__tarifa form-escuadra-e__tarifa--ext">{{ tarifaNoSocio }}&euro;</span>
-      </div>
-    }
-  </div>
-
-  <!-- Puesto 4 -->
-  <div class="form-escuadra-e__puesto">
-    <div class="form-escuadra-e__puesto-header">
-      <label class="form-label">Puesto 4</label>
-      <div class="form-escuadra-e__tipo-tabs">
-        <button type="button" [class.active]="tipos[3] === 'socio'" (click)="onTipoChange(3, 'socio')">Socio</button>
-        <button type="button" [class.active]="tipos[3] === 'no_socio'" (click)="onTipoChange(3, 'no_socio')">No socio</button>
-      </div>
-    </div>
-    @if (tipos[3] === 'socio') {
-      <div class="form-escuadra-e__input-row">
-        <select class="form-input-surface" [value]="userIds[3]" (change)="onSelectSocio(3, $event)">
-          <option value="">— Sin asignar —</option>
-          @for (s of sociosDisponibles(3); track s.id) {
-            <option [value]="s.id">{{ s.favorito ? '★ ' : '' }}{{ s.apellidos }}, {{ s.nombre }} (#{{ s.numeroSocio }})</option>
-          }
-        </select>
-        @if (userIds[3]) {
-          <span class="form-escuadra-e__tarifa">{{ yaInscrito(userIds[3]) ? 'Ya inscrito' : tarifaSocio + '€' }}</span>
-        }
-      </div>
-    }
-    @if (tipos[3] === 'no_socio') {
-      <div class="form-escuadra-e__input-row">
-        <input type="text" [value]="nombresExternos[3]" (input)="onNombreExterno(3, $event)" placeholder="Nombre (opcional)" class="form-input-surface" />
-        <span class="form-escuadra-e__tarifa form-escuadra-e__tarifa--ext">{{ tarifaNoSocio }}&euro;</span>
-      </div>
-    }
-  </div>
-
-  <!-- Puesto 5 -->
-  <div class="form-escuadra-e__puesto">
-    <div class="form-escuadra-e__puesto-header">
-      <label class="form-label">Puesto 5</label>
-      <div class="form-escuadra-e__tipo-tabs">
-        <button type="button" [class.active]="tipos[4] === 'socio'" (click)="onTipoChange(4, 'socio')">Socio</button>
-        <button type="button" [class.active]="tipos[4] === 'no_socio'" (click)="onTipoChange(4, 'no_socio')">No socio</button>
-      </div>
-    </div>
-    @if (tipos[4] === 'socio') {
-      <div class="form-escuadra-e__input-row">
-        <select class="form-input-surface" [value]="userIds[4]" (change)="onSelectSocio(4, $event)">
-          <option value="">— Sin asignar —</option>
-          @for (s of sociosDisponibles(4); track s.id) {
-            <option [value]="s.id">{{ s.favorito ? '★ ' : '' }}{{ s.apellidos }}, {{ s.nombre }} (#{{ s.numeroSocio }})</option>
-          }
-        </select>
-        @if (userIds[4]) {
-          <span class="form-escuadra-e__tarifa">{{ yaInscrito(userIds[4]) ? 'Ya inscrito' : tarifaSocio + '€' }}</span>
-        }
-      </div>
-    }
-    @if (tipos[4] === 'no_socio') {
-      <div class="form-escuadra-e__input-row">
-        <input type="text" [value]="nombresExternos[4]" (input)="onNombreExterno(4, $event)" placeholder="Nombre (opcional)" class="form-input-surface" />
-        <span class="form-escuadra-e__tarifa form-escuadra-e__tarifa--ext">{{ tarifaNoSocio }}&euro;</span>
-      </div>
-    }
-  </div>
-
-  <!-- Puesto 6 -->
-  <div class="form-escuadra-e__puesto">
-    <div class="form-escuadra-e__puesto-header">
-      <label class="form-label">Puesto 6</label>
-      <div class="form-escuadra-e__tipo-tabs">
-        <button type="button" [class.active]="tipos[5] === 'socio'" (click)="onTipoChange(5, 'socio')">Socio</button>
-        <button type="button" [class.active]="tipos[5] === 'no_socio'" (click)="onTipoChange(5, 'no_socio')">No socio</button>
-      </div>
-    </div>
-    @if (tipos[5] === 'socio') {
-      <div class="form-escuadra-e__input-row">
-        <select class="form-input-surface" [value]="userIds[5]" (change)="onSelectSocio(5, $event)">
-          <option value="">— Sin asignar —</option>
-          @for (s of sociosDisponibles(5); track s.id) {
-            <option [value]="s.id">{{ s.favorito ? '★ ' : '' }}{{ s.apellidos }}, {{ s.nombre }} (#{{ s.numeroSocio }})</option>
-          }
-        </select>
-        @if (userIds[5]) {
-          <span class="form-escuadra-e__tarifa">{{ yaInscrito(userIds[5]) ? 'Ya inscrito' : tarifaSocio + '€' }}</span>
-        }
-      </div>
-    }
-    @if (tipos[5] === 'no_socio') {
-      <div class="form-escuadra-e__input-row">
-        <input type="text" [value]="nombresExternos[5]" (input)="onNombreExterno(5, $event)" placeholder="Nombre (opcional)" class="form-input-surface" />
-        <span class="form-escuadra-e__tarifa form-escuadra-e__tarifa--ext">{{ tarifaNoSocio }}&euro;</span>
-      </div>
-    }
-  </div>
+  }
 
   @if (totalEscuadra > 0) {
     <div class="form-escuadra-e__total">
@@ -217,7 +71,7 @@
 
   <div class="form-escuadra-e__actions">
     <button (click)="cancel()" class="btn-secondary">Cancelar</button>
-    <button (click)="onSubmit()" [disabled]="loading" class="btn-primary">
+    <button (click)="onSubmit()" [disabled]="loading || asignadosCount === 0" class="btn-primary">
       {{ loading ? 'Guardando...' : 'Crear escuadra' }}
     </button>
   </div>
