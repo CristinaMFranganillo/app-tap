@@ -32,7 +32,258 @@
 
   <!-- ── Sección según rol ──────────────────────────────────── -->
 
-  @if (!esAdmin()) {
+  @if (esAdmin()) {
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- ADMIN: Administración                                     -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+
+    <div class="perfil-admin">
+
+      @if (errorAdmin()) {
+        <p class="perfil-admin__error">{{ errorAdmin() }}</p>
+      }
+
+      <h3 class="perfil-admin__section-title">
+        <i class="bi bi-bar-chart-line"></i> Administración
+      </h3>
+
+      <!-- Resumen financiero -->
+      @if (cargandoResumen()) {
+        <div class="perfil-admin__skeleton">
+          <div class="perfil-admin__skeleton-bar"></div>
+          <div class="perfil-admin__skeleton-bar"></div>
+        </div>
+      } @else if (resumen()) {
+        @let r = resumen()!;
+
+        <!-- Balance -->
+        <div class="card perfil-balance">
+          <div class="perfil-balance__header">
+            <span class="perfil-balance__label">Balance {{ anioAdmin }}</span>
+            <span class="perfil-balance__valor"
+              [class.perfil-balance__valor--positivo]="balanceTotal() >= 0"
+              [class.perfil-balance__valor--negativo]="balanceTotal() < 0">
+              {{ balanceTotal() | number:'1.2-2' }} &euro;
+            </span>
+          </div>
+        </div>
+
+        <!-- Desglose ingresos -->
+        <div class="card perfil-desglose">
+          <p class="perfil-desglose__titulo">Ingresos</p>
+
+          <div class="perfil-desglose__fila">
+            <div class="perfil-desglose__left">
+              <i class="bi bi-credit-card perfil-desglose__icon perfil-desglose__icon--cuotas"></i>
+              <div>
+                <span class="perfil-desglose__concepto">Cuotas</span>
+                <span class="perfil-desglose__detalle">{{ r.cuotasPagadas }}/{{ r.cuotasTotal }} pagadas</span>
+              </div>
+            </div>
+            <span class="perfil-desglose__importe">{{ r.ingresosCuotas | number:'1.2-2' }} &euro;</span>
+          </div>
+
+          <div class="perfil-desglose__fila">
+            <div class="perfil-desglose__left">
+              <i class="bi bi-bullseye perfil-desglose__icon perfil-desglose__icon--escuadras"></i>
+              <div>
+                <span class="perfil-desglose__concepto">Escuadras</span>
+                <span class="perfil-desglose__detalle">Entrenamientos</span>
+              </div>
+            </div>
+            <span class="perfil-desglose__importe">{{ r.ingresosEscuadras | number:'1.2-2' }} &euro;</span>
+          </div>
+
+          <div class="perfil-desglose__fila">
+            <div class="perfil-desglose__left">
+              <i class="bi bi-trophy perfil-desglose__icon perfil-desglose__icon--torneos"></i>
+              <div>
+                <span class="perfil-desglose__concepto">Torneos</span>
+                <span class="perfil-desglose__detalle">Inscripciones</span>
+              </div>
+            </div>
+            <span class="perfil-desglose__importe">{{ r.ingresosTorneos | number:'1.2-2' }} &euro;</span>
+          </div>
+
+          @if (r.ingresosVarios > 0) {
+            <div class="perfil-desglose__fila">
+              <div class="perfil-desglose__left">
+                <i class="bi bi-wallet2 perfil-desglose__icon perfil-desglose__icon--varios"></i>
+                <div>
+                  <span class="perfil-desglose__concepto">Otros ingresos</span>
+                </div>
+              </div>
+              <span class="perfil-desglose__importe">{{ r.ingresosVarios | number:'1.2-2' }} &euro;</span>
+            </div>
+          }
+
+          <div class="perfil-desglose__total">
+            <span>Total ingresos</span>
+            <strong>{{ totalIngresos() | number:'1.2-2' }} &euro;</strong>
+          </div>
+        </div>
+
+        <!-- Gastos -->
+        @if (r.gastos > 0) {
+          <div class="card perfil-desglose">
+            <p class="perfil-desglose__titulo perfil-desglose__titulo--gasto">Gastos</p>
+            <div class="perfil-desglose__total perfil-desglose__total--gasto">
+              <span>Total gastos</span>
+              <strong>-{{ r.gastos | number:'1.2-2' }} &euro;</strong>
+            </div>
+          </div>
+        }
+      }
+
+      <!-- Botones registrar -->
+      <div class="perfil-admin__acciones">
+        <button (click)="abrirFormMovimiento('ingreso')" class="btn-primary perfil-admin__btn">
+          <i class="bi bi-plus-circle"></i> Registrar ingreso
+        </button>
+        <button (click)="abrirFormMovimiento('gasto')" class="perfil-admin__btn perfil-admin__btn--gasto">
+          <i class="bi bi-dash-circle"></i> Registrar gasto
+        </button>
+      </div>
+
+      <!-- Formulario nuevo movimiento -->
+      @if (mostrarFormMovimiento()) {
+        <div class="card perfil-form-mov">
+          <p class="perfil-form-mov__titulo">
+            {{ tipoMovimiento() === 'gasto' ? 'Nuevo gasto' : 'Nuevo ingreso' }}
+          </p>
+          <div class="perfil-form-mov__campo">
+            <label class="form-label">Concepto</label>
+            <input
+              [(ngModel)]="nuevoConcepto"
+              placeholder="Ej: Material de tiro, Patrocinio..."
+              class="form-input-surface" />
+          </div>
+          <div class="perfil-form-mov__row">
+            <div class="perfil-form-mov__campo perfil-form-mov__campo--flex">
+              <label class="form-label">Importe (&euro;)</label>
+              <input
+                type="number"
+                [(ngModel)]="nuevoImporte"
+                min="0.01"
+                step="0.50"
+                placeholder="0,00"
+                class="form-input-surface" />
+            </div>
+            <div class="perfil-form-mov__campo perfil-form-mov__campo--flex">
+              <label class="form-label">Fecha</label>
+              <input
+                type="date"
+                [(ngModel)]="nuevoFecha"
+                class="form-input-surface" />
+            </div>
+          </div>
+          <div class="perfil-form-mov__acciones">
+            <button (click)="cancelarFormMovimiento()" [disabled]="guardando()" class="perfil-form-mov__btn-cancel">
+              Cancelar
+            </button>
+            <button
+              (click)="guardarMovimiento()"
+              [disabled]="guardando() || !nuevoConcepto.trim() || !nuevoImporte || nuevoImporte <= 0"
+              class="btn-primary perfil-form-mov__btn-save">
+              {{ guardando() ? 'Guardando...' : 'Guardar' }}
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- Lista movimientos manuales recientes -->
+      @if (movimientosManuales().length > 0) {
+        <div class="card perfil-movs">
+          <p class="perfil-movs__titulo">Movimientos manuales</p>
+          <div class="perfil-movs__lista">
+            @for (mov of movimientosManuales(); track mov.id) {
+              <div class="perfil-movs__fila">
+                <div class="perfil-movs__info">
+                  <span class="perfil-movs__badge"
+                    [class.perfil-movs__badge--ingreso]="mov.tipo === 'ingreso'"
+                    [class.perfil-movs__badge--gasto]="mov.tipo === 'gasto'">
+                    {{ mov.tipo === 'ingreso' ? '+' : '-' }}
+                  </span>
+                  <div class="perfil-movs__detalle">
+                    <span class="perfil-movs__concepto">{{ mov.concepto }}</span>
+                    <span class="perfil-movs__fecha">{{ mov.fecha }}</span>
+                  </div>
+                </div>
+                <div class="perfil-movs__right">
+                  <span class="perfil-movs__importe"
+                    [class.perfil-movs__importe--ingreso]="mov.tipo === 'ingreso'"
+                    [class.perfil-movs__importe--gasto]="mov.tipo === 'gasto'">
+                    {{ mov.tipo === 'gasto' ? '-' : '' }}{{ mov.importe | number:'1.2-2' }} &euro;
+                  </span>
+                  <button (click)="eliminarMovimientoManual(mov)" class="perfil-movs__btn-del">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- ════════════════════════════════════════════════════════ -->
+      <!-- ADMIN: Estadísticas / Accesos rápidos                   -->
+      <!-- ════════════════════════════════════════════════════════ -->
+
+      <h3 class="perfil-admin__section-title perfil-admin__section-title--mt">
+        <i class="bi bi-gear"></i> Gestión
+      </h3>
+
+      <div class="perfil-admin__links">
+        <button (click)="irSocios()" class="perfil-admin__link card">
+          <i class="bi bi-people-fill perfil-admin__link-icon"></i>
+          <div>
+            <p class="perfil-admin__link-titulo">Socios</p>
+            <p class="perfil-admin__link-sub">Gestionar socios del club</p>
+          </div>
+          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
+        </button>
+
+        <button (click)="irTemporadas()" class="perfil-admin__link card">
+          <i class="bi bi-calendar-check perfil-admin__link-icon"></i>
+          <div>
+            <p class="perfil-admin__link-titulo">Temporadas</p>
+            <p class="perfil-admin__link-sub">Cuotas y periodos</p>
+          </div>
+          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
+        </button>
+
+        <button (click)="irCaja()" class="perfil-admin__link card">
+          <i class="bi bi-cash-coin perfil-admin__link-icon"></i>
+          <div>
+            <p class="perfil-admin__link-titulo">Caja</p>
+            <p class="perfil-admin__link-sub">Desglose detallado de ingresos</p>
+          </div>
+          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
+        </button>
+
+        <button (click)="irEntrenamientos()" class="perfil-admin__link card">
+          <i class="bi bi-bullseye perfil-admin__link-icon"></i>
+          <div>
+            <p class="perfil-admin__link-titulo">Entrenamientos</p>
+            <p class="perfil-admin__link-sub">Gestionar sesiones y escuadras</p>
+          </div>
+          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
+        </button>
+
+        <button (click)="irTorneos()" class="perfil-admin__link card">
+          <i class="bi bi-trophy perfil-admin__link-icon"></i>
+          <div>
+            <p class="perfil-admin__link-titulo">Torneos</p>
+            <p class="perfil-admin__link-sub">Competiciones y rankings</p>
+          </div>
+          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
+        </button>
+      </div>
+
+    </div>
+
+  } @else {
 
     <!-- SOCIO: Mis entrenamientos -->
     <div class="perfil-entrena">
