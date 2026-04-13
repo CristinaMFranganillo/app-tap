@@ -8,7 +8,7 @@
 
   <p class="form-escuadra-e__section-label">Tiradores por puesto</p>
 
-  @for (puesto of puestos; track $index) {
+  @for (puesto of puestos(); track $index) {
     <div class="form-escuadra-e__puesto">
       <div class="form-escuadra-e__puesto-header">
         <label class="form-label">Puesto {{ $index + 1 }}</label>
@@ -36,8 +36,8 @@
               <i class="bi bi-search socio-search__icon"></i>
               <input
                 type="text"
-                [ngModel]="searchText[$index]"
-                (ngModelChange)="searchText[$index] = $event; dropdownOpen[$index] = true"
+                [ngModel]="searchText()[$index]"
+                (ngModelChange)="onSearchChange($index, $event)"
                 (focus)="onSearchFocus($index)"
                 (blur)="onSearchBlur($index)"
                 placeholder="Buscar socio..."
@@ -49,7 +49,7 @@
                 </button>
               }
             </div>
-            @if (dropdownOpen[$index]) {
+            @if (dropdownOpen()[$index]) {
               <div class="socio-search__dropdown">
                 @for (s of sociosFiltrados($index); track s.id) {
                   <button type="button"
@@ -67,7 +67,7 @@
             }
           </div>
           @if (puesto.userId) {
-            <span class="form-escuadra-e__tarifa">{{ tarifaSocio }}&euro;</span>
+            <span class="form-escuadra-e__tarifa">{{ tarifaSocio() }}&euro;</span>
           }
         </div>
       }
@@ -77,35 +77,36 @@
         <div class="form-escuadra-e__input-row">
           <input
             type="text"
-            [(ngModel)]="puestos[$index].nombreExterno"
+            [ngModel]="puesto.nombreExterno ?? ''"
+            (ngModelChange)="onNombreExternoChange($index, $event)"
             placeholder="Nombre (opcional)"
             class="form-input-surface" />
-          <span class="form-escuadra-e__tarifa form-escuadra-e__tarifa--ext">{{ tarifaNoSocio }}&euro;</span>
+          <span class="form-escuadra-e__tarifa form-escuadra-e__tarifa--ext">{{ tarifaNoSocio() }}&euro;</span>
         </div>
       }
     </div>
   }
 
   <!-- Resumen total — solo si hay alguien asignado -->
-  @if (totalEscuadra > 0) {
+  @if (totalEscuadra() > 0) {
     <div class="form-escuadra-e__total">
       <div class="form-escuadra-e__total-detalle">
-        @if (countSocios > 0) {
+        @if (countSocios() > 0) {
           <span class="form-escuadra-e__total-item">
-            {{ countSocios }} socio{{ countSocios !== 1 ? 's' : '' }}
-            &times; {{ tarifaSocio }}&euro;
+            {{ countSocios() }} socio{{ countSocios() !== 1 ? 's' : '' }}
+            &times; {{ tarifaSocio() }}&euro;
           </span>
         }
-        @if (countNoSocios > 0) {
+        @if (countNoSocios() > 0) {
           <span class="form-escuadra-e__total-item form-escuadra-e__total-item--ext">
-            {{ countNoSocios }} no socio{{ countNoSocios !== 1 ? 's' : '' }}
-            &times; {{ tarifaNoSocio }}&euro;
+            {{ countNoSocios() }} no socio{{ countNoSocios() !== 1 ? 's' : '' }}
+            &times; {{ tarifaNoSocio() }}&euro;
           </span>
         }
       </div>
       <div class="form-escuadra-e__total-suma">
         <span>Total</span>
-        <strong>{{ totalEscuadra }}&euro;</strong>
+        <strong>{{ totalEscuadra() }}&euro;</strong>
       </div>
     </div>
   }

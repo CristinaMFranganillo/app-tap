@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -45,90 +45,122 @@ export class FormEscuadraEntrenamientoComponent {
 
   tarifas = toSignal(this.escuadraService.getTarifas(), { initialValue: [] as Tarifa[] });
 
-  puestos: PuestoVM[] = Array.from({ length: 6 }, () => ({ tipo: 'socio' as const }));
-
-  searchText: string[] = Array(6).fill('');
-  dropdownOpen: boolean[] = Array(6).fill(false);
+  puestos = signal<PuestoVM[]>(Array.from({ length: 6 }, () => ({ tipo: 'socio' as const })));
+  searchText = signal<string[]>(Array(6).fill(''));
+  dropdownOpen = signal<boolean[]>(Array(6).fill(false));
 
   loading = false;
   error   = '';
 
   // ── Helpers ──────────────────────────────────────────────────────────────
 
-  get tarifaSocio(): number {
-    return this.tarifas().find(t => t.tipo === 'socio')?.importe ?? 6;
-  }
+  tarifaSocio = computed(() => this.tarifas().find(t => t.tipo === 'socio')?.importe ?? 6);
+  tarifaNoSocio = computed(() => this.tarifas().find(t => t.tipo === 'no_socio')?.importe ?? 7);
 
-  get tarifaNoSocio(): number {
-    return this.tarifas().find(t => t.tipo === 'no_socio')?.importe ?? 7;
-  }
+  asignados = computed(() => this.puestos().filter(p =>
+    (p.tipo === 'socio' && !!p.userId?.trim()) || (p.tipo === 'no_socio')
+  ));
 
-  get asignados(): PuestoVM[] {
-    return this.puestos.filter(p =>
-      (p.tipo === 'socio'    && !!p.userId?.trim()) ||
-      (p.tipo === 'no_socio')
-    );
-  }
+  totalEscuadra = computed(() =>
+    this.asignados().reduce((sum, p) =>
+      sum + (p.tipo === 'socio' ? this.tarifaSocio() : this.tarifaNoSocio()), 0
+    )
+  );
 
-  get totalEscuadra(): number {
-    return this.asignados.reduce((sum, p) =>
-      sum + (p.tipo === 'socio' ? this.tarifaSocio : this.tarifaNoSocio), 0
-    );
-  }
+  countSocios = computed(() => this.asignados().filter(p => p.tipo === 'socio').length);
+  countNoSocios = computed(() => this.asignados().filter(p => p.tipo === 'no_socio').length);
 
-  get countSocios(): number {
-    return this.asignados.filter(p => p.tipo === 'socio').length;
-  }
-
-  get countNoSocios(): number {
-    return this.asignados.filter(p => p.tipo === 'no_socio').length;
-  }
-
-  sociosDisponibles(index: number): User[] {
-    const ocupados = this.puestos
-      .filter((p, j) => j !== index && p.tipo === 'socio' && !!p.userId)
-      .map(p => p.userId);
-    return this.socios().filter(s => !ocupados.includes(s.id));
-  }
+  private sociosFiltradosSignals = Array.from({ length: 6 }, (_, i) =>
+    computed<User[]>(() => {
+      const ocupados = this.puestos()
+        .filter((p, j) => j !== i && p.tipo === 'socio' && !!p.userId)
+        .map(p => p.userId);
+      const disponibles = this.socios().filter(s => !ocupados.includes(s.id));
+      const term = (this.searchText()[i] ?? '').toLowerCase().trim();
+      if (!term) return disponibles;
+      return disponibles.filter(s =>
+        `${s.apellidos} ${s.nombre} ${s.numeroSocio}`.toLowerCase().includes(term)
+      );
+    })
+  );
 
   sociosFiltrados(index: number): User[] {
-    const term = this.searchText[index]?.toLowerCase().trim() || '';
-    const disponibles = this.sociosDisponibles(index);
-    if (!term) return disponibles;
-    return disponibles.filter(s =>
-      `${s.apellidos} ${s.nombre} ${s.numeroSocio}`.toLowerCase().includes(term)
-    );
+    return this.sociosFiltradosSignals[index]();
+  }
+
+  private updatePuesto(index: number, patch: Partial<PuestoVM> | PuestoVM, replace = false): void {
+    this.puestos.update(arr => {
+      const next = arr.slice();
+      next[index] = replace ? (patch as PuestoVM) : { ...next[index], ...patch };
+      return next;
+    });
+  }
+
+  private updateSearch(index: number, value: string): void {
+    this.searchText.update(arr => {
+      const next = arr.slice();
+      next[index] = value;
+      return next;
+    });
+  }
+
+  private updateDropdown(index: number, open: boolean): void {
+    this.dropdownOpen.update(arr => {
+      const next = arr.slice();
+      next[index] = open;
+      return next;
+    });
   }
 
   onSearchFocus(index: number): void {
-    this.dropdownOpen[index] = true;
+    if (this.puestos()[index].userId) {
+      this.updateSearch(index, '');
+    }
+    this.updateDropdown(index, true);
   }
 
   onSearchBlur(index: number): void {
-    setTimeout(() => this.dropdownOpen[index] = false, 200);
+    setTimeout(() => {
+      this.updateDropdown(index, false);
+      const p = this.puestos()[index];
+      if (p.userId && !this.searchText()[index]) {
+        const socio = this.socios().find(s => s.id === p.userId);
+        if (socio) this.updateSearch(index, `${socio.apellidos}, ${socio.nombre}`);
+      }
+    }, 200);
+  }
+
+  onSearchChange(index: number, value: string): void {
+    this.updateSearch(index, value);
+    this.updateDropdown(index, true);
   }
 
   selectSocio(index: number, socio: User): void {
-    this.puestos[index].userId = socio.id;
-    this.searchText[index] = `${socio.apellidos}, ${socio.nombre}`;
-    this.dropdownOpen[index] = false;
+    this.updatePuesto(index, { userId: socio.id });
+    this.updateSearch(index, `${socio.apellidos}, ${socio.nombre}`);
+    this.updateDropdown(index, false);
   }
 
   clearSocio(index: number): void {
-    this.puestos[index].userId = undefined;
-    this.searchText[index] = '';
+    this.updatePuesto(index, { userId: undefined });
+    this.updateSearch(index, '');
+    this.updateDropdown(index, false);
   }
 
   onTipoChange(index: number, tipo: 'socio' | 'no_socio'): void {
-    this.puestos[index] = { tipo };
-    this.searchText[index] = '';
-    this.dropdownOpen[index] = false;
+    this.updatePuesto(index, { tipo }, true);
+    this.updateSearch(index, '');
+    this.updateDropdown(index, false);
+  }
+
+  onNombreExternoChange(index: number, nombre: string): void {
+    this.updatePuesto(index, { nombreExterno: nombre });
   }
 
   // ── Submit ───────────────────────────────────────────────────────────────
 
   async onSubmit(): Promise<void> {
-    if (this.asignados.length === 0) {
+    if (this.asignados().length === 0) {
       this.error = 'Asigna al menos un tirador';
       return;
     }
@@ -144,8 +176,9 @@ export class FormEscuadraEntrenamientoComponent {
       );
 
       // 1. Añadir tiradores — puestos vacíos se saltan
-      for (let i = 0; i < this.puestos.length; i++) {
-        const p = this.puestos[i];
+      const puestosActuales = this.puestos();
+      for (let i = 0; i < puestosActuales.length; i++) {
+        const p = puestosActuales[i];
         if (p.tipo === 'socio' && p.userId?.trim()) {
           await this.escuadraService.addTirador(escuadraId, p.userId.trim(), i + 1);
         } else if (p.tipo === 'no_socio') {
@@ -159,21 +192,21 @@ export class FormEscuadraEntrenamientoComponent {
       const registrador = this.authService.currentUser!.id;
       const sociosMap   = new Map(this.socios().map(s => [s.id, s]));
 
-      const movimientos = this.asignados.map(p => {
+      const movimientos = this.asignados().map(p => {
         if (p.tipo === 'socio') {
           const socio = sociosMap.get(p.userId!);
           return {
             userId:        p.userId,
             nombreTirador: socio ? `${socio.apellidos}, ${socio.nombre}` : p.userId!,
             esNoSocio:     false,
-            importe:       this.tarifaSocio,
+            importe:       this.tarifaSocio(),
           };
         }
         return {
           userId:        undefined,
           nombreTirador: p.nombreExterno?.trim() || 'No socio',
           esNoSocio:     true,
-          importe:       this.tarifaNoSocio,
+          importe:       this.tarifaNoSocio(),
         };
       });
 
