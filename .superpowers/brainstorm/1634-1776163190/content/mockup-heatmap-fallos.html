@@ -1,0 +1,184 @@
+<h2>Feature 2: Heatmap de fallos por plato</h2>
+<p class="subtitle">Grid 5x5 mostrando frecuencia de fallo en cada plato (1-25), filtrado por año</p>
+
+<div class="mockup">
+  <div class="mockup-header">Perfil del socio — Bloque "Fallos por plato"</div>
+  <div class="mockup-body" style="background:#fff;padding:16px;font-family:system-ui,sans-serif;">
+
+    <!-- Card fallos -->
+    <div style="background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.08);padding:12px 14px;display:flex;flex-direction:column;gap:10px;">
+
+      <!-- Título -->
+      <p style="font-size:12px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:1.5px;margin:0;">Fallos por plato</p>
+
+      <!-- Grid 5x5 -->
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;">
+        <!-- Plato 1 - pocos fallos -->
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#dcfce7;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">1</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">2</span>
+        </div>
+        <!-- Plato 2 - sin fallos -->
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#f5f5f5;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">2</span>
+          <span style="font-size:14px;font-weight:700;color:#9ca3af;line-height:1;margin-top:2px;">—</span>
+        </div>
+        <!-- Plato 3 - muchos fallos (peor) -->
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fecaca;border:2px solid #ef4444;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">3</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">14</span>
+        </div>
+        <!-- Plato 4 - medio -->
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fef9c3;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">4</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">7</span>
+        </div>
+        <!-- Plato 5 - pocos -->
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#dcfce7;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">5</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">3</span>
+        </div>
+
+        <!-- Fila 2: platos 6-10 -->
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fed7aa;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">6</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">9</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#dcfce7;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">7</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">1</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#f5f5f5;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">8</span>
+          <span style="font-size:14px;font-weight:700;color:#9ca3af;line-height:1;margin-top:2px;">—</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fecaca;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">9</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">12</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fef9c3;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">10</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">6</span>
+        </div>
+
+        <!-- Fila 3: platos 11-15 -->
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#dcfce7;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">11</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">2</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fed7aa;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">12</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">8</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#f5f5f5;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">13</span>
+          <span style="font-size:14px;font-weight:700;color:#9ca3af;line-height:1;margin-top:2px;">—</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#dcfce7;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">14</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">1</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fef9c3;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">15</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">5</span>
+        </div>
+
+        <!-- Fila 4: platos 16-20 -->
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fef9c3;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">16</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">6</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fecaca;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">17</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">11</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#dcfce7;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">18</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">2</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#f5f5f5;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">19</span>
+          <span style="font-size:14px;font-weight:700;color:#9ca3af;line-height:1;margin-top:2px;">—</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fed7aa;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">20</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">8</span>
+        </div>
+
+        <!-- Fila 5: platos 21-25 -->
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#dcfce7;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">21</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">3</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fecaca;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">22</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">13</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#fef9c3;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">23</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">5</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#dcfce7;border:1px solid #e5e7eb;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">24</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">2</span>
+        </div>
+        <div style="aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px;background:#bbf7d0;border:2px solid #10b981;">
+          <span style="font-size:10px;font-weight:600;color:#9ca3af;line-height:1;">25</span>
+          <span style="font-size:14px;font-weight:700;color:#002F86;line-height:1;margin-top:2px;">0</span>
+        </div>
+      </div>
+
+      <!-- Resumen -->
+      <div style="display:flex;flex-direction:column;gap:3px;margin-top:4px;">
+        <p style="font-size:12px;font-weight:500;color:#ef4444;display:flex;align-items:center;gap:4px;margin:0;">
+          <span style="font-size:14px;">&#9650;</span> Más fallados: 3, 22, 9
+        </p>
+        <p style="font-size:12px;font-weight:500;color:#10b981;display:flex;align-items:center;gap:4px;margin:0;">
+          <span style="font-size:14px;">&#9660;</span> Menos fallados: 25, 7, 14
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div style="margin-top:24px;">
+  <h3>Escala de color (por frecuencia relativa)</h3>
+  <p style="font-size:13px;color:#6b7280;margin-bottom:12px;">Los colores se calculan relativos al plato más fallado del usuario, no absolutos. Así siempre se ve el contraste.</p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:4px;">
+      <span style="width:20px;height:20px;border-radius:4px;background:#f5f5f5;border:1px solid #e5e7eb;display:inline-block;"></span>
+      <span style="font-size:12px;color:#6b7280;">Sin datos</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <span style="width:20px;height:20px;border-radius:4px;background:#bbf7d0;display:inline-block;"></span>
+      <span style="font-size:12px;color:#6b7280;">0 fallos</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <span style="width:20px;height:20px;border-radius:4px;background:#dcfce7;display:inline-block;"></span>
+      <span style="font-size:12px;color:#6b7280;">&lt; 25%</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <span style="width:20px;height:20px;border-radius:4px;background:#fef9c3;display:inline-block;"></span>
+      <span style="font-size:12px;color:#6b7280;">25-50%</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <span style="width:20px;height:20px;border-radius:4px;background:#fed7aa;display:inline-block;"></span>
+      <span style="font-size:12px;color:#6b7280;">50-75%</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <span style="width:20px;height:20px;border-radius:4px;background:#fecaca;display:inline-block;"></span>
+      <span style="font-size:12px;color:#6b7280;">&gt; 75%</span>
+    </div>
+  </div>
+
+  <h3 style="margin-top:16px;">Comportamiento</h3>
+  <ul style="font-size:14px;color:#4b5563;line-height:1.8;">
+    <li><strong>Filtrado por año:</strong> usa <code>anioSeleccionado</code>, requiere nueva query <code>getFallosByUserAndYear()</code></li>
+    <li><strong>Color relativo:</strong> porcentaje = <code>veces / maxVeces * 100</code>, donde <code>maxVeces</code> es el plato más fallado</li>
+    <li><strong>Plato más fallado:</strong> borde <code>border-danger</code>; plato menos fallado (con datos): borde <code>border-success</code></li>
+    <li><strong>Número mostrado:</strong> cantidad absoluta de veces fallado ese plato en el año</li>
+    <li><strong>Sin datos de fallos:</strong> bloque oculto (misma lógica que heatmap esquemas)</li>
+  </ul>
+</div>

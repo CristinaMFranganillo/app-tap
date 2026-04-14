@@ -1,0 +1,38 @@
+<h2>Enfoque para Estadísticas del Tirador</h2>
+<p class="subtitle">Dos bloques nuevos en el perfil del socio, reemplazando el gráfico actual</p>
+
+<div class="section">
+  <h3>Orden final del perfil del socio</h3>
+  <div style="display:flex;flex-direction:column;gap:8px;max-width:400px;margin:0 auto;">
+    <div style="background:#f3f4f6;border-radius:10px;padding:12px 16px;text-align:center;font-size:14px;color:#6b7280;">1. Stats (Sesiones / Media / Mejor)</div>
+    <div style="background:#f3f4f6;border-radius:10px;padding:12px 16px;text-align:center;font-size:14px;color:#6b7280;">2. Posición en el club</div>
+    <div style="background:#FFAE00;border-radius:10px;padding:12px 16px;text-align:center;font-size:14px;color:#002F86;font-weight:700;">3. NUEVO — Evolución por meses (multi-año)</div>
+    <div style="background:#f3f4f6;border-radius:10px;padding:12px 16px;text-align:center;font-size:14px;color:#6b7280;">4. Heatmap esquemas (ya implementado)</div>
+    <div style="background:#FFAE00;border-radius:10px;padding:12px 16px;text-align:center;font-size:14px;color:#002F86;font-weight:700;">5. NUEVO — Heatmap de fallos por plato</div>
+  </div>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Enfoque recomendado: Dos features, una spec</h3>
+      <p>Ambas features van en el mismo componente (<code>perfil.component</code>), comparten el <code>anioSeleccionado</code>, y se implementan juntas. Una sola spec cubre ambas.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Coherencia entre features</li><li>Una sola ronda de review</li><li>Comparten lógica de filtrado por año</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Spec más larga</li></ul></div>
+      </div>
+    </div>
+  </div>
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Specs separadas</h3>
+      <p>Una spec por feature: primero evolución por meses, luego heatmap de fallos. Implementación secuencial.</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>Pros</h4><ul><li>Más enfocadas</li><li>Menor riesgo por spec</li></ul></div>
+        <div class="cons"><h4>Cons</h4><ul><li>Más overhead de proceso</li><li>Duplican contexto del componente</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>

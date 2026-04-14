@@ -1,0 +1,92 @@
+<h2>Feature 1: Evolución por meses</h2>
+<p class="subtitle">Reemplaza el gráfico SVG actual. Muestra media mensual con comparativa multi-año.</p>
+
+<div class="mockup">
+  <div class="mockup-header">Perfil del socio — Bloque "Evolución"</div>
+  <div class="mockup-body" style="background:#fff;padding:16px;font-family:system-ui,sans-serif;">
+
+    <!-- Card evolución -->
+    <div style="background:#fff;border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,0.08);padding:12px 14px;display:flex;flex-direction:column;gap:10px;">
+
+      <!-- Título -->
+      <p style="font-size:12px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:1.5px;margin:0;">Evolución mensual</p>
+
+      <!-- Chips de años -->
+      <div style="display:flex;gap:6px;">
+        <span style="background:#002F86;color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">2026</span>
+        <span style="background:#E5E7EB;color:#6b7280;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;cursor:pointer;">2025</span>
+        <span style="background:#E5E7EB;color:#6b7280;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;cursor:pointer;">2024</span>
+      </div>
+
+      <!-- Gráfico SVG simulado -->
+      <div style="position:relative;height:120px;border-left:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;margin-top:4px;">
+        <!-- Eje Y labels -->
+        <span style="position:absolute;left:-28px;top:-4px;font-size:9px;color:#9ca3af;">25</span>
+        <span style="position:absolute;left:-28px;top:28px;font-size:9px;color:#9ca3af;">20</span>
+        <span style="position:absolute;left:-28px;top:56px;font-size:9px;color:#9ca3af;">15</span>
+        <span style="position:absolute;left:-28px;top:84px;font-size:9px;color:#9ca3af;">10</span>
+        <span style="position:absolute;left:-28px;top:112px;font-size:9px;color:#9ca3af;">0</span>
+        <!-- Grid lines -->
+        <div style="position:absolute;top:32px;left:0;right:0;border-top:1px dashed #f3f4f6;"></div>
+        <div style="position:absolute;top:60px;left:0;right:0;border-top:1px dashed #f3f4f6;"></div>
+        <div style="position:absolute;top:88px;left:0;right:0;border-top:1px dashed #f3f4f6;"></div>
+
+        <!-- Línea 2026 (activa, color primario) -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;" viewBox="0 0 300 120" preserveAspectRatio="none">
+          <polyline points="25,72 50,60 75,54 100,48 125,42 150,36 175,40 200,32 225,28"
+            fill="none" stroke="#FFAE00" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <!-- Dots -->
+          <circle cx="25" cy="72" r="3.5" fill="#FFAE00" stroke="white" stroke-width="1.5"/>
+          <circle cx="50" cy="60" r="3.5" fill="#FFAE00" stroke="white" stroke-width="1.5"/>
+          <circle cx="75" cy="54" r="3.5" fill="#FFAE00" stroke="white" stroke-width="1.5"/>
+          <circle cx="100" cy="48" r="3.5" fill="#FFAE00" stroke="white" stroke-width="1.5"/>
+          <circle cx="125" cy="42" r="3.5" fill="#FFAE00" stroke="white" stroke-width="1.5"/>
+          <circle cx="150" cy="36" r="3.5" fill="#FFAE00" stroke="white" stroke-width="1.5"/>
+          <circle cx="175" cy="40" r="3.5" fill="#FFAE00" stroke="white" stroke-width="1.5"/>
+          <circle cx="200" cy="32" r="3.5" fill="#FFAE00" stroke="white" stroke-width="1.5"/>
+          <circle cx="225" cy="28" r="3.5" fill="#FFAE00" stroke="white" stroke-width="1.5"/>
+        </svg>
+
+        <!-- Eje X labels (meses) -->
+        <div style="position:absolute;bottom:-18px;left:0;right:0;display:flex;justify-content:space-between;padding:0 10px;">
+          <span style="font-size:9px;color:#9ca3af;">Ene</span>
+          <span style="font-size:9px;color:#9ca3af;">Feb</span>
+          <span style="font-size:9px;color:#9ca3af;">Mar</span>
+          <span style="font-size:9px;color:#9ca3af;">Abr</span>
+          <span style="font-size:9px;color:#9ca3af;">May</span>
+          <span style="font-size:9px;color:#9ca3af;">Jun</span>
+          <span style="font-size:9px;color:#9ca3af;">Jul</span>
+          <span style="font-size:9px;color:#9ca3af;">Ago</span>
+          <span style="font-size:9px;color:#9ca3af;">Sep</span>
+          <span style="font-size:9px;color:#9ca3af;">Oct</span>
+          <span style="font-size:9px;color:#9ca3af;">Nov</span>
+          <span style="font-size:9px;color:#9ca3af;">Dic</span>
+        </div>
+      </div>
+
+      <!-- Leyenda (cuando hay multi-año activo) -->
+      <div style="margin-top:20px;display:flex;gap:12px;justify-content:center;">
+        <span style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#002F86;">
+          <span style="width:12px;height:3px;background:#FFAE00;border-radius:2px;display:inline-block;"></span> 2026
+        </span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:#9ca3af;">
+          <span style="width:12px;height:3px;background:#9ca3af;border-radius:2px;display:inline-block;opacity:0.3;"></span> 2025 (inactivo)
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div style="margin-top:24px;">
+  <h3>Comportamiento</h3>
+  <ul style="font-size:14px;color:#4b5563;line-height:1.8;">
+    <li><strong>Año principal:</strong> siempre el <code>anioSeleccionado</code> global (chip con fondo azul oscuro)</li>
+    <li><strong>Años comparativos:</strong> click en chip gris lo activa (fondo semitransparente de su color). Máximo 2 adicionales.</li>
+    <li><strong>Colores de línea:</strong> primario = #FFAE00, segundo año = #60A5FA (azul claro), tercer año = #A78BFA (violeta)</li>
+    <li><strong>Meses sin datos:</strong> el punto no se renderiza, la línea salta al siguiente mes con datos</li>
+    <li><strong>Datos:</strong> media de <code>platosRotos</code> agrupada por mes, derivada de <code>getByUser()</code></li>
+    <li><strong>Eje Y:</strong> 0-25 fijo (máximo posible de platos)</li>
+  </ul>
+</div>
