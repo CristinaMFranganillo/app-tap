@@ -47,7 +47,6 @@ export class PerfilComponent {
   // ADMIN: Administración financiera
   // ══════════════════════════════════════════════════════════════════
 
-  tabAdmin = signal<'admin' | 'stats'>('admin');
   anioAdmin = new Date().getFullYear();
   resumen = signal<ResumenFinanciero | null>(null);
   cargandoResumen = signal(true);

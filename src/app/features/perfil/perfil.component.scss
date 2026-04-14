@@ -222,20 +222,6 @@
 .perfil-admin {
   @apply flex flex-col gap-3 px-3 pb-2;
 
-  &__tabs {
-    @apply flex bg-neutral-100 rounded-card p-1 gap-1;
-  }
-
-  &__tab {
-    @apply flex-1 py-1.5 rounded-[8px] text-sm font-semibold
-           text-neutral-400 transition-all duration-fast cursor-pointer
-           border-0 bg-transparent;
-
-    &--active {
-      @apply bg-white text-secondary shadow-card;
-    }
-  }
-
   &__error {
     @apply text-[13px] text-danger font-semibold bg-danger-light
            border border-danger/30 rounded-card px-3 py-2;

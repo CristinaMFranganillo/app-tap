@@ -20,7 +20,7 @@ const ADMIN_NAV: NavItem[] = [
   { route: '/admin/socios',    icon: 'bi-people',    label: 'Socios'   },
   { route: '/admin/noticias',  icon: 'bi-newspaper', label: 'Noticias' },
   { route: '/admin/scores',    icon: 'bi-bullseye',  label: 'Entrena'  },
-  { route: '/perfil',          icon: 'bi-gear',      label: 'Config'   },
+  { route: '/perfil',          icon: 'bi-gear',      label: 'Admin'    },
 ];
 
 @Component({
