@@ -51,7 +51,7 @@
   }
 
   &__fecha {
-    @apply flex items-center gap-2 text-[14px] font-semibold text-secondary;
+    @apply flex items-center gap-2 text-[14px] font-medium text-secondary;
 
     i { @apply text-neutral-300; }
   }
@@ -68,7 +68,7 @@
   @apply flex flex-col gap-2 mt-4;
 
   &__btn {
-    @apply w-full py-3 rounded-[12px] text-[14px] font-extrabold
+    @apply w-full py-3 rounded-[12px] text-[14px] font-bold
            flex items-center justify-center gap-2;
 
     &--sec {
@@ -137,7 +137,7 @@
   }
 
   &__titulo {
-    @apply text-sm font-extrabold text-left;
+    @apply text-sm font-bold text-left;
     color: #F5E000;
     margin: 0;
     letter-spacing: -0.01em;

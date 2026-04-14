@@ -744,7 +744,7 @@ Leer `lista-socios.component.scss` para ver el contenido actual, luego añadir a
   }
 
   &__nombre {
-    @apply text-[18px] font-extrabold text-secondary;
+    @apply text-[18px] font-bold text-secondary;
   }
 
   &__socio {

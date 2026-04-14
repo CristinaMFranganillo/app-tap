@@ -12,7 +12,7 @@
   @apply flex flex-col;
   &__row { @apply flex items-center gap-2; }
   &__info { @apply flex-1 min-w-0; }
-  &__nombre { @apply text-[14px] font-bold text-brand-dark truncate; }
+  &__nombre { @apply text-[14px] font-medium text-brand-dark truncate; }
   &__meta { @apply text-[12px] text-gray-400 font-medium truncate;
     &--inactive { @apply text-amber-600 font-semibold; }
   }
@@ -32,7 +32,7 @@
     &--success, &--success i { color: #059669; }
     .bi-star-fill { color: #FFAE00 !important; }
   }
-  &__cuota-btn { @apply flex items-center justify-center p-1 rounded-full; }
+  &__cuota-btn { @apply flex items-center justify-center w-8 h-8 rounded-full; }
   &__cuota-dot {
     @apply w-5 h-5 rounded-full bg-gray-300 flex-shrink-0;
     &--pagada { background-color: #10B981; }

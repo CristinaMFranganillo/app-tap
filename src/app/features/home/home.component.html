@@ -1,5 +1,7 @@
 <div class="home">
-  <h2 class="page-title home__welcome">¡Hola, {{ user()?.nombre }}!</h2>
+  @if (!esAdmin()) {
+    <h2 class="page-title home__welcome">¡Hola, {{ user()?.nombre }}!</h2>
+  }
 
   @if (esAdmin()) {
 

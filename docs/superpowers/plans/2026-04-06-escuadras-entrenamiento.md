@@ -373,7 +373,7 @@ Reemplazar `src/app/features/admin/scores/form-escuadra/form-escuadra.component.
     <button (click)="cancel()" class="text-gray-400">
       <i class="bi bi-chevron-left text-[15px]"></i>
     </button>
-    <h2 class="text-[11px] font-extrabold text-brand-dark">Nueva Escuadra</h2>
+    <h2 class="text-[11px] font-bold text-brand-dark">Nueva Escuadra</h2>
   </div>
 
   <label class="block text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-1">Fecha</label>
@@ -411,7 +411,7 @@ Reemplazar `src/app/features/admin/scores/form-escuadra/form-escuadra.component.
     <button
       (click)="onSubmit()"
       [disabled]="loading()"
-      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-bold disabled:opacity-50"
     >
       {{ loading() ? 'Guardando...' : 'Crear escuadra' }}
     </button>
@@ -503,7 +503,7 @@ Crear `src/app/features/admin/scores/lista-escuadras/lista-escuadras.component.h
 
 ```html
 <div class="p-3 pb-20">
-  <h2 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-4">Escuadras</h2>
+  <h2 class="text-[9px] font-bold uppercase tracking-[1.5px] text-brand-dark mb-4">Escuadras</h2>
 
   @if (groups().length === 0) {
     <div class="flex flex-col items-center justify-center py-16 text-center">
@@ -526,7 +526,7 @@ Crear `src/app/features/admin/scores/lista-escuadras/lista-escuadras.component.h
         </div>
         <button
           (click)="registrar(e.id)"
-          class="flex-shrink-0 px-3 py-1.5 bg-brand-yellow rounded-[10px] text-[8px] font-extrabold text-brand-dark"
+          class="flex-shrink-0 px-3 py-1.5 bg-brand-yellow rounded-[10px] text-[8px] font-bold text-brand-dark"
         >
           Resultados
         </button>
@@ -666,7 +666,7 @@ Crear `src/app/features/admin/scores/registrar-resultado-entrenamiento/registrar
     <button (click)="cancel()" class="text-gray-400">
       <i class="bi bi-chevron-left text-[15px]"></i>
     </button>
-    <h2 class="text-[11px] font-extrabold text-brand-dark">Registrar Resultados</h2>
+    <h2 class="text-[11px] font-bold text-brand-dark">Registrar Resultados</h2>
   </div>
 
   @if (puestosResultado().length === 0) {
@@ -709,7 +709,7 @@ Crear `src/app/features/admin/scores/registrar-resultado-entrenamiento/registrar
     <button
       (click)="guardar()"
       [disabled]="saving() || puestosResultado().length === 0"
-      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-bold disabled:opacity-50"
     >
       {{ saving() ? 'Guardando...' : 'Guardar resultados' }}
     </button>
@@ -954,7 +954,7 @@ Reemplazar `src/app/features/perfil/perfil.component.html`:
       [avatarUrl]="user()?.avatarUrl"
       [size]="64"
     />
-    <h2 class="text-white font-extrabold text-[13px] mt-2">
+    <h2 class="text-white font-bold text-[13px] mt-2">
       {{ user()?.nombre }} {{ user()?.apellidos }}
     </h2>
     <p class="text-brand-yellow font-bold text-[8px] uppercase tracking-wider">
@@ -980,7 +980,7 @@ Reemplazar `src/app/features/perfil/perfil.component.html`:
 
   <!-- Historial -->
   <div class="p-3 mt-2">
-    <h3 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2">Mis Entrenamientos</h3>
+    <h3 class="text-[9px] font-bold uppercase tracking-[1.5px] text-brand-dark mb-2">Mis Entrenamientos</h3>
 
     @if (resultados().length === 0) {
       <app-empty-state icon="bi-bullseye" mensaje="Sin entrenamientos registrados" />
@@ -1005,7 +1005,7 @@ Reemplazar `src/app/features/perfil/perfil.component.html`:
   <div class="px-3 pb-4">
     <button
       (click)="logout()"
-      class="w-full py-2.5 rounded-[12px] border border-danger text-danger text-[9px] font-extrabold"
+      class="w-full py-2.5 rounded-[12px] border border-danger text-danger text-[9px] font-bold"
     >
       <i class="bi bi-box-arrow-right mr-1"></i>
       Cerrar sesión

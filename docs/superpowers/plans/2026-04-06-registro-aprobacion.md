@@ -365,7 +365,7 @@ Crear `src/app/features/registro/registro.component.html`:
       <button
         type="submit"
         [disabled]="form.invalid || loading()"
-        class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-extrabold text-[11px] tracking-wide rounded-[12px] py-3 disabled:opacity-50"
+        class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-bold text-[11px] tracking-wide rounded-[12px] py-3 disabled:opacity-50"
       >
         <i class="bi bi-send-fill"></i>
         {{ loading() ? 'Enviando...' : 'Enviar solicitud' }}
@@ -459,7 +459,7 @@ Crear `src/app/features/registro/registro-confirmacion.component.html`:
 
     <button
       (click)="irAlLogin()"
-      class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-extrabold text-[11px] tracking-wide rounded-[12px] py-3"
+      class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-bold text-[11px] tracking-wide rounded-[12px] py-3"
     >
       <i class="bi bi-box-arrow-in-right"></i>
       Volver al login

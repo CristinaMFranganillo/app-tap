@@ -544,7 +544,7 @@ Reemplazar `src/app/shared/components/cambiar-password/cambiar-password.componen
   <div class="modal-sheet">
 
     @if (fase() === 'password') {
-      <h2 class="text-[12px] font-extrabold text-brand-dark mb-1">¡Bienvenido!</h2>
+      <h2 class="text-[12px] font-bold text-brand-dark mb-1">¡Bienvenido!</h2>
       <p class="text-[13px] text-gray-400 font-medium mb-4">
         Estás usando una contraseña provisional. ¿Quieres cambiarla ahora?
       </p>

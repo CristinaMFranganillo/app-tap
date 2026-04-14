@@ -748,7 +748,7 @@ git commit -m "feat: add auth HTTP interceptor, register in app config"
       class="w-8 h-8 rounded-full object-cover border-2 border-brand-yellow bg-white"
     />
     <div class="leading-tight">
-      <p class="text-white font-extrabold text-[10px] tracking-tight">Campo de Tiro</p>
+      <p class="text-white font-bold text-[10px] tracking-tight">Campo de Tiro</p>
       <p class="text-brand-yellow font-bold text-[7.5px] uppercase tracking-widest">San Isidro</p>
     </div>
   </div>
@@ -945,7 +945,7 @@ export class ShellComponent {}
       <button
         type="submit"
         [disabled]="form.invalid || loading"
-        class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-extrabold text-[11px] tracking-wide rounded-[12px] py-3 disabled:opacity-50"
+        class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-bold text-[11px] tracking-wide rounded-[12px] py-3 disabled:opacity-50"
       >
         <i class="bi bi-box-arrow-in-right"></i>
         {{ loading ? 'Entrando...' : 'Entrar' }}
@@ -1030,7 +1030,7 @@ export class LoginComponent {
 
 ```html
 <div class="p-4">
-  <h2 class="text-brand-dark font-extrabold text-[12px] uppercase tracking-wider mb-3">Inicio</h2>
+  <h2 class="text-brand-dark font-bold text-[12px] uppercase tracking-wider mb-3">Inicio</h2>
   <p class="text-[10px] text-gray-500 font-medium">Bienvenido a Campo de Tiro San Isidro.</p>
 </div>
 ```
@@ -1045,7 +1045,7 @@ import { Component } from '@angular/core';
   standalone: true,
   template: `
     <div class="p-4">
-      <h2 class="text-brand-dark font-extrabold text-[12px] uppercase tracking-wider mb-3">Inicio</h2>
+      <h2 class="text-brand-dark font-bold text-[12px] uppercase tracking-wider mb-3">Inicio</h2>
       <p class="text-[10px] text-gray-500 font-medium">Bienvenido a Campo de Tiro San Isidro.</p>
     </div>
   `,
@@ -1357,7 +1357,7 @@ export class ListaSociosComponent {
       <button
         type="submit"
         [disabled]="form.invalid"
-        class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-extrabold text-[10px] tracking-wide rounded-[10px] py-2.5 mt-2 disabled:opacity-50"
+        class="w-full flex items-center justify-center gap-2 bg-brand-yellow text-brand-dark font-bold text-[10px] tracking-wide rounded-[10px] py-2.5 mt-2 disabled:opacity-50"
       >
         <i class="bi bi-person-plus-fill"></i>
         {{ isEdit ? 'Guardar cambios' : 'Crear socio' }}
@@ -1508,7 +1508,7 @@ Añadir al final de `src/styles.scss`:
 ```scss
 @layer components {
   .section-title {
-    @apply text-[9px] font-extrabold text-brand-dark uppercase tracking-[.8px] mb-2.5 flex items-center gap-1.5;
+    @apply text-[9px] font-bold text-brand-dark uppercase tracking-[.8px] mb-2.5 flex items-center gap-1.5;
     &::after {
       content: '';
       @apply flex-1 h-px bg-gray-200;

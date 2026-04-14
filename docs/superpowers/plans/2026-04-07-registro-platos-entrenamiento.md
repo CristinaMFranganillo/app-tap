@@ -327,7 +327,7 @@ Diseño visual:
   &__back-btn { @apply text-gray-400 text-[15px]; }
 
   &__header-info { @apply flex-1 min-w-0; }
-  &__nombre { @apply text-[18px] font-extrabold text-secondary truncate; }
+  &__nombre { @apply text-[18px] font-bold text-secondary truncate; }
   &__puesto { @apply text-xs text-neutral-300 font-medium; }
   &__progreso { @apply text-xs font-bold text-neutral-300 flex-shrink-0; }
 

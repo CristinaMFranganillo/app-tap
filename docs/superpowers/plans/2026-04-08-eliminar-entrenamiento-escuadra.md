@@ -691,7 +691,7 @@ En `detalle-dia-entrenamiento.component.scss`, añadir dentro del bloque `.escua
   @apply p-3 flex flex-col gap-3;
 
   &__back-btn { @apply text-gray-400; }
-  &__title { @apply text-[18px] font-extrabold text-secondary capitalize; }
+  &__title { @apply text-[18px] font-bold text-secondary capitalize; }
   &__error { @apply text-danger text-sm font-semibold px-1; }
 }
 
@@ -737,7 +737,7 @@ En `detalle-dia-entrenamiento.component.scss`, añadir dentro del bloque `.escua
   &__nombre { @apply flex-1 text-sm font-semibold text-secondary truncate; }
 
   &__rotos {
-    @apply text-sm font-extrabold text-secondary flex-shrink-0;
+    @apply text-sm font-bold text-secondary flex-shrink-0;
     &--bueno { @apply text-success; }
     &--malo  { @apply text-danger; }
   }

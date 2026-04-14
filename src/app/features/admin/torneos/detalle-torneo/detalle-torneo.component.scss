@@ -9,7 +9,7 @@
   &__back-btn  { @apply text-neutral-400; }
   &__back-icon { @apply text-[15px]; }
   &__header-info { @apply flex flex-col; }
-  &__title       { @apply text-[18px] font-extrabold text-secondary; }
+  &__title       { @apply text-[18px] font-bold text-secondary; }
   &__fecha       { @apply text-sm text-neutral-400 font-medium; }
   &__crear-escuadra-btn {
     @apply flex items-center gap-1 text-[13px] font-semibold text-warning-dark bg-warning-light px-4 py-2 rounded-badge mx-auto;
@@ -43,7 +43,7 @@
   &__icon  { @apply text-secondary text-[16px]; }
   &__label { @apply text-sm font-bold text-secondary; }
   &__right { @apply flex items-center gap-2; }
-  &__total { @apply text-base font-extrabold text-secondary; }
+  &__total { @apply text-base font-bold text-secondary; }
   &__arrow { @apply text-neutral-300 text-[13px]; }
 }
 

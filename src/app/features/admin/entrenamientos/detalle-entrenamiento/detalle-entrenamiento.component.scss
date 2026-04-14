@@ -3,7 +3,7 @@
 
   &__back-btn  { @apply text-neutral-400; }
   &__back-icon { @apply text-[15px]; }
-  &__title     { @apply text-[18px] font-extrabold text-secondary; }
+  &__title     { @apply text-[18px] font-bold text-secondary; }
 
   &__crear-escuadra-btn {
     @apply flex items-center gap-1 text-[13px] font-semibold
@@ -24,7 +24,7 @@
   &__label { @apply text-sm font-bold text-secondary; }
 
   &__right { @apply flex items-center gap-2; }
-  &__total { @apply text-base font-extrabold text-secondary; }
+  &__total { @apply text-base font-bold text-secondary; }
   &__arrow { @apply text-neutral-300 text-[13px]; }
 }
 

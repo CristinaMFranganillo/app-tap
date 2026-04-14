@@ -387,7 +387,7 @@ export class FormEntrenamientoComponent {
 
   &__back-btn { @apply text-gray-400; }
   &__back-icon { @apply text-[15px]; }
-  &__title { @apply text-[18px] font-extrabold text-secondary; }
+  &__title { @apply text-[18px] font-bold text-secondary; }
 
   &__card {
     @apply bg-white rounded-card p-4 shadow-card flex flex-col gap-3;
@@ -518,7 +518,7 @@ export class DetalleEntrenamientoComponent {
 
   &__back-btn { @apply text-gray-400; }
   &__back-icon { @apply text-[15px]; }
-  &__title { @apply text-[18px] font-extrabold text-secondary; }
+  &__title { @apply text-[18px] font-bold text-secondary; }
 }
 
 .escuadra-item {
@@ -655,7 +655,7 @@ export class FormEscuadraEntrenamientoComponent {
 
   &__back-btn { @apply text-gray-400; }
   &__back-icon { @apply text-[15px]; }
-  &__title { @apply text-[18px] font-extrabold text-secondary; }
+  &__title { @apply text-[18px] font-bold text-secondary; }
   &__section-label { @apply text-xs font-bold text-neutral-300 uppercase tracking-wide mb-2; }
   &__puesto { @apply mb-2; }
   &__error { @apply text-danger text-sm font-semibold mt-3; }
@@ -827,7 +827,7 @@ export class RegistrarResultadoEntrenamientoComponent {
 
   &__back-btn { @apply text-gray-400; }
   &__back-icon { @apply text-[15px]; }
-  &__title { @apply text-[18px] font-extrabold text-secondary; }
+  &__title { @apply text-[18px] font-bold text-secondary; }
   &__error { @apply text-danger text-sm font-semibold mt-2; }
   &__btn-guardar { @apply w-full mt-4; }
 }
@@ -1018,7 +1018,7 @@ export class AdminScoresComponent {
 
 .admin-scores__btn-primary {
   @apply flex items-center gap-3 bg-primary rounded-card px-4 py-3
-         font-extrabold text-secondary w-full
+         font-bold text-secondary w-full
          active:scale-[.98] transition-transform duration-fast;
 
   &-icon { @apply text-[20px]; }

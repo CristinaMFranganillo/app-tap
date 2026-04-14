@@ -18,7 +18,7 @@
   @apply w-9 h-9 rounded-card bg-primary/20 flex items-center justify-center flex-shrink-0;
   i { @apply text-secondary text-[16px]; }
 }
-.caja-acceso__titulo   { @apply text-sm font-bold text-secondary; }
+.caja-acceso__titulo   { @apply text-sm font-semibold text-secondary; }
 .caja-acceso__sub      { @apply text-xs text-neutral-400; }
 .caja-acceso__arrow    { @apply text-neutral-300 text-[13px]; }
 
@@ -37,7 +37,7 @@
 
 .admin-scores__btn-primary {
   @apply flex items-center gap-3 bg-primary rounded-card px-4 py-3
-         font-extrabold text-secondary w-full
+         font-bold text-secondary w-full
          active:scale-[.98] transition-transform duration-fast;
   &-icon { @apply text-[20px]; }
   span   { @apply text-base; }

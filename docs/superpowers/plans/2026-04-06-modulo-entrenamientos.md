@@ -338,7 +338,7 @@ export class FormEntrenamientoComponent {
     <button (click)="cancel()" class="text-gray-300">
       <i class="bi bi-chevron-left text-[15px]"></i>
     </button>
-    <h2 class="text-[11px] font-extrabold text-brand-dark">Nuevo Entrenamiento</h2>
+    <h2 class="text-[11px] font-bold text-brand-dark">Nuevo Entrenamiento</h2>
   </div>
 
   <label class="block text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-1">Fecha</label>
@@ -359,7 +359,7 @@ export class FormEntrenamientoComponent {
     <button
       (click)="onSubmit()"
       [disabled]="loading"
-      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-bold disabled:opacity-50"
     >
       {{ loading ? 'Creando...' : 'Crear entrenamiento' }}
     </button>
@@ -453,7 +453,7 @@ export class FormEscuadraEntrenamientoComponent {
     <button (click)="cancel()" class="text-gray-300">
       <i class="bi bi-chevron-left text-[15px]"></i>
     </button>
-    <h2 class="text-[11px] font-extrabold text-brand-dark">Nueva Escuadra</h2>
+    <h2 class="text-[11px] font-bold text-brand-dark">Nueva Escuadra</h2>
   </div>
 
   <p class="text-[8px] font-bold text-gray-300 uppercase tracking-wide mb-2">Tiradores por puesto</p>
@@ -484,7 +484,7 @@ export class FormEscuadraEntrenamientoComponent {
     <button
       (click)="onSubmit()"
       [disabled]="loading"
-      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-bold disabled:opacity-50"
     >
       {{ loading ? 'Guardando...' : 'Crear escuadra' }}
     </button>
@@ -606,7 +606,7 @@ export class RegistrarResultadoEntrenamientoComponent {
     <button (click)="cancel()" class="text-gray-300">
       <i class="bi bi-chevron-left text-[15px]"></i>
     </button>
-    <h2 class="text-[11px] font-extrabold text-brand-dark">Registrar Resultados</h2>
+    <h2 class="text-[11px] font-bold text-brand-dark">Registrar Resultados</h2>
   </div>
 
   <p class="text-[7.5px] font-bold text-brand-dark uppercase tracking-wide mb-3">Platos rotos (máx. 25)</p>
@@ -643,7 +643,7 @@ export class RegistrarResultadoEntrenamientoComponent {
     <button
       (click)="onSubmit()"
       [disabled]="loading()"
-      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-bold disabled:opacity-50"
     >
       {{ loading() ? 'Guardando...' : 'Guardar resultados' }}
     </button>
@@ -804,7 +804,7 @@ export class DetalleEntrenamientoComponent {
       <i class="bi bi-chevron-left text-[15px]"></i>
     </button>
     @if (entrenamiento()) {
-      <h2 class="text-[11px] font-extrabold text-brand-dark">
+      <h2 class="text-[11px] font-bold text-brand-dark">
         {{ entrenamiento()!.fecha | date:'EEEE d \'de\' MMMM':'':'es' | titlecase }}
       </h2>
     }
@@ -815,7 +815,7 @@ export class DetalleEntrenamientoComponent {
     class="w-full flex items-center gap-3 bg-brand-yellow rounded-[12px] px-4 py-3 mb-4"
   >
     <i class="bi bi-plus-circle text-brand-dark text-[16px]"></i>
-    <span class="text-[10px] font-extrabold text-brand-dark">Nueva escuadra</span>
+    <span class="text-[10px] font-bold text-brand-dark">Nueva escuadra</span>
   </button>
 
   @if (escuadrasConTiradores().length === 0) {
@@ -831,7 +831,7 @@ export class DetalleEntrenamientoComponent {
         class="flex items-center justify-between bg-white rounded-[12px] px-3 py-2.5 mb-2 shadow-sm cursor-pointer"
       >
         <div>
-          <p class="text-[9.5px] font-extrabold text-brand-dark">Escuadra {{ e.numero }}</p>
+          <p class="text-[9.5px] font-bold text-brand-dark">Escuadra {{ e.numero }}</p>
           <p class="text-[7.5px] text-gray-300 font-medium">{{ e.numTiradores }} tirador{{ e.numTiradores !== 1 ? 'es' : '' }}</p>
         </div>
         <i class="bi bi-chevron-right text-gray-300 text-[12px]"></i>
@@ -1031,14 +1031,14 @@ export class AdminScoresComponent {
 <div class="p-3">
 
   <!-- SECCIÓN ENTRENAMIENTOS -->
-  <h2 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-3">Entrenamientos</h2>
+  <h2 class="text-[9px] font-bold uppercase tracking-[1.5px] text-brand-dark mb-3">Entrenamientos</h2>
 
   <button
     (click)="nuevoEntrenamiento()"
     class="w-full flex items-center gap-3 bg-brand-yellow rounded-[12px] px-4 py-3 mb-4"
   >
     <i class="bi bi-plus-circle text-brand-dark text-[16px]"></i>
-    <span class="text-[10px] font-extrabold text-brand-dark">Nuevo entrenamiento</span>
+    <span class="text-[10px] font-bold text-brand-dark">Nuevo entrenamiento</span>
   </button>
 
   @if (entrenamientos().length === 0) {
@@ -1054,7 +1054,7 @@ export class AdminScoresComponent {
         class="flex items-center justify-between bg-white rounded-[12px] px-3 py-2.5 mb-2 shadow-sm cursor-pointer"
       >
         <div>
-          <p class="text-[9.5px] font-extrabold text-brand-dark">{{ e.fecha | date:'EEEE d \'de\' MMMM':'':'es' | titlecase }}</p>
+          <p class="text-[9.5px] font-bold text-brand-dark">{{ e.fecha | date:'EEEE d \'de\' MMMM':'':'es' | titlecase }}</p>
           <p class="text-[7.5px] text-gray-300 font-medium">{{ e.numEscuadras }} escuadra{{ e.numEscuadras !== 1 ? 's' : '' }}</p>
         </div>
         <i class="bi bi-chevron-right text-gray-300 text-[12px]"></i>
@@ -1066,7 +1066,7 @@ export class AdminScoresComponent {
   <div class="border-t border-gray-100 my-4"></div>
 
   <!-- SECCIÓN COMPETICIONES -->
-  <h2 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-3">Competiciones</h2>
+  <h2 class="text-[9px] font-bold uppercase tracking-[1.5px] text-brand-dark mb-3">Competiciones</h2>
 
   <button
     (click)="nuevaCompeticion()"
@@ -1088,7 +1088,7 @@ export class AdminScoresComponent {
         <div class="flex items-start justify-between">
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
-              <p class="text-[9.5px] font-extrabold text-brand-dark truncate">{{ c.nombre }}</p>
+              <p class="text-[9.5px] font-bold text-brand-dark truncate">{{ c.nombre }}</p>
               @if (c.activa) {
                 <span class="flex-shrink-0 px-1.5 py-0.5 bg-brand-yellow rounded-full text-[6.5px] font-black text-brand-dark uppercase">Activa</span>
               }

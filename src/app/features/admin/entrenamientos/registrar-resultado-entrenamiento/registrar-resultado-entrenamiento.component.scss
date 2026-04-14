@@ -2,7 +2,7 @@
   @apply p-3 flex flex-col gap-4;
 
   &__back-btn { @apply text-gray-400 text-[15px]; }
-  &__title { @apply text-[18px] font-extrabold text-secondary; }
+  &__title { @apply text-[18px] font-bold text-secondary; }
 
   &__loading {
     @apply flex items-center justify-center py-16 text-neutral-300 text-sm;

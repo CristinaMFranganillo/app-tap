@@ -3,7 +3,7 @@
 
   &__back-btn { @apply text-gray-400; }
   &__back-icon { @apply text-[15px]; }
-  &__title { @apply text-[18px] font-extrabold text-secondary; }
+  &__title { @apply text-[18px] font-bold text-secondary; }
 
   &__card {
     @apply bg-white rounded-card p-4 shadow-card flex flex-col gap-3;

@@ -3,7 +3,7 @@
 }
 
 .registrar-resultado__title {
-  @apply text-[18px] font-extrabold text-brand-dark mb-4;
+  @apply text-[18px] font-bold text-brand-dark mb-4;
 }
 
 .registrar-resultado__selects {
@@ -51,9 +51,9 @@
 }
 
 .btn-roto {
-  @apply px-3 py-1.5 rounded-[8px] bg-success text-white text-[13px] font-extrabold disabled:opacity-50;
+  @apply px-3 py-1.5 rounded-[8px] bg-success text-white text-[13px] font-bold disabled:opacity-50;
 }
 
 .btn-fallo {
-  @apply px-3 py-1.5 rounded-[8px] bg-danger text-white text-[13px] font-extrabold disabled:opacity-50;
+  @apply px-3 py-1.5 rounded-[8px] bg-danger text-white text-[13px] font-bold disabled:opacity-50;
 }

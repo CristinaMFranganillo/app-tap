@@ -638,7 +638,7 @@ export class FormEscuadraComponent {
     <button (click)="cancel()" class="text-gray-400">
       <i class="bi bi-chevron-left text-[15px]"></i>
     </button>
-    <h2 class="text-[11px] font-extrabold text-brand-dark">Nueva Escuadra</h2>
+    <h2 class="text-[11px] font-bold text-brand-dark">Nueva Escuadra</h2>
   </div>
 
   <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Competición</label>
@@ -680,7 +680,7 @@ export class FormEscuadraComponent {
     <button
       (click)="onSubmit()"
       [disabled]="loading"
-      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+      class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-bold disabled:opacity-50"
     >
       {{ loading ? 'Guardando...' : 'Crear escuadra' }}
     </button>
@@ -813,7 +813,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 ```html
 <!-- src/app/features/admin/scores/registrar-resultado/registrar-resultado.component.html -->
 <div class="p-3">
-  <h2 class="text-[11px] font-extrabold text-brand-dark mb-4">Registrar resultados</h2>
+  <h2 class="text-[11px] font-bold text-brand-dark mb-4">Registrar resultados</h2>
 
   <!-- Selector competición -->
   <label class="block text-[7.5px] font-bold text-gray-300 uppercase tracking-wide mb-1">Competición</label>
@@ -875,14 +875,14 @@ import { toObservable } from '@angular/core/rxjs-interop';
           <button
             (click)="registrar(t.userId, 1)"
             [disabled]="saving()"
-            class="px-3 py-1.5 rounded-[8px] bg-success text-white text-[9px] font-extrabold disabled:opacity-50"
+            class="px-3 py-1.5 rounded-[8px] bg-success text-white text-[9px] font-bold disabled:opacity-50"
           >
             ROTO
           </button>
           <button
             (click)="registrar(t.userId, 0)"
             [disabled]="saving()"
-            class="px-3 py-1.5 rounded-[8px] bg-danger text-white text-[9px] font-extrabold disabled:opacity-50"
+            class="px-3 py-1.5 rounded-[8px] bg-danger text-white text-[9px] font-bold disabled:opacity-50"
           >
             FALLO
           </button>

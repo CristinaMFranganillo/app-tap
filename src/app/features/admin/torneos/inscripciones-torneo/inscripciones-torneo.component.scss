@@ -9,7 +9,7 @@
   &__back-icon { @apply text-[15px]; }
 
   &__header-info { @apply flex flex-col; }
-  &__title    { @apply text-[18px] font-extrabold text-secondary; }
+  &__title    { @apply text-[18px] font-bold text-secondary; }
   &__subtitle { @apply text-sm text-neutral-400 font-medium; }
 
   &__error {
@@ -59,7 +59,7 @@
   }
 
   &__total {
-    @apply text-base font-extrabold text-secondary;
+    @apply text-base font-bold text-secondary;
   }
 
   &__vacio {

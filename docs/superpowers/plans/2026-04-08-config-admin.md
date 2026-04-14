@@ -344,7 +344,7 @@ git commit -m "feat(perfil): bifurcar template por rol — admin ve resumen del 
   }
 
   &__acceso-btn {
-    @apply w-full py-3 rounded-[12px] text-[14px] font-extrabold
+    @apply w-full py-3 rounded-[12px] text-[14px] font-bold
            flex items-center justify-center gap-2;
 
     &--sec {

@@ -3,7 +3,7 @@
 
   &__back-btn { @apply text-gray-400; }
 
-  &__title { @apply text-[18px] font-extrabold text-secondary; }
+  &__title { @apply text-[18px] font-bold text-secondary; }
 
   &__card {
     @apply flex flex-col items-center gap-1 py-6;

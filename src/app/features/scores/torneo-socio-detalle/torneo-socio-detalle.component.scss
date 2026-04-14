@@ -3,7 +3,7 @@
   &__back-btn  { @apply text-neutral-400; }
   &__back-icon { @apply text-[15px]; }
   &__header-info { @apply flex flex-col; }
-  &__title       { @apply text-[18px] font-extrabold text-secondary; }
+  &__title       { @apply text-[18px] font-bold text-secondary; }
   &__fecha       { @apply text-sm text-neutral-400 font-medium; }
 }
 

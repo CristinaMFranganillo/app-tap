@@ -491,7 +491,7 @@ Reemplazar el contenido de `form-socio.component.html`:
     <button (click)="cancel()" class="text-gray-400">
       <i class="bi bi-chevron-left text-[15px]"></i>
     </button>
-    <h3 class="text-[11px] font-extrabold text-brand-dark">{{ isEdit ? 'Editar Socio' : 'Nuevo Socio' }}</h3>
+    <h3 class="text-[11px] font-bold text-brand-dark">{{ isEdit ? 'Editar Socio' : 'Nuevo Socio' }}</h3>
   </div>
 
   @if (error()) {
@@ -536,7 +536,7 @@ Reemplazar el contenido de `form-socio.component.html`:
           Cancelar
         </button>
         <button type="submit" [disabled]="form.invalid || saving()"
-          class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50">
+          class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-bold disabled:opacity-50">
           {{ saving() ? 'Guardando...' : (isEdit ? 'Guardar cambios' : 'Crear socio') }}
         </button>
       </div>
@@ -694,7 +694,7 @@ export class CambiarPasswordComponent {
 <!-- src/app/shared/components/cambiar-password/cambiar-password.component.html -->
 <div class="fixed inset-0 bg-black/50 z-50 flex items-end justify-center">
   <div class="bg-white w-full max-w-sm rounded-t-[20px] p-5">
-    <h2 class="text-[12px] font-extrabold text-brand-dark mb-1">¡Bienvenido!</h2>
+    <h2 class="text-[12px] font-bold text-brand-dark mb-1">¡Bienvenido!</h2>
     <p class="text-[9px] text-gray-400 font-medium mb-4">
       Estás usando una contraseña provisional. ¿Quieres cambiarla ahora?
     </p>
@@ -721,7 +721,7 @@ export class CambiarPasswordComponent {
           Ahora no
         </button>
         <button type="submit" [disabled]="form.invalid || saving()"
-          class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50">
+          class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-bold disabled:opacity-50">
           {{ saving() ? 'Guardando...' : 'Cambiar contraseña' }}
         </button>
       </div>

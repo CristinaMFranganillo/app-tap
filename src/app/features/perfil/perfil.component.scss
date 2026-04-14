@@ -102,7 +102,7 @@
 }
 
 .btn-logout {
-  @apply w-full py-2.5 rounded-[12px] border border-danger text-danger text-[13px] font-extrabold;
+  @apply w-full py-2.5 rounded-[12px] border border-danger text-danger text-[13px] font-bold;
 
   i {
     @apply mr-1;
@@ -202,7 +202,7 @@
   }
 
   &__section-title {
-    @apply text-[15px] font-extrabold text-secondary flex items-center gap-2 mt-1;
+    @apply text-[15px] font-bold text-secondary flex items-center gap-2 mt-1;
 
     i { @apply text-neutral-400 text-[14px]; }
 
@@ -224,7 +224,7 @@
   }
 
   &__btn {
-    @apply flex-1 py-2.5 rounded-[12px] text-[13px] font-extrabold
+    @apply flex-1 py-2.5 rounded-[12px] text-[13px] font-bold
            flex items-center justify-center gap-1.5;
 
     &--gasto {
@@ -328,7 +328,7 @@
            bg-neutral-50 border-t border-neutral-100;
 
     span   { @apply text-xs font-medium text-neutral-400; }
-    strong { @apply text-sm font-extrabold text-success; }
+    strong { @apply text-sm font-bold text-success; }
 
     &--gasto strong { @apply text-danger; }
   }
@@ -340,7 +340,7 @@
   @apply flex flex-col gap-3 p-4;
 
   &__titulo {
-    @apply text-sm font-extrabold text-secondary;
+    @apply text-sm font-bold text-secondary;
   }
 
   &__campo {
@@ -358,12 +358,12 @@
   }
 
   &__btn-cancel {
-    @apply flex-1 py-2.5 rounded-[12px] text-[13px] font-extrabold
+    @apply flex-1 py-2.5 rounded-[12px] text-[13px] font-bold
            bg-neutral-100 text-neutral-500 border-0;
   }
 
   &__btn-save {
-    @apply flex-1 py-2.5 rounded-[12px] text-[13px] font-extrabold;
+    @apply flex-1 py-2.5 rounded-[12px] text-[13px] font-bold;
   }
 }
 

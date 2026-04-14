@@ -880,7 +880,7 @@ git commit -m "feat(contabilidad): add ContabilidadComponent template with all 3
   }
 
   &__title {
-    @apply text-[18px] font-extrabold text-secondary flex-1;
+    @apply text-[18px] font-bold text-secondary flex-1;
   }
 }
 
@@ -927,7 +927,7 @@ git commit -m "feat(contabilidad): add ContabilidadComponent template with all 3
   }
 
   &__balance-valor {
-    @apply text-xl font-extrabold;
+    @apply text-xl font-bold;
     &--positivo { @apply text-success; }
     &--negativo { @apply text-error; }
   }
@@ -945,7 +945,7 @@ git commit -m "feat(contabilidad): add ContabilidadComponent template with all 3
   }
 
   &__mini-valor {
-    @apply text-lg font-extrabold mt-1;
+    @apply text-lg font-bold mt-1;
     &--ingreso { @apply text-success; }
     &--gasto   { @apply text-error; }
   }
@@ -1025,7 +1025,7 @@ git commit -m "feat(contabilidad): add ContabilidadComponent template with all 3
 
   &__right  { @apply flex items-center gap-2 flex-shrink-0; }
   &__total  {
-    @apply text-base font-extrabold;
+    @apply text-base font-bold;
     &--positivo { @apply text-success; }
     &--negativo { @apply text-error; }
   }

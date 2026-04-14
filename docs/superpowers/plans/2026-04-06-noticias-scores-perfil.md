@@ -321,10 +321,10 @@ export class CardNoticiaComponent {
         {{ noticia.fecha | date:'d MMM yyyy' : '' : 'es' }}
       </span>
       @if (isReciente(noticia.fecha)) {
-        <span class="bg-brand-yellow text-brand-dark text-[6.5px] font-extrabold uppercase tracking-wide px-1.5 py-0.5 rounded-full">Nuevo</span>
+        <span class="bg-brand-yellow text-brand-dark text-[6.5px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full">Nuevo</span>
       }
     </div>
-    <h3 class="text-[10px] font-extrabold text-brand-dark leading-tight line-clamp-2">{{ noticia.titulo }}</h3>
+    <h3 class="text-[10px] font-bold text-brand-dark leading-tight line-clamp-2">{{ noticia.titulo }}</h3>
     <p class="text-[8.5px] text-gray-400 font-medium mt-1 line-clamp-2 leading-relaxed">{{ noticia.contenido }}</p>
   </div>
 </div>
@@ -441,7 +441,7 @@ export class ListaNoticiasComponent {
 ```html
 <!-- src/app/features/noticias/lista/lista-noticias.component.html -->
 <div class="p-3">
-  <h2 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-3">Noticias</h2>
+  <h2 class="text-[9px] font-bold uppercase tracking-[1.5px] text-brand-dark mb-3">Noticias</h2>
 
   @if (noticias().length === 0) {
     <app-empty-state icon="bi-newspaper" mensaje="No hay noticias publicadas" />
@@ -572,7 +572,7 @@ import { CardNoticiaComponent } from '../../shared/components/card-noticia/card-
   imports: [CardNoticiaComponent],
   template: `
     <div class="p-3">
-      <h2 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-3">Inicio</h2>
+      <h2 class="text-[9px] font-bold uppercase tracking-[1.5px] text-brand-dark mb-3">Inicio</h2>
 
       <p class="text-[8px] font-bold text-gray-300 uppercase tracking-wider mb-2">Últimas noticias</p>
 
@@ -667,7 +667,7 @@ export class ListaNoticiasAdminComponent {
 <!-- src/app/features/admin/noticias/lista-noticias-admin/lista-noticias-admin.component.html -->
 <div class="p-3">
   <!-- Publicadas -->
-  <h3 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2">
+  <h3 class="text-[9px] font-bold uppercase tracking-[1.5px] text-brand-dark mb-2">
     Publicadas ({{ publicadas().length }})
   </h3>
 
@@ -696,7 +696,7 @@ export class ListaNoticiasAdminComponent {
   }
 
   <!-- Borradores -->
-  <h3 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2 mt-4">
+  <h3 class="text-[9px] font-bold uppercase tracking-[1.5px] text-brand-dark mb-2 mt-4">
     Borradores ({{ borradores().length }})
   </h3>
 
@@ -848,7 +848,7 @@ Y eliminar la importación de `AuthService` si ya no es necesaria — no, sí se
     <button (click)="cancel()" class="text-gray-400">
       <i class="bi bi-chevron-left text-[15px]"></i>
     </button>
-    <h2 class="text-[11px] font-extrabold text-brand-dark">
+    <h2 class="text-[11px] font-bold text-brand-dark">
       {{ isEdit ? 'Editar noticia' : 'Nueva noticia' }}
     </h2>
   </div>
@@ -894,7 +894,7 @@ Y eliminar la importación de `AuthService` si ya no es necesaria — no, sí se
       <button
         type="submit"
         [disabled]="form.invalid"
-        class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+        class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-bold disabled:opacity-50"
       >
         {{ isEdit ? 'Guardar cambios' : 'Crear noticia' }}
       </button>
@@ -1064,7 +1064,7 @@ export class ScoresRankingComponent {
 ```html
 <!-- src/app/features/scores/ranking/scores-ranking.component.html -->
 <div class="p-3">
-  <h2 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-3">Ranking</h2>
+  <h2 class="text-[9px] font-bold uppercase tracking-[1.5px] text-brand-dark mb-3">Ranking</h2>
 
   <!-- Selector de competición -->
   <div class="flex gap-2 overflow-x-auto pb-1 mb-4 scrollbar-hide">
@@ -1197,7 +1197,7 @@ export class ScoresHistorialComponent {
 ```html
 <!-- src/app/features/scores/historial/scores-historial.component.html -->
 <div class="p-3">
-  <h2 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-3">Mi Historial</h2>
+  <h2 class="text-[9px] font-bold uppercase tracking-[1.5px] text-brand-dark mb-3">Mi Historial</h2>
 
   @if (scores().length === 0) {
     <app-empty-state icon="bi-trophy" mensaje="Sin resultados registrados" />
@@ -1313,7 +1313,7 @@ export class FormScoreComponent {
     <button (click)="cancel()" class="text-gray-400">
       <i class="bi bi-chevron-left text-[15px]"></i>
     </button>
-    <h2 class="text-[11px] font-extrabold text-brand-dark">Registrar Score</h2>
+    <h2 class="text-[11px] font-bold text-brand-dark">Registrar Score</h2>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
@@ -1371,7 +1371,7 @@ export class FormScoreComponent {
       <button
         type="submit"
         [disabled]="form.invalid"
-        class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+        class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-bold disabled:opacity-50"
       >
         Registrar
       </button>
@@ -1454,7 +1454,7 @@ export class FormCompeticionComponent {
     <button (click)="cancel()" class="text-gray-400">
       <i class="bi bi-chevron-left text-[15px]"></i>
     </button>
-    <h2 class="text-[11px] font-extrabold text-brand-dark">Nueva Competición</h2>
+    <h2 class="text-[11px] font-bold text-brand-dark">Nueva Competición</h2>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
@@ -1513,7 +1513,7 @@ export class FormCompeticionComponent {
       <button
         type="submit"
         [disabled]="form.invalid"
-        class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-extrabold disabled:opacity-50"
+        class="flex-1 py-2.5 rounded-[12px] bg-brand-yellow text-brand-dark text-[9px] font-bold disabled:opacity-50"
       >
         Crear competición
       </button>
@@ -1616,7 +1616,7 @@ export class PerfilComponent {
       [avatarUrl]="user()?.avatarUrl"
       [size]="64"
     />
-    <h2 class="text-white font-extrabold text-[13px] mt-2">
+    <h2 class="text-white font-bold text-[13px] mt-2">
       {{ user()?.nombre }} {{ user()?.apellidos }}
     </h2>
     <p class="text-brand-yellow font-bold text-[8px] uppercase tracking-wider">
@@ -1642,7 +1642,7 @@ export class PerfilComponent {
 
   <!-- Historial -->
   <div class="p-3 mt-2">
-    <h3 class="text-[9px] font-extrabold uppercase tracking-[1.5px] text-brand-dark mb-2">Mis Resultados</h3>
+    <h3 class="text-[9px] font-bold uppercase tracking-[1.5px] text-brand-dark mb-2">Mis Resultados</h3>
 
     @if (scores().length === 0) {
       <app-empty-state icon="bi-trophy" mensaje="Sin resultados registrados" />
@@ -1667,7 +1667,7 @@ export class PerfilComponent {
   <div class="px-3 pb-4">
     <button
       (click)="logout()"
-      class="w-full py-2.5 rounded-[12px] border border-danger text-danger text-[9px] font-extrabold"
+      class="w-full py-2.5 rounded-[12px] border border-danger text-danger text-[9px] font-bold"
     >
       <i class="bi bi-box-arrow-right mr-1"></i>
       Cerrar sesión

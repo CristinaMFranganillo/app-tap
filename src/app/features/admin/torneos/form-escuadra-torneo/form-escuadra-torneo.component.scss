@@ -3,7 +3,7 @@
 
   &__back-btn   { @apply text-neutral-400; }
   &__back-icon  { @apply text-[15px]; }
-  &__title      { @apply text-[18px] font-extrabold text-secondary; }
+  &__title      { @apply text-[18px] font-bold text-secondary; }
 
   &__section-label {
     @apply text-xs font-semibold text-neutral-400 uppercase tracking-[1.5px] mt-2 mb-1;
@@ -29,7 +29,7 @@
   // ── Tarifa inline ──────────────────────────────────────────────
 
   &__tarifa {
-    @apply text-sm font-extrabold text-secondary flex-shrink-0;
+    @apply text-sm font-bold text-secondary flex-shrink-0;
     &--ext { @apply text-warning-dark; }
   }
 
@@ -50,7 +50,7 @@
   &__total-suma {
     @apply flex items-center justify-between;
     span   { @apply text-sm font-semibold text-neutral-400; }
-    strong { @apply text-lg font-extrabold text-secondary; }
+    strong { @apply text-lg font-bold text-secondary; }
   }
 
   &__error   { @apply text-danger text-sm font-semibold mt-2; }
