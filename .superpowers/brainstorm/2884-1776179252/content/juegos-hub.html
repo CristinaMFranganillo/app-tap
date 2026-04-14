@@ -1,0 +1,111 @@
+<h2>Sección "Juegos Mentales" - Diseño General</h2>
+<p class="subtitle">Arquitectura de pantallas y flujo de navegación</p>
+
+<div class="section">
+  <h3>1. Home del socio (tarjeta reemplazada)</h3>
+  <div class="mockup">
+    <div class="mockup-header">Home — Socio</div>
+    <div class="mockup-body" style="background:#f8f9fa;padding:16px;font-family:system-ui">
+      <!-- Ultimo entrenamiento -->
+      <div style="background:white;border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:12px;color:#999;font-weight:600">🎯 Ultimo entrenamiento</span>
+          <span style="font-size:11px;color:#bbb">12 Abr</span>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:4px">
+          <span style="font-size:28px;font-weight:800;color:#1a1a2e">21</span>
+          <span style="font-size:13px;color:#999">/ 25 platos</span>
+        </div>
+        <div style="font-size:11px;color:#bbb;margin-top:4px">Media 19.2/25 · 3ro de 18</div>
+      </div>
+
+      <!-- NUEVA tarjeta Juegos Mentales -->
+      <div style="background:linear-gradient(135deg,#1a1a2e,#2d2d5e);border-radius:14px;padding:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:28px">🧠</span>
+          <div>
+            <p style="font-size:14px;font-weight:700;color:white;margin:0">Juegos Mentales</p>
+            <p style="font-size:11px;color:rgba(255,255,255,.6);margin:2px 0 0">Entrena reflejos y concentracion</p>
+          </div>
+        </div>
+        <span style="color:rgba(255,255,255,.4);font-size:20px">›</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>2. Hub /juegos (3 tarjetas)</h3>
+  <div class="mockup">
+    <div class="mockup-header">/juegos — Hub de Juegos Mentales</div>
+    <div class="mockup-body" style="background:#f8f9fa;padding:16px;font-family:system-ui">
+      <h3 style="font-size:18px;font-weight:800;color:#1a1a2e;margin:0 0 16px">Juegos Mentales</h3>
+
+      <!-- Tarjeta 1: Rompe Platos -->
+      <div style="background:white;border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+        <div style="width:48px;height:48px;border-radius:12px;background:#FFF3D0;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🎯</div>
+        <div style="flex:1;min-width:0">
+          <p style="font-size:14px;font-weight:700;color:#1a1a2e;margin:0">Rompe Platos</p>
+          <p style="font-size:11px;color:#999;margin:2px 0 0">25 platos · Punteria y velocidad</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <p style="font-size:11px;color:#FFAE00;font-weight:700;margin:0">Mejor: 23</p>
+        </div>
+      </div>
+
+      <!-- Tarjeta 2: Test de Reflejos -->
+      <div style="background:white;border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+        <div style="width:48px;height:48px;border-radius:12px;background:#E8F5E9;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">⚡</div>
+        <div style="flex:1;min-width:0">
+          <p style="font-size:14px;font-weight:700;color:#1a1a2e;margin:0">Test de Reflejos</p>
+          <p style="font-size:11px;color:#999;margin:2px 0 0">5 rondas · Reaccion pura</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <p style="font-size:11px;color:#10B981;font-weight:700;margin:0">Mejor: 218ms</p>
+        </div>
+      </div>
+
+      <!-- Tarjeta 3: Izquierda o Derecha -->
+      <div style="background:white;border-radius:14px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+        <div style="width:48px;height:48px;border-radius:12px;background:#E3F2FD;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">↔️</div>
+        <div style="flex:1;min-width:0">
+          <p style="font-size:14px;font-weight:700;color:#1a1a2e;margin:0">Izquierda o Derecha</p>
+          <p style="font-size:11px;color:#999;margin:2px 0 0">10 platos · Decision lateral rapida</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <p style="font-size:11px;color:#3B82F6;font-weight:700;margin:0">Mejor: 340ms</p>
+        </div>
+      </div>
+
+      <!-- Ranking -->
+      <div style="margin-top:16px">
+        <p style="font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 8px">Top Club — Test de Reflejos</p>
+        <div style="background:white;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #f3f4f6">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:13px;font-weight:800;color:#FFAE00">1.</span>
+              <span style="font-size:13px;font-weight:600;color:#1a1a2e">Juan P.</span>
+            </div>
+            <span style="font-size:12px;font-weight:700;color:#1a1a2e">198ms</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid #f3f4f6">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:13px;font-weight:800;color:#aaa">2.</span>
+              <span style="font-size:13px;font-weight:600;color:#1a1a2e">Maria G.</span>
+            </div>
+            <span style="font-size:12px;font-weight:700;color:#1a1a2e">215ms</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#FFFDE7">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:13px;font-weight:800;color:#aaa">3.</span>
+              <span style="font-size:13px;font-weight:600;color:#FFAE00">Tu (Carlos)</span>
+            </div>
+            <span style="font-size:12px;font-weight:700;color:#1a1a2e">232ms</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:24px">¿Te parece bien esta estructura general? Responde en el terminal.</p>

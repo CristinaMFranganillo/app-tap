@@ -1,0 +1,134 @@
+<h2>Pantallas de cada juego nuevo</h2>
+<p class="subtitle">Estados: espera, juego activo, resultado final</p>
+
+<div class="section">
+  <h3>Test de Reflejos</h3>
+  <div class="split">
+    <!-- Estado: Espera -->
+    <div class="mockup">
+      <div class="mockup-header">Esperando... (ronda 2/5)</div>
+      <div class="mockup-body" style="background:#374151;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;font-family:system-ui;position:relative">
+        <p style="font-size:11px;color:rgba(255,255,255,.4);position:absolute;top:12px;right:14px;margin:0">Ronda 2 / 5</p>
+        <div style="width:80px;height:80px;border-radius:50%;border:3px dashed rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+          <span style="font-size:32px;opacity:.3">🎯</span>
+        </div>
+        <p style="font-size:16px;font-weight:700;color:white;margin:0">Espera...</p>
+        <p style="font-size:12px;color:rgba(255,255,255,.4);margin:6px 0 0">Toca cuando aparezca el plato</p>
+        <p style="font-size:10px;color:#EF4444;margin:24px 0 0;opacity:.7">Si tocas antes → ronda nula</p>
+      </div>
+    </div>
+
+    <!-- Estado: PLATO! -->
+    <div class="mockup">
+      <div class="mockup-header">¡PLATO! — toca ahora</div>
+      <div class="mockup-body" style="background:#10B981;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;font-family:system-ui;position:relative;cursor:pointer">
+        <p style="font-size:11px;color:rgba(255,255,255,.6);position:absolute;top:12px;right:14px;margin:0">Ronda 2 / 5</p>
+        <div style="width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px;animation:pulse 0.5s infinite alternate">
+          <span style="font-size:48px">🎯</span>
+        </div>
+        <p style="font-size:22px;font-weight:800;color:white;margin:0">¡TOCA!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resultado -->
+  <div class="mockup" style="margin-top:12px">
+    <div class="mockup-header">Resultado final</div>
+    <div class="mockup-body" style="background:#f8f9fa;padding:20px;font-family:system-ui;text-align:center">
+      <p style="font-size:12px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;margin:0">Tu tiempo medio</p>
+      <p style="font-size:48px;font-weight:800;color:#1a1a2e;margin:4px 0">232<span style="font-size:18px;color:#999;font-weight:600">ms</span></p>
+
+      <div style="display:flex;gap:8px;justify-content:center;margin:12px 0 20px">
+        <div style="background:white;border-radius:10px;padding:8px 16px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <p style="font-size:18px;font-weight:800;color:#1a1a2e;margin:0">198</p>
+          <p style="font-size:10px;color:#999;margin:2px 0 0">Mejor</p>
+        </div>
+        <div style="background:white;border-radius:10px;padding:8px 16px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <p style="font-size:18px;font-weight:800;color:#1a1a2e;margin:0">287</p>
+          <p style="font-size:10px;color:#999;margin:2px 0 0">Peor</p>
+        </div>
+        <div style="background:white;border-radius:10px;padding:8px 16px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+          <p style="font-size:18px;font-weight:800;color:#1a1a2e;margin:0">0</p>
+          <p style="font-size:10px;color:#999;margin:2px 0 0">Nulas</p>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:6px;margin-bottom:16px">
+        <span style="background:#E8F5E9;color:#10B981;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px">⚡ Mejor: 198ms</span>
+        <span style="background:#FFF3D0;color:#FFAE00;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px">🏆 3ro del club</span>
+      </div>
+
+      <div style="display:flex;gap:8px;justify-content:center">
+        <button style="background:#1a1a2e;color:white;border:none;border-radius:12px;padding:12px 24px;font-size:13px;font-weight:700;cursor:pointer">Jugar de nuevo</button>
+        <button style="background:#f3f4f6;color:#666;border:none;border-radius:12px;padding:12px 24px;font-size:13px;font-weight:700;cursor:pointer">Volver</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:24px">
+  <h3>Izquierda o Derecha</h3>
+  <div class="split">
+    <!-- Estado: juego activo -->
+    <div class="mockup">
+      <div class="mockup-header">Ronda 4/10 — plato volando a la derecha</div>
+      <div class="mockup-body" style="background:#87CEEB;min-height:320px;font-family:system-ui;position:relative;overflow:hidden">
+        <!-- Cielo -->
+        <p style="font-size:11px;color:rgba(255,255,255,.7);position:absolute;top:12px;left:50%;transform:translateX(-50%);margin:0;font-weight:600">Ronda 4 / 10</p>
+
+        <!-- Plato volando a la derecha -->
+        <div style="position:absolute;top:35%;right:25%;font-size:40px;transform:rotate(15deg)">🏗️</div>
+        <div style="position:absolute;top:32%;right:22%;width:50px;height:12px;background:rgba(255,140,0,.8);border-radius:50%;transform:rotate(15deg)"></div>
+
+        <!-- Suelo -->
+        <div style="position:absolute;bottom:70px;left:0;right:0;height:3px;background:rgba(0,0,0,.1)"></div>
+
+        <!-- Botones laterales -->
+        <div style="position:absolute;bottom:12px;left:12px;right:12px;display:flex;gap:10px">
+          <button style="flex:1;padding:18px;border-radius:14px;background:white;border:2px solid #e5e7eb;font-size:18px;font-weight:800;color:#1a1a2e;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+            ← IZQ
+          </button>
+          <button style="flex:1;padding:18px;border-radius:14px;background:#FFAE00;border:2px solid #FFAE00;font-size:18px;font-weight:800;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 2px 8px rgba(255,174,0,.4)">
+            DCHA →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultado -->
+    <div class="mockup">
+      <div class="mockup-header">Resultado final</div>
+      <div class="mockup-body" style="background:#f8f9fa;padding:20px;font-family:system-ui;text-align:center">
+        <p style="font-size:12px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;margin:0">Tu tiempo medio</p>
+        <p style="font-size:48px;font-weight:800;color:#1a1a2e;margin:4px 0">340<span style="font-size:18px;color:#999;font-weight:600">ms</span></p>
+
+        <div style="display:flex;gap:8px;justify-content:center;margin:12px 0">
+          <div style="background:white;border-radius:10px;padding:8px 16px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+            <p style="font-size:18px;font-weight:800;color:#10B981;margin:0">8</p>
+            <p style="font-size:10px;color:#999;margin:2px 0 0">Aciertos</p>
+          </div>
+          <div style="background:white;border-radius:10px;padding:8px 16px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+            <p style="font-size:18px;font-weight:800;color:#EF4444;margin:0">2</p>
+            <p style="font-size:10px;color:#999;margin:2px 0 0">Fallos</p>
+          </div>
+          <div style="background:white;border-radius:10px;padding:8px 16px;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+            <p style="font-size:18px;font-weight:800;color:#1a1a2e;margin:0">290</p>
+            <p style="font-size:10px;color:#999;margin:2px 0 0">Mejor ms</p>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;justify-content:center;margin:16px 0">
+          <span style="background:#E3F2FD;color:#3B82F6;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px">80% precision</span>
+          <span style="background:#FFF3D0;color:#FFAE00;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px">🏆 5to del club</span>
+        </div>
+
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:16px">
+          <button style="background:#1a1a2e;color:white;border:none;border-radius:12px;padding:12px 24px;font-size:13px;font-weight:700;cursor:pointer">Jugar de nuevo</button>
+          <button style="background:#f3f4f6;color:#666;border:none;border-radius:12px;padding:12px 24px;font-size:13px;font-weight:700;cursor:pointer">Volver</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:24px">¿Te gustan las pantallas de juego y resultados? Responde en el terminal.</p>
