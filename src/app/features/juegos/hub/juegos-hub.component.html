@@ -1,0 +1,82 @@
+<div class="juegos-hub">
+
+  <h3 class="page-title">Juegos Mentales</h3>
+
+  <!-- ── Tarjetas de juegos ─────────────────────────────────────── -->
+  <div class="juegos-hub__cards">
+    @for (juego of juegos; track juego.id) {
+      <button
+        class="juegos-hub__card card"
+        (click)="irAJuego(juego.ruta)"
+        type="button"
+      >
+        <div
+          class="juegos-hub__card-icon"
+          [style.background]="juego.fondoIcono"
+        >
+          <span class="juegos-hub__card-emoji">{{ juego.icono }}</span>
+        </div>
+
+        <div class="juegos-hub__card-info">
+          <span class="juegos-hub__card-nombre">{{ juego.nombre }}</span>
+          <span class="juegos-hub__card-desc">{{ juego.descripcion }}</span>
+        </div>
+
+        <div class="juegos-hub__card-marca" [style.color]="juego.colorMarca">
+          <span class="juegos-hub__card-marca-valor">{{ formatMarca(juego) }}</span>
+          @if (juego.unidad) {
+            <span class="juegos-hub__card-marca-unidad">mejor</span>
+          } @else {
+            <span class="juegos-hub__card-marca-unidad">platos</span>
+          }
+        </div>
+      </button>
+    }
+  </div>
+
+  <!-- ── Ranking Top Club ───────────────────────────────────────── -->
+  <div class="card juegos-hub__ranking">
+    <div class="juegos-hub__ranking-header">
+      <span class="juegos-hub__ranking-titulo">Top Club</span>
+      <div class="juegos-hub__chips">
+        @for (juego of juegos; track juego.id) {
+          <button
+            type="button"
+            class="juegos-hub__chip"
+            [class.juegos-hub__chip--activo]="rankingTipo() === juego.tipoJuego"
+            (click)="cambiarRanking(juego.tipoJuego)"
+          >
+            {{ juego.icono }} {{ juego.nombre }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="juegos-hub__ranking-lista">
+      @if (ranking().length === 0) {
+        <p class="juegos-hub__ranking-vacio">Aún no hay partidas registradas</p>
+      } @else {
+        @for (r of ranking(); track r.userId; let i = $index) {
+          <div
+            class="juegos-hub__ranking-fila"
+            [class.juegos-hub__ranking-fila--yo]="r.userId === userId()"
+          >
+            <div class="juegos-hub__ranking-izq">
+              <span
+                class="juegos-hub__ranking-pos"
+                [class.juegos-hub__ranking-pos--gold]="i === 0"
+              >{{ i + 1 }}</span>
+              <span class="juegos-hub__ranking-nombre">
+                {{ r.nombre }} {{ r.apellidos | slice:0:1 }}.
+              </span>
+            </div>
+            <span class="juegos-hub__ranking-valor">
+              {{ formatRankingValor(r.valor) }}
+            </span>
+          </div>
+        }
+      }
+    </div>
+  </div>
+
+</div>

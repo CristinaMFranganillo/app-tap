@@ -1,0 +1,118 @@
+.juegos-hub {
+  @apply flex flex-col gap-4 px-3 py-4;
+
+  // ── Tarjetas ──────────────────────────────────────────────────
+  &__cards {
+    @apply flex flex-col gap-3;
+  }
+
+  &__card {
+    @apply flex flex-row items-center gap-3 w-full text-left
+           active:scale-[.98] transition-transform duration-100
+           bg-transparent border-0 p-0 cursor-pointer;
+
+    // override card padding
+    &.card {
+      @apply p-3;
+    }
+  }
+
+  &__card-icon {
+    @apply rounded-xl flex items-center justify-center flex-shrink-0;
+    width: 48px;
+    height: 48px;
+  }
+
+  &__card-emoji {
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  &__card-info {
+    @apply flex flex-col gap-0.5 flex-1 min-w-0;
+  }
+
+  &__card-nombre {
+    @apply text-[14px] font-bold text-secondary truncate block;
+  }
+
+  &__card-desc {
+    @apply text-[12px] text-neutral-400 font-medium truncate block;
+  }
+
+  &__card-marca {
+    @apply flex flex-col items-end flex-shrink-0;
+  }
+
+  &__card-marca-valor {
+    @apply text-[16px] font-bold;
+  }
+
+  &__card-marca-unidad {
+    @apply text-[10px] font-semibold text-neutral-400 uppercase tracking-wide;
+  }
+
+  // ── Ranking ───────────────────────────────────────────────────
+  &__ranking {
+    @apply flex flex-col gap-3 p-0 overflow-hidden;
+  }
+
+  &__ranking-header {
+    @apply flex flex-col gap-2 px-4 pt-4;
+  }
+
+  &__ranking-titulo {
+    @apply text-[15px] font-bold text-secondary;
+  }
+
+  &__chips {
+    @apply flex gap-1.5 flex-wrap;
+  }
+
+  &__chip {
+    @apply text-[11px] font-bold px-2.5 py-1 rounded-full
+           bg-neutral-100 text-neutral-500 border-0 cursor-pointer
+           transition-all duration-100;
+
+    &--activo {
+      @apply bg-secondary text-white;
+    }
+  }
+
+  &__ranking-lista {
+    @apply flex flex-col pb-2;
+  }
+
+  &__ranking-vacio {
+    @apply text-[13px] text-neutral-400 text-center py-4 px-4;
+  }
+
+  &__ranking-fila {
+    @apply flex items-center justify-between px-4 py-2.5
+           border-b border-neutral-100 last:border-b-0;
+
+    &--yo {
+      background: #FFFDE7;
+    }
+  }
+
+  &__ranking-izq {
+    @apply flex items-center gap-2;
+  }
+
+  &__ranking-pos {
+    @apply text-[13px] font-bold text-neutral-400 w-5 flex-shrink-0;
+
+    &--gold {
+      color: #FFAE00;
+    }
+  }
+
+  &__ranking-nombre {
+    @apply text-[13px] font-semibold text-secondary;
+  }
+
+  &__ranking-valor {
+    @apply text-[13px] font-bold text-secondary;
+  }
+}
