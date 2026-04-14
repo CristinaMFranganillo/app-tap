@@ -23,7 +23,7 @@
 
     <div class="inscripciones__card card">
       <p class="inscripciones__section-label">Añadir socio</p>
-      <div class="inscripciones__row">
+      <div class="inscripciones__row inscripciones__row--stacked">
         <select [(ngModel)]="nuevoSocioId" class="form-input-surface">
           <option value="">— Selecciona socio —</option>
           @for (u of sociosDisponibles(); track u.id) {

@@ -42,5 +42,13 @@
     i {
       @apply text-[20px];
     }
+
+    &--danger {
+      @apply text-red-600;
+
+      i {
+        @apply text-red-600;
+      }
+    }
   }
 }

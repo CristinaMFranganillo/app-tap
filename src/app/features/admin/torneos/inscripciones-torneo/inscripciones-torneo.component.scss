@@ -33,6 +33,12 @@
     &--invitado {
       @apply grid grid-cols-[1fr_1fr_auto] gap-2;
     }
+
+    &--stacked {
+      @apply flex-col items-stretch;
+
+      .form-input-surface { @apply w-full; }
+    }
   }
 
   &__btn-add {

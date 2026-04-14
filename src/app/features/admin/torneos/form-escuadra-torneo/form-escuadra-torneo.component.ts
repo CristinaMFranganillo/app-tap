@@ -39,35 +39,8 @@ export class FormEscuadraTorneoComponent {
   }
 
   private async cargarInscritos(torneoId: string): Promise<void> {
-    const [all, escuadras] = await Promise.all([
-      this.inscService.listarInscritos(torneoId),
-      firstValueFrom(this.escuadraService.getByTorneo(torneoId)),
-    ]);
-
-    const userIdsOcupados = new Set<string>();
-    const nombresOcupados = new Set<string>();
-    for (const e of escuadras) {
-      for (const t of e.tiradores ?? []) {
-        if (t.esNoSocio && t.nombreExterno) {
-          nombresOcupados.add(this.normaliza(t.nombreExterno));
-        } else if (t.userId) {
-          userIdsOcupados.add(t.userId);
-        }
-      }
-    }
-
-    const libres = all.filter(i => {
-      if (i.enEscuadra) return false;
-      if (i.esNoSocio) {
-        return !nombresOcupados.has(this.normaliza(`${i.nombre} ${i.apellidos}`));
-      }
-      return !userIdsOcupados.has(i.userId!);
-    });
-    this.inscritosLibres.set(libres);
-  }
-
-  private normaliza(s: string): string {
-    return s.trim().toLowerCase().replace(/\s+/g, ' ');
+    const all = await this.inscService.listarInscritos(torneoId);
+    this.inscritosLibres.set(all);
   }
 
   onNumPlatosChange(event: Event): void {
