@@ -13,12 +13,18 @@
 
   <div class="header-avatar-wrap">
     <button (click)="toggleMenu()" class="header-avatar-wrap__btn">
-      <app-avatar
-        [nombre]="(currentUser$ | async)?.nombre ?? ''"
-        [apellidos]="(currentUser$ | async)?.apellidos ?? ''"
-        [avatarUrl]="(currentUser$ | async)?.avatarUrl"
-        [size]="30"
-      />
+      @if (esAdmin()) {
+        <div class="header-admin-avatar">
+          <i class="bi bi-shield-lock-fill"></i>
+        </div>
+      } @else {
+        <app-avatar
+          [nombre]="(currentUser$ | async)?.nombre ?? ''"
+          [apellidos]="(currentUser$ | async)?.apellidos ?? ''"
+          [avatarUrl]="(currentUser$ | async)?.avatarUrl"
+          [size]="30"
+        />
+      }
     </button>
 
     @if (menuAbierto()) {

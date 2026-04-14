@@ -9,13 +9,12 @@ import { EntrenamientoService } from '../admin/entrenamientos/entrenamiento.serv
 import { UserService } from '../admin/socios/user.service';
 import { Entrenamiento } from '../../core/models/entrenamiento.model';
 import { User } from '../../core/models/user.model';
-import { CardNoticiaComponent } from '../../shared/components/card-noticia/card-noticia.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CardNoticiaComponent, EmptyStateComponent, DatePipe],
+  imports: [EmptyStateComponent, DatePipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

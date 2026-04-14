@@ -1,0 +1,290 @@
+<h2>Contabilidad — Mockup de la vista</h2>
+<p class="subtitle">Layout mobile-first siguiendo el patrón de Caja</p>
+
+<div class="split" style="gap: 24px; flex-direction: column;">
+
+  <!-- VISTA DÍA -->
+  <div class="mockup">
+    <div class="mockup-header">Vista Día — Movimientos individuales</div>
+    <div class="mockup-body" style="background: #f8f9fa; padding: 12px; font-family: system-ui;">
+
+      <!-- Header -->
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+        <span style="color:#9ca3af; font-size:18px;">‹</span>
+        <span style="font-size:16px; font-weight:800; color:#002F86; flex:1;">Contabilidad</span>
+        <span style="font-size:11px; background:#f3f4f6; padding:4px 8px; border-radius:6px; color:#6b7280;">Solo admin: +/-</span>
+      </div>
+
+      <!-- Tabs -->
+      <div style="display:flex; background:#f3f4f6; border-radius:10px; padding:3px; gap:3px; margin-bottom:12px;">
+        <div style="flex:1; text-align:center; padding:6px; border-radius:8px; background:white; font-size:13px; font-weight:700; color:#002F86; box-shadow:0 1px 3px rgba(0,0,0,0.08);">Día</div>
+        <div style="flex:1; text-align:center; padding:6px; border-radius:8px; font-size:13px; font-weight:600; color:#9ca3af;">Mes</div>
+        <div style="flex:1; text-align:center; padding:6px; border-radius:8px; font-size:13px; font-weight:600; color:#9ca3af;">Año</div>
+      </div>
+
+      <!-- Filtro fecha -->
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px; font-weight:600; color:#6b7280; margin-bottom:4px;">Fecha</div>
+        <div style="background:white; border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:13px; color:#374151;">14/04/2026</div>
+      </div>
+
+      <!-- Balance del día -->
+      <div style="background:white; border-radius:12px; padding:12px 16px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <div>
+          <div style="font-size:11px; font-weight:600; color:#6b7280;">Balance del día</div>
+        </div>
+        <div style="font-size:20px; font-weight:800; color:#10B981;">+342,00 €</div>
+      </div>
+
+      <!-- Resumen ingresos / gastos -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+        <div style="background:white; border-radius:12px; padding:10px 12px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+          <div style="font-size:10px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.5px;">Ingresos</div>
+          <div style="font-size:16px; font-weight:800; color:#10B981; margin-top:4px;">392,00 €</div>
+        </div>
+        <div style="background:white; border-radius:12px; padding:10px 12px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+          <div style="font-size:10px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.5px;">Gastos</div>
+          <div style="font-size:16px; font-weight:800; color:#EF4444; margin-top:4px;">50,00 €</div>
+        </div>
+      </div>
+
+      <!-- Sección label -->
+      <div style="font-size:10px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px;">Movimientos</div>
+
+      <!-- Movimientos individuales -->
+      <div style="background:white; border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid #f3f4f6;">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="background:#dbeafe; color:#1d4ed8; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;">ESCUADRA</span>
+              <span style="font-size:13px; font-weight:600; color:#002F86;">Juan Pérez</span>
+            </div>
+          </div>
+          <span style="font-size:13px; font-weight:700; color:#10B981;">+8,00 €</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid #f3f4f6;">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="background:#dbeafe; color:#1d4ed8; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;">ESCUADRA</span>
+              <span style="font-size:13px; font-weight:600; color:#002F86;">Pedro García</span>
+            </div>
+          </div>
+          <span style="font-size:13px; font-weight:700; color:#10B981;">+12,00 €</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid #f3f4f6;">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="background:#fef3c7; color:#92400e; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;">TORNEO</span>
+              <span style="font-size:13px; font-weight:600; color:#002F86;">Inscripción Torneo Primavera</span>
+            </div>
+          </div>
+          <span style="font-size:13px; font-weight:700; color:#10B981;">+25,00 €</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid #f3f4f6;">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="background:#d1fae5; color:#065f46; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;">CUOTA</span>
+              <span style="font-size:13px; font-weight:600; color:#002F86;">Cuota socio — Ana López</span>
+            </div>
+          </div>
+          <span style="font-size:13px; font-weight:700; color:#10B981;">+25,00 €</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="background:#fee2e2; color:#991b1b; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;">GASTO</span>
+              <span style="font-size:13px; font-weight:600; color:#002F86;">Material de tiro</span>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:13px; font-weight:700; color:#EF4444;">-50,00 €</span>
+            <span style="color:#d1d5db; font-size:14px; cursor:pointer;">🗑</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones admin -->
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button style="flex:1; padding:10px; border-radius:10px; border:none; background:#FFAE00; color:#002F86; font-weight:700; font-size:13px; cursor:pointer;">+ Ingreso</button>
+        <button style="flex:1; padding:10px; border-radius:10px; border:1px solid #e5e7eb; background:white; color:#EF4444; font-weight:700; font-size:13px; cursor:pointer;">- Gasto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA MES -->
+  <div class="mockup">
+    <div class="mockup-header">Vista Mes — Agrupado por día (clickable → día)</div>
+    <div class="mockup-body" style="background: #f8f9fa; padding: 12px; font-family: system-ui;">
+
+      <!-- Tabs con Mes activo -->
+      <div style="display:flex; background:#f3f4f6; border-radius:10px; padding:3px; gap:3px; margin-bottom:12px;">
+        <div style="flex:1; text-align:center; padding:6px; border-radius:8px; font-size:13px; font-weight:600; color:#9ca3af;">Día</div>
+        <div style="flex:1; text-align:center; padding:6px; border-radius:8px; background:white; font-size:13px; font-weight:700; color:#002F86; box-shadow:0 1px 3px rgba(0,0,0,0.08);">Mes</div>
+        <div style="flex:1; text-align:center; padding:6px; border-radius:8px; font-size:13px; font-weight:600; color:#9ca3af;">Año</div>
+      </div>
+
+      <!-- Filtro mes -->
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px; font-weight:600; color:#6b7280; margin-bottom:4px;">Mes</div>
+        <div style="background:white; border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:13px; color:#374151;">abril 2026</div>
+      </div>
+
+      <!-- Balance mensual -->
+      <div style="background:white; border-radius:12px; padding:12px 16px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <span style="font-size:11px; font-weight:600; color:#6b7280;">Balance del mes</span>
+        <span style="font-size:20px; font-weight:800; color:#10B981;">+2.840,00 €</span>
+      </div>
+
+      <!-- Resumen categorías -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+        <div style="background:white; border-radius:12px; padding:10px 12px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+          <div style="font-size:10px; font-weight:700; color:#6b7280; text-transform:uppercase;">Ingresos</div>
+          <div style="font-size:16px; font-weight:800; color:#10B981; margin-top:4px;">3.240,00 €</div>
+        </div>
+        <div style="background:white; border-radius:12px; padding:10px 12px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+          <div style="font-size:10px; font-weight:700; color:#6b7280; text-transform:uppercase;">Gastos</div>
+          <div style="font-size:16px; font-weight:800; color:#EF4444; margin-top:4px;">400,00 €</div>
+        </div>
+      </div>
+
+      <!-- Desglose por día -->
+      <div style="font-size:10px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px;">Desglose por día</div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="background:white; border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer;">
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#002F86;">Lun 14 Abr</div>
+            <div style="font-size:11px; color:#6b7280; margin-top:2px;">4 ingresos · 1 gasto</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:14px; font-weight:800; color:#10B981;">+342,00 €</span>
+            <span style="color:#d1d5db;">›</span>
+          </div>
+        </div>
+        <div style="background:white; border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer;">
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#002F86;">Dom 13 Abr</div>
+            <div style="font-size:11px; color:#6b7280; margin-top:2px;">8 ingresos</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:14px; font-weight:800; color:#10B981;">+520,00 €</span>
+            <span style="color:#d1d5db;">›</span>
+          </div>
+        </div>
+        <div style="background:white; border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer;">
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#002F86;">Sáb 12 Abr</div>
+            <div style="font-size:11px; color:#6b7280; margin-top:2px;">6 ingresos · 2 gastos</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:14px; font-weight:800; color:#EF4444;">-80,00 €</span>
+            <span style="color:#d1d5db;">›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISTA AÑO -->
+  <div class="mockup">
+    <div class="mockup-header">Vista Año — Agrupado por mes (clickable → mes)</div>
+    <div class="mockup-body" style="background: #f8f9fa; padding: 12px; font-family: system-ui;">
+
+      <!-- Tabs con Año activo -->
+      <div style="display:flex; background:#f3f4f6; border-radius:10px; padding:3px; gap:3px; margin-bottom:12px;">
+        <div style="flex:1; text-align:center; padding:6px; border-radius:8px; font-size:13px; font-weight:600; color:#9ca3af;">Día</div>
+        <div style="flex:1; text-align:center; padding:6px; border-radius:8px; font-size:13px; font-weight:600; color:#9ca3af;">Mes</div>
+        <div style="flex:1; text-align:center; padding:6px; border-radius:8px; background:white; font-size:13px; font-weight:700; color:#002F86; box-shadow:0 1px 3px rgba(0,0,0,0.08);">Año</div>
+      </div>
+
+      <!-- Filtro año -->
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px; font-weight:600; color:#6b7280; margin-bottom:4px;">Año</div>
+        <div style="background:white; border:1px solid #e5e7eb; border-radius:8px; padding:8px 12px; font-size:13px; color:#374151;">2026</div>
+      </div>
+
+      <!-- Balance anual -->
+      <div style="background:white; border-radius:12px; padding:12px 16px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <span style="font-size:11px; font-weight:600; color:#6b7280;">Balance anual</span>
+        <span style="font-size:20px; font-weight:800; color:#10B981;">+8.450,00 €</span>
+      </div>
+
+      <!-- Resumen por categoría -->
+      <div style="background:white; border-radius:12px; padding:12px 14px; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        <div style="font-size:10px; font-weight:700; color:#6b7280; text-transform:uppercase; margin-bottom:8px;">Desglose por categoría</div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #f3f4f6;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="background:#dbeafe; width:8px; height:8px; border-radius:50%; display:inline-block;"></span>
+            <span style="font-size:12px; color:#374151;">Escuadras</span>
+          </div>
+          <span style="font-size:12px; font-weight:700; color:#10B981;">4.200,00 €</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #f3f4f6;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="background:#fef3c7; width:8px; height:8px; border-radius:50%; display:inline-block;"></span>
+            <span style="font-size:12px; color:#374151;">Torneos</span>
+          </div>
+          <span style="font-size:12px; font-weight:700; color:#10B981;">1.800,00 €</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #f3f4f6;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="background:#d1fae5; width:8px; height:8px; border-radius:50%; display:inline-block;"></span>
+            <span style="font-size:12px; color:#374151;">Cuotas</span>
+          </div>
+          <span style="font-size:12px; font-weight:700; color:#10B981;">3.250,00 €</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #f3f4f6;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="background:#e0e7ff; width:8px; height:8px; border-radius:50%; display:inline-block;"></span>
+            <span style="font-size:12px; color:#374151;">Otros ingresos</span>
+          </div>
+          <span style="font-size:12px; font-weight:700; color:#10B981;">400,00 €</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; padding:4px 0;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="background:#fee2e2; width:8px; height:8px; border-radius:50%; display:inline-block;"></span>
+            <span style="font-size:12px; color:#374151;">Gastos</span>
+          </div>
+          <span style="font-size:12px; font-weight:700; color:#EF4444;">-1.200,00 €</span>
+        </div>
+      </div>
+
+      <!-- Desglose por mes -->
+      <div style="font-size:10px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px;">Desglose por mes</div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="background:white; border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer;">
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#002F86;">Abril 2026</div>
+            <div style="font-size:11px; color:#6b7280; margin-top:2px;">32 ingresos · 5 gastos</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:14px; font-weight:800; color:#10B981;">+2.840,00 €</span>
+            <span style="color:#d1d5db;">›</span>
+          </div>
+        </div>
+        <div style="background:white; border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer;">
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#002F86;">Marzo 2026</div>
+            <div style="font-size:11px; color:#6b7280; margin-top:2px;">28 ingresos · 3 gastos</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:14px; font-weight:800; color:#10B981;">+3.100,00 €</span>
+            <span style="color:#d1d5db;">›</span>
+          </div>
+        </div>
+        <div style="background:white; border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,0.05); cursor:pointer;">
+          <div>
+            <div style="font-size:13px; font-weight:700; color:#002F86;">Febrero 2026</div>
+            <div style="font-size:11px; color:#6b7280; margin-top:2px;">18 ingresos · 8 gastos</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:14px; font-weight:800; color:#EF4444;">-120,00 €</span>
+            <span style="color:#d1d5db;">›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

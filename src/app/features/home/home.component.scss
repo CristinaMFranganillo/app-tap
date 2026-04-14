@@ -32,7 +32,7 @@
   }
 
   &__value {
-    @apply text-[22px] font-black text-brand-dark;
+    @apply text-[22px] font-bold text-brand-dark;
   }
 
   &__label {
@@ -100,7 +100,7 @@
   }
 
   &__num {
-    @apply text-[40px] font-black text-secondary leading-none;
+    @apply text-[40px] font-bold text-secondary leading-none;
   }
 
   &__de {

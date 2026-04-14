@@ -10,6 +10,17 @@
   }
 }
 
+.header-admin-avatar {
+  @apply rounded-full bg-brand-yellow flex items-center justify-center;
+  width: 30px;
+  height: 30px;
+
+  i {
+    @apply text-brand-dark;
+    font-size: 16px;
+  }
+}
+
 .header-overlay {
   @apply fixed inset-0 z-40;
 }

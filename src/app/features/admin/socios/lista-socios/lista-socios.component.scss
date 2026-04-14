@@ -53,7 +53,7 @@
 }
 
 .lista-socios__empty { text-align: center; font-size: 13px; color: #9ca3af; margin-top: 1.5rem; }
-.fab-icon { @apply text-[18px] font-black; }
+.fab-icon { @apply text-[18px] font-bold; }
 
 .lista-socios__header {
   @apply flex items-center mb-3;

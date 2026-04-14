@@ -1,5 +1,16 @@
 .perfil-hero {
   @apply bg-brand-dark px-4 pt-4 pb-6 flex flex-col items-center;
+
+  &__admin-avatar {
+    @apply rounded-full bg-brand-yellow flex items-center justify-center;
+    width: 64px;
+    height: 64px;
+
+    i {
+      @apply text-brand-dark;
+      font-size: 32px;
+    }
+  }
 }
 
 .perfil-hero__cambiar-foto {
@@ -78,7 +89,7 @@
   }
 
   &__value {
-    @apply text-[22px] font-black text-brand-dark;
+    @apply text-[22px] font-bold text-brand-dark;
   }
 
   &__label {
@@ -127,7 +138,7 @@
   }
 
   &__num {
-    @apply text-[32px] font-black text-secondary leading-none;
+    @apply text-[32px] font-bold text-secondary leading-none;
   }
 
   &__de {
@@ -141,7 +152,7 @@
   &__linea {
     @apply text-sm text-neutral-400;
 
-    strong { @apply text-secondary font-black; }
+    strong { @apply text-secondary font-bold; }
   }
 }
 

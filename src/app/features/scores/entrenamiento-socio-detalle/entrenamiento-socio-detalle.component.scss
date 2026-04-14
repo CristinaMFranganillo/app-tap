@@ -10,7 +10,7 @@
   }
 
   &__resultado {
-    @apply text-[48px] font-black text-secondary leading-none;
+    @apply text-[48px] font-bold text-secondary leading-none;
 
     &--bueno { @apply text-success; }
     &--malo  { @apply text-danger; }

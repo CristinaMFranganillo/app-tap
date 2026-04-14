@@ -1,0 +1,84 @@
+<h2>Contabilidad — Enfoques de implementación</h2>
+<p class="subtitle">Cómo estructurar el componente y los datos</p>
+
+<div class="options">
+
+  <div class="option" data-choice="a" onclick="toggleSelect(this)" style="border-left: 4px solid #FFAE00;">
+    <div class="letter" style="background: #FFAE00; color: #002F86;">A</div>
+    <div class="content">
+      <h3>Componente único con lógica interna</h3>
+      <p>Un solo <code>ContabilidadComponent</code> que maneja las 3 vistas (día/mes/año) con tabs, similar a cómo funciona <code>CajaComponent</code> actualmente.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Patrón ya probado en Caja</li>
+            <li>Menos archivos, navegación simple</li>
+            <li>Estado compartido entre vistas</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Componente grande (3 vistas + CRUD + formulario)</li>
+            <li>Un solo archivo .ts con mucha lógica</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top: 12px; padding: 8px 12px; background: #f0fdf4; border-radius: 8px; font-size: 13px;">
+        <strong>⭐ Recomendado</strong> — Consistente con el patrón de Caja. La lógica extra (CRUD manuales) es manejable con signals.
+      </p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Componente padre + sub-componentes por vista</h3>
+      <p>Un <code>ContabilidadComponent</code> shell con 3 componentes hijos: <code>ContabilidadDiaComponent</code>, <code>ContabilidadMesComponent</code>, <code>ContabilidadAnioComponent</code>.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>Archivos pequeños y enfocados</li>
+            <li>Cada vista es independiente</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Más archivos (4 componentes mínimo)</li>
+            <li>Comunicación padre-hijo para navegación drill-down</li>
+            <li>Rompe el patrón establecido por Caja</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="c" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>Rutas independientes por vista</h3>
+      <p>Rutas separadas: <code>/admin/contabilidad/dia</code>, <code>/admin/contabilidad/mes</code>, <code>/admin/contabilidad/anio</code>. Cada una con su componente lazy-loaded.</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Pros</h4>
+          <ul>
+            <li>URLs compartibles y con deep-link</li>
+            <li>Componentes totalmente aislados</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Cons</h4>
+          <ul>
+            <li>Pierde estado al cambiar de vista (recarga datos)</li>
+            <li>Navegación drill-down más compleja con query params</li>
+            <li>Complejidad innecesaria para una PWA mobile-first</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

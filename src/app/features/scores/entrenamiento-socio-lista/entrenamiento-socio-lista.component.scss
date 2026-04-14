@@ -26,7 +26,7 @@
   }
 
   &__resultado {
-    @apply text-[16px] font-black text-secondary flex-shrink-0;
+    @apply text-[16px] font-bold text-secondary flex-shrink-0;
 
     &--bueno { @apply text-success; }
     &--malo  { @apply text-danger; }
