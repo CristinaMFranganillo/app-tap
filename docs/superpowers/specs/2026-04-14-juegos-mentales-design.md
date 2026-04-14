@@ -1,15 +1,15 @@
-# Juegos Mentales — Spec de Diseño
+# Echa un rato — Spec de Diseño
 
 ## Objetivo
 
-Crear una sección "Juegos Mentales" accesible desde la home del socio con 3 minijuegos: el existente "Rompe Platos" y 2 nuevos (Test de Reflejos y ¿Izquierda o Derecha?). Los juegos entrenan agilidad visual, tiempo de reacción y decisión lateral rápida. Las partidas se persisten en Supabase con ranking del club.
+Crear una sección "Echa un rato" accesible desde la home del socio con 3 minijuegos: el existente "Rompe Platos" y 2 nuevos (Test de Reflejos y ¿Izquierda o Derecha?). Los juegos entrenan agilidad visual, tiempo de reacción y decisión lateral rápida. Las partidas se persisten en Supabase con ranking del club.
 
 ## Arquitectura
 
 - Nueva ruta `/juegos` como hub con 3 tarjetas de juego + ranking
 - Subrutas `/juegos/reflejos` y `/juegos/lateralidad` para los juegos nuevos
 - "Rompe Platos" en el hub enlaza a `/juego` (ruta existente, sin cambios)
-- Tarjeta de la home del socio se reemplaza: "Rompe Platos" → "Juegos Mentales" → `/juegos`
+- Tarjeta de la home del socio se reemplaza: "Rompe Platos" → "Echa un rato" → `/juegos`
 - Tabla `juegos_scores` en Supabase para persistencia y ranking
 
 ## Componentes nuevos
@@ -134,7 +134,7 @@ Reemplazar la tarjeta actual:
   <div class="home-juego__left">
     <span class="home-juego__icon">🧠</span>
     <div>
-      <p class="home-juego__titulo">Juegos Mentales</p>
+      <p class="home-juego__titulo">Echa un rato</p>
       <p class="home-juego__sub">Entrena reflejos y concentración</p>
     </div>
   </div>
@@ -160,7 +160,7 @@ Se añaden en `app.routes.ts` o en un `juegos.routes.ts` con lazy loading.
 
 ### Hub `/juegos`
 
-- Título "Juegos Mentales" como `page-title`
+- Título "Echa un rato" como `page-title`
 - Tarjetas: fondo blanco, border-radius 14px, shadow-sm. Cada una con:
   - Icono 48x48 en cuadrado redondeado con fondo de color suave (amarillo para Rompe Platos, verde para Reflejos, azul para Lateralidad)
   - Nombre (14px bold), descripción (11px gris)
@@ -210,5 +210,5 @@ Se añaden en `app.routes.ts` o en un `juegos.routes.ts` con lazy loading.
 | RF8 | Lateralidad: resultado con media ms, aciertos, fallos, precisión %, ranking |
 | RF9 | Ambos juegos guardan resultado en `juegos_scores` al terminar |
 | RF10 | Ranking ordena por mejor valor: min ms (reflejos/lateralidad), max platos (rompe_platos) |
-| RF11 | Home socio: tarjeta "Juegos Mentales" reemplaza "Rompe Platos", navega a `/juegos` |
+| RF11 | Home socio: tarjeta "Echa un rato" reemplaza "Rompe Platos", navega a `/juegos` |
 | RF12 | Tabla `juegos_scores` con RLS: select público, insert solo propio |

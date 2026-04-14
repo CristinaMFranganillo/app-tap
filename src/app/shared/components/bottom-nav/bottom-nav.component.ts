@@ -10,9 +10,8 @@ interface NavItem {
 
 const SOCIO_NAV: NavItem[] = [
   { route: '/',          icon: 'bi-house',     label: 'Inicio'   },
-  { route: '/noticias',  icon: 'bi-newspaper', label: 'Noticias' },
   { route: '/scores',    icon: 'bi-bullseye',  label: 'Entrena'  },
-  { route: '/perfil',    icon: 'bi-person',    label: 'Perfil'   },
+  { route: '/perfil',    icon: 'bi-graph-up',  label: 'Métricas' },
 ];
 
 const ADMIN_NAV: NavItem[] = [

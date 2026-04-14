@@ -1,7 +1,7 @@
 import { Component, inject, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap, EMPTY, of, map } from 'rxjs';
+import { switchMap, EMPTY, of } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
 import { NewsService } from '../noticias/news.service';
@@ -10,11 +10,12 @@ import { UserService } from '../admin/socios/user.service';
 import { Entrenamiento } from '../../core/models/entrenamiento.model';
 import { User } from '../../core/models/user.model';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { CardNoticiaComponent } from '../../shared/components/card-noticia/card-noticia.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [EmptyStateComponent, DatePipe],
+  imports: [EmptyStateComponent, DatePipe, CardNoticiaComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
@@ -34,8 +35,8 @@ export class HomeComponent {
     return rol === 'admin' || rol === 'moderador';
   });
 
-  ultimasNoticias = toSignal(
-    this.newsService.getPublicadas().pipe(map(news => news.slice(0, 1))),
+  noticias = toSignal(
+    this.newsService.getPublicadas(),
     { initialValue: [] }
   );
 

@@ -1,36 +1,5 @@
 <div>
 
-  <!-- Hero (solo socio) -->
-  @if (!esAdmin()) {
-    <div class="perfil-hero">
-      <app-avatar
-        [nombre]="user()?.nombre ?? ''"
-        [apellidos]="user()?.apellidos ?? ''"
-        [avatarUrl]="user()?.avatarUrl"
-        [size]="64"
-      />
-      <h2 class="perfil-hero__nombre">
-        {{ user()?.nombre }} {{ user()?.apellidos }}
-      </h2>
-      <p class="perfil-hero__rol">
-        {{ user()?.rol }} · #{{ user()?.numeroSocio }}
-      </p>
-      <button class="perfil-hero__cambiar-foto" (click)="abrirEditorAvatar()">
-        <i class="bi bi-camera"></i> Cambiar foto
-      </button>
-    </div>
-  }
-
-  @if (mostrarEditorAvatar()) {
-    <div class="perfil-avatar-modal">
-      <div class="perfil-avatar-modal__sheet">
-        <app-avatar-editor
-          (completado)="onAvatarCompletado()"
-          (omitido)="onAvatarOmitido()"
-        />
-      </div>
-    </div>
-  }
 
   <!-- ── Sección según rol ──────────────────────────────────── -->
 

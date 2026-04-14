@@ -8,13 +8,8 @@ export const scoresRoutes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'historial',
+        redirectTo: 'entrenamientos',
         pathMatch: 'full',
-      },
-      {
-        path: 'historial',
-        loadComponent: () =>
-          import('./historial/scores-historial.component').then(m => m.ScoresHistorialComponent),
       },
       {
         path: 'entrenamientos',

@@ -1,4 +1,7 @@
-<app-header (cambiarPassword)="abrirCambioPassword()" />
+<app-header
+  (cambiarPassword)="abrirCambioPassword()"
+  (cambiarFoto)="abrirCambioFoto()"
+/>
 <main class="shell-main">
   <router-outlet />
 </main>
@@ -10,4 +13,15 @@
 
 @if (cambioPasswordManual()) {
   <app-cambiar-password [soloPassword]="true" (cerrar)="onPasswordCerrado()" />
+}
+
+@if (mostrarEditorAvatar()) {
+  <div class="shell-avatar-modal" (click)="cerrarEditorAvatar()">
+    <div class="shell-avatar-modal__sheet" (click)="$event.stopPropagation()">
+      <app-avatar-editor
+        (completado)="cerrarEditorAvatar()"
+        (omitido)="cerrarEditorAvatar()"
+      />
+    </div>
+  </div>
 }

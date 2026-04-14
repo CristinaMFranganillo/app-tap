@@ -23,6 +23,7 @@ export class HeaderComponent {
   });
   menuAbierto      = signal(false);
   cambiarPassword  = output<void>();
+  cambiarFoto      = output<void>();
 
   toggleMenu(): void {
     this.menuAbierto.update(v => !v);
@@ -31,6 +32,11 @@ export class HeaderComponent {
   onCambiarPassword(): void {
     this.menuAbierto.set(false);
     this.cambiarPassword.emit();
+  }
+
+  onCambiarFoto(): void {
+    this.menuAbierto.set(false);
+    this.cambiarFoto.emit();
   }
 
   async logout(): Promise<void> {

@@ -9,8 +9,9 @@
 }
 
 // El shell aplica pt-[54px] pb-[52px]; el juego debe caber en el alto restante
-// sin provocar scroll vertical.
-$alto-juego: calc(100vh - 54px - 52px);
+// sin provocar scroll vertical. Usamos 100dvh para respetar las barras dinámicas
+// del navegador móvil y que los botones no queden ocultos tras el bottom-nav.
+$alto-juego: calc(100dvh - 54px - 52px);
 
 // ─── Root ───────────────────────────────────────────────────────────────────
 .lateralidad {
@@ -49,7 +50,7 @@ $alto-juego: calc(100vh - 54px - 52px);
   @apply flex flex-col items-center select-none relative;
   height: $alto-juego;
   background-color: #87CEEB;
-  padding: 56px 0.75rem 0.75rem;
+  padding: 56px 0.75rem 2rem;
 }
 
 .lateralidad__espera-texto {

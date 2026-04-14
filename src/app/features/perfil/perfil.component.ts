@@ -11,14 +11,12 @@ import { CuotaService } from '../admin/socios/cuota.service';
 import { ContabilidadService, ResumenFinanciero } from '../admin/contabilidad/contabilidad.service';
 import { ResultadoEntrenamientoConFecha } from '../../core/models/entrenamiento.model';
 
-import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
-import { AvatarEditorComponent } from '../../shared/components/avatar-editor/avatar-editor.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [AvatarComponent, AvatarEditorComponent, EmptyStateComponent, DecimalPipe],
+  imports: [EmptyStateComponent, DecimalPipe],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss',
 })
@@ -30,12 +28,6 @@ export class PerfilComponent {
   private router = inject(Router);
 
   user = toSignal(this.authService.currentUser$, { initialValue: null });
-
-  mostrarEditorAvatar = signal(false);
-
-  abrirEditorAvatar(): void { this.mostrarEditorAvatar.set(true); }
-  onAvatarCompletado(): void { this.mostrarEditorAvatar.set(false); }
-  onAvatarOmitido(): void { this.mostrarEditorAvatar.set(false); }
 
   // ── Bifurcación por rol ────────────────────────────────────────
   esAdmin = computed(() => {

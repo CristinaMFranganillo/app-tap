@@ -1,4 +1,4 @@
--- Tabla para guardar partidas de los minijuegos mentales
+-- Tabla para guardar partidas de los miniEcha un rato
 CREATE TABLE juegos_scores (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,

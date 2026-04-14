@@ -32,6 +32,12 @@
       <div class="header-overlay" (click)="toggleMenu()"></div>
 
       <div class="header-menu">
+        @if (!esAdmin()) {
+          <button (click)="onCambiarFoto()" class="header-menu__item">
+            <i class="bi bi-camera"></i>
+            Cambiar foto de perfil
+          </button>
+        }
         <button (click)="onCambiarPassword()" class="header-menu__item">
           <i class="bi bi-key"></i>
           Cambiar contraseña

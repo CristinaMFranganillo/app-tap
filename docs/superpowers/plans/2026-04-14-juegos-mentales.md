@@ -1,8 +1,8 @@
-# Juegos Mentales Implementation Plan
+# Echa un rato Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a "Juegos Mentales" section with 2 new minigames (Test de Reflejos + Izquierda o Derecha), a hub page, Supabase persistence, and club ranking.
+**Goal:** Add a "Echa un rato" section with 2 new minigames (Test de Reflejos + Izquierda o Derecha), a hub page, Supabase persistence, and club ranking.
 
 **Architecture:** New route `/juegos` as hub linking to 3 games (existing Rompe Platos + 2 new). Each game is a standalone component with canvas/DOM-based gameplay. A shared `JuegosService` handles Supabase CRUD against a new `juegos_scores` table. Home socio card is updated to link to the hub.
 
@@ -28,7 +28,7 @@
 | `src/app/features/juegos/lateralidad/lateralidad.component.scss` | Lateralidad styles |
 | Modify: `src/app/app.routes.ts` | Add `/juegos` lazy route |
 | Modify: `src/app/features/home/home.component.ts` | Replace `goToJuego()` with `goToJuegos()` |
-| Modify: `src/app/features/home/home.component.html` | Replace "Rompe Platos" card with "Juegos Mentales" |
+| Modify: `src/app/features/home/home.component.html` | Replace "Rompe Platos" card with "Echa un rato" |
 
 ---
 
@@ -409,7 +409,7 @@ export class JuegosHubComponent {
 ```html
 <!-- src/app/features/juegos/hub/juegos-hub.component.html -->
 <div class="juegos-hub">
-  <h3 class="page-title">Juegos Mentales</h3>
+  <h3 class="page-title">Echa un rato</h3>
 
   <div class="juegos-hub__cards">
     @for (j of juegos; track j.id) {
@@ -1465,7 +1465,7 @@ git commit -m "feat(juegos): add LateralidadComponent — left/right decision ga
 
 ---
 
-### Task 7: Home — Replace "Rompe Platos" card with "Juegos Mentales"
+### Task 7: Home — Replace "Rompe Platos" card with "Echa un rato"
 
 **Files:**
 - Modify: `src/app/features/home/home.component.ts`
@@ -1497,7 +1497,7 @@ In `src/app/features/home/home.component.html`, replace the button at lines 79�
       <div class="home-juego__left">
         <span class="home-juego__icon">🧠</span>
         <div>
-          <p class="home-juego__titulo">Juegos Mentales</p>
+          <p class="home-juego__titulo">Echa un rato</p>
           <p class="home-juego__sub">Entrena reflejos y concentración</p>
         </div>
       </div>
@@ -1514,7 +1514,7 @@ Expected: BUILD SUCCESS
 
 1. Run `npm start` and open `http://localhost:4200`
 2. Login as a socio
-3. Verify home shows "Juegos Mentales" card with 🧠 icon
+3. Verify home shows "Echa un rato" card with 🧠 icon
 4. Click the card → navigates to `/juegos`
 5. Hub shows 3 game cards
 6. Click "Rompe Platos" → navigates to `/juego` (existing game)
@@ -1527,7 +1527,7 @@ Expected: BUILD SUCCESS
 
 ```bash
 git add src/app/features/home/home.component.ts src/app/features/home/home.component.html
-git commit -m "feat(home): replace Rompe Platos card with Juegos Mentales hub link"
+git commit -m "feat(home): replace Rompe Platos card with Echa un rato hub link"
 ```
 
 ---

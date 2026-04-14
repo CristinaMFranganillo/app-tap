@@ -1,3 +1,16 @@
 .shell-main {
   @apply pt-[54px] pb-[52px] min-h-screen bg-surface;
 }
+
+.shell-avatar-modal {
+  @apply fixed inset-0 z-50 flex items-end justify-center;
+  background: rgba(0, 0, 0, 0.5);
+
+  &__sheet {
+    @apply w-full p-5;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+    background: white;
+    border-radius: 20px 20px 0 0;
+    max-width: 480px;
+  }
+}
