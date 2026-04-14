@@ -128,8 +128,8 @@ export class HomeComponent {
     this.router.navigate(['/perfil']);
   }
 
-  goToJuego(): void {
-    this.router.navigate(['/juego']);
+  goToJuegos(): void {
+    this.router.navigate(['/juegos']);
   }
 
   irSocios(): void {
