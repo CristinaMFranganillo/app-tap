@@ -499,6 +499,38 @@
   }
 }
 
+// ── Heatmap fallos por plato ────────────────────────────────────
+
+.perfil-fallos {
+  @apply p-3 flex flex-col gap-2;
+
+  &__titulo {
+    @apply text-xs font-semibold text-neutral-400 uppercase tracking-[1.5px];
+  }
+
+  &__grid {
+    @apply grid grid-cols-5 gap-1;
+  }
+
+  &__celda {
+    @apply aspect-square flex flex-col items-center justify-center
+           rounded-[8px] border border-neutral-200;
+
+    &--peor  { @apply border-2 border-danger; }
+    &--mejor { @apply border-2 border-success; }
+  }
+
+  &__num   { @apply text-[10px] font-semibold text-neutral-400 leading-none; }
+  &__veces { @apply text-sm font-bold text-secondary leading-none mt-0.5; }
+
+  &__resumen { @apply flex flex-col gap-0.5 mt-1; }
+  &__linea {
+    @apply text-[12px] font-medium flex items-center gap-1;
+    &--peor  { @apply text-danger; }
+    &--mejor { @apply text-success; }
+  }
+}
+
 // ── Enlace contabilidad ───────────────────────────────────────
 .conta-link {
   @apply flex items-center justify-between py-3 px-4 cursor-pointer
