@@ -414,3 +414,18 @@
            active:opacity-60 transition-opacity;
   }
 }
+
+// ── Enlace contabilidad ───────────────────────────────────────
+.conta-link {
+  @apply flex items-center justify-between py-3 px-4 cursor-pointer
+         active:bg-neutral-50 transition-colors mt-2;
+
+  &__left {
+    @apply flex items-center gap-2 text-sm font-semibold text-secondary;
+    i { @apply text-[16px] text-primary; }
+  }
+
+  &__arrow {
+    @apply text-neutral-300 text-xs;
+  }
+}

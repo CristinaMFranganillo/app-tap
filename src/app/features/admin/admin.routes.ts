@@ -113,6 +113,14 @@ export const adminRoutes: Routes = [
     loadComponent: () =>
       import('./caja/config-tarifas/config-tarifas.component').then(m => m.ConfigTarifasComponent),
   },
+  // ── Contabilidad ────────────────────────────────────────────────────────────
+  {
+    path: 'contabilidad',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./contabilidad/contabilidad.component').then(m => m.ContabilidadComponent),
+  },
   // ── Entrenamientos ───────────────────────────────────────────────────────
   {
     path: 'entrenamientos/dia/:fecha',

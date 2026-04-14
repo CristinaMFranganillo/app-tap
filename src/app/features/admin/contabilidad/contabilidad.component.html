@@ -1,0 +1,303 @@
+<div class="conta-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <button (click)="goBack()" class="conta-page__back-btn">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <h2 class="conta-page__title">Contabilidad</h2>
+  </div>
+
+  <!-- Tabs dia / mes / anio -->
+  <div class="conta-tabs">
+    <button [class.conta-tabs__tab--active]="vista() === 'dia'"  (click)="setVista('dia')">Día</button>
+    <button [class.conta-tabs__tab--active]="vista() === 'mes'"  (click)="setVista('mes')">Mes</button>
+    <button [class.conta-tabs__tab--active]="vista() === 'anio'" (click)="setVista('anio')">Año</button>
+  </div>
+
+  <!-- Filtro dia -->
+  @if (vista() === 'dia') {
+    <div class="conta-filtro">
+      <label class="form-label">Fecha</label>
+      <input type="date" class="form-input-surface"
+        [value]="fechaDia()"
+        (change)="cargarDia($any($event).target.value)" />
+    </div>
+  }
+
+  <!-- Filtro mes -->
+  @if (vista() === 'mes') {
+    <div class="conta-filtro">
+      <label class="form-label">Mes</label>
+      <select class="form-input-surface"
+        [value]="mesFiltro()"
+        (change)="cargarMes($any($event).target.value)">
+        @for (m of mesesDisponibles(); track m) {
+          <option [value]="m">{{ labelMes(m) }}</option>
+        }
+      </select>
+    </div>
+  }
+
+  <!-- Filtro anio -->
+  @if (vista() === 'anio') {
+    <div class="conta-filtro">
+      <label class="form-label">Año</label>
+      <select class="form-input-surface"
+        [value]="anioFiltro()"
+        (change)="cargarAnio(+$any($event).target.value)">
+        @for (a of aniosDisponibles(); track a) {
+          <option [value]="a">{{ a }}</option>
+        }
+      </select>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error()) {
+    <p class="conta-error">{{ error() }}</p>
+  }
+
+  <!-- Tarjetas resumen -->
+  @if (!cargando()) {
+    <div class="conta-resumen">
+
+      <div class="conta-resumen__balance card">
+        <div class="conta-resumen__balance-label">
+          <i class="bi bi-graph-up-arrow"></i>
+          <span>Balance</span>
+        </div>
+        <p class="conta-resumen__balance-valor"
+          [class.conta-resumen__balance-valor--positivo]="resumen().balance >= 0"
+          [class.conta-resumen__balance-valor--negativo]="resumen().balance < 0">
+          {{ resumen().balance >= 0 ? '+' : '' }}{{ resumen().balance | number:'1.2-2' }} &euro;
+        </p>
+      </div>
+
+      <div class="conta-resumen__doble">
+        <div class="card conta-resumen__mini">
+          <p class="conta-resumen__mini-label">Ingresos</p>
+          <p class="conta-resumen__mini-valor conta-resumen__mini-valor--ingreso">{{ resumen().ingresos | number:'1.2-2' }} &euro;</p>
+        </div>
+        <div class="card conta-resumen__mini">
+          <p class="conta-resumen__mini-label">Gastos</p>
+          <p class="conta-resumen__mini-valor conta-resumen__mini-valor--gasto">{{ resumen().gastos | number:'1.2-2' }} &euro;</p>
+        </div>
+      </div>
+
+    </div>
+  }
+
+  <!-- Skeleton cargando -->
+  @if (cargando()) {
+    <div class="conta-skeleton">
+      <div class="conta-skeleton__card"></div>
+      <div class="conta-skeleton__doble">
+        <div class="conta-skeleton__card conta-skeleton__card--sm"></div>
+        <div class="conta-skeleton__card conta-skeleton__card--sm"></div>
+      </div>
+    </div>
+  }
+
+  <!-- Vacio -->
+  @if (!cargando() && movimientos().length === 0) {
+    <div class="conta-empty">
+      <i class="bi bi-graph-up-arrow conta-empty__icon"></i>
+      <p class="conta-empty__texto">Sin movimientos para este periodo</p>
+    </div>
+  }
+
+  <!-- ══════ Vista AÑO: desglose por categoría ══════ -->
+  @if (!cargando() && vista() === 'anio' && movimientos().length > 0) {
+    <div class="card conta-desglose-cat">
+      <p class="conta-section-label">Desglose por categoría</p>
+
+      <div class="conta-desglose-cat__fila">
+        <div class="conta-desglose-cat__left">
+          <span class="conta-dot conta-dot--escuadra"></span>
+          <span>Escuadras</span>
+        </div>
+        <span class="conta-desglose-cat__importe conta-desglose-cat__importe--ingreso">{{ desgloseCategoria().escuadras | number:'1.2-2' }} &euro;</span>
+      </div>
+
+      <div class="conta-desglose-cat__fila">
+        <div class="conta-desglose-cat__left">
+          <span class="conta-dot conta-dot--torneo"></span>
+          <span>Torneos</span>
+        </div>
+        <span class="conta-desglose-cat__importe conta-desglose-cat__importe--ingreso">{{ desgloseCategoria().torneos | number:'1.2-2' }} &euro;</span>
+      </div>
+
+      <div class="conta-desglose-cat__fila">
+        <div class="conta-desglose-cat__left">
+          <span class="conta-dot conta-dot--cuota"></span>
+          <span>Cuotas</span>
+        </div>
+        <span class="conta-desglose-cat__importe conta-desglose-cat__importe--ingreso">{{ desgloseCategoria().cuotas | number:'1.2-2' }} &euro;</span>
+      </div>
+
+      @if (desgloseCategoria().ingresosVarios > 0) {
+        <div class="conta-desglose-cat__fila">
+          <div class="conta-desglose-cat__left">
+            <span class="conta-dot conta-dot--ingreso"></span>
+            <span>Otros ingresos</span>
+          </div>
+          <span class="conta-desglose-cat__importe conta-desglose-cat__importe--ingreso">{{ desgloseCategoria().ingresosVarios | number:'1.2-2' }} &euro;</span>
+        </div>
+      }
+
+      <div class="conta-desglose-cat__fila">
+        <div class="conta-desglose-cat__left">
+          <span class="conta-dot conta-dot--gasto"></span>
+          <span>Gastos</span>
+        </div>
+        <span class="conta-desglose-cat__importe conta-desglose-cat__importe--gasto">-{{ desgloseCategoria().gastos | number:'1.2-2' }} &euro;</span>
+      </div>
+    </div>
+  }
+
+  <!-- ══════ Vista AÑO: desglose por mes ══════ -->
+  @if (!cargando() && vista() === 'anio' && agrupadoPorMes().length > 0) {
+    <p class="conta-section-label">Desglose por mes</p>
+
+    @for (grupo of agrupadoPorMes(); track grupo.mes) {
+      <div class="card conta-periodo-fila" (click)="drillDownMes(grupo.mes)">
+        <div class="conta-periodo-fila__left">
+          <p class="conta-periodo-fila__titulo">{{ grupo.label | titlecase }}</p>
+          <p class="conta-periodo-fila__count">
+            {{ grupo.countIngresos }} ingreso{{ grupo.countIngresos !== 1 ? 's' : '' }}
+            @if (grupo.countGastos > 0) {
+              &nbsp;&middot;&nbsp;{{ grupo.countGastos }} gasto{{ grupo.countGastos !== 1 ? 's' : '' }}
+            }
+          </p>
+        </div>
+        <div class="conta-periodo-fila__right">
+          <p class="conta-periodo-fila__total"
+            [class.conta-periodo-fila__total--positivo]="grupo.balance >= 0"
+            [class.conta-periodo-fila__total--negativo]="grupo.balance < 0">
+            {{ grupo.balance >= 0 ? '+' : '' }}{{ grupo.balance | number:'1.2-2' }} &euro;
+          </p>
+          <i class="bi bi-chevron-right conta-periodo-fila__arrow"></i>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- ══════ Vista MES: desglose por dia ══════ -->
+  @if (!cargando() && vista() === 'mes' && agrupadoPorDia().length > 0) {
+    <p class="conta-section-label">Desglose por día</p>
+
+    @for (dia of agrupadoPorDia(); track dia.fecha) {
+      <div class="card conta-periodo-fila" (click)="drillDownDia(dia.fecha)">
+        <div class="conta-periodo-fila__left">
+          <p class="conta-periodo-fila__titulo">
+            {{ dia.fecha | date:'EEE d MMM':'':'es' | titlecase }}
+          </p>
+          <p class="conta-periodo-fila__count">
+            {{ dia.countIngresos }} ingreso{{ dia.countIngresos !== 1 ? 's' : '' }}
+            @if (dia.countGastos > 0) {
+              &nbsp;&middot;&nbsp;{{ dia.countGastos }} gasto{{ dia.countGastos !== 1 ? 's' : '' }}
+            }
+          </p>
+        </div>
+        <div class="conta-periodo-fila__right">
+          <p class="conta-periodo-fila__total"
+            [class.conta-periodo-fila__total--positivo]="dia.balance >= 0"
+            [class.conta-periodo-fila__total--negativo]="dia.balance < 0">
+            {{ dia.balance >= 0 ? '+' : '' }}{{ dia.balance | number:'1.2-2' }} &euro;
+          </p>
+          <i class="bi bi-chevron-right conta-periodo-fila__arrow"></i>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- ══════ Vista DIA: movimientos individuales ══════ -->
+  @if (!cargando() && vista() === 'dia' && movimientos().length > 0) {
+    <p class="conta-section-label">Movimientos</p>
+
+    <div class="card conta-movs">
+      @for (mov of movimientos(); track mov.id) {
+        <div class="conta-mov-fila">
+          <div class="conta-mov-fila__info">
+            <span class="conta-badge" [attr.data-cat]="mov.categoria">
+              {{ labelCategoria(mov.categoria) }}
+            </span>
+            <span class="conta-mov-fila__concepto">{{ mov.concepto }}</span>
+          </div>
+          <div class="conta-mov-fila__right">
+            <span class="conta-mov-fila__importe"
+              [class.conta-mov-fila__importe--ingreso]="!mov.esGasto"
+              [class.conta-mov-fila__importe--gasto]="mov.esGasto">
+              {{ mov.esGasto ? '-' : '+' }}{{ mov.importe | number:'1.2-2' }} &euro;
+            </span>
+            @if (esAdmin() && esMovimientoManual(mov)) {
+              <button (click)="eliminarMovimiento(mov); $event.stopPropagation()" class="conta-mov-fila__btn-del">
+                <i class="bi bi-trash3"></i>
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Botones registrar (solo admin) -->
+  @if (!cargando() && esAdmin()) {
+    <!-- Formulario nuevo movimiento -->
+    @if (mostrarFormMovimiento()) {
+      <div class="card conta-form-mov">
+        <p class="conta-form-mov__titulo">
+          {{ tipoMovimiento() === 'gasto' ? 'Nuevo gasto' : 'Nuevo ingreso' }}
+        </p>
+        <div class="conta-form-mov__campo">
+          <label class="form-label">Concepto</label>
+          <input
+            [(ngModel)]="nuevoConcepto"
+            placeholder="Ej: Material de tiro, Patrocinio..."
+            class="form-input-surface" />
+        </div>
+        <div class="conta-form-mov__row">
+          <div class="conta-form-mov__campo conta-form-mov__campo--flex">
+            <label class="form-label">Importe (&euro;)</label>
+            <input
+              type="number"
+              [(ngModel)]="nuevoImporte"
+              min="0.01"
+              step="0.50"
+              placeholder="0,00"
+              class="form-input-surface" />
+          </div>
+          <div class="conta-form-mov__campo conta-form-mov__campo--flex">
+            <label class="form-label">Fecha</label>
+            <input
+              type="date"
+              [(ngModel)]="nuevoFecha"
+              class="form-input-surface" />
+          </div>
+        </div>
+        <div class="conta-form-mov__acciones">
+          <button (click)="cancelarFormMovimiento()" [disabled]="guardando()" class="conta-form-mov__btn-cancel">
+            Cancelar
+          </button>
+          <button
+            (click)="guardarMovimiento()"
+            [disabled]="guardando() || !nuevoConcepto.trim() || !nuevoImporte || nuevoImporte <= 0"
+            class="btn-primary conta-form-mov__btn-save">
+            {{ guardando() ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </div>
+      </div>
+    }
+
+    <div class="conta-admin-acciones">
+      <button (click)="abrirFormMovimiento('ingreso')" class="btn-primary conta-admin-acciones__btn">
+        <i class="bi bi-plus-circle"></i> Ingreso
+      </button>
+      <button (click)="abrirFormMovimiento('gasto')" class="conta-admin-acciones__btn conta-admin-acciones__btn--gasto">
+        <i class="bi bi-dash-circle"></i> Gasto
+      </button>
+    </div>
+  }
+
+</div>

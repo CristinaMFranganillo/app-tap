@@ -3,13 +3,12 @@ import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { switchMap, combineLatest, EMPTY } from 'rxjs';
 import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
 import { EntrenamientoService } from '../admin/entrenamientos/entrenamiento.service';
 import { CuotaService } from '../admin/socios/cuota.service';
 import { ContabilidadService, ResumenFinanciero } from '../admin/contabilidad/contabilidad.service';
-import { MovimientoManual } from '../../core/models/movimiento-manual.model';
+
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { AvatarEditorComponent } from '../../shared/components/avatar-editor/avatar-editor.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
@@ -17,7 +16,7 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [AvatarComponent, AvatarEditorComponent, EmptyStateComponent, DecimalPipe, FormsModule],
+  imports: [AvatarComponent, AvatarEditorComponent, EmptyStateComponent, DecimalPipe],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss',
 })
@@ -49,17 +48,8 @@ export class PerfilComponent {
   tabAdmin = signal<'admin' | 'stats'>('admin');
   anioAdmin = new Date().getFullYear();
   resumen = signal<ResumenFinanciero | null>(null);
-  movimientosManuales = signal<MovimientoManual[]>([]);
   cargandoResumen = signal(true);
   errorAdmin = signal('');
-
-  // Formulario nuevo movimiento
-  mostrarFormMovimiento = signal(false);
-  tipoMovimiento = signal<'gasto' | 'ingreso'>('gasto');
-  nuevoConcepto = '';
-  nuevoImporte: number | null = null;
-  nuevoFecha = new Date().toISOString().split('T')[0];
-  guardando = signal(false);
 
   balanceTotal = computed(() => {
     const r = this.resumen();
@@ -83,63 +73,15 @@ export class PerfilComponent {
     this.cargandoResumen.set(true);
     try {
       const temporada = await firstValueFrom(this.cuotaService.getTemporadaActiva());
-      const [resumen, manuales] = await Promise.all([
-        this.contabilidadService.getResumenAnual(this.anioAdmin, temporada?.id ?? null),
-        firstValueFrom(this.contabilidadService.getMovimientosManuales(this.anioAdmin)),
-      ]);
+      const resumen = await this.contabilidadService.getResumenAnual(
+        this.anioAdmin,
+        temporada?.id ?? null
+      );
       this.resumen.set(resumen);
-      this.movimientosManuales.set(manuales);
     } catch (e: any) {
       this.errorAdmin.set(e.message ?? 'Error cargando datos');
     } finally {
       this.cargandoResumen.set(false);
-    }
-  }
-
-  abrirFormMovimiento(tipo: 'gasto' | 'ingreso'): void {
-    this.tipoMovimiento.set(tipo);
-    this.nuevoConcepto = '';
-    this.nuevoImporte = null;
-    this.nuevoFecha = new Date().toISOString().split('T')[0];
-    this.mostrarFormMovimiento.set(true);
-  }
-
-  cancelarFormMovimiento(): void {
-    this.mostrarFormMovimiento.set(false);
-  }
-
-  async guardarMovimiento(): Promise<void> {
-    const concepto = this.nuevoConcepto.trim();
-    if (!concepto || !this.nuevoImporte || this.nuevoImporte <= 0) return;
-    const me = this.authService.currentUser;
-    if (!me) return;
-    this.guardando.set(true);
-    this.errorAdmin.set('');
-    try {
-      await this.contabilidadService.crearMovimiento(
-        this.tipoMovimiento(),
-        concepto,
-        this.nuevoImporte,
-        this.nuevoFecha,
-        me.id
-      );
-      this.mostrarFormMovimiento.set(false);
-      await this.cargarDatosAdmin();
-    } catch (e: any) {
-      this.errorAdmin.set(e.message);
-    } finally {
-      this.guardando.set(false);
-    }
-  }
-
-  async eliminarMovimientoManual(mov: MovimientoManual): Promise<void> {
-    if (!confirm(`¿Eliminar ${mov.tipo === 'gasto' ? 'gasto' : 'ingreso'}: "${mov.concepto}"?`)) return;
-    this.errorAdmin.set('');
-    try {
-      await this.contabilidadService.eliminarMovimiento(mov.id);
-      await this.cargarDatosAdmin();
-    } catch (e: any) {
-      this.errorAdmin.set(e.message);
     }
   }
 
@@ -150,6 +92,7 @@ export class PerfilComponent {
   irCaja(): void { this.router.navigate(['/admin/caja']); }
   irTorneos(): void { this.router.navigate(['/admin/torneos']); }
   irEntrenamientos(): void { this.router.navigate(['/admin/scores']); }
+  irContabilidad(): void { this.router.navigate(['/admin/contabilidad']); }
 
   // ══════════════════════════════════════════════════════════════════
   // SOCIO: Entrenamientos personales

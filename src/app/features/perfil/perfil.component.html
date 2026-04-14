@@ -150,95 +150,14 @@
         }
       }
 
-      <!-- Botones registrar -->
-      <div class="perfil-admin__acciones">
-        <button (click)="abrirFormMovimiento('ingreso')" class="btn-primary perfil-admin__btn">
-          <i class="bi bi-plus-circle"></i> Registrar ingreso
-        </button>
-        <button (click)="abrirFormMovimiento('gasto')" class="perfil-admin__btn perfil-admin__btn--gasto">
-          <i class="bi bi-dash-circle"></i> Registrar gasto
-        </button>
-      </div>
-
-      <!-- Formulario nuevo movimiento -->
-      @if (mostrarFormMovimiento()) {
-        <div class="card perfil-form-mov">
-          <p class="perfil-form-mov__titulo">
-            {{ tipoMovimiento() === 'gasto' ? 'Nuevo gasto' : 'Nuevo ingreso' }}
-          </p>
-          <div class="perfil-form-mov__campo">
-            <label class="form-label">Concepto</label>
-            <input
-              [(ngModel)]="nuevoConcepto"
-              placeholder="Ej: Material de tiro, Patrocinio..."
-              class="form-input-surface" />
-          </div>
-          <div class="perfil-form-mov__row">
-            <div class="perfil-form-mov__campo perfil-form-mov__campo--flex">
-              <label class="form-label">Importe (&euro;)</label>
-              <input
-                type="number"
-                [(ngModel)]="nuevoImporte"
-                min="0.01"
-                step="0.50"
-                placeholder="0,00"
-                class="form-input-surface" />
-            </div>
-            <div class="perfil-form-mov__campo perfil-form-mov__campo--flex">
-              <label class="form-label">Fecha</label>
-              <input
-                type="date"
-                [(ngModel)]="nuevoFecha"
-                class="form-input-surface" />
-            </div>
-          </div>
-          <div class="perfil-form-mov__acciones">
-            <button (click)="cancelarFormMovimiento()" [disabled]="guardando()" class="perfil-form-mov__btn-cancel">
-              Cancelar
-            </button>
-            <button
-              (click)="guardarMovimiento()"
-              [disabled]="guardando() || !nuevoConcepto.trim() || !nuevoImporte || nuevoImporte <= 0"
-              class="btn-primary perfil-form-mov__btn-save">
-              {{ guardando() ? 'Guardando...' : 'Guardar' }}
-            </button>
-          </div>
+      <!-- Enlace a contabilidad -->
+      <button (click)="irContabilidad()" class="conta-link card">
+        <div class="conta-link__left">
+          <i class="bi bi-graph-up-arrow"></i>
+          <span>Ver contabilidad completa</span>
         </div>
-      }
-
-      <!-- Lista movimientos manuales recientes -->
-      @if (movimientosManuales().length > 0) {
-        <div class="card perfil-movs">
-          <p class="perfil-movs__titulo">Movimientos manuales</p>
-          <div class="perfil-movs__lista">
-            @for (mov of movimientosManuales(); track mov.id) {
-              <div class="perfil-movs__fila">
-                <div class="perfil-movs__info">
-                  <span class="perfil-movs__badge"
-                    [class.perfil-movs__badge--ingreso]="mov.tipo === 'ingreso'"
-                    [class.perfil-movs__badge--gasto]="mov.tipo === 'gasto'">
-                    {{ mov.tipo === 'ingreso' ? '+' : '-' }}
-                  </span>
-                  <div class="perfil-movs__detalle">
-                    <span class="perfil-movs__concepto">{{ mov.concepto }}</span>
-                    <span class="perfil-movs__fecha">{{ mov.fecha }}</span>
-                  </div>
-                </div>
-                <div class="perfil-movs__right">
-                  <span class="perfil-movs__importe"
-                    [class.perfil-movs__importe--ingreso]="mov.tipo === 'ingreso'"
-                    [class.perfil-movs__importe--gasto]="mov.tipo === 'gasto'">
-                    {{ mov.tipo === 'gasto' ? '-' : '' }}{{ mov.importe | number:'1.2-2' }} &euro;
-                  </span>
-                  <button (click)="eliminarMovimientoManual(mov)" class="perfil-movs__btn-del">
-                    <i class="bi bi-trash3"></i>
-                  </button>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      }
+        <i class="bi bi-chevron-right conta-link__arrow"></i>
+      </button>
 
       } @else {
 
@@ -268,6 +187,15 @@
           <div>
             <p class="perfil-admin__link-titulo">Caja</p>
             <p class="perfil-admin__link-sub">Desglose detallado de ingresos</p>
+          </div>
+          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
+        </button>
+
+        <button (click)="irContabilidad()" class="perfil-admin__link card">
+          <i class="bi bi-graph-up-arrow perfil-admin__link-icon"></i>
+          <div>
+            <p class="perfil-admin__link-titulo">Contabilidad</p>
+            <p class="perfil-admin__link-sub">Balance financiero del club</p>
           </div>
           <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
         </button>
