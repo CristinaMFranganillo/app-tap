@@ -378,6 +378,34 @@
           </div>
         }
 
+        @if (totalFallos() > 0) {
+          <div class="perfil-fallos card">
+            <p class="perfil-fallos__titulo">Fallos por plato</p>
+            <div class="perfil-fallos__grid">
+              @for (celda of heatmapFallos(); track celda.plato) {
+                <div [class]="claseCeldaFallo(celda)">
+                  <span class="perfil-fallos__num">{{ celda.plato }}</span>
+                  <span class="perfil-fallos__veces">{{ celda.veces > 0 ? celda.veces : '—' }}</span>
+                </div>
+              }
+            </div>
+            <div class="perfil-fallos__resumen">
+              @if (platosMasFallados().length > 0) {
+                <p class="perfil-fallos__linea perfil-fallos__linea--peor">
+                  <i class="bi bi-caret-up-fill"></i>
+                  Más fallados: {{ platosMasFallados().join(', ') }}
+                </p>
+              }
+              @if (platosMenosFallados().length > 0) {
+                <p class="perfil-fallos__linea perfil-fallos__linea--mejor">
+                  <i class="bi bi-caret-down-fill"></i>
+                  Menos fallados: {{ platosMenosFallados().join(', ') }}
+                </p>
+              }
+            </div>
+          </div>
+        }
+
       }
     </div>
 
