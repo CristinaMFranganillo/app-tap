@@ -235,7 +235,7 @@
         <select
           class="perfil-entrena__anio-select"
           [value]="anioSeleccionado()"
-          (change)="anioSeleccionado.set(+$any($event.target).value)"
+          (change)="anioSeleccionado.set(+$any($event.target).value); aniosComparativos.set([])"
         >
           @for (a of anios; track a) {
             <option [value]="a">{{ a }}</option>
