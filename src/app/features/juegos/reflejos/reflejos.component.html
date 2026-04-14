@@ -1,0 +1,118 @@
+<!-- ─── INTRO ─── -->
+@if (fase() === 'intro') {
+  <div class="reflejos__intro">
+    <div class="reflejos__intro-card">
+      <div class="reflejos__icono">⚡</div>
+      <h1 class="reflejos__titulo">Test de Reflejos</h1>
+      <p class="reflejos__descripcion">
+        Cuando la pantalla se ponga verde y aparezca el plato,
+        ¡toca lo antes posible! Tendrás {{ TOTAL_RONDAS }} rondas.
+      </p>
+      <ul class="reflejos__instrucciones">
+        <li>Espera a que la pantalla cambie a verde</li>
+        <li>Toca en cuanto veas el plato</li>
+        <li>No toques antes — ¡cuenta como nula!</li>
+      </ul>
+      <button class="reflejos__btn-primario" (click)="empezar()">
+        Empezar
+      </button>
+      <button class="reflejos__btn-secundario" (click)="volver()">
+        Volver
+      </button>
+    </div>
+  </div>
+}
+
+<!-- ─── ESPERA ─── -->
+@if (fase() === 'espera') {
+  <div class="reflejos__espera" (click)="onClickZona()">
+    <span class="reflejos__ronda-badge">
+      Ronda {{ rondaActual() + 1 }} / {{ TOTAL_RONDAS }}
+    </span>
+    <div class="reflejos__plato-ghost">🥏</div>
+    <p class="reflejos__espera-texto">Espera...</p>
+  </div>
+}
+
+<!-- ─── PLATO ─── -->
+@if (fase() === 'plato') {
+  <div class="reflejos__plato" (click)="onClickZona()">
+    <span class="reflejos__ronda-badge">
+      Ronda {{ rondaActual() + 1 }} / {{ TOTAL_RONDAS }}
+    </span>
+    <div class="reflejos__plato-icono">🥏</div>
+    <p class="reflejos__toca-texto">¡TOCA!</p>
+  </div>
+}
+
+<!-- ─── PREMATURO ─── -->
+@if (fase() === 'prematuro') {
+  <div class="reflejos__prematuro">
+    <span class="reflejos__ronda-badge">
+      Ronda {{ rondaActual() }} / {{ TOTAL_RONDAS }}
+    </span>
+    <div class="reflejos__prematuro-icono">✋</div>
+    <p class="reflejos__prematuro-texto">¡Demasiado pronto!</p>
+    <p class="reflejos__prematuro-sub">Ronda nula. Espera a que la pantalla sea verde.</p>
+  </div>
+}
+
+<!-- ─── RESULTADO ─── -->
+@if (fase() === 'resultado') {
+  <div class="reflejos__resultado">
+    <div class="reflejos__resultado-card">
+      <div class="reflejos__resultado-icono">⚡</div>
+      <h2 class="reflejos__resultado-titulo">¡Partida terminada!</h2>
+
+      <!-- Media -->
+      <div class="reflejos__media-bloque">
+        <span class="reflejos__media-label">Tu tiempo medio</span>
+        <span class="reflejos__media-valor">{{ mediaMs() }}<small>ms</small></span>
+      </div>
+
+      <!-- Stats -->
+      <div class="reflejos__stats">
+        <div class="reflejos__stat">
+          <span class="reflejos__stat-label">Mejor</span>
+          <span class="reflejos__stat-valor reflejos__stat-valor--verde">
+            {{ mejorMs() }}<small>ms</small>
+          </span>
+        </div>
+        <div class="reflejos__stat">
+          <span class="reflejos__stat-label">Peor</span>
+          <span class="reflejos__stat-valor reflejos__stat-valor--rojo">
+            {{ peorMs() }}<small>ms</small>
+          </span>
+        </div>
+        <div class="reflejos__stat">
+          <span class="reflejos__stat-label">Nulas</span>
+          <span class="reflejos__stat-valor">{{ rondasNulas() }}</span>
+        </div>
+      </div>
+
+      <!-- Posición -->
+      @if (guardado() && posicionClub() !== null) {
+        <div class="reflejos__posicion-badge">
+          <i class="bi bi-trophy-fill"></i>
+          Posición en el club: #{{ posicionClub() }}
+        </div>
+      }
+      @if (guardado() && posicionClub() === null) {
+        <div class="reflejos__posicion-badge reflejos__posicion-badge--nueva">
+          <i class="bi bi-star-fill"></i>
+          ¡Primera marca guardada!
+        </div>
+      }
+
+      <!-- Acciones -->
+      <div class="reflejos__acciones">
+        <button class="reflejos__btn-primario" (click)="jugarDeNuevo()">
+          Jugar de nuevo
+        </button>
+        <button class="reflejos__btn-secundario" (click)="volver()">
+          Volver
+        </button>
+      </div>
+    </div>
+  </div>
+}

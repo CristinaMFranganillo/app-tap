@@ -1,0 +1,181 @@
+@keyframes pulso {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+
+// ─── Root ───────────────────────────────────────────────────────────────────
+.reflejos {
+  @apply min-h-screen;
+}
+
+// ─── Intro ──────────────────────────────────────────────────────────────────
+.reflejos__intro {
+  @apply min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8;
+}
+
+.reflejos__intro-card {
+  @apply bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center gap-4 w-full max-w-sm;
+}
+
+.reflejos__icono {
+  @apply text-6xl;
+}
+
+.reflejos__titulo {
+  @apply text-2xl font-bold text-gray-800 text-center;
+}
+
+.reflejos__descripcion {
+  @apply text-gray-600 text-sm text-center leading-relaxed;
+}
+
+.reflejos__instrucciones {
+  @apply text-left text-sm text-gray-500 list-disc list-inside space-y-1 w-full;
+}
+
+// ─── Espera ─────────────────────────────────────────────────────────────────
+.reflejos__espera {
+  @apply min-h-screen flex flex-col items-center justify-center cursor-pointer select-none;
+  background-color: #374151;
+  position: relative;
+}
+
+.reflejos__plato-ghost {
+  @apply text-8xl opacity-20;
+}
+
+.reflejos__espera-texto {
+  @apply text-2xl font-bold text-gray-300 mt-4;
+}
+
+// ─── Plato ──────────────────────────────────────────────────────────────────
+.reflejos__plato {
+  @apply min-h-screen flex flex-col items-center justify-center cursor-pointer select-none;
+  background-color: #10B981;
+  position: relative;
+}
+
+.reflejos__plato-icono {
+  @apply text-9xl;
+  animation: pulso 0.4s ease-in-out infinite alternate;
+}
+
+.reflejos__toca-texto {
+  @apply text-4xl font-extrabold text-white mt-4 tracking-widest;
+}
+
+// ─── Prematuro ──────────────────────────────────────────────────────────────
+.reflejos__prematuro {
+  @apply min-h-screen flex flex-col items-center justify-center select-none;
+  background-color: #EF4444;
+  position: relative;
+}
+
+.reflejos__prematuro-icono {
+  @apply text-8xl;
+}
+
+.reflejos__prematuro-texto {
+  @apply text-3xl font-extrabold text-white mt-4;
+}
+
+.reflejos__prematuro-sub {
+  @apply text-sm text-red-100 mt-2 text-center px-6;
+}
+
+// ─── Ronda badge (común a espera/plato/prematuro) ───────────────────────────
+.reflejos__ronda-badge {
+  @apply absolute top-4 right-4 text-white text-sm font-semibold opacity-80;
+}
+
+// ─── Resultado ──────────────────────────────────────────────────────────────
+.reflejos__resultado {
+  @apply min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8;
+}
+
+.reflejos__resultado-card {
+  @apply bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center gap-5 w-full max-w-sm;
+}
+
+.reflejos__resultado-icono {
+  @apply text-5xl;
+}
+
+.reflejos__resultado-titulo {
+  @apply text-xl font-bold text-gray-800;
+}
+
+// Media principal
+.reflejos__media-bloque {
+  @apply flex flex-col items-center gap-1;
+}
+
+.reflejos__media-label {
+  @apply text-sm text-gray-500 uppercase tracking-wide font-semibold;
+}
+
+.reflejos__media-valor {
+  @apply text-5xl font-extrabold text-gray-800;
+
+  small {
+    @apply text-2xl font-semibold text-gray-500 ml-1;
+  }
+}
+
+// Stats grid
+.reflejos__stats {
+  @apply grid grid-cols-3 gap-3 w-full;
+}
+
+.reflejos__stat {
+  @apply flex flex-col items-center bg-gray-50 rounded-xl py-3 px-2 gap-1;
+}
+
+.reflejos__stat-label {
+  @apply text-xs text-gray-500 font-semibold uppercase tracking-wide;
+}
+
+.reflejos__stat-valor {
+  @apply text-xl font-bold text-gray-800;
+
+  small {
+    @apply text-sm font-normal text-gray-500;
+  }
+
+  &--verde { color: #10B981; }
+  &--rojo  { color: #EF4444; }
+}
+
+// Posición badge
+.reflejos__posicion-badge {
+  @apply flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full;
+  background-color: #FFF3D0;
+  color: #92400E;
+
+  i { color: #FFAE00; }
+
+  &--nueva {
+    background-color: #D1FAE5;
+    color: #065F46;
+
+    i { color: #10B981; }
+  }
+}
+
+// ─── Botones ─────────────────────────────────────────────────────────────────
+.reflejos__acciones {
+  @apply flex flex-col gap-3 w-full;
+}
+
+.reflejos__btn-primario {
+  @apply w-full py-3 rounded-xl font-bold text-white text-base tracking-wide transition-opacity;
+  background-color: #1a1a2e;
+
+  &:active { @apply opacity-80; }
+}
+
+.reflejos__btn-secundario {
+  @apply w-full py-3 rounded-xl font-bold text-gray-700 text-base tracking-wide bg-gray-100 transition-opacity;
+
+  &:active { @apply opacity-80; }
+}
