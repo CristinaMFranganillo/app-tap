@@ -285,18 +285,77 @@ export class PerfilComponent {
     return lineas;
   });
 
-  puntosSvg = computed(() => {
-    const list = [...this.misEntrenamientos()].reverse();
-    if (list.length < 2) return { points: '', dots: [] as { x: number; y: number; platos: number }[] };
-    const W = 300;
-    const H = 80;
-    const PAD = 8;
-    const xs = list.map((_, i) => PAD + (i / (list.length - 1)) * (W - PAD * 2));
-    const ys = list.map(r => H - PAD - ((r.platosRotos / 25) * (H - PAD * 2)));
-    const points = xs.map((x, i) => `${x},${ys[i]}`).join(' ');
-    const dots = xs.map((x, i) => ({ x, y: ys[i], platos: list[i].platosRotos }));
-    return { points, dots };
+  misFallosAnuales = toSignal(
+    combineLatest([
+      this.authService.currentUser$,
+      toObservable(this.anioSeleccionado),
+    ]).pipe(
+      switchMap(([u, year]) =>
+        u?.id ? this.entrenamientoService.getFallosByUserAndYear(u.id, year) : of([])
+      )
+    ),
+    { initialValue: [] as { numeroPlato: number; veces: number }[] }
+  );
+
+  totalFallos = computed(() => this.misFallosAnuales().reduce((sum, f) => sum + f.veces, 0));
+
+  heatmapFallos = computed(() => {
+    const fallos = this.misFallosAnuales();
+    const fallosMap = new Map(fallos.map(f => [f.numeroPlato, f.veces]));
+    const maxVeces = fallos.length > 0 ? Math.max(...fallos.map(f => f.veces)) : 0;
+    return Array.from({ length: 25 }, (_, i) => ({
+      plato: i + 1,
+      veces: fallosMap.get(i + 1) ?? 0,
+      maxVeces,
+    }));
   });
+
+  platoMasFallado = computed(() => {
+    const con = this.heatmapFallos().filter(c => c.veces > 0);
+    if (con.length === 0) return null;
+    return con.reduce((max, c) => c.veces > max.veces ? c : max);
+  });
+
+  platoMenosFallado = computed(() => {
+    const con = this.heatmapFallos().filter(c => c.veces > 0);
+    if (con.length <= 1) return null;
+    return con.reduce((min, c) => c.veces < min.veces ? c : min);
+  });
+
+  platosMasFallados = computed(() => {
+    const con = this.heatmapFallos().filter(c => c.veces > 0);
+    return con.sort((a, b) => b.veces - a.veces).slice(0, 3).map(c => c.plato);
+  });
+
+  platosMenosFallados = computed(() => {
+    const con = this.heatmapFallos().filter(c => c.veces > 0);
+    if (con.length <= 1) return [] as number[];
+    return con.sort((a, b) => a.veces - b.veces).slice(0, 3).map(c => c.plato);
+  });
+
+  claseCeldaFallo(celda: { plato: number; veces: number; maxVeces: number }): string {
+    const classes: string[] = ['perfil-fallos__celda'];
+    const { veces, maxVeces } = celda;
+
+    if (maxVeces === 0) {
+      classes.push('bg-neutral-100');
+    } else if (veces === 0) {
+      classes.push('bg-green-200');
+    } else {
+      const pct = (veces / maxVeces) * 100;
+      if (pct < 25) classes.push('bg-green-100');
+      else if (pct < 50) classes.push('bg-yellow-100');
+      else if (pct < 75) classes.push('bg-orange-200');
+      else classes.push('bg-red-200');
+    }
+
+    const peor = this.platoMasFallado();
+    const mejor = this.platoMenosFallado();
+    if (peor && celda.plato === peor.plato) classes.push('perfil-fallos__celda--peor');
+    else if (mejor && celda.plato === mejor.plato) classes.push('perfil-fallos__celda--mejor');
+
+    return classes.join(' ');
+  }
 
   // ── Común ───────────────────────────────────────────────────────
 
