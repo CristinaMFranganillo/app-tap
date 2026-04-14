@@ -149,6 +149,57 @@ export class PerfilComponent {
     return Math.round((sum / ranking.length) * 10) / 10;
   });
 
+  heatmapEsquemas = computed(() => {
+    const list = this.misEntrenamientos();
+    const buckets = new Map<number, number[]>();
+    for (let e = 1; e <= 7; e++) buckets.set(e, []);
+    for (const r of list) {
+      if (r.esquema && r.esquema >= 1 && r.esquema <= 7) {
+        buckets.get(r.esquema)!.push(r.platosRotos);
+      }
+    }
+    return Array.from(buckets.entries()).map(([esquema, arr]) => {
+      if (arr.length === 0) return { esquema, sesiones: 0, mediaPlatos: null as number | null };
+      const sum = arr.reduce((a, b) => a + b, 0);
+      return {
+        esquema,
+        sesiones: arr.length,
+        mediaPlatos: Math.round((sum / arr.length) * 10) / 10,
+      };
+    });
+  });
+
+  mejorEsquema = computed(() => {
+    const con = this.heatmapEsquemas().filter(c => c.mediaPlatos !== null);
+    if (con.length === 0) return null;
+    return con.reduce((max, c) => c.mediaPlatos! > max.mediaPlatos! ? c : max);
+  });
+
+  peorEsquema = computed(() => {
+    const con = this.heatmapEsquemas().filter(c => c.mediaPlatos !== null);
+    if (con.length === 0) return null;
+    return con.reduce((min, c) => c.mediaPlatos! < min.mediaPlatos! ? c : min);
+  });
+
+  claseCelda(celda: { esquema: number; sesiones: number; mediaPlatos: number | null }): string {
+    const classes: string[] = ['perfil-heatmap__celda'];
+    const m = celda.mediaPlatos;
+    if (m === null) classes.push('bg-neutral-100');
+    else if (m < 10) classes.push('bg-red-200');
+    else if (m < 16) classes.push('bg-orange-200');
+    else if (m < 20) classes.push('bg-yellow-200');
+    else if (m < 23) classes.push('bg-green-200');
+    else classes.push('bg-green-400');
+
+    const mejor = this.mejorEsquema();
+    const peor  = this.peorEsquema();
+    if (mejor && celda.esquema === mejor.esquema) classes.push('perfil-heatmap__celda--mejor');
+    else if (peor && peor.esquema !== mejor?.esquema && celda.esquema === peor.esquema) {
+      classes.push('perfil-heatmap__celda--peor');
+    }
+    return classes.join(' ');
+  }
+
   puntosSvg = computed(() => {
     const list = [...this.misEntrenamientos()].reverse();
     if (list.length < 2) return { points: '', dots: [] as { x: number; y: number; platos: number }[] };

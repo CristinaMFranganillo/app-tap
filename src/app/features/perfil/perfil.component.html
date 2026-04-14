@@ -302,6 +302,41 @@
           </div>
         }
 
+        @if (totalEntrenamientos() > 0) {
+          <div class="perfil-heatmap card">
+            <p class="perfil-heatmap__titulo">Precisión por esquema</p>
+            <div class="perfil-heatmap__grid">
+              @for (celda of heatmapEsquemas(); track celda.esquema) {
+                <div [class]="claseCelda(celda)">
+                  <span class="perfil-heatmap__num">{{ celda.esquema }}</span>
+                  @if (celda.mediaPlatos !== null) {
+                    <span class="perfil-heatmap__media">{{ celda.mediaPlatos }}</span>
+                    <span class="perfil-heatmap__sesiones">{{ celda.sesiones }}s</span>
+                  } @else {
+                    <span class="perfil-heatmap__media">—</span>
+                  }
+                </div>
+              }
+            </div>
+            @if (mejorEsquema(); as m) {
+              <div class="perfil-heatmap__resumen">
+                <p class="perfil-heatmap__linea perfil-heatmap__linea--mejor">
+                  <i class="bi bi-caret-up-fill"></i>
+                  Mejor: esquema {{ m.esquema }} ({{ m.mediaPlatos }}/25)
+                </p>
+                @if (peorEsquema(); as p) {
+                  @if (p.esquema !== m.esquema) {
+                    <p class="perfil-heatmap__linea perfil-heatmap__linea--peor">
+                      <i class="bi bi-caret-down-fill"></i>
+                      Peor: esquema {{ p.esquema }} ({{ p.mediaPlatos }}/25)
+                    </p>
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
+
       }
     </div>
 
