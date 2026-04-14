@@ -274,7 +274,7 @@
   }
 
   &__valor {
-    @apply text-xl font-extrabold;
+    @apply text-xl font-bold;
 
     &--positivo { @apply text-success; }
     &--negativo { @apply text-danger; }

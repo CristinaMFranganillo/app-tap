@@ -1,31 +1,25 @@
 <div>
 
-  <!-- Hero -->
-  <div class="perfil-hero">
-    @if (esAdmin()) {
-      <div class="perfil-hero__admin-avatar">
-        <i class="bi bi-shield-lock-fill"></i>
-      </div>
-    } @else {
+  <!-- Hero (solo socio) -->
+  @if (!esAdmin()) {
+    <div class="perfil-hero">
       <app-avatar
         [nombre]="user()?.nombre ?? ''"
         [apellidos]="user()?.apellidos ?? ''"
         [avatarUrl]="user()?.avatarUrl"
         [size]="64"
       />
-    }
-    <h2 class="perfil-hero__nombre">
-      {{ user()?.nombre }} {{ user()?.apellidos }}
-    </h2>
-    <p class="perfil-hero__rol">
-      {{ user()?.rol }} · #{{ esAdmin() ? 1 : user()?.numeroSocio }}
-    </p>
-    @if (!esAdmin()) {
+      <h2 class="perfil-hero__nombre">
+        {{ user()?.nombre }} {{ user()?.apellidos }}
+      </h2>
+      <p class="perfil-hero__rol">
+        {{ user()?.rol }} · #{{ user()?.numeroSocio }}
+      </p>
       <button class="perfil-hero__cambiar-foto" (click)="abrirEditorAvatar()">
         <i class="bi bi-camera"></i> Cambiar foto
       </button>
-    }
-  </div>
+    </div>
+  }
 
   @if (mostrarEditorAvatar()) {
     <div class="perfil-avatar-modal">
