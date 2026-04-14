@@ -42,27 +42,11 @@
 
     <div class="perfil-admin">
 
-      <!-- Tabs -->
-      <div class="perfil-admin__tabs">
-        <button
-          [class.perfil-admin__tab--active]="tabAdmin() === 'admin'"
-          (click)="tabAdmin.set('admin')"
-          class="perfil-admin__tab">
-          Administración
-        </button>
-        <button
-          [class.perfil-admin__tab--active]="tabAdmin() === 'stats'"
-          (click)="tabAdmin.set('stats')"
-          class="perfil-admin__tab">
-          Estadísticas
-        </button>
-      </div>
+      <h3 class="page-title">Admin</h3>
 
       @if (errorAdmin()) {
         <p class="perfil-admin__error">{{ errorAdmin() }}</p>
       }
-
-      @if (tabAdmin() === 'admin') {
 
       <!-- Enlace a contabilidad -->
       <button (click)="irContabilidad()" class="conta-link card">
@@ -161,10 +145,7 @@
         }
       }
 
-      } @else {
-
-      <!-- Tab Estadísticas -->
-
+      <!-- Gestión -->
       <div class="perfil-admin__links">
         <button (click)="irSocios()" class="perfil-admin__link card">
           <i class="bi bi-people-fill perfil-admin__link-icon"></i>
@@ -193,15 +174,6 @@
           <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
         </button>
 
-        <button (click)="irContabilidad()" class="perfil-admin__link card">
-          <i class="bi bi-graph-up-arrow perfil-admin__link-icon"></i>
-          <div>
-            <p class="perfil-admin__link-titulo">Contabilidad</p>
-            <p class="perfil-admin__link-sub">Balance financiero del club</p>
-          </div>
-          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
-        </button>
-
         <button (click)="irEntrenamientos()" class="perfil-admin__link card">
           <i class="bi bi-bullseye perfil-admin__link-icon"></i>
           <div>
@@ -220,8 +192,6 @@
           <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
         </button>
       </div>
-
-      }
 
     </div>
 
