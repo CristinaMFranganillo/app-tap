@@ -289,6 +289,30 @@ export class EntrenamientoService {
     );
   }
 
+  getFallosByUserAndYear(userId: string, year: number): Observable<{ numeroPlato: number; veces: number }[]> {
+    const fromDate = `${year}-01-01`;
+    const toDate = `${year}-12-31`;
+    return from(
+      supabase
+        .from('entrenamiento_fallos')
+        .select('numero_plato, escuadras!inner(entrenamientos!inner(fecha))')
+        .eq('user_id', userId)
+        .gte('escuadras.entrenamientos.fecha', fromDate)
+        .lte('escuadras.entrenamientos.fecha', toDate)
+    ).pipe(
+      map(({ data }) => {
+        const counts = new Map<number, number>();
+        for (const row of (data ?? []) as Record<string, unknown>[]) {
+          const p = row['numero_plato'] as number;
+          counts.set(p, (counts.get(p) ?? 0) + 1);
+        }
+        return Array.from(counts.entries())
+          .map(([numeroPlato, veces]) => ({ numeroPlato, veces }))
+          .sort((a, b) => a.numeroPlato - b.numeroPlato);
+      })
+    );
+  }
+
   async deleteEntrenamiento(id: string): Promise<void> {
     const { data: escuadras, error: escuadrasError } = await supabase
       .from('escuadras').select('id').eq('entrenamiento_id', id);
