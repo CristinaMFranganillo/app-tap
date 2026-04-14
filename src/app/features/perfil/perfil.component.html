@@ -275,30 +275,71 @@
           </div>
         }
 
-        @if (puntosSvg().dots.length >= 2) {
-          <div class="perfil-grafico card">
-            <p class="perfil-grafico__titulo">Evolución {{ anioSeleccionado() }}</p>
-            <svg class="perfil-grafico__svg" viewBox="0 0 300 80" preserveAspectRatio="none">
-              <line x1="8" y1="8" x2="292" y2="8" stroke="#E5E7EB" stroke-width="0.5"/>
-              <line x1="8" y1="40" x2="292" y2="40" stroke="#E5E7EB" stroke-width="0.5"/>
-              <line x1="8" y1="72" x2="292" y2="72" stroke="#E5E7EB" stroke-width="0.5"/>
-              <polyline
-                [attr.points]="puntosSvg().points"
-                fill="none"
-                stroke="#FFAE00"
-                stroke-width="2"
-                stroke-linejoin="round"
-                stroke-linecap="round"
-              />
-              @for (d of puntosSvg().dots; track $index) {
-                <circle [attr.cx]="d.x" [attr.cy]="d.y" r="3" fill="#FFAE00" stroke="white" stroke-width="1.5"/>
+        @if (totalEntrenamientos() > 0) {
+          <div class="perfil-evolucion card">
+            <p class="perfil-evolucion__titulo">Evolución mensual</p>
+            <div class="perfil-evolucion__chips">
+              @for (a of anios; track a) {
+                <button
+                  class="perfil-evolucion__chip"
+                  [class.perfil-evolucion__chip--activo]="a === anioSeleccionado()"
+                  [class.perfil-evolucion__chip--comparar]="aniosComparativos().includes(a)"
+                  (click)="toggleAnioComparativo(a)">
+                  {{ a }}
+                </button>
               }
-            </svg>
-            <div class="perfil-grafico__leyenda">
-              <span>0</span>
-              <span>12</span>
-              <span>25</span>
             </div>
+            <div class="perfil-evolucion__chart-area">
+              <div class="perfil-evolucion__eje-y">
+                <span>25</span>
+                <span>20</span>
+                <span>15</span>
+                <span>10</span>
+                <span>0</span>
+              </div>
+              <svg class="perfil-evolucion__svg" viewBox="0 0 300 120">
+                <line x1="0" y1="8" x2="300" y2="8" stroke="#f3f4f6" stroke-width="0.5" stroke-dasharray="4"/>
+                <line x1="0" y1="32" x2="300" y2="32" stroke="#f3f4f6" stroke-width="0.5" stroke-dasharray="4"/>
+                <line x1="0" y1="56" x2="300" y2="56" stroke="#f3f4f6" stroke-width="0.5" stroke-dasharray="4"/>
+                <line x1="0" y1="80" x2="300" y2="80" stroke="#f3f4f6" stroke-width="0.5" stroke-dasharray="4"/>
+                <line x1="0" y1="112" x2="300" y2="112" stroke="#e5e7eb" stroke-width="0.5"/>
+                @for (linea of svgEvolucion(); track linea.anio) {
+                  @if (linea.dots.length >= 2) {
+                    <polyline
+                      [attr.points]="linea.points"
+                      fill="none"
+                      [attr.stroke]="linea.color"
+                      stroke-width="2"
+                      stroke-linejoin="round"
+                      stroke-linecap="round"
+                    />
+                  }
+                  @for (d of linea.dots; track $index) {
+                    <circle [attr.cx]="d.x" [attr.cy]="d.y" r="3" [attr.fill]="linea.color" stroke="white" stroke-width="1.5"/>
+                  }
+                }
+              </svg>
+            </div>
+            <div class="perfil-evolucion__eje-x">
+              @for (m of mesesAbrev; track $index) {
+                <span>{{ m }}</span>
+              }
+            </div>
+            @if (aniosComparativos().length > 0) {
+              <div class="perfil-evolucion__leyenda">
+                <span class="perfil-evolucion__leyenda-item">
+                  <span class="perfil-evolucion__leyenda-linea" style="background:#FFAE00"></span>
+                  {{ anioSeleccionado() }}
+                </span>
+                @for (a of aniosComparativos(); track a; let i = $index) {
+                  <span class="perfil-evolucion__leyenda-item">
+                    <span class="perfil-evolucion__leyenda-linea"
+                      [style.background]="i === 0 ? '#60A5FA' : '#A78BFA'"></span>
+                    {{ a }}
+                  </span>
+                }
+              </div>
+            }
           </div>
         }
 
