@@ -1,6 +1,7 @@
 import { Component, inject, computed, signal } from '@angular/core';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
-import { switchMap, combineLatest, EMPTY } from 'rxjs';
+import { switchMap, combineLatest, EMPTY, forkJoin, of, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -8,6 +9,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { EntrenamientoService } from '../admin/entrenamientos/entrenamiento.service';
 import { CuotaService } from '../admin/socios/cuota.service';
 import { ContabilidadService, ResumenFinanciero } from '../admin/contabilidad/contabilidad.service';
+import { ResultadoEntrenamientoConFecha } from '../../core/models/entrenamiento.model';
 
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { AvatarEditorComponent } from '../../shared/components/avatar-editor/avatar-editor.component';
@@ -102,6 +104,18 @@ export class PerfilComponent {
   anioSeleccionado = signal(this.anioActual);
   anios = Array.from({ length: 3 }, (_, i) => this.anioActual - i);
 
+  aniosComparativos = signal<number[]>([]);
+
+  toggleAnioComparativo(anio: number): void {
+    if (anio === this.anioSeleccionado()) return;
+    const current = this.aniosComparativos();
+    if (current.includes(anio)) {
+      this.aniosComparativos.set(current.filter(a => a !== anio));
+    } else if (current.length < 2) {
+      this.aniosComparativos.set([...current, anio]);
+    }
+  }
+
   misEntrenamientos = toSignal(
     combineLatest([
       this.authService.currentUser$,
@@ -112,6 +126,27 @@ export class PerfilComponent {
       )
     ),
     { initialValue: [] }
+  );
+
+  entrenamientosComparativos = toSignal(
+    combineLatest([
+      this.authService.currentUser$,
+      toObservable(this.aniosComparativos),
+    ]).pipe(
+      switchMap(([u, years]) => {
+        if (!u?.id || years.length === 0) return of(new Map<number, ResultadoEntrenamientoConFecha[]>());
+        const obs: Record<string, Observable<ResultadoEntrenamientoConFecha[]>> = {};
+        for (const y of years) obs[String(y)] = this.entrenamientoService.getByUser(u.id, y);
+        return forkJoin(obs).pipe(
+          map(result => {
+            const m = new Map<number, ResultadoEntrenamientoConFecha[]>();
+            for (const [k, v] of Object.entries(result)) m.set(Number(k), v);
+            return m;
+          })
+        );
+      })
+    ),
+    { initialValue: new Map<number, ResultadoEntrenamientoConFecha[]>() }
   );
 
   rankingAnual = toSignal(
@@ -199,6 +234,56 @@ export class PerfilComponent {
     }
     return classes.join(' ');
   }
+
+  readonly mesesAbrev = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+  private calcularMediasMensuales(list: ResultadoEntrenamientoConFecha[]): (number | null)[] {
+    const buckets = Array.from({ length: 12 }, () => [] as number[]);
+    for (const r of list) {
+      const mes = new Date(r.fecha).getMonth();
+      buckets[mes].push(r.platosRotos);
+    }
+    return buckets.map(arr =>
+      arr.length === 0 ? null : Math.round((arr.reduce((a, b) => a + b, 0) / arr.length) * 10) / 10
+    );
+  }
+
+  evolucionMensual = computed(() => {
+    const result = new Map<number, (number | null)[]>();
+    result.set(this.anioSeleccionado(), this.calcularMediasMensuales(this.misEntrenamientos()));
+    const comp = this.entrenamientosComparativos();
+    for (const [year, list] of comp.entries()) {
+      result.set(year, this.calcularMediasMensuales(list));
+    }
+    return result;
+  });
+
+  svgEvolucion = computed(() => {
+    const data = this.evolucionMensual();
+    const W = 300, H = 120, PAD_X = 30, PAD_Y = 8;
+    const colores = [
+      { anio: this.anioSeleccionado(), color: '#FFAE00' },
+      ...this.aniosComparativos().map((a, i) =>
+        ({ anio: a, color: i === 0 ? '#60A5FA' : '#A78BFA' })
+      )
+    ];
+    const lineas: { anio: number; color: string; points: string; dots: { x: number; y: number; media: number }[] }[] = [];
+
+    for (const { anio, color } of colores) {
+      const medias = data.get(anio);
+      if (!medias) continue;
+      const dots: { x: number; y: number; media: number }[] = [];
+      for (let m = 0; m < 12; m++) {
+        if (medias[m] === null) continue;
+        const x = PAD_X + (m / 11) * (W - PAD_X * 2);
+        const y = H - PAD_Y - ((medias[m]! / 25) * (H - PAD_Y * 2));
+        dots.push({ x, y, media: medias[m]! });
+      }
+      const points = dots.map(d => `${d.x},${d.y}`).join(' ');
+      lineas.push({ anio, color, points, dots });
+    }
+    return lineas;
+  });
 
   puntosSvg = computed(() => {
     const list = [...this.misEntrenamientos()].reverse();
