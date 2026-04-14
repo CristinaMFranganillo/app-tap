@@ -12,7 +12,7 @@
     <div class="home-stats">
       <div class="home-stat home-stat--border">
         <p class="home-stat__value">{{ totalActivos() }}</p>
-        <p class="home-stat__label">Socios activos</p>
+        <p class="home-stat__label">Socios<br>activos</p>
       </div>
       <div class="home-stat home-stat--border">
         @if (cuotaPct() !== null) {
@@ -20,7 +20,7 @@
         } @else {
           <p class="home-stat__value">—</p>
         }
-        <p class="home-stat__label">Cuota pagada</p>
+        <p class="home-stat__label">Cuota<br>pagada</p>
       </div>
       <div class="home-stat">
         <p class="home-stat__value">{{ entrenamientosMes() }}</p>
