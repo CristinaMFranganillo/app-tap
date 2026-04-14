@@ -91,11 +91,28 @@ export class EscuadraService {
     return (data as Record<string, unknown>)['id'] as string;
   }
 
-  async createEscuadraTorneo(torneoId: string, numero: number): Promise<string> {
+  async createEscuadraTorneo(torneoId: string, numero: number, numPlatos: number = 25): Promise<string> {
     const { data, error } = await supabase
-      .from('escuadras').insert({ torneo_id: torneoId, numero }).select('id').single();
+      .from('escuadras')
+      .insert({ torneo_id: torneoId, numero, num_platos: numPlatos })
+      .select('id')
+      .single();
     if (error || !data) throw new Error('Error creando escuadra');
     return (data as Record<string, unknown>)['id'] as string;
+  }
+
+  async getEscuadraById(id: string): Promise<Escuadra | null> {
+    const { data, error } = await supabase
+      .from('escuadras').select('*').eq('id', id).single();
+    if (error || !data) return null;
+    return {
+      id: (data as any)['id'],
+      numero: (data as any)['numero'],
+      torneoId: (data as any)['torneo_id'] ?? undefined,
+      entrenamientoId: (data as any)['entrenamiento_id'] ?? undefined,
+      esquema: (data as any)['esquema'] ?? undefined,
+      numPlatos: (data as any)['num_platos'] ?? 25,
+    };
   }
 
   getByTorneo(torneoId: string): Observable<Escuadra[]> {
@@ -111,6 +128,7 @@ export class EscuadraService {
           id: (row as any)['id'] as string,
           torneoId: (row as any)['torneo_id'] as string,
           numero: (row as any)['numero'] as number,
+          numPlatos: ((row as any)['num_platos'] as number) ?? 25,
           tiradores: ((row as any)['escuadra_tiradores'] ?? []).map(toEscuadraTirador),
         }))
       )

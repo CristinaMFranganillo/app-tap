@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, effect, computed } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
@@ -46,15 +46,21 @@ export class RegistrarResultadoTorneoComponent {
   tiradorAbierto = signal<number | null>(null);
   saving         = signal(false);
   error          = signal('');
+  numPlatos      = signal(25);
 
-  readonly indices = Array.from({ length: 25 }, (_, i) => i);
+  indices = computed(() => Array.from({ length: this.numPlatos() }, (_, i) => i));
 
   constructor() {
+    this.escuadraService.getEscuadraById(this.escuadraId).then(esc => {
+      if (esc?.numPlatos) this.numPlatos.set(esc.numPlatos);
+    });
+
     // Effect reactivo: se ejecuta cada vez que socios o tiradores cambian.
     // Solo construye la sesion cuando AMBOS tienen datos, evitando mostrar UUIDs.
     effect(() => {
       const socios    = this.socios();
       const tiradores = this.tiradores();
+      const total     = this.numPlatos();
 
       // Esperar a que ambos esten cargados
       if (tiradores.length === 0 || socios.length === 0) return;
@@ -78,7 +84,7 @@ export class RegistrarResultadoTorneoComponent {
             esNoSocio:     t.esNoSocio,
             nombre,
             puesto:        t.puesto,
-            platos:        Array(25).fill(true),
+            platos:        Array(total).fill(true),
           };
         })
       );

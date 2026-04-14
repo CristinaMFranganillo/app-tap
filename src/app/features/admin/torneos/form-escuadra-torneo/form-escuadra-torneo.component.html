@@ -11,6 +11,22 @@
       No hay inscritos disponibles. Inscribe participantes desde la pantalla del torneo.
     </p>
   } @else {
+    <div class="form-escuadra-e__puesto">
+      <div class="form-escuadra-e__puesto-header">
+        <label class="form-label">Platos por tirador</label>
+      </div>
+      <div class="form-escuadra-e__input-row">
+        <input
+          type="number"
+          class="form-input-surface"
+          min="1"
+          max="200"
+          [value]="numPlatos"
+          (input)="onNumPlatosChange($event)"
+        />
+      </div>
+    </div>
+
     <p class="form-escuadra-e__section-label">Tiradores por puesto</p>
 
     @for (slot of [0,1,2,3,4,5]; track slot) {

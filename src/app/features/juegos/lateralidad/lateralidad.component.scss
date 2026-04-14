@@ -8,14 +8,19 @@
   to   { left: 115%; opacity: 0.3; }
 }
 
+// El shell aplica pt-[54px] pb-[52px]; el juego debe caber en el alto restante
+// sin provocar scroll vertical.
+$alto-juego: calc(100vh - 54px - 52px);
+
 // ─── Root ───────────────────────────────────────────────────────────────────
 .lateralidad {
-  @apply min-h-screen;
+  height: $alto-juego;
 }
 
 // ─── Intro ──────────────────────────────────────────────────────────────────
 .lateralidad__intro {
-  @apply min-h-screen flex items-center justify-center px-4 py-8;
+  @apply flex items-center justify-center px-4 py-4;
+  height: $alto-juego;
   background-color: #f8f9fa;
 }
 
@@ -41,9 +46,10 @@
 
 // ─── Cielo (espera + volando) ────────────────────────────────────────────────
 .lateralidad__cielo {
-  @apply min-h-screen flex flex-col items-center justify-start select-none relative;
+  @apply flex flex-col items-center select-none relative;
+  height: $alto-juego;
   background-color: #87CEEB;
-  padding-top: 60px;
+  padding: 56px 0.75rem 0.75rem;
 }
 
 .lateralidad__espera-texto {
@@ -60,8 +66,8 @@
 
 // ─── Plato zona + animaciones ────────────────────────────────────────────────
 .lateralidad__plato-zona {
-  @apply relative w-full;
-  height: 200px;
+  @apply relative w-full flex-1;
+  min-height: 0;
 }
 
 .lateralidad__plato-ghost {
@@ -90,10 +96,8 @@
 
 // ─── Botones laterales ───────────────────────────────────────────────────────
 .lateralidad__botones {
-  @apply absolute flex gap-4;
-  bottom: 1rem;
-  left: 0.75rem;
-  right: 0.75rem;
+  @apply flex gap-4 w-full flex-shrink-0;
+  margin-top: 0.75rem;
 }
 
 .lateralidad__btn-lado {
@@ -111,7 +115,8 @@
 
 // ─── Feedback ────────────────────────────────────────────────────────────────
 .lateralidad__feedback {
-  @apply min-h-screen flex items-center justify-center;
+  @apply flex items-center justify-center;
+  height: $alto-juego;
 
   &--ok  { background-color: #10B981; }
   &--fail { background-color: #EF4444; }
@@ -125,7 +130,8 @@
 
 // ─── Resultado ───────────────────────────────────────────────────────────────
 .lateralidad__resultado {
-  @apply min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8;
+  @apply flex items-center justify-center bg-gray-50 px-4 py-4 overflow-y-auto;
+  height: $alto-juego;
 }
 
 .lateralidad__resultado-card {

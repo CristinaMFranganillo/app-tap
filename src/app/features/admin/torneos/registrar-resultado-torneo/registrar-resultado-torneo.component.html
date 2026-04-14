@@ -24,9 +24,9 @@
             <span class="tirador-item__puesto">{{ t.puesto }}</span>
             <span class="tirador-item__nombre">{{ t.nombre }}</span>
             <span class="tirador-item__contador"
-              [class.tirador-item__contador--ok]="platosRotos(t) >= 20"
-              [class.tirador-item__contador--mal]="platosRotos(t) < 15">
-              {{ platosRotos(t) }}/25
+              [class.tirador-item__contador--ok]="platosRotos(t) >= numPlatos() * 0.8"
+              [class.tirador-item__contador--mal]="platosRotos(t) < numPlatos() * 0.6">
+              {{ platosRotos(t) }}/{{ numPlatos() }}
             </span>
             <i class="bi tirador-item__chevron"
               [class.bi-chevron-down]="tiradorAbierto() !== idx"
@@ -37,9 +37,9 @@
           <!-- Cuadricula de platos (expandida) -->
           @if (tiradorAbierto() === idx) {
             <div class="tirador-item__grid-wrap">
-              <p class="tirador-item__fallos">{{ 25 - platosRotos(t) }} fallos</p>
+              <p class="tirador-item__fallos">{{ numPlatos() - platosRotos(t) }} fallos</p>
               <div class="platos-grid">
-                @for (i of indices; track i) {
+                @for (i of indices(); track i) {
                   <button
                     type="button"
                     (click)="togglePlato(idx, i)"
