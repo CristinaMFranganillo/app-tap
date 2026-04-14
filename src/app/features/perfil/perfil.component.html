@@ -143,53 +143,7 @@
         }
       }
 
-      <!-- Gestión -->
-      <div class="perfil-admin__links">
-        <button (click)="irSocios()" class="perfil-admin__link card">
-          <i class="bi bi-people-fill perfil-admin__link-icon"></i>
-          <div>
-            <p class="perfil-admin__link-titulo">Socios</p>
-            <p class="perfil-admin__link-sub">Gestionar socios del club</p>
-          </div>
-          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
-        </button>
-
-        <button (click)="irTemporadas()" class="perfil-admin__link card">
-          <i class="bi bi-calendar-check perfil-admin__link-icon"></i>
-          <div>
-            <p class="perfil-admin__link-titulo">Temporadas</p>
-            <p class="perfil-admin__link-sub">Cuotas y periodos</p>
-          </div>
-          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
-        </button>
-
-        <button (click)="irCaja()" class="perfil-admin__link card">
-          <i class="bi bi-cash-coin perfil-admin__link-icon"></i>
-          <div>
-            <p class="perfil-admin__link-titulo">Caja</p>
-            <p class="perfil-admin__link-sub">Desglose detallado de ingresos</p>
-          </div>
-          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
-        </button>
-
-        <button (click)="irEntrenamientos()" class="perfil-admin__link card">
-          <i class="bi bi-bullseye perfil-admin__link-icon"></i>
-          <div>
-            <p class="perfil-admin__link-titulo">Entrenamientos</p>
-            <p class="perfil-admin__link-sub">Gestionar sesiones y escuadras</p>
-          </div>
-          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
-        </button>
-
-        <button (click)="irTorneos()" class="perfil-admin__link card">
-          <i class="bi bi-trophy perfil-admin__link-icon"></i>
-          <div>
-            <p class="perfil-admin__link-titulo">Torneos</p>
-            <p class="perfil-admin__link-sub">Competiciones y rankings</p>
-          </div>
-          <i class="bi bi-chevron-right perfil-admin__link-arrow"></i>
-        </button>
-      </div>
+   
 
     </div>
 
@@ -217,7 +171,7 @@
 
         <div class="perfil-stats perfil-stats--entrena">
           <div class="perfil-stat perfil-stat--border">
-            <p class="perfil-stat__value">{{ totalEntrenamientos() }}</p>
+            <p class="perfil-stat__value">{{ esquemaSeleccionado() !== null ? totalFiltrados() : totalEntrenamientos() }}</p>
             <p class="perfil-stat__label">Sesiones</p>
           </div>
           <div class="perfil-stat perfil-stat--border">
@@ -229,6 +183,13 @@
             <p class="perfil-stat__label">Mejor</p>
           </div>
         </div>
+        @if (esquemaSeleccionado() !== null) {
+          <p class="perfil-entrena__filtro">
+            <i class="bi bi-funnel-fill"></i>
+            Filtrado por esquema {{ esquemaSeleccionado() }} ·
+            <button class="perfil-entrena__filtro-clear" (click)="seleccionarEsquema(esquemaSeleccionado()!)">Quitar</button>
+          </p>
+        }
 
         @if (posicionClub(); as pos) {
           <div class="perfil-posicion card">
@@ -316,7 +277,7 @@
             <p class="perfil-heatmap__titulo">Precisión por esquema</p>
             <div class="perfil-heatmap__grid">
               @for (celda of heatmapEsquemas(); track celda.esquema) {
-                <div [class]="claseCelda(celda)">
+                <div [class]="claseCelda(celda)" (click)="seleccionarEsquema(celda.esquema)">
                   <span class="perfil-heatmap__num">{{ celda.esquema }}</span>
                   @if (celda.mediaPlatos !== null) {
                     <span class="perfil-heatmap__media">{{ celda.mediaPlatos }}</span>
@@ -379,12 +340,5 @@
 
   }
 
-  <!-- Logout -->
-  <div class="perfil-logout">
-    <button (click)="logout()" class="btn-logout">
-      <i class="bi bi-box-arrow-right"></i>
-      Cerrar sesión
-    </button>
-  </div>
 
 </div>

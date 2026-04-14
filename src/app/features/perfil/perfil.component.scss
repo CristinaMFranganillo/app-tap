@@ -122,6 +122,15 @@
     @apply text-sm font-bold text-secondary bg-neutral-100
            rounded-input px-2 py-1 outline-none border-none;
   }
+
+  &__filtro {
+    @apply text-xs text-neutral-500 font-medium flex items-center gap-1.5 -mt-1;
+    i { @apply text-primary; }
+  }
+
+  &__filtro-clear {
+    @apply text-primary font-semibold underline bg-transparent border-none p-0 cursor-pointer;
+  }
 }
 
 .perfil-stats--entrena {
@@ -462,15 +471,17 @@
   }
 
   &__grid {
-    @apply grid grid-cols-7 gap-1;
+    @apply grid grid-cols-5 gap-1;
   }
 
   &__celda {
     @apply aspect-square flex flex-col items-center justify-center
-           rounded-[8px] border border-neutral-200;
+           rounded-[8px] border border-neutral-200 cursor-pointer
+           transition-transform active:scale-95;
 
-    &--mejor { @apply border-2 border-success; }
-    &--peor  { @apply border-2 border-danger; }
+    &--mejor  { @apply border-2 border-success; }
+    &--peor   { @apply border-2 border-danger; }
+    &--activo { @apply ring-2 ring-primary ring-offset-1; }
   }
 
   &__num      { @apply text-[10px] font-semibold text-neutral-400 leading-none; }

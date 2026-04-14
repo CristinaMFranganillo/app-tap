@@ -39,7 +39,7 @@ export class FormEscuadraEntrenamientoComponent {
   tarifas = toSignal(this.escuadraService.getTarifas(), { initialValue: [] as Tarifa[] });
 
   esquemaSeleccionado = 0;  // 0 = sin esquema
-  esquemas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  esquemas = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   userIds: string[] = ['', '', '', '', '', ''];
   tipos: ('socio' | 'no_socio')[] = ['socio', 'socio', 'socio', 'socio', 'socio', 'socio'];

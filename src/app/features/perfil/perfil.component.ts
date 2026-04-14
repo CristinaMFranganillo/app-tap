@@ -103,6 +103,12 @@ export class PerfilComponent {
   anioSeleccionado = signal(this.anioActual);
   anios = Array.from({ length: 3 }, (_, i) => this.anioActual - i);
 
+  esquemaSeleccionado = signal<number | null>(null);
+
+  seleccionarEsquema(esquema: number): void {
+    this.esquemaSeleccionado.set(this.esquemaSeleccionado() === esquema ? null : esquema);
+  }
+
   aniosComparativos = signal<number[]>([]);
 
   toggleAnioComparativo(anio: number): void {
@@ -155,17 +161,26 @@ export class PerfilComponent {
     { initialValue: [] }
   );
 
+  entrenamientosFiltrados = computed(() => {
+    const esq = this.esquemaSeleccionado();
+    const list = this.misEntrenamientos();
+    if (esq === null) return list;
+    return list.filter(r => r.esquema === esq);
+  });
+
   totalEntrenamientos = computed(() => this.misEntrenamientos().length);
 
+  totalFiltrados = computed(() => this.entrenamientosFiltrados().length);
+
   mediaEntrenamientos = computed(() => {
-    const list = this.misEntrenamientos();
+    const list = this.entrenamientosFiltrados();
     if (list.length === 0) return 0;
     const sum = list.reduce((acc, r) => acc + r.platosRotos, 0);
     return Math.round((sum / list.length) * 10) / 10;
   });
 
   mejorResultado = computed(() =>
-    this.misEntrenamientos().reduce((max, r) => Math.max(max, r.platosRotos), 0)
+    this.entrenamientosFiltrados().reduce((max, r) => Math.max(max, r.platosRotos), 0)
   );
 
   posicionClub = computed(() => {
@@ -186,9 +201,9 @@ export class PerfilComponent {
   heatmapEsquemas = computed(() => {
     const list = this.misEntrenamientos();
     const buckets = new Map<number, number[]>();
-    for (let e = 1; e <= 7; e++) buckets.set(e, []);
+    for (let e = 1; e <= 10; e++) buckets.set(e, []);
     for (const r of list) {
-      if (r.esquema && r.esquema >= 1 && r.esquema <= 7) {
+      if (r.esquema && r.esquema >= 1 && r.esquema <= 10) {
         buckets.get(r.esquema)!.push(r.platosRotos);
       }
     }
@@ -231,6 +246,7 @@ export class PerfilComponent {
     else if (peor && peor.esquema !== mejor?.esquema && celda.esquema === peor.esquema) {
       classes.push('perfil-heatmap__celda--peor');
     }
+    if (this.esquemaSeleccionado() === celda.esquema) classes.push('perfil-heatmap__celda--activo');
     return classes.join(' ');
   }
 
@@ -248,11 +264,15 @@ export class PerfilComponent {
   }
 
   evolucionMensual = computed(() => {
+    const esq = this.esquemaSeleccionado();
+    const filtrar = (list: ResultadoEntrenamientoConFecha[]) =>
+      esq === null ? list : list.filter(r => r.esquema === esq);
+
     const result = new Map<number, (number | null)[]>();
-    result.set(this.anioSeleccionado(), this.calcularMediasMensuales(this.misEntrenamientos()));
+    result.set(this.anioSeleccionado(), this.calcularMediasMensuales(filtrar(this.misEntrenamientos())));
     const comp = this.entrenamientosComparativos();
     for (const [year, list] of comp.entries()) {
-      result.set(year, this.calcularMediasMensuales(list));
+      result.set(year, this.calcularMediasMensuales(filtrar(list)));
     }
     return result;
   });
@@ -293,18 +313,26 @@ export class PerfilComponent {
         u?.id ? this.entrenamientoService.getFallosByUserAndYear(u.id, year) : of([])
       )
     ),
-    { initialValue: [] as { numeroPlato: number; veces: number }[] }
+    { initialValue: [] as { numeroPlato: number; esquema: number | null }[] }
   );
 
-  totalFallos = computed(() => this.misFallosAnuales().reduce((sum, f) => sum + f.veces, 0));
+  fallosFiltrados = computed(() => {
+    const esq = this.esquemaSeleccionado();
+    const list = this.misFallosAnuales();
+    if (esq === null) return list;
+    return list.filter(f => f.esquema === esq);
+  });
+
+  totalFallos = computed(() => this.fallosFiltrados().length);
 
   heatmapFallos = computed(() => {
-    const fallos = this.misFallosAnuales();
-    const fallosMap = new Map(fallos.map(f => [f.numeroPlato, f.veces]));
-    const maxVeces = fallos.length > 0 ? Math.max(...fallos.map(f => f.veces)) : 0;
+    const fallos = this.fallosFiltrados();
+    const counts = new Map<number, number>();
+    for (const f of fallos) counts.set(f.numeroPlato, (counts.get(f.numeroPlato) ?? 0) + 1);
+    const maxVeces = counts.size > 0 ? Math.max(...counts.values()) : 0;
     return Array.from({ length: 25 }, (_, i) => ({
       plato: i + 1,
-      veces: fallosMap.get(i + 1) ?? 0,
+      veces: counts.get(i + 1) ?? 0,
       maxVeces,
     }));
   });
