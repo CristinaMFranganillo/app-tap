@@ -1,0 +1,166 @@
+<!-- ─── INTRO ─── -->
+@if (fase() === 'intro') {
+  <div class="lateralidad__intro">
+    <div class="lateralidad__intro-card">
+      <div class="lateralidad__icono">↔️</div>
+      <h1 class="lateralidad__titulo">Izquierda o Derecha</h1>
+      <p class="lateralidad__descripcion">
+        Un plato volará hacia un lado. ¡Pulsa el botón correcto lo más rápido posible!
+        Tendrás {{ TOTAL_RONDAS }} rondas.
+      </p>
+      <ul class="lateralidad__instrucciones">
+        <li>Observa hacia dónde vuela el plato</li>
+        <li>Pulsa "IZQ" o "DCHA" lo antes posible</li>
+        <li>Tienes {{ 1500 / 1000 }} segundos por ronda</li>
+      </ul>
+      <button class="lateralidad__btn-primario" (click)="empezar()">
+        Empezar
+      </button>
+      <button class="lateralidad__btn-secundario" (click)="volver()">
+        Volver
+      </button>
+    </div>
+  </div>
+}
+
+<!-- ─── ESPERA ─── -->
+@if (fase() === 'espera') {
+  <div class="lateralidad__cielo">
+    <span class="lateralidad__ronda">
+      Ronda {{ rondaActual() + 1 }} / {{ TOTAL_RONDAS }}
+    </span>
+    <div class="lateralidad__plato-zona">
+      <span class="lateralidad__plato-ghost">🥏</span>
+    </div>
+    <p class="lateralidad__espera-texto">Prepárate...</p>
+    <div class="lateralidad__botones">
+      <button class="lateralidad__btn-lado" disabled>
+        ← IZQ
+      </button>
+      <button class="lateralidad__btn-lado" disabled>
+        DCHA →
+      </button>
+    </div>
+  </div>
+}
+
+<!-- ─── VOLANDO ─── -->
+@if (fase() === 'volando') {
+  <div class="lateralidad__cielo">
+    <span class="lateralidad__ronda">
+      Ronda {{ rondaActual() + 1 }} / {{ TOTAL_RONDAS }}
+    </span>
+    <div class="lateralidad__plato-zona">
+      <span
+        class="lateralidad__plato"
+        [class.lateralidad__plato--izq]="direccion() === 'izq'"
+        [class.lateralidad__plato--dcha]="direccion() === 'dcha'"
+      >🥏</span>
+    </div>
+    <div class="lateralidad__botones">
+      <button
+        class="lateralidad__btn-lado"
+        (click)="responder('izq')"
+      >
+        ← IZQ
+      </button>
+      <button
+        class="lateralidad__btn-lado"
+        (click)="responder('dcha')"
+      >
+        DCHA →
+      </button>
+    </div>
+  </div>
+}
+
+<!-- ─── FEEDBACK ─── -->
+@if (fase() === 'feedback') {
+  <div
+    class="lateralidad__feedback"
+    [class.lateralidad__feedback--ok]="feedbackOk() === true"
+    [class.lateralidad__feedback--fail]="feedbackOk() === false"
+  >
+    @if (feedbackOk() === true) {
+      <span class="lateralidad__feedback-icono">✓</span>
+    } @else {
+      <span class="lateralidad__feedback-icono">✗</span>
+    }
+  </div>
+}
+
+<!-- ─── RESULTADO ─── -->
+@if (fase() === 'resultado') {
+  <div class="lateralidad__resultado">
+    <div class="lateralidad__resultado-card">
+      <div class="lateralidad__icono">↔️</div>
+      <h2 class="lateralidad__resultado-titulo">¡Partida terminada!</h2>
+
+      <!-- Media -->
+      <div class="lateralidad__media-bloque">
+        <span class="lateralidad__media-label">Tu tiempo medio</span>
+        @if (mediaMs() !== null) {
+          <span class="lateralidad__media-valor">{{ mediaMs() }}<small>ms</small></span>
+        } @else {
+          <span class="lateralidad__media-valor">—</span>
+        }
+      </div>
+
+      <!-- Stats -->
+      <div class="lateralidad__stats">
+        <div class="lateralidad__stat">
+          <span class="lateralidad__stat-label">Aciertos</span>
+          <span class="lateralidad__stat-valor lateralidad__stat-valor--ok">
+            {{ aciertos() }}
+          </span>
+        </div>
+        <div class="lateralidad__stat">
+          <span class="lateralidad__stat-label">Fallos</span>
+          <span class="lateralidad__stat-valor lateralidad__stat-valor--fail">
+            {{ fallos() }}
+          </span>
+        </div>
+        <div class="lateralidad__stat">
+          <span class="lateralidad__stat-label">Mejor</span>
+          <span class="lateralidad__stat-valor">
+            @if (mejorMs() !== null) {
+              {{ mejorMs() }}<small>ms</small>
+            } @else {
+              —
+            }
+          </span>
+        </div>
+      </div>
+
+      <!-- Precisión badge -->
+      <div class="lateralidad__badge lateralidad__badge--precision">
+        <i class="bi bi-bullseye"></i>
+        Precisión: {{ precision() }}%
+      </div>
+
+      <!-- Posición en el club -->
+      @if (guardado() && posicionClub() !== null) {
+        <div class="lateralidad__badge lateralidad__badge--ranking">
+          <i class="bi bi-trophy-fill"></i>
+          Posición en el club: #{{ posicionClub() }}
+        </div>
+      }
+      @if (guardado() && posicionClub() === null) {
+        <div class="lateralidad__badge lateralidad__badge--ranking">
+          <i class="bi bi-star-fill"></i>
+          ¡Primera marca guardada!
+        </div>
+      }
+
+      <!-- Acciones -->
+      <div class="lateralidad__acciones">
+        <button class="lateralidad__btn-primario" (click)="jugarDeNuevo()">
+          Jugar de nuevo
+        </button>
+        <button class="lateralidad__btn-secundario" (click)="volver()">
+          Volver
+        </button>
+      </div>
+    </div>
+  </div>
+}
