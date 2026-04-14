@@ -48,6 +48,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/juego-platos/juego-platos.component').then(m => m.JuegoPlatosComponent),
       },
+      {
+        path: 'juegos',
+        loadChildren: () =>
+          import('./features/juegos/juegos.routes').then(m => m.juegosRoutes),
+      },
     ],
   },
   { path: '**', redirectTo: '' },
