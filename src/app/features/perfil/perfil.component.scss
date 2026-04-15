@@ -405,13 +405,13 @@
     &--activo { @apply ring-2 ring-primary ring-offset-1; }
   }
 
-  &__num      { @apply text-[10px] font-semibold text-neutral-400 leading-none; }
-  &__media    { @apply text-base font-bold text-secondary leading-none mt-0.5; }
-  &__sesiones { @apply text-[9px] text-neutral-400 font-medium leading-none; }
+  &__num      { @apply text-[11px] font-bold text-neutral-700 leading-none; }
+  &__media    { @apply text-[18px] font-extrabold text-secondary leading-none mt-1; }
+  &__sesiones { @apply text-[10px] text-neutral-600 font-semibold leading-none mt-0.5; }
 
-  &__resumen { @apply flex flex-col gap-0.5 mt-1; }
+  &__resumen { @apply flex flex-col gap-1 mt-2; }
   &__linea {
-    @apply text-[12px] font-medium flex items-center gap-1;
+    @apply text-[13px] font-semibold flex items-center gap-1.5;
     &--mejor { @apply text-success; }
     &--peor  { @apply text-danger; }
   }
@@ -438,12 +438,12 @@
     &--mejor { @apply border-2 border-success; }
   }
 
-  &__num   { @apply text-[10px] font-semibold text-neutral-400 leading-none; }
-  &__veces { @apply text-sm font-bold text-secondary leading-none mt-0.5; }
+  &__num   { @apply text-[11px] font-bold text-neutral-700 leading-none; }
+  &__veces { @apply text-[17px] font-extrabold text-secondary leading-none mt-1; }
 
-  &__resumen { @apply flex flex-col gap-0.5 mt-1; }
+  &__resumen { @apply flex flex-col gap-1 mt-2; }
   &__linea {
-    @apply text-[12px] font-medium flex items-center gap-1;
+    @apply text-[13px] font-semibold flex items-center gap-1.5;
     &--peor  { @apply text-danger; }
     &--mejor { @apply text-success; }
   }

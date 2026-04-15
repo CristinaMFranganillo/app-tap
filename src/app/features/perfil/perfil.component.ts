@@ -226,11 +226,11 @@ export class PerfilComponent {
     const classes: string[] = ['perfil-heatmap__celda'];
     const m = celda.mediaPlatos;
     if (m === null) classes.push('bg-neutral-100');
-    else if (m < 10) classes.push('bg-red-200');
-    else if (m < 16) classes.push('bg-orange-200');
-    else if (m < 20) classes.push('bg-yellow-200');
-    else if (m < 23) classes.push('bg-green-200');
-    else classes.push('bg-green-400');
+    else if (m < 13) classes.push('bg-red-300');
+    else if (m < 17) classes.push('bg-orange-300');
+    else if (m < 20) classes.push('bg-yellow-300');
+    else if (m < 23) classes.push('bg-lime-300');
+    else classes.push('bg-green-500');
 
     const mejor = this.mejorEsquema();
     const peor  = this.peorEsquema();
@@ -359,13 +359,13 @@ export class PerfilComponent {
     if (maxVeces === 0) {
       classes.push('bg-neutral-100');
     } else if (veces === 0) {
-      classes.push('bg-green-200');
+      classes.push('bg-neutral-100');
     } else {
       const pct = (veces / maxVeces) * 100;
-      if (pct < 25) classes.push('bg-green-100');
-      else if (pct < 50) classes.push('bg-yellow-100');
-      else if (pct < 75) classes.push('bg-orange-200');
-      else classes.push('bg-red-200');
+      if (pct < 25) classes.push('bg-yellow-200');
+      else if (pct < 50) classes.push('bg-yellow-400');
+      else if (pct < 75) classes.push('bg-orange-400');
+      else classes.push('bg-red-400');
     }
 
     const peor = this.platoMasFallado();

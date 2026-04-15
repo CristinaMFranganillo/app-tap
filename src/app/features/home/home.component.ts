@@ -107,13 +107,9 @@ export class HomeComponent {
     return Math.round((pagados / activos.length) * 100);
   });
 
-  entrenamientosMes = computed(() => {
-    const hoy = new Date();
-    return this.todosLosEntrenamientos().filter(e => {
-      const d = new Date(e.fecha);
-      return d.getFullYear() === hoy.getFullYear() && d.getMonth() === hoy.getMonth();
-    }).length;
-  });
+  totalInactivos = computed(() =>
+    this.todosLosSocios().filter(s => !s.activo).length
+  );
 
   ultimos5 = computed(() =>
     this.todosLosEntrenamientos().slice(0, 5)

@@ -5,13 +5,13 @@
       <div class="lateralidad__icono">↔️</div>
       <h1 class="lateralidad__titulo">Izquierda o Derecha</h1>
       <p class="lateralidad__descripcion">
-        Un plato volará hacia un lado. ¡Pulsa el botón correcto lo más rápido posible!
-        Tendrás {{ TOTAL_RONDAS }} rondas.
+        Un plato volará hacia un lado. Toca la mitad correcta de la pantalla lo
+        más rápido posible. Tendrás {{ TOTAL_RONDAS }} rondas.
       </p>
       <ul class="lateralidad__instrucciones">
         <li>Observa hacia dónde vuela el plato</li>
-        <li>Pulsa "IZQ" o "DCHA" lo antes posible</li>
-        <li>Tienes {{ 1500 / 1000 }} segundos por ronda</li>
+        <li>Toca la mitad izquierda o derecha</li>
+        <li>Tienes {{ TIMEOUT_MS / 1000 }} s por ronda</li>
       </ul>
       <button class="lateralidad__btn-primario" (click)="empezar()">
         Empezar
@@ -23,69 +23,84 @@
   </div>
 }
 
-<!-- ─── ESPERA ─── -->
-@if (fase() === 'espera') {
+<!-- ─── ESPERA / VOLANDO ─── -->
+@if (fase() === 'espera' || fase() === 'volando') {
   <div class="lateralidad__cielo">
-    <span class="lateralidad__ronda">
-      Ronda {{ rondaActual() + 1 }} / {{ TOTAL_RONDAS }}
-    </span>
-    <div class="lateralidad__plato-zona">
-      <span class="lateralidad__plato-ghost">🥏</span>
-    </div>
-    <p class="lateralidad__espera-texto">Prepárate...</p>
-    <div class="lateralidad__botones">
-      <button class="lateralidad__btn-lado" disabled>
-        ← IZQ
-      </button>
-      <button class="lateralidad__btn-lado" disabled>
-        DCHA →
-      </button>
-    </div>
-  </div>
-}
 
-<!-- ─── VOLANDO ─── -->
-@if (fase() === 'volando') {
-  <div class="lateralidad__cielo">
-    <span class="lateralidad__ronda">
-      Ronda {{ rondaActual() + 1 }} / {{ TOTAL_RONDAS }}
-    </span>
-    <div class="lateralidad__plato-zona">
-      <span
-        class="lateralidad__plato"
-        [class.lateralidad__plato--izq]="direccion() === 'izq'"
-        [class.lateralidad__plato--dcha]="direccion() === 'dcha'"
-      >🥏</span>
+    <!-- HUD superior -->
+    <div class="lateralidad__hud">
+      <span class="lateralidad__hud-chip">
+        Ronda {{ rondaActual() + 1 }}/{{ TOTAL_RONDAS }}
+      </span>
+      <span class="lateralidad__hud-chip lateralidad__hud-chip--ok">
+        ✓ {{ aciertosLive() }}
+      </span>
     </div>
-    <div class="lateralidad__botones">
-      <button
-        class="lateralidad__btn-lado"
-        (click)="responder('izq')"
-      >
-        ← IZQ
-      </button>
-      <button
-        class="lateralidad__btn-lado"
-        (click)="responder('dcha')"
-      >
-        DCHA →
-      </button>
-    </div>
-  </div>
-}
 
-<!-- ─── FEEDBACK ─── -->
-@if (fase() === 'feedback') {
-  <div
-    class="lateralidad__feedback"
-    [class.lateralidad__feedback--ok]="feedbackOk() === true"
-    [class.lateralidad__feedback--fail]="feedbackOk() === false"
-  >
-    @if (feedbackOk() === true) {
-      <span class="lateralidad__feedback-icono">✓</span>
-    } @else {
-      <span class="lateralidad__feedback-icono">✗</span>
+    <!-- Zonas táctiles -->
+    <button
+      type="button"
+      class="lateralidad__zona lateralidad__zona--izq"
+      [disabled]="fase() !== 'volando'"
+      (click)="responder('izq')"
+      aria-label="Izquierda"
+    >
+      <span class="lateralidad__flecha">‹</span>
+    </button>
+    <button
+      type="button"
+      class="lateralidad__zona lateralidad__zona--dcha"
+      [disabled]="fase() !== 'volando'"
+      (click)="responder('dcha')"
+      aria-label="Derecha"
+    >
+      <span class="lateralidad__flecha">›</span>
+    </button>
+
+    <!-- Plato / centro -->
+    <div class="lateralidad__centro">
+      @if (fase() === 'espera') {
+        <span class="lateralidad__espera-texto">Prepárate…</span>
+      } @else {
+        <div
+          class="lateralidad__plato"
+          [class.lateralidad__plato--izq]="direccion() === 'izq'"
+          [class.lateralidad__plato--dcha]="direccion() === 'dcha'"
+        ></div>
+      }
+    </div>
+
+    <!-- Barra de tiempo -->
+    @if (fase() === 'volando') {
+      <div class="lateralidad__timer">
+        <div class="lateralidad__timer-fill"></div>
+      </div>
     }
+  </div>
+}
+
+<!-- ─── FEEDBACK (overlay ligero) ─── -->
+@if (fase() === 'feedback') {
+  <div class="lateralidad__cielo lateralidad__cielo--feedback"
+       [class.lateralidad__cielo--ok]="feedbackOk() === true"
+       [class.lateralidad__cielo--fail]="feedbackOk() === false">
+    <div class="lateralidad__hud">
+      <span class="lateralidad__hud-chip">
+        Ronda {{ rondaActual() }}/{{ TOTAL_RONDAS }}
+      </span>
+      <span class="lateralidad__hud-chip lateralidad__hud-chip--ok">
+        ✓ {{ aciertosLive() }}
+      </span>
+    </div>
+    <div class="lateralidad__centro">
+      @if (feedbackOk() === true) {
+        <span class="lateralidad__feedback-icono lateralidad__feedback-icono--ok">✓</span>
+      } @else if (feedbackMotivo() === 'timeout') {
+        <span class="lateralidad__feedback-icono lateralidad__feedback-icono--fail">⏱</span>
+      } @else {
+        <span class="lateralidad__feedback-icono lateralidad__feedback-icono--fail">✗</span>
+      }
+    </div>
   </div>
 }
 
@@ -96,7 +111,6 @@
       <div class="lateralidad__icono">↔️</div>
       <h2 class="lateralidad__resultado-titulo">¡Partida terminada!</h2>
 
-      <!-- Media -->
       <div class="lateralidad__media-bloque">
         <span class="lateralidad__media-label">Tu tiempo medio</span>
         @if (mediaMs() !== null) {
@@ -106,7 +120,6 @@
         }
       </div>
 
-      <!-- Stats -->
       <div class="lateralidad__stats">
         <div class="lateralidad__stat">
           <span class="lateralidad__stat-label">Aciertos</span>
@@ -132,13 +145,11 @@
         </div>
       </div>
 
-      <!-- Precisión badge -->
       <div class="lateralidad__badge lateralidad__badge--precision">
         <i class="bi bi-bullseye"></i>
         Precisión: {{ precision() }}%
       </div>
 
-      <!-- Posición en el club -->
       @if (guardado() && posicionClub() !== null) {
         <div class="lateralidad__badge lateralidad__badge--ranking">
           <i class="bi bi-trophy-fill"></i>
@@ -152,7 +163,6 @@
         </div>
       }
 
-      <!-- Acciones -->
       <div class="lateralidad__acciones">
         <button class="lateralidad__btn-primario" (click)="jugarDeNuevo()">
           Jugar de nuevo

@@ -11,16 +11,19 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { JuegosService } from '../juegos.service';
 
 type Fase = 'intro' | 'espera' | 'volando' | 'feedback' | 'resultado';
+type MotivoFallo = 'lado' | 'timeout' | null;
 
 interface RondaResultado {
   acierto: boolean;
   ms: number | null;
+  motivo: MotivoFallo;
 }
 
 const TOTAL_RONDAS = 10;
-const TIMEOUT_MS = 1500;
-const PAUSA_ENTRE_RONDAS = 600;
-const FEEDBACK_MS = 300;
+const TIMEOUT_MS = 2000;
+const PAUSA_ENTRE_RONDAS = 400;
+const FEEDBACK_MS = 280;
+const DELAY_INICIO_VUELO_MS = 120;
 
 @Component({
   selector: 'app-lateralidad',
@@ -39,19 +42,20 @@ export class LateralidadComponent implements OnDestroy {
   private resultados: RondaResultado[] = [];
 
   readonly TOTAL_RONDAS = TOTAL_RONDAS;
+  readonly TIMEOUT_MS = TIMEOUT_MS;
 
-  // Señales de estado
   fase = signal<Fase>('intro');
   rondaActual = signal(0);
   direccion = signal<'izq' | 'dcha'>('izq');
   feedbackOk = signal<boolean | null>(null);
+  feedbackMotivo = signal<MotivoFallo>(null);
   resultadosFinal = signal<RondaResultado[]>([]);
   guardado = signal(false);
   posicionClub = signal<number | null>(null);
+  aciertosLive = signal(0);
 
   user = toSignal(this.authService.currentUser$, { initialValue: null });
 
-  // Computadas
   aciertos = computed(() =>
     this.resultadosFinal().filter(r => r.acierto).length
   );
@@ -80,10 +84,6 @@ export class LateralidadComponent implements OnDestroy {
     return Math.min(...validos);
   });
 
-  // ────────────────────────────────────────────
-  // Flujo del juego
-  // ────────────────────────────────────────────
-
   empezar(): void {
     this.rondaActual.set(0);
     this.resultados = [];
@@ -91,6 +91,8 @@ export class LateralidadComponent implements OnDestroy {
     this.guardado.set(false);
     this.posicionClub.set(null);
     this.feedbackOk.set(null);
+    this.feedbackMotivo.set(null);
+    this.aciertosLive.set(0);
     this.iniciarRonda();
   }
 
@@ -101,13 +103,17 @@ export class LateralidadComponent implements OnDestroy {
     const t = setTimeout(() => {
       const dir: 'izq' | 'dcha' = Math.random() < 0.5 ? 'izq' : 'dcha';
       this.direccion.set(dir);
-      this.timestamp = performance.now();
       this.fase.set('volando');
 
-      // Timeout automático si el usuario no pulsa
+      // el cronómetro arranca cuando el plato ya es visualmente direccional
+      const tStart = setTimeout(() => {
+        this.timestamp = performance.now();
+      }, DELAY_INICIO_VUELO_MS);
+      this.timeouts.push(tStart);
+
       const timeout = setTimeout(() => {
         if (!this.respondido) {
-          this.registrarRespuesta(false, null);
+          this.registrarRespuesta(false, null, 'timeout');
         }
       }, TIMEOUT_MS);
       this.timeouts.push(timeout);
@@ -118,23 +124,32 @@ export class LateralidadComponent implements OnDestroy {
 
   responder(lado: 'izq' | 'dcha'): void {
     if (this.fase() !== 'volando' || this.respondido) return;
+    if (this.timestamp === 0) return; // aún no arrancó el cronómetro
     this.respondido = true;
 
     const ms = Math.round(performance.now() - this.timestamp);
     const acierto = lado === this.direccion();
-    this.registrarRespuesta(acierto, ms);
+    this.registrarRespuesta(acierto, ms, acierto ? null : 'lado');
   }
 
-  private registrarRespuesta(acierto: boolean, ms: number | null): void {
+  private registrarRespuesta(
+    acierto: boolean,
+    ms: number | null,
+    motivo: MotivoFallo
+  ): void {
     this.respondido = true;
-    this.resultados.push({ acierto, ms });
+    this.timestamp = 0;
+    this.resultados.push({ acierto, ms, motivo });
     this.rondaActual.update(n => n + 1);
+    if (acierto) this.aciertosLive.update(n => n + 1);
 
     this.feedbackOk.set(acierto);
+    this.feedbackMotivo.set(motivo);
     this.fase.set('feedback');
 
     const t = setTimeout(() => {
       this.feedbackOk.set(null);
+      this.feedbackMotivo.set(null);
       if (this.rondaActual() >= TOTAL_RONDAS) {
         this.mostrarResultado();
       } else {
@@ -171,7 +186,7 @@ export class LateralidadComponent implements OnDestroy {
         this.posicionClub.set(idx >= 0 ? idx + 1 : null);
       });
     } catch {
-      // Silencioso: el usuario igual ve su resultado
+      // silencioso
     }
   }
 
@@ -182,10 +197,6 @@ export class LateralidadComponent implements OnDestroy {
   volver(): void {
     this.router.navigate(['/juegos']);
   }
-
-  // ────────────────────────────────────────────
-  // Cleanup
-  // ────────────────────────────────────────────
 
   private limpiarTimeouts(): void {
     this.timeouts.forEach(t => clearTimeout(t));

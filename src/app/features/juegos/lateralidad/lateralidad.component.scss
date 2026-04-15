@@ -1,16 +1,27 @@
+// ─── Animaciones ────────────────────────────────────────────────────────────
 @keyframes vuela-izq {
-  from { left: 50%; opacity: 1; }
-  to   { left: -15%; opacity: 0.3; }
+  0%   { transform: translate(-50%, -50%) scale(1); }
+  15%  { transform: translate(-65%, -50%) scale(1); }
+  100% { transform: translate(-280%, -50%) scale(0.75); }
 }
 
 @keyframes vuela-dcha {
-  from { left: 50%; opacity: 1; }
-  to   { left: 115%; opacity: 0.3; }
+  0%   { transform: translate(-50%, -50%) scale(1); }
+  15%  { transform: translate(-35%, -50%) scale(1); }
+  100% { transform: translate(180%, -50%) scale(0.75); }
 }
 
-// El shell aplica pt-[54px] pb-[52px]; el juego debe caber en el alto restante
-// sin provocar scroll vertical. Usamos 100dvh para respetar las barras dinámicas
-// del navegador móvil y que los botones no queden ocultos tras el bottom-nav.
+@keyframes timer-barra {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
+@keyframes flecha-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%      { opacity: 0.65; transform: scale(1.08); }
+}
+
+// El shell aplica pt-[54px] pb-[52px]; el juego debe caber sin scroll.
 $alto-juego: calc(100dvh - 54px - 52px);
 
 // ─── Root ───────────────────────────────────────────────────────────────────
@@ -18,7 +29,7 @@ $alto-juego: calc(100dvh - 54px - 52px);
   height: $alto-juego;
 }
 
-// ─── Intro ──────────────────────────────────────────────────────────────────
+// ─── Intro / Resultado (comparten fondo) ───────────────────────────────────
 .lateralidad__intro {
   @apply flex items-center justify-center px-4 py-4;
   height: $alto-juego;
@@ -45,91 +56,170 @@ $alto-juego: calc(100dvh - 54px - 52px);
   @apply text-left text-sm text-gray-500 list-disc list-inside space-y-1 w-full;
 }
 
-// ─── Cielo (espera + volando) ────────────────────────────────────────────────
+// ─── Cielo (gameplay) ──────────────────────────────────────────────────────
 .lateralidad__cielo {
-  @apply flex flex-col items-center select-none relative;
+  position: relative;
   height: $alto-juego;
-  background-color: #87CEEB;
-  padding: 56px 0.75rem 2rem;
+  overflow: hidden;
+  user-select: none;
+  background: linear-gradient(180deg, #4FA6D9 0%, #87CEEB 60%, #B8E4F5 100%);
+  transition: background-color 180ms ease;
+
+  &--feedback {
+    transition: background-color 80ms ease;
+  }
+
+  &--ok {
+    background: linear-gradient(180deg, #059669 0%, #10B981 100%);
+  }
+
+  &--fail {
+    background: linear-gradient(180deg, #B91C1C 0%, #EF4444 100%);
+  }
+}
+
+// ─── HUD superior ──────────────────────────────────────────────────────────
+.lateralidad__hud {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 14px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.lateralidad__hud-chip {
+  @apply text-white text-sm font-bold px-3 py-1 rounded-full;
+  background-color: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(4px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+  &--ok {
+    background-color: rgba(16, 185, 129, 0.85);
+  }
+}
+
+// ─── Zonas táctiles a media pantalla ───────────────────────────────────────
+.lateralidad__zona {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 120ms ease;
+  -webkit-tap-highlight-color: transparent;
+
+  &--izq  { left: 0; }
+  &--dcha { right: 0; }
+
+  &:not(:disabled):active {
+    background-color: rgba(255, 255, 255, 0.18);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.lateralidad__flecha {
+  font-size: 72px;
+  line-height: 1;
+  color: white;
+  font-weight: 900;
+  opacity: 0.35;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  animation: flecha-pulse 1.6s ease-in-out infinite;
+}
+
+// ─── Centro (plato + textos) ───────────────────────────────────────────────
+.lateralidad__centro {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 6;
 }
 
 .lateralidad__espera-texto {
-  @apply text-xl font-bold text-white mt-2;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  @apply text-2xl font-extrabold text-white uppercase tracking-wider;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
-// ─── Ronda badge ────────────────────────────────────────────────────────────
-.lateralidad__ronda {
-  @apply absolute top-4 left-1/2 -translate-x-1/2 text-white text-sm font-semibold;
-  background-color: rgba(0, 0, 0, 0.2);
-  @apply px-3 py-1 rounded-full;
-}
-
-// ─── Plato zona + animaciones ────────────────────────────────────────────────
-.lateralidad__plato-zona {
-  @apply relative w-full flex-1;
-  min-height: 0;
-}
-
-.lateralidad__plato-ghost {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 48px;
-  opacity: 0.3;
-}
-
+// Plato como disco real: más consistente que emoji
 .lateralidad__plato {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  font-size: 48px;
+  left: 50%;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #FFD97A 0%, #F59E0B 45%, #B45309 100%);
+  box-shadow:
+    0 0 0 3px rgba(180, 83, 9, 0.4),
+    0 6px 18px rgba(0, 0, 0, 0.25),
+    inset 0 -6px 12px rgba(0, 0, 0, 0.2);
+  transform: translate(-50%, -50%);
+  will-change: transform;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 18%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+  }
 
   &--izq {
-    animation: vuela-izq 1.5s linear forwards;
+    animation: vuela-izq 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
   }
 
   &--dcha {
-    animation: vuela-dcha 1.5s linear forwards;
+    animation: vuela-dcha 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
   }
 }
 
-// ─── Botones laterales ───────────────────────────────────────────────────────
-.lateralidad__botones {
-  @apply flex gap-4 w-full flex-shrink-0;
-  margin-top: 0.75rem;
+// ─── Barra de tiempo ───────────────────────────────────────────────────────
+.lateralidad__timer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  background-color: rgba(0, 0, 0, 0.18);
+  z-index: 9;
 }
 
-.lateralidad__btn-lado {
-  @apply flex-1 rounded-xl text-lg font-extrabold bg-white border border-gray-200 transition-opacity;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  color: #1a1a2e;
-
-  &:active { @apply opacity-70; }
-
-  &:disabled {
-    @apply opacity-50 cursor-not-allowed;
-  }
+.lateralidad__timer-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10B981 0%, #FFAE00 60%, #EF4444 100%);
+  transform-origin: left center;
+  animation: timer-barra 2s linear forwards;
 }
 
-// ─── Feedback ────────────────────────────────────────────────────────────────
-.lateralidad__feedback {
-  @apply flex items-center justify-center;
-  height: $alto-juego;
-
-  &--ok  { background-color: #10B981; }
-  &--fail { background-color: #EF4444; }
-}
-
+// ─── Feedback icono central ────────────────────────────────────────────────
 .lateralidad__feedback-icono {
-  @apply text-white font-extrabold;
-  font-size: 96px;
+  font-size: 120px;
   line-height: 1;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+
+  &--ok,
+  &--fail { color: white; }
 }
 
-// ─── Resultado ───────────────────────────────────────────────────────────────
+// ─── Resultado ─────────────────────────────────────────────────────────────
 .lateralidad__resultado {
   @apply flex items-center justify-center bg-gray-50 px-4 py-4 overflow-y-auto;
   height: $alto-juego;
@@ -143,7 +233,6 @@ $alto-juego: calc(100dvh - 54px - 52px);
   @apply text-xl font-bold text-gray-800;
 }
 
-// Media principal
 .lateralidad__media-bloque {
   @apply flex flex-col items-center gap-1;
 }
@@ -160,7 +249,6 @@ $alto-juego: calc(100dvh - 54px - 52px);
   }
 }
 
-// Stats grid
 .lateralidad__stats {
   @apply grid grid-cols-3 gap-3 w-full;
 }
@@ -184,7 +272,6 @@ $alto-juego: calc(100dvh - 54px - 52px);
   &--fail { color: #EF4444; }
 }
 
-// Badges
 .lateralidad__badge {
   @apply flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full;
 
@@ -203,7 +290,6 @@ $alto-juego: calc(100dvh - 54px - 52px);
   }
 }
 
-// ─── Botones ─────────────────────────────────────────────────────────────────
 .lateralidad__acciones {
   @apply flex flex-col gap-3 w-full;
 }

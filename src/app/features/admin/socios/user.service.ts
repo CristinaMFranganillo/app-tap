@@ -27,7 +27,7 @@ function toUser(row: Record<string, unknown>): User {
     avatarUrl:   (row['avatar_url'] as string) ?? undefined,
     rol:         normalizeRol(row['rol']),
     fechaAlta:   new Date(row['fecha_alta'] as string),
-    activo:      row['activo'] as boolean,
+    activo:      row['activo'] === false ? false : true,
     firstLogin:  (row['first_login'] as boolean) ?? true,
     dni:         (row['dni'] as string) ?? undefined,
     telefono:    (row['telefono'] as string) ?? undefined,
