@@ -53,6 +53,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./features/juegos/juegos.routes').then(m => m.juegosRoutes),
       },
+      {
+        path: 'coach',
+        loadComponent: () =>
+          import('./features/coach/coach.component').then(m => m.CoachComponent),
+      },
     ],
   },
   { path: '**', redirectTo: '' },
