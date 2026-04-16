@@ -142,8 +142,8 @@ export class CoachService {
   }
 
   private async getToken(): Promise<string> {
-    await this.auth.whenSessionReady();
-    const token = this.auth.accessToken;
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token;
     if (!token) throw new Error('No hay sesión activa');
     return token;
   }
