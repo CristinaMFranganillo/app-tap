@@ -1,0 +1,86 @@
+<div class="coach-page flex flex-col h-full overflow-hidden">
+
+  <!-- INFORME AUTOMÁTICO -->
+  <section class="coach-informe flex-shrink-0 p-4 border-b border-gray-100">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="text-lg">📋</span>
+      <h2 class="text-sm font-bold uppercase tracking-wide text-gray-500">Análisis de tu temporada</h2>
+    </div>
+
+    @if (cargandoInforme()) {
+      <div class="flex items-center gap-3 py-4">
+        <div class="coach-spinner"></div>
+        <span class="text-sm text-gray-500">Analizando tus entrenamientos...</span>
+      </div>
+    }
+
+    @if (errorInforme()) {
+      <div class="text-sm text-red-500 py-2">{{ errorInforme() }}</div>
+    }
+
+    @if (informe() && !cargandoInforme()) {
+      <div class="coach-informe__texto text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+        {{ informe() }}
+      </div>
+      <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+        <span class="text-xs text-gray-400">{{ formatearFecha(fechaInforme()) }}</span>
+        <button
+          (click)="actualizarInforme()"
+          class="text-xs text-amber-500 font-semibold hover:text-amber-600 transition-colors"
+        >
+          Actualizar análisis ↺
+        </button>
+      </div>
+    }
+  </section>
+
+  <!-- CHAT -->
+  <section class="flex flex-col flex-1 min-h-0 overflow-hidden">
+    <div class="px-4 py-2 border-b border-gray-100">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">💬</span>
+        <h2 class="text-sm font-bold uppercase tracking-wide text-gray-500">Pregúntame lo que quieras</h2>
+      </div>
+    </div>
+
+    <!-- Burbujas -->
+    <div #chatScroll class="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3">
+      @if (mensajes().length === 0 && informe()) {
+        <div class="coach-burbuja coach-burbuja--model">
+          <p class="text-sm">¿Tienes alguna duda sobre tu análisis o quieres que te explique algo con más detalle? ¡Aquí estoy! 🎯</p>
+        </div>
+      }
+      @for (msg of mensajes(); track $index) {
+        <div [class]="'coach-burbuja ' + (msg.rol === 'user' ? 'coach-burbuja--user' : 'coach-burbuja--model')">
+          <p class="text-sm whitespace-pre-wrap">{{ msg.texto }}</p>
+        </div>
+      }
+      @if (enviando()) {
+        <div class="coach-burbuja coach-burbuja--model">
+          <div class="coach-typing">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Input -->
+    <div class="px-4 py-3 border-t border-gray-100 flex gap-2">
+      <textarea
+        [(ngModel)]="inputUsuario"
+        (keydown)="onKeydown($event)"
+        [disabled]="enviando() || !informe()"
+        placeholder="Escribe tu pregunta..."
+        rows="1"
+        class="flex-1 resize-none rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:border-amber-400 disabled:opacity-50"
+      ></textarea>
+      <button
+        (click)="enviarMensaje()"
+        [disabled]="enviando() || !inputUsuario.trim() || !informe()"
+        class="w-10 h-10 flex items-center justify-center rounded-xl bg-amber-400 text-white disabled:opacity-40 hover:bg-amber-500 transition-colors self-end"
+      >
+        <i class="bi bi-send-fill text-sm"></i>
+      </button>
+    </div>
+  </section>
+</div>
