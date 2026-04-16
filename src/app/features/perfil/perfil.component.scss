@@ -388,7 +388,7 @@
   @apply p-3 flex flex-col gap-2;
 
   &__titulo {
-    @apply text-xs font-semibold text-neutral-400 uppercase tracking-[1.5px];
+    @apply text-xs font-medium text-neutral-400 uppercase tracking-[1.5px];
   }
 
   &__grid {
@@ -396,17 +396,31 @@
   }
 
   &__celda {
-    @apply aspect-square flex flex-col items-center justify-center
-           rounded-[8px] border border-neutral-200 cursor-pointer
+    @apply aspect-square relative flex flex-col items-center justify-center
+           rounded-[8px] border-0 cursor-pointer
            transition-transform active:scale-95;
 
-    &--mejor  { @apply border-2 border-success; }
-    &--peor   { @apply border-2 border-danger; }
+    &--normal {
+      background-color: #FFAE00;
+      .perfil-heatmap__num, .perfil-heatmap__media, .perfil-heatmap__sesiones { @apply text-white; }
+    }
+    &--mejor {
+      @apply bg-green-500;
+      .perfil-heatmap__num, .perfil-heatmap__media, .perfil-heatmap__sesiones { @apply text-white; }
+    }
+    &--peor {
+      @apply bg-red-500;
+      .perfil-heatmap__num, .perfil-heatmap__media, .perfil-heatmap__sesiones { @apply text-white; }
+    }
     &--activo { @apply ring-2 ring-primary ring-offset-1; }
   }
 
-  &__num      { @apply text-[11px] font-bold text-neutral-700 leading-none; }
-  &__media    { @apply text-[18px] font-extrabold text-secondary leading-none mt-1; }
+  &__badge {
+    @apply absolute top-1 right-1 text-[11px] leading-none text-white;
+  }
+
+  &__num      { @apply text-[11px] font-semibold text-neutral-700 leading-none; }
+  &__media    { @apply text-[18px] font-bold text-secondary leading-none mt-1; }
   &__sesiones { @apply text-[10px] text-neutral-600 font-semibold leading-none mt-0.5; }
 
   &__resumen { @apply flex flex-col gap-1 mt-2; }
@@ -431,15 +445,29 @@
   }
 
   &__celda {
-    @apply aspect-square flex flex-col items-center justify-center
-           rounded-[8px] border border-neutral-200;
+    @apply aspect-square relative flex flex-col items-center justify-center
+           rounded-[8px] border-0;
 
-    &--peor  { @apply border-2 border-danger; }
-    &--mejor { @apply border-2 border-success; }
+    &--normal {
+      background-color: #FFAE00;
+      .perfil-fallos__num, .perfil-fallos__veces { @apply text-white; }
+    }
+    &--peor {
+      @apply bg-red-500;
+      .perfil-fallos__num, .perfil-fallos__veces { @apply text-white; }
+    }
+    &--mejor {
+      @apply bg-green-500;
+      .perfil-fallos__num, .perfil-fallos__veces { @apply text-white; }
+    }
   }
 
-  &__num   { @apply text-[11px] font-bold text-neutral-700 leading-none; }
-  &__veces { @apply text-[17px] font-extrabold text-secondary leading-none mt-1; }
+  &__badge {
+    @apply absolute top-1 right-1 text-[11px] leading-none text-white;
+  }
+
+  &__num   { @apply text-[11px] font-semibold text-neutral-700 leading-none; }
+  &__veces { @apply text-[17px] font-bold text-secondary leading-none mt-1; }
 
   &__resumen { @apply flex flex-col gap-1 mt-2; }
   &__linea {

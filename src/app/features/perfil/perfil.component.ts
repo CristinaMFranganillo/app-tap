@@ -225,18 +225,17 @@ export class PerfilComponent {
   claseCelda(celda: { esquema: number; sesiones: number; mediaPlatos: number | null }): string {
     const classes: string[] = ['perfil-heatmap__celda'];
     const m = celda.mediaPlatos;
-    if (m === null) classes.push('bg-neutral-100');
-    else if (m < 13) classes.push('bg-red-300');
-    else if (m < 17) classes.push('bg-orange-300');
-    else if (m < 20) classes.push('bg-yellow-300');
-    else if (m < 23) classes.push('bg-lime-300');
-    else classes.push('bg-green-500');
-
     const mejor = this.mejorEsquema();
     const peor  = this.peorEsquema();
-    if (mejor && celda.esquema === mejor.esquema) classes.push('perfil-heatmap__celda--mejor');
-    else if (peor && peor.esquema !== mejor?.esquema && celda.esquema === peor.esquema) {
+
+    if (m === null) {
+      classes.push('bg-neutral-100');
+    } else if (mejor && celda.esquema === mejor.esquema) {
+      classes.push('perfil-heatmap__celda--mejor');
+    } else if (peor && peor.esquema !== mejor?.esquema && celda.esquema === peor.esquema) {
       classes.push('perfil-heatmap__celda--peor');
+    } else {
+      classes.push('perfil-heatmap__celda--normal');
     }
     if (this.esquemaSeleccionado() === celda.esquema) classes.push('perfil-heatmap__celda--activo');
     return classes.join(' ');
@@ -356,22 +355,18 @@ export class PerfilComponent {
     const classes: string[] = ['perfil-fallos__celda'];
     const { veces, maxVeces } = celda;
 
-    if (maxVeces === 0) {
-      classes.push('bg-neutral-100');
-    } else if (veces === 0) {
-      classes.push('bg-neutral-100');
-    } else {
-      const pct = (veces / maxVeces) * 100;
-      if (pct < 25) classes.push('bg-yellow-200');
-      else if (pct < 50) classes.push('bg-yellow-400');
-      else if (pct < 75) classes.push('bg-orange-400');
-      else classes.push('bg-red-400');
-    }
-
     const peor = this.platoMasFallado();
     const mejor = this.platoMenosFallado();
-    if (peor && celda.plato === peor.plato) classes.push('perfil-fallos__celda--peor');
-    else if (mejor && celda.plato === mejor.plato) classes.push('perfil-fallos__celda--mejor');
+
+    if (veces === 0) {
+      classes.push('bg-neutral-100');
+    } else if (peor && celda.plato === peor.plato) {
+      classes.push('perfil-fallos__celda--peor');
+    } else if (mejor && celda.plato === mejor.plato) {
+      classes.push('perfil-fallos__celda--mejor');
+    } else {
+      classes.push('perfil-fallos__celda--normal');
+    }
 
     return classes.join(' ');
   }
