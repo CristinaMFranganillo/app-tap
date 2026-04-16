@@ -106,16 +106,17 @@ export class CoachService {
   ): Promise<{ nombre: string; fecha: string } | null> {
     const { data } = await supabase
       .from('inscripciones_torneo')
-      .select('torneos!inner(nombre, fecha)')
-      .eq('user_id', userId)
-      .gte('torneos.fecha', hoy)
-      .order('torneos.fecha', { ascending: true })
-      .limit(1)
-      .maybeSingle();
+      .select('torneos(nombre, fecha)')
+      .eq('user_id', userId);
 
     if (!data) return null;
-    const torneo = (data as any)['torneos'];
-    return torneo ? { nombre: torneo['nombre'] as string, fecha: torneo['fecha'] as string } : null;
+    const futuros = (data as any[])
+      .map(row => row['torneos'])
+      .filter(t => t && t['fecha'] >= hoy)
+      .sort((a, b) => a['fecha'].localeCompare(b['fecha']));
+
+    if (futuros.length === 0) return null;
+    return { nombre: futuros[0]['nombre'] as string, fecha: futuros[0]['fecha'] as string };
   }
 
   private async getProximaEscuadra(
@@ -124,23 +125,31 @@ export class CoachService {
   ): Promise<{ fecha: string; esquema: number } | null> {
     const { data } = await supabase
       .from('escuadra_tiradores')
-      .select('escuadras!inner(esquema, entrenamientos!inner(fecha))')
-      .eq('user_id', userId)
-      .gte('escuadras.entrenamientos.fecha', hoy)
-      .order('escuadras.entrenamientos.fecha', { ascending: true })
-      .limit(1)
-      .maybeSingle();
+      .select('escuadras(esquema, entrenamiento_id, entrenamientos(fecha))')
+      .eq('user_id', userId);
 
     if (!data) return null;
-    const escuadra = (data as any)['escuadras'];
-    if (!escuadra) return null;
-    const entrenamiento = escuadra['entrenamientos'];
-    if (!entrenamiento) return null;
-    return { fecha: entrenamiento['fecha'] as string, esquema: escuadra['esquema'] as number };
+    const futuras = (data as any[])
+      .map(row => row['escuadras'])
+      .filter(e => e && e['entrenamientos'] && e['entrenamientos']['fecha'] >= hoy)
+      .sort((a, b) => a['entrenamientos']['fecha'].localeCompare(b['entrenamientos']['fecha']));
+
+    if (futuras.length === 0) return null;
+    return {
+      fecha: futuras[0]['entrenamientos']['fecha'] as string,
+      esquema: futuras[0]['esquema'] as number,
+    };
+  }
+
+  private async getToken(): Promise<string> {
+    await this.auth.whenSessionReady();
+    const token = this.auth.accessToken;
+    if (!token) throw new Error('No hay sesión activa');
+    return token;
   }
 
   async generarInforme(nombre: string, contexto: ContextoCoach): Promise<string> {
-    const token = this.auth.accessToken;
+    const token = await this.getToken();
     const res = await fetch(
       `${environment.supabaseUrl}/functions/v1/gemini-coach`,
       {
@@ -159,7 +168,7 @@ export class CoachService {
   }
 
   async chat(mensajes: MensajeChat[], informeResumen: string): Promise<string> {
-    const token = this.auth.accessToken;
+    const token = await this.getToken();
     const res = await fetch(
       `${environment.supabaseUrl}/functions/v1/gemini-coach`,
       {
