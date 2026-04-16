@@ -1,0 +1,2 @@
+[functions.gemini-coach]
+verify_jwt = false

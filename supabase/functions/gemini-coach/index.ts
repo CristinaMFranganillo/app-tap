@@ -16,23 +16,32 @@ Los platos se numeran del 1 al 25 en cinco series de 5:
 
 Cuando detectes fallos recurrentes en un carril, explícalo de forma sencilla y anima a mejorar. Celebra los progresos aunque sean pequeños. Si hay un torneo próximo en la asociación, anímale y dile en qué fijarse. Responde siempre en español.`
 
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
+const GROQ_MODEL = 'llama-3.3-70b-versatile'
 
-async function llamarGemini(apiKey: string, contents: object[]): Promise<string> {
-  const res = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
+async function llamarGroq(apiKey: string, messages: { role: string; content: string }[]): Promise<string> {
+  const res = await fetch(GROQ_API_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
     body: JSON.stringify({
-      system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-      contents,
+      model: GROQ_MODEL,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        ...messages,
+      ],
+      temperature: 0.7,
+      max_tokens: 1024,
     }),
   })
   if (!res.ok) {
     const err = await res.text()
-    throw new Error(`Gemini error ${res.status}: ${err}`)
+    throw new Error(`Groq error ${res.status}: ${err}`)
   }
   const json = await res.json()
-  return json?.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+  return json?.choices?.[0]?.message?.content ?? ''
 }
 
 function construirPromptInforme(nombre: string, ctx: Record<string, unknown>): string {
@@ -155,10 +164,10 @@ Deno.serve(async (req: Request) => {
       )
     }
 
-    const apiKey = Deno.env.get('GEMINI_API_KEY') ?? ''
+    const apiKey = Deno.env.get('GROQ_API_KEY') ?? ''
     if (!apiKey) {
       return new Response(
-        JSON.stringify({ error: 'API key de Gemini no configurada' }),
+        JSON.stringify({ error: 'API key de Groq no configurada' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       )
     }
@@ -169,11 +178,10 @@ Deno.serve(async (req: Request) => {
     if (modo === 'informe') {
       const { nombre, contexto } = body
       const prompt = construirPromptInforme(nombre, contexto)
-      const respuesta = await llamarGemini(apiKey, [
-        { role: 'user', parts: [{ text: prompt }] }
+      const respuesta = await llamarGroq(apiKey, [
+        { role: 'user', content: prompt }
       ])
 
-      // Eliminar informe anterior y guardar el nuevo
       await supabaseAdmin
         .from('coach_informes')
         .delete()
@@ -195,19 +203,16 @@ Deno.serve(async (req: Request) => {
         mensajes: { rol: string; texto: string }[]
       }
 
-      const contents = [
-        {
-          role: 'user',
-          parts: [{ text: `Contexto del análisis previo del tirador:\n\n${informeResumen}\n\nA partir de ahora responde a sus preguntas usando este contexto.` }]
-        },
-        { role: 'model', parts: [{ text: 'Perfecto, estoy listo para ayudarte 🎯' }] },
+      const messages = [
+        { role: 'user', content: `Contexto del análisis previo del tirador:\n\n${informeResumen}\n\nA partir de ahora responde a sus preguntas usando este contexto.` },
+        { role: 'assistant', content: 'Perfecto, estoy listo para ayudarte 🎯' },
         ...mensajes.map(m => ({
-          role: m.rol === 'user' ? 'user' : 'model',
-          parts: [{ text: m.texto }]
+          role: m.rol === 'user' ? 'user' : 'assistant',
+          content: m.texto,
         }))
       ]
 
-      const respuesta = await llamarGemini(apiKey, contents)
+      const respuesta = await llamarGroq(apiKey, messages)
 
       return new Response(
         JSON.stringify({ respuesta }),
