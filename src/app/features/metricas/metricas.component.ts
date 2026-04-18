@@ -237,12 +237,6 @@ export class MetricasComponent {
     return con.reduce((min, p) => p.media! < min.media! ? p : min).puesto;
   });
 
-  maxMediaPuesto = computed(() => {
-    const con = this.analisisPuestos().filter(p => p.media !== null);
-    if (con.length === 0) return 25;
-    return Math.max(...con.map(p => p.media!));
-  });
-
   // ── Evolución mensual (SVG) ──────────────────────────────────────
   private calcularMediasMensuales(list: ResultadoEntrenamientoConFecha[]): (number | null)[] {
     const buckets = Array.from({ length: 12 }, () => [] as number[]);
@@ -307,22 +301,10 @@ export class MetricasComponent {
   });
 
   // ── Racha y consistencia ─────────────────────────────────────────
-  rachaActual = computed(() => {
-    const list = [...this.misEntrenamientos()].sort((a, b) => b.fecha.localeCompare(a.fecha));
-    const media = this.mediaAnual();
-    if (list.length === 0 || media === 0) return 0;
-    let racha = 0;
-    for (const r of list) {
-      if (r.platosRotos > media) racha++;
-      else break;
-    }
-    return racha;
-  });
-
   mejorRacha = computed(() => {
     const list = [...this.misEntrenamientos()].sort((a, b) => a.fecha.localeCompare(b.fecha));
     const media = this.mediaAnual();
-    if (list.length === 0 || media === 0) return 0;
+    if (list.length === 0) return 0;
     let mejor = 0, actual = 0;
     for (const r of list) {
       if (r.platosRotos > media) { actual++; mejor = Math.max(mejor, actual); }
