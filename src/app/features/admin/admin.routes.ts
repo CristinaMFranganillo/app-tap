@@ -170,4 +170,29 @@ export const adminRoutes: Routes = [
       import('./entrenamientos/resumen-escuadra-entrenamiento/resumen-escuadra-entrenamiento.component')
         .then(m => m.ResumenEscuadraEntrenamientoComponent),
   },
+  // ── Coach contexto ───────────────────────────────────────────────────────
+  {
+    path: 'coach',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./coach/lista-coach-contexto/lista-coach-contexto.component')
+        .then(m => m.ListaCoachContextoComponent),
+  },
+  {
+    path: 'coach/nueva',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./coach/form-coach-contexto/form-coach-contexto.component')
+        .then(m => m.FormCoachContextoComponent),
+  },
+  {
+    path: 'coach/:id',
+    canActivate: [roleGuard],
+    data: { roles: ['admin', 'moderador'] },
+    loadComponent: () =>
+      import('./coach/form-coach-contexto/form-coach-contexto.component')
+        .then(m => m.FormCoachContextoComponent),
+  },
 ];
