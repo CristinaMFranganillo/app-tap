@@ -1,10 +1,10 @@
 <!-- ── Selector de año (sticky bajo header de la app) ──────────── -->
 <div class="metricas-anio-bar">
-  <button class="metricas-anio-bar__btn" (click)="anioAnterior()" [disabled]="anioSeleccionado() <= anioActual - 4">
+  <button class="metricas-anio-bar__btn" (click)="anioAnterior()" [disabled]="anioSeleccionado() <= anioActual - 4" aria-label="Año anterior">
     <i class="bi bi-chevron-left"></i>
   </button>
   <span class="metricas-anio-bar__anio">{{ anioSeleccionado() }}</span>
-  <button class="metricas-anio-bar__btn" (click)="anioSiguiente()" [disabled]="anioSeleccionado() >= anioActual">
+  <button class="metricas-anio-bar__btn" (click)="anioSiguiente()" [disabled]="anioSeleccionado() >= anioActual" aria-label="Año siguiente">
     <i class="bi bi-chevron-right"></i>
   </button>
 </div>
@@ -15,12 +15,9 @@
   @if (!hayDatos()) {
     <app-empty-state
       icon="bi-graph-up"
-      [title]="'Sin entrenamientos en ' + anioSeleccionado()"
-      subtitle="Aún no tienes entrenamientos registrados este año">
+      [mensaje]="'Sin entrenamientos en ' + anioSeleccionado()">
     </app-empty-state>
-  }
-
-  @if (hayDatos()) {
+  } @else {
 
     <!-- ── 1. KPIs 2×2 ──────────────────────────────────────── -->
     <div class="metricas-kpis">
@@ -83,10 +80,11 @@
             fill="none"
             [attr.stroke]="linea!.color"
             stroke-width="2"
-            [attr.stroke-dasharray]="linea!.punteado ? '4 3' : 'none'" />
+            [attr.stroke-dasharray]="linea!.punteado ? '4 3' : null" />
           @for (dot of linea!.dots; track dot.mes) {
-            <circle [attr.cx]="dot.x" [attr.cy]="dot.y" r="3" [attr.fill]="linea!.color" />
-            <title>{{ mesesAbrev[dot.mes] }}: {{ dot.media | number:'1.1-1' }}/25</title>
+            <circle [attr.cx]="dot.x" [attr.cy]="dot.y" r="3" [attr.fill]="linea!.color">
+              <title>{{ mesesAbrev[dot.mes] }}: {{ dot.media | number:'1.1-1' }}/25</title>
+            </circle>
           }
         }
         <!-- Eje X: etiquetas meses -->
