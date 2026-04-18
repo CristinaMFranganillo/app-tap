@@ -1,0 +1,71 @@
+@if (abierto) {
+  <!-- Overlay -->
+  <div
+    class="fixed inset-0 bg-black/40 z-40"
+    (click)="onCerrar()"
+  ></div>
+
+  <!-- Panel lateral -->
+  <div class="drawer-panel fixed top-0 right-0 h-full w-full max-w-sm bg-white z-50 flex flex-col shadow-xl">
+
+    <!-- Cabecera -->
+    <div class="drawer-header flex items-center justify-between px-4 py-3 border-b border-gray-100">
+      <h2 class="text-base font-bold text-gray-800">Notificaciones</h2>
+      <div class="flex items-center gap-3">
+        @if (notificacionesService.noLeidas() > 0) {
+          <button
+            class="text-sm font-semibold text-amber-500"
+            (click)="onMarcarTodas()"
+          >
+            Marcar todas leídas
+          </button>
+        }
+        <button (click)="onCerrar()" class="text-gray-400 hover:text-gray-600">
+          <i class="bi bi-x-lg text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Lista -->
+    <div class="flex-1 overflow-y-auto">
+      @if (notificacionesService.notificaciones().length === 0) {
+        <div class="flex flex-col items-center justify-center h-full gap-3 text-gray-400">
+          <i class="bi bi-bell-slash text-5xl"></i>
+          <p class="text-sm">No tienes notificaciones nuevas</p>
+        </div>
+      } @else {
+        @for (n of notificacionesService.notificaciones(); track n.id) {
+          <button
+            class="drawer-item w-full text-left px-4 py-3 border-b border-gray-50 flex gap-3 items-start"
+            [class.drawer-item--leida]="n.leida"
+            (click)="onMarcarLeida(n.id)"
+          >
+            <!-- Punto no leído -->
+            <div class="drawer-item__dot-wrap pt-1">
+              @if (!n.leida) {
+                <span class="drawer-item__dot"></span>
+              } @else {
+                <span class="drawer-item__dot-placeholder"></span>
+              }
+            </div>
+
+            <!-- Icono tipo -->
+            <i
+              class="bi text-xl mt-0.5"
+              [class]="'bi ' + iconoPorTipo(n.tipo)"
+              [style.color]="colorPorTipo(n.tipo)"
+            ></i>
+
+            <!-- Contenido -->
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-800 truncate">{{ n.titulo }}</p>
+              <p class="text-xs text-gray-500 mt-0.5 line-clamp-2">{{ n.cuerpo }}</p>
+              <p class="text-xs text-gray-400 mt-1 text-right">{{ fechaRelativa(n.createdAt) }}</p>
+            </div>
+          </button>
+        }
+      }
+    </div>
+
+  </div>
+}

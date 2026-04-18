@@ -1,0 +1,39 @@
+.drawer-panel {
+  animation: slideInRight 0.25s ease-out;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.drawer-item {
+  transition: background 0.15s;
+
+  &:hover {
+    background: #F9FAFB;
+  }
+
+  &--leida {
+    opacity: 0.6;
+  }
+
+  &__dot-wrap {
+    width: 10px;
+    flex-shrink: 0;
+  }
+
+  &__dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #F97316;
+  }
+
+  &__dot-placeholder {
+    display: block;
+    width: 8px;
+    height: 8px;
+  }
+}
