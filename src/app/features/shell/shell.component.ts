@@ -4,28 +4,29 @@ import { HeaderComponent } from '../../shared/components/header/header.component
 import { BottomNavComponent } from '../../shared/components/bottom-nav/bottom-nav.component';
 import { CambiarPasswordComponent } from '../../shared/components/cambiar-password/cambiar-password.component';
 import { AvatarEditorComponent } from '../../shared/components/avatar-editor/avatar-editor.component';
+import { NotificacionesDrawerComponent } from '../../shared/components/notificaciones-drawer/notificaciones-drawer.component';
 import { AuthService } from '../../core/auth/auth.service';
 import { supabase } from '../../core/supabase/supabase.client';
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, BottomNavComponent, CambiarPasswordComponent, AvatarEditorComponent],
+  imports: [RouterOutlet, HeaderComponent, BottomNavComponent, CambiarPasswordComponent, AvatarEditorComponent, NotificacionesDrawerComponent],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
 })
 export class ShellComponent implements OnInit {
   private auth = inject(AuthService);
-  mostrarCambioPassword = signal(false);
-  cambioPasswordManual  = signal(false);
-  mostrarEditorAvatar   = signal(false);
+  mostrarCambioPassword  = signal(false);
+  cambioPasswordManual   = signal(false);
+  mostrarEditorAvatar    = signal(false);
+  drawerNotificaciones   = signal(false);
 
   ngOnInit(): void {
     if (this.auth.currentUser?.firstLogin) {
       this.mostrarCambioPassword.set(true);
     }
 
-    // Detectar evento de recuperación de contraseña (enlace de email)
     supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') {
         this.cambioPasswordManual.set(true);
@@ -48,5 +49,13 @@ export class ShellComponent implements OnInit {
 
   cerrarEditorAvatar(): void {
     this.mostrarEditorAvatar.set(false);
+  }
+
+  abrirDrawerNotificaciones(): void {
+    this.drawerNotificaciones.set(true);
+  }
+
+  cerrarDrawerNotificaciones(): void {
+    this.drawerNotificaciones.set(false);
   }
 }

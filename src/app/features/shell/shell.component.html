@@ -1,11 +1,17 @@
 <app-header
   (cambiarPassword)="abrirCambioPassword()"
   (cambiarFoto)="abrirCambioFoto()"
+  (abrirDrawer)="abrirDrawerNotificaciones()"
 />
 <main class="shell-main">
   <router-outlet />
 </main>
 <app-bottom-nav />
+
+<app-notificaciones-drawer
+  [abierto]="drawerNotificaciones()"
+  (cerrar)="cerrarDrawerNotificaciones()"
+/>
 
 @if (mostrarCambioPassword()) {
   <app-cambiar-password (cerrar)="onPasswordCerrado()" />
