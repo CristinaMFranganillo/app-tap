@@ -1,12 +1,11 @@
 import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
-import { DatePipe } from '@angular/common';
 import { NotificacionesService } from '../../../core/services/notificaciones.service';
 import { TipoNotificacion } from '../../../core/models/notificacion.model';
 
 @Component({
   selector: 'app-notificaciones-drawer',
   standalone: true,
-  imports: [DatePipe],
+  imports: [],
   templateUrl: './notificaciones-drawer.component.html',
   styleUrl: './notificaciones-drawer.component.scss',
 })
