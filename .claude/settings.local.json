@@ -21,7 +21,8 @@
       "Bash(git push:*)",
       "Bash(rtk npx:*)",
       "Bash(grep:*)",
-      "Bash(rtk grep:*)"
+      "Bash(rtk grep:*)",
+      "Bash(rtk git *)"
     ]
   },
   "enableAllProjectMcpServers": true,
