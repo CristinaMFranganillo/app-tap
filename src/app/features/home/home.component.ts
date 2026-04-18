@@ -140,4 +140,8 @@ export class HomeComponent {
   irEntrenamientos(): void {
     this.router.navigate(['/admin/scores']);
   }
+
+  irCoachContexto(): void {
+    this.router.navigate(['/admin/coach']);
+  }
 }
