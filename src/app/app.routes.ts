@@ -34,9 +34,9 @@ export const routes: Routes = [
           import('./features/scores/scores.routes').then(m => m.scoresRoutes),
       },
       {
-        path: 'perfil',
+        path: 'metricas',
         loadComponent: () =>
-          import('./features/perfil/perfil.component').then(m => m.PerfilComponent),
+          import('./features/metricas/metricas.component').then(m => m.MetricasComponent),
       },
       {
         path: 'admin',
