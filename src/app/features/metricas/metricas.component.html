@@ -1,1 +1,253 @@
-<div></div>
+<!-- ── Selector de año (sticky bajo header de la app) ──────────── -->
+<div class="metricas-anio-bar">
+  <button class="metricas-anio-bar__btn" (click)="anioAnterior()" [disabled]="anioSeleccionado() <= anioActual - 4">
+    <i class="bi bi-chevron-left"></i>
+  </button>
+  <span class="metricas-anio-bar__anio">{{ anioSeleccionado() }}</span>
+  <button class="metricas-anio-bar__btn" (click)="anioSiguiente()" [disabled]="anioSeleccionado() >= anioActual">
+    <i class="bi bi-chevron-right"></i>
+  </button>
+</div>
+
+<div class="metricas-container">
+
+  <!-- ── Estado vacío ─────────────────────────────────────────── -->
+  @if (!hayDatos()) {
+    <app-empty-state
+      icon="bi-graph-up"
+      [title]="'Sin entrenamientos en ' + anioSeleccionado()"
+      subtitle="Aún no tienes entrenamientos registrados este año">
+    </app-empty-state>
+  }
+
+  @if (hayDatos()) {
+
+    <!-- ── 1. KPIs 2×2 ──────────────────────────────────────── -->
+    <div class="metricas-kpis">
+      <div class="metricas-kpi">
+        <span class="metricas-kpi__label">Media anual</span>
+        <span class="metricas-kpi__valor">{{ mediaAnual() | number:'1.1-1' }} <small>/25</small></span>
+        <span class="metricas-kpi__sub text-gray-500">vs club: {{ mediaClub() | number:'1.1-1' }}</span>
+      </div>
+      <div class="metricas-kpi">
+        <span class="metricas-kpi__label">Sesiones</span>
+        <span class="metricas-kpi__valor">{{ totalSesiones() }}</span>
+        <span class="metricas-kpi__sub text-gray-500">entrenamientos</span>
+      </div>
+      <div class="metricas-kpi">
+        <span class="metricas-kpi__label">Mejor resultado</span>
+        <span class="metricas-kpi__valor">{{ mejorResultado() }} <small>/25</small></span>
+        <span class="metricas-kpi__sub text-gray-500">{{ formatFecha(fechaMejorResultado()) }}</span>
+      </div>
+      <div class="metricas-kpi">
+        <span class="metricas-kpi__label">Posición club</span>
+        @if (posicionClub(); as pos) {
+          <span class="metricas-kpi__valor">#{{ pos.posicion }}</span>
+          <span class="metricas-kpi__sub text-gray-500">de {{ pos.total }} socios</span>
+        } @else {
+          <span class="metricas-kpi__valor">—</span>
+        }
+      </div>
+    </div>
+
+    <!-- ── 2. Evolución temporal ────────────────────────────── -->
+    <div class="metricas-card">
+      <div class="metricas-card__header">
+        <h3 class="metricas-card__title">Evolución mensual</h3>
+        <div class="metricas-card__actions">
+          @for (anio of aniosDisponibles; track anio) {
+            @if (anio !== anioSeleccionado()) {
+              <button
+                class="metricas-btn-comparar"
+                [class.metricas-btn-comparar--activo]="aniosComparativos().includes(anio)"
+                (click)="toggleAnioComparativo(anio)">
+                {{ anio }}
+              </button>
+            }
+          }
+        </div>
+      </div>
+
+      <svg class="metricas-svg" viewBox="0 0 300 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- Línea media club (referencia gris punteado) -->
+        @if (svgLineaClub()) {
+          <polyline
+            [attr.points]="svgLineaClub()"
+            fill="none" stroke="#94A3B8" stroke-width="1"
+            stroke-dasharray="4 3" opacity="0.6" />
+        }
+        <!-- Líneas del socio y comparativas -->
+        @for (linea of svgLineas(); track linea!.anio) {
+          <polyline
+            [attr.points]="linea!.points"
+            fill="none"
+            [attr.stroke]="linea!.color"
+            stroke-width="2"
+            [attr.stroke-dasharray]="linea!.punteado ? '4 3' : 'none'" />
+          @for (dot of linea!.dots; track dot.mes) {
+            <circle [attr.cx]="dot.x" [attr.cy]="dot.y" r="3" [attr.fill]="linea!.color" />
+            <title>{{ mesesAbrev[dot.mes] }}: {{ dot.media | number:'1.1-1' }}/25</title>
+          }
+        }
+        <!-- Eje X: etiquetas meses -->
+        @for (mes of mesesAbrev; track $index) {
+          <text
+            [attr.x]="30 + ($index / 11) * 240"
+            y="118"
+            text-anchor="middle"
+            font-size="7"
+            fill="#94A3B8">{{ mes }}</text>
+        }
+      </svg>
+
+      <!-- Leyenda -->
+      <div class="metricas-leyenda">
+        <span class="metricas-leyenda__item">
+          <span class="metricas-leyenda__dot" style="background:#FFAE00"></span>
+          {{ anioSeleccionado() }}
+        </span>
+        @for (anio of aniosComparativos(); track anio) {
+          <span class="metricas-leyenda__item">
+            <span class="metricas-leyenda__dot" style="background:#60A5FA"></span>
+            {{ anio }}
+          </span>
+        }
+        <span class="metricas-leyenda__item">
+          <span class="metricas-leyenda__dot metricas-leyenda__dot--punteado"></span>
+          Media club
+        </span>
+      </div>
+    </div>
+
+    <!-- ── 3. Heatmap esquemas (1–10) ────────────────────────── -->
+    <div class="metricas-card">
+      <h3 class="metricas-card__title">Rendimiento por esquema</h3>
+
+      <div class="metricas-esquema__grid">
+        @for (celda of heatmapEsquemas(); track celda.esquema) {
+          <button
+            [class]="claseCeldaEsquema(celda)"
+            (click)="seleccionarEsquema(celda.esquema)"
+            [attr.aria-pressed]="esquemaSeleccionado() === celda.esquema">
+            <span class="metricas-esquema__num">{{ celda.esquema }}</span>
+            @if (celda.mediaPlatos !== null) {
+              <span class="metricas-esquema__media">{{ celda.mediaPlatos | number:'1.1-1' }}</span>
+              <span class="metricas-esquema__sesiones">{{ celda.sesiones }}s</span>
+            } @else {
+              <span class="metricas-esquema__vacia">—</span>
+            }
+          </button>
+        }
+      </div>
+
+      @if (esquemaSeleccionado() !== null) {
+        <div class="metricas-filtro-chip">
+          <span>Esquema {{ esquemaSeleccionado() }} activo</span>
+          <button (click)="seleccionarEsquema(esquemaSeleccionado()!)" aria-label="Quitar filtro">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+      }
+    </div>
+
+    <!-- ── 4. Heatmap platos (1–25) ──────────────────────────── -->
+    <div class="metricas-card">
+      <h3 class="metricas-card__title">Fallos por plato</h3>
+
+      <!-- Cabecera de puestos -->
+      <div class="metricas-fallos__cabecera">
+        @for (p of [1,2,3,4,5]; track p) {
+          <span>P{{ p }}</span>
+        }
+      </div>
+
+      <div class="metricas-fallos__grid">
+        @for (celda of heatmapFallos(); track celda.plato) {
+          <div [class]="claseCeldaFallo(celda)" [title]="celda.veces > 0 ? celda.veces + ' fallos' : ''">
+            <span class="metricas-fallos__num">{{ celda.plato }}</span>
+            <span class="metricas-fallos__veces">{{ celda.veces > 0 ? celda.veces : '—' }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Resumen textual -->
+      <div class="metricas-fallos__resumen">
+        @if (platosMasFallados().length === 0) {
+          <p class="text-green-600 font-medium">¡Sin fallos registrados este año!</p>
+        } @else {
+          @if (puestoMasDebil() !== null) {
+            <p>Tu punto más débil: <strong>puesto {{ puestoMasDebil() }}</strong></p>
+          }
+          <p>Platos con más fallos: <strong>{{ platosMasFallados().join(', ') }}</strong></p>
+        }
+      </div>
+    </div>
+
+    <!-- ── 5. Análisis por puesto (1–6) ─────────────────────── -->
+    <div class="metricas-card">
+      <h3 class="metricas-card__title">Análisis por puesto</h3>
+
+      <div class="metricas-puestos">
+        @for (p of analisisPuestos(); track p.puesto) {
+          <div class="metricas-puesto">
+            <div class="metricas-puesto__label">
+              <span>Puesto {{ p.puesto }}</span>
+              @if (mejorPuesto() === p.puesto) { <span class="metricas-puesto__star">★</span> }
+              @if (peorPuesto() === p.puesto) { <span class="metricas-puesto__peor">↓</span> }
+            </div>
+            <div class="metricas-puesto__barra-wrap">
+              @if (p.media !== null) {
+                <div class="metricas-puesto__barra"
+                  [style.width.%]="(p.media / 25) * 100">
+                </div>
+                <span class="metricas-puesto__valor">{{ p.media | number:'1.1-1' }}</span>
+              } @else {
+                <span class="metricas-puesto__sin-datos">Sin datos</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- ── 6. Racha y consistencia ───────────────────────────── -->
+    <div class="metricas-card metricas-racha">
+      <h3 class="metricas-card__title">Racha y consistencia</h3>
+
+      <div class="metricas-racha__grid">
+        <div class="metricas-racha__item">
+          <span class="metricas-racha__num">{{ mejorRacha() }}</span>
+          <span class="metricas-racha__label">Mejor racha</span>
+          <span class="metricas-racha__sub">sesiones &gt; tu media</span>
+        </div>
+        <div class="metricas-racha__item">
+          @if (consistencia(); as c) {
+            <span class="metricas-racha__num">σ {{ c.std }}</span>
+            <span class="metricas-racha__label">Consistencia</span>
+            <span class="metricas-racha__sub">{{ c.label }}</span>
+          } @else {
+            <span class="metricas-racha__num">—</span>
+            <span class="metricas-racha__label">Consistencia</span>
+          }
+        </div>
+        <div class="metricas-racha__item metricas-racha__sparkline-wrap">
+          <span class="metricas-racha__label">Últimas 5 sesiones</span>
+          @if (svgSparkline()) {
+            <svg class="metricas-sparkline" viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg">
+              <polyline [attr.points]="svgSparkline()" fill="none" stroke="#FFAE00" stroke-width="2" />
+            </svg>
+            <div class="metricas-sparkline__valores">
+              @for (s of tendenciaReciente(); track s.fecha) {
+                <span>{{ s.platos }}</span>
+              }
+            </div>
+          } @else {
+            <span class="metricas-racha__sub">Sin datos suficientes</span>
+          }
+        </div>
+      </div>
+    </div>
+
+  }
+
+</div>
