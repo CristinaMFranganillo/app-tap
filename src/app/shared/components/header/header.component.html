@@ -11,42 +11,55 @@
     </div>
   </a>
 
-  <div class="header-avatar-wrap">
-    <button (click)="toggleMenu()" class="header-avatar-wrap__btn">
-      @if (esAdmin()) {
-        <div class="header-admin-avatar">
-          <i class="bi bi-shield-lock-fill"></i>
-        </div>
-      } @else {
-        <app-avatar
-          [nombre]="(currentUser$ | async)?.nombre ?? ''"
-          [apellidos]="(currentUser$ | async)?.apellidos ?? ''"
-          [avatarUrl]="(currentUser$ | async)?.avatarUrl"
-          [size]="30"
-        />
+  <div class="flex items-center gap-3">
+    <!-- Campana de notificaciones -->
+    <button (click)="abrirNotificaciones()" class="header-bell">
+      <i class="bi bi-bell-fill"
+         [class.header-bell__icon--active]="notificacionesService.noLeidas() > 0"></i>
+      @if (notificacionesService.noLeidas() > 0) {
+        <span class="header-bell__badge">
+          {{ notificacionesService.noLeidas() > 9 ? '9+' : notificacionesService.noLeidas() }}
+        </span>
       }
     </button>
 
-    @if (menuAbierto()) {
-      <!-- Overlay para cerrar al pulsar fuera -->
-      <div class="header-overlay" (click)="toggleMenu()"></div>
-
-      <div class="header-menu">
-        @if (!esAdmin()) {
-          <button (click)="onCambiarFoto()" class="header-menu__item">
-            <i class="bi bi-camera"></i>
-            Cambiar foto de perfil
-          </button>
+    <!-- Avatar / menú -->
+    <div class="header-avatar-wrap">
+      <button (click)="toggleMenu()" class="header-avatar-wrap__btn">
+        @if (esAdmin()) {
+          <div class="header-admin-avatar">
+            <i class="bi bi-shield-lock-fill"></i>
+          </div>
+        } @else {
+          <app-avatar
+            [nombre]="(currentUser$ | async)?.nombre ?? ''"
+            [apellidos]="(currentUser$ | async)?.apellidos ?? ''"
+            [avatarUrl]="(currentUser$ | async)?.avatarUrl"
+            [size]="30"
+          />
         }
-        <button (click)="onCambiarPassword()" class="header-menu__item">
-          <i class="bi bi-key"></i>
-          Cambiar contraseña
-        </button>
-        <button (click)="logout()" class="header-menu__item header-menu__item--danger">
-          <i class="bi bi-box-arrow-right"></i>
-          Cerrar sesión
-        </button>
-      </div>
-    }
+      </button>
+
+      @if (menuAbierto()) {
+        <div class="header-overlay" (click)="toggleMenu()"></div>
+
+        <div class="header-menu">
+          @if (!esAdmin()) {
+            <button (click)="onCambiarFoto()" class="header-menu__item">
+              <i class="bi bi-camera"></i>
+              Cambiar foto de perfil
+            </button>
+          }
+          <button (click)="onCambiarPassword()" class="header-menu__item">
+            <i class="bi bi-key"></i>
+            Cambiar contraseña
+          </button>
+          <button (click)="logout()" class="header-menu__item header-menu__item--danger">
+            <i class="bi bi-box-arrow-right"></i>
+            Cerrar sesión
+          </button>
+        </div>
+      }
+    </div>
   </div>
 </header>

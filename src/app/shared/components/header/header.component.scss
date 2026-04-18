@@ -52,3 +52,43 @@
     }
   }
 }
+
+.header-bell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  i {
+    font-size: 18px;
+    color: #9CA3AF;
+    transition: color 0.2s;
+
+    &.header-bell__icon--active {
+      color: #FFAE00;
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    width: 16px;
+    height: 16px;
+    background: #EF4444;
+    border-radius: 50%;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+}

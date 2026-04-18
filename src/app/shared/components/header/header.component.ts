@@ -3,6 +3,7 @@ import { AsyncPipe } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/auth/auth.service';
+import { NotificacionesService } from '../../../core/services/notificaciones.service';
 import { AvatarComponent } from '../avatar/avatar.component';
 
 @Component({
@@ -15,6 +16,7 @@ import { AvatarComponent } from '../avatar/avatar.component';
 export class HeaderComponent {
   private auth = inject(AuthService);
   private router = inject(Router);
+  readonly notificacionesService = inject(NotificacionesService);
   readonly currentUser$ = this.auth.currentUser$;
   private user = toSignal(this.currentUser$, { initialValue: null });
   esAdmin = computed(() => {
@@ -24,9 +26,14 @@ export class HeaderComponent {
   menuAbierto      = signal(false);
   cambiarPassword  = output<void>();
   cambiarFoto      = output<void>();
+  abrirDrawer      = output<void>();
 
   toggleMenu(): void {
     this.menuAbierto.update(v => !v);
+  }
+
+  abrirNotificaciones(): void {
+    this.abrirDrawer.emit();
   }
 
   onCambiarPassword(): void {
