@@ -8,7 +8,7 @@ $text-muted: #94A3B8;
 // ── Barra selector de año ───────────────────────────────────────
 .metricas-anio-bar {
   position: sticky;
-  top: 56px; // altura del header principal de la app
+  top: 54px; // altura del header principal de la app
   z-index: 10;
   background: #fff;
   border-bottom: 1px solid #e5e7eb;
@@ -194,10 +194,10 @@ $text-muted: #94A3B8;
   &:active { transform: scale(0.96); }
 
   &--vacia { background: #F3F4F6; color: $text-muted; }
-  &--bajo  { background: rgba($error, 0.15); color: darken($error, 15%); }
-  &--medio { background: rgba($primary, 0.18); color: darken($primary, 20%); }
-  &--alto  { background: rgba($success, 0.18); color: darken($success, 10%); }
-  &--activa { border-color: $secondary !important; }
+  &--bajo  { background: rgba($error, 0.15);   color: #b91c1c; }
+  &--medio { background: rgba($primary, 0.18); color: #8a5a00; }
+  &--alto  { background: rgba($success, 0.18); color: #065f46; }
+  &--activa { border-color: $secondary; }
 }
 
 .metricas-esquema__num    { font-size: 1rem; font-weight: 800; line-height: 1; }
