@@ -1,0 +1,46 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Notificaciones</h1>
+    <button class="btn btn-primary" (click)="nueva()">
+      <i class="bi bi-plus-lg"></i> Nueva
+    </button>
+  </div>
+
+  @if (notificaciones().length === 0) {
+    <p class="text-gray-400 text-sm text-center mt-12">No hay notificaciones creadas.</p>
+  } @else {
+    <div class="lista-notif">
+      @for (n of notificaciones(); track n.id) {
+        <div class="lista-notif__fila card">
+          <div class="lista-notif__info">
+            <span class="badge" [class]="badgeClass(n.tipo)">{{ n.tipo }}</span>
+            <p class="lista-notif__titulo">{{ n.titulo }}</p>
+            <p class="lista-notif__meta">
+              {{ labelDestinatarios(n) }}
+              @if (n.fechaExpiracion) {
+                · Expira {{ n.fechaExpiracion | date:'d MMM yyyy' : '' : 'es' }}
+              }
+              · {{ n.createdAt | date:'d MMM yyyy' : '' : 'es' }}
+            </p>
+          </div>
+          <div class="lista-notif__actions">
+            <button class="icon-btn" (click)="editar(n.id)" title="Editar">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="icon-btn icon-btn--danger" (click)="confirmarEliminar(n.id)" title="Eliminar">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
+
+@if (pendingDeleteId()) {
+  <app-confirm-dialog
+    mensaje="¿Eliminar esta notificación?"
+    (confirmado)="eliminar()"
+    (cancelado)="cancelarEliminar()"
+  />
+}
