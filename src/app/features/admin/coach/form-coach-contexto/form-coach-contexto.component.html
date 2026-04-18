@@ -1,0 +1,73 @@
+<div class="p-4 max-w-lg mx-auto">
+  <h2 class="text-lg font-bold text-gray-800 mb-4">
+    {{ isEdit ? 'Editar entrada' : 'Nueva entrada del coach' }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Título *</label>
+      <input
+        formControlName="titulo"
+        type="text"
+        placeholder="Ej: Torneo provincial mayo 2026"
+        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400"
+      />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Categoría *</label>
+      <select
+        formControlName="categoria"
+        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400"
+      >
+        <option value="noticia">Noticia</option>
+        <option value="consejo_tecnico">Consejo técnico</option>
+        <option value="aviso_torneo">Aviso torneo</option>
+        <option value="equipamiento">Equipamiento</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Contenido *</label>
+      <textarea
+        formControlName="contenido"
+        rows="5"
+        placeholder="Texto que el coach usará como contexto..."
+        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400 resize-none"
+      ></textarea>
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Fecha de expiración (opcional)</label>
+      <input
+        formControlName="fechaExpiracion"
+        type="date"
+        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400"
+      />
+    </div>
+
+    <div class="flex items-center gap-3">
+      <label class="text-sm font-medium text-gray-700">Activo</label>
+      <input formControlName="activo" type="checkbox" class="w-4 h-4 accent-amber-400" />
+    </div>
+
+    <div class="flex gap-3 mt-2">
+      <button
+        type="submit"
+        [disabled]="form.invalid || guardando"
+        class="flex-1 bg-amber-400 text-white font-semibold py-2 rounded-lg disabled:opacity-40 hover:bg-amber-500 transition-colors"
+      >
+        {{ guardando ? 'Guardando...' : (isEdit ? 'Guardar cambios' : 'Crear entrada') }}
+      </button>
+      <button
+        type="button"
+        (click)="cancelar()"
+        class="flex-1 border border-gray-200 text-gray-600 font-semibold py-2 rounded-lg hover:bg-gray-50 transition-colors"
+      >
+        Cancelar
+      </button>
+    </div>
+
+  </form>
+</div>
