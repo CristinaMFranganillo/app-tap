@@ -41,6 +41,10 @@ export class NotificacionesService {
   }
 
   suscribirRealtime(): RealtimeChannel {
+    if (this.canal) {
+      supabase.removeChannel(this.canal);
+      this.canal = null;
+    }
     this.canal = supabase
       .channel('notificaciones-nuevas')
       .on(
