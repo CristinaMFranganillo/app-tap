@@ -1,0 +1,395 @@
+// ── Variables ───────────────────────────────────────────────────
+$primary: #FFAE00;
+$secondary: #002F86;
+$success: #10B981;
+$error: #EF4444;
+$text-muted: #94A3B8;
+
+// ── Barra selector de año ───────────────────────────────────────
+.metricas-anio-bar {
+  position: sticky;
+  top: 56px; // altura del header principal de la app
+  z-index: 10;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+
+  &__btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $primary;
+    font-size: 1.1rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    &:disabled { color: $text-muted; cursor: not-allowed; }
+    &:not(:disabled):hover { background: #FFF8E6; }
+  }
+
+  &__anio {
+    font-size: 1.125rem;
+    font-weight: 700;
+    min-width: 4rem;
+    text-align: center;
+  }
+}
+
+// ── Contenedor principal ────────────────────────────────────────
+.metricas-container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: 5rem; // espacio para bottom-nav
+}
+
+// ── Card base ───────────────────────────────────────────────────
+.metricas-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  &__title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #374151;
+    margin: 0 0 0.75rem;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+  }
+}
+
+// ── KPIs grid 2×2 ───────────────────────────────────────────────
+.metricas-kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.metricas-kpi {
+  background: #fff;
+  border-radius: 0.75rem;
+  padding: 0.875rem 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+
+  &__label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  &__valor {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1.2;
+
+    small {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: $text-muted;
+    }
+  }
+
+  &__sub {
+    font-size: 0.7rem;
+  }
+}
+
+// ── Botón de año comparativo ────────────────────────────────────
+.metricas-btn-comparar {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  cursor: pointer;
+  color: #374151;
+  transition: all 0.15s;
+
+  &--activo {
+    background: #DBEAFE;
+    border-color: #60A5FA;
+    color: #1D4ED8;
+    font-weight: 600;
+  }
+}
+
+// ── SVG gráfico evolución ───────────────────────────────────────
+.metricas-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+// ── Leyenda ──────────────────────────────────────────────────────
+.metricas-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.7rem;
+    color: #6b7280;
+  }
+
+  &__dot {
+    width: 10px;
+    height: 4px;
+    border-radius: 2px;
+    display: inline-block;
+
+    &--punteado {
+      background: repeating-linear-gradient(to right, #94A3B8 0, #94A3B8 3px, transparent 3px, transparent 7px);
+    }
+  }
+}
+
+// ── Heatmap esquemas ─────────────────────────────────────────────
+.metricas-esquema__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.35rem;
+}
+
+.metricas-esquema__celda {
+  aspect-ratio: 1;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.1s;
+  padding: 0.25rem;
+
+  &:active { transform: scale(0.96); }
+
+  &--vacia { background: #F3F4F6; color: $text-muted; }
+  &--bajo  { background: rgba($error, 0.15); color: darken($error, 15%); }
+  &--medio { background: rgba($primary, 0.18); color: darken($primary, 20%); }
+  &--alto  { background: rgba($success, 0.18); color: darken($success, 10%); }
+  &--activa { border-color: $secondary !important; }
+}
+
+.metricas-esquema__num    { font-size: 1rem; font-weight: 800; line-height: 1; }
+.metricas-esquema__media  { font-size: 0.6rem; font-weight: 600; }
+.metricas-esquema__sesiones { font-size: 0.55rem; color: $text-muted; }
+.metricas-esquema__vacia  { font-size: 0.75rem; }
+
+// ── Chip filtro activo ───────────────────────────────────────────
+.metricas-filtro-chip {
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #EFF6FF;
+  border: 1px solid #BFDBFE;
+  border-radius: 1rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  color: #1D4ED8;
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #1D4ED8;
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    padding: 0;
+  }
+}
+
+// ── Heatmap fallos ───────────────────────────────────────────────
+.metricas-fallos__cabecera {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin-bottom: 0.25rem;
+  gap: 0.25rem;
+
+  span {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: $text-muted;
+    text-transform: uppercase;
+  }
+}
+
+.metricas-fallos__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25rem;
+}
+
+.metricas-fallos__celda {
+  aspect-ratio: 1;
+  border-radius: 0.375rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  &--cero  { background: #F0FDF4; }
+  &--bajo  { background: rgba($error, 0.12); }
+  &--medio { background: rgba($error, 0.35); }
+  &--alto  { background: rgba($error, 0.65); color: #fff; }
+}
+
+.metricas-fallos__num   { font-size: 0.65rem; font-weight: 700; line-height: 1; }
+.metricas-fallos__veces { font-size: 0.55rem; color: inherit; }
+
+.metricas-fallos__resumen {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: #374151;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+// ── Análisis por puesto ──────────────────────────────────────────
+.metricas-puestos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metricas-puesto {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  &__label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #374151;
+    min-width: 4.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  &__star { color: $primary; font-size: 0.85rem; }
+  &__peor { color: $error; font-size: 0.85rem; }
+
+  &__barra-wrap {
+    flex: 1;
+    height: 1.25rem;
+    background: #F3F4F6;
+    border-radius: 0.25rem;
+    position: relative;
+    overflow: visible;
+    display: flex;
+    align-items: center;
+  }
+
+  &__barra {
+    height: 100%;
+    background: $primary;
+    border-radius: 0.25rem;
+    min-width: 4px;
+    transition: width 0.3s;
+  }
+
+  &__valor {
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-left: 0.35rem;
+    color: #111827;
+  }
+
+  &__sin-datos {
+    font-size: 0.7rem;
+    color: $text-muted;
+    padding-left: 0.5rem;
+  }
+}
+
+// ── Racha y consistencia ────────────────────────────────────────
+.metricas-racha {
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.1rem;
+  }
+
+  &__sparkline-wrap {
+    grid-column: 1 / -1;
+  }
+
+  &__num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: $primary;
+    line-height: 1.2;
+  }
+
+  &__label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #374151;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &__sub {
+    font-size: 0.65rem;
+    color: $text-muted;
+  }
+}
+
+// ── Sparkline ───────────────────────────────────────────────────
+.metricas-sparkline {
+  width: 100%;
+  max-width: 120px;
+  height: 40px;
+}
+
+.metricas-sparkline__valores {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 120px;
+  font-size: 0.6rem;
+  color: #374151;
+  font-weight: 600;
+}
