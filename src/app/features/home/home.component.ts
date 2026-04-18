@@ -144,4 +144,8 @@ export class HomeComponent {
   irCoachContexto(): void {
     this.router.navigate(['/admin/coach']);
   }
+
+  irNotificaciones(): void {
+    this.router.navigate(['/admin/notificaciones']);
+  }
 }

@@ -195,4 +195,29 @@ export const adminRoutes: Routes = [
       import('./coach/form-coach-contexto/form-coach-contexto.component')
         .then(m => m.FormCoachContextoComponent),
   },
+  // ── Notificaciones ───────────────────────────────────────────────────────
+  {
+    path: 'notificaciones',
+    canActivate: [roleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./notificaciones/lista-notificaciones-admin/lista-notificaciones-admin.component')
+        .then(m => m.ListaNotificacionesAdminComponent),
+  },
+  {
+    path: 'notificaciones/nueva',
+    canActivate: [roleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./notificaciones/form-notificacion/form-notificacion.component')
+        .then(m => m.FormNotificacionComponent),
+  },
+  {
+    path: 'notificaciones/:id',
+    canActivate: [roleGuard],
+    data: { roles: ['admin'] },
+    loadComponent: () =>
+      import('./notificaciones/form-notificacion/form-notificacion.component')
+        .then(m => m.FormNotificacionComponent),
+  },
 ];
