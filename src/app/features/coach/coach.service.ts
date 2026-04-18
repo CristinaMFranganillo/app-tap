@@ -57,7 +57,7 @@ export class CoachService {
     // Rendimiento por esquema
     const bucketEsquemas = new Map<number, number[]>();
     for (const r of entrenamientos) {
-      if (r.esquema && r.esquema >= 1 && r.esquema <= 12) {
+      if (r.esquema && r.esquema >= 1 && r.esquema <= 10) {
         if (!bucketEsquemas.has(r.esquema)) bucketEsquemas.set(r.esquema, []);
         bucketEsquemas.get(r.esquema)!.push(r.platosRotos);
       }
