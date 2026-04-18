@@ -2,19 +2,21 @@
 @if (fase() === 'intro') {
   <div class="lateralidad__intro">
     <div class="lateralidad__intro-card">
-      <div class="lateralidad__icono">↔️</div>
+      <div class="lateralidad__icono-wrap">
+        <i class="bi bi-arrow-left-right lateralidad__icono-svg"></i>
+      </div>
       <h1 class="lateralidad__titulo">Izquierda o Derecha</h1>
       <p class="lateralidad__descripcion">
         Un plato volará hacia un lado. Toca la mitad correcta de la pantalla lo
         más rápido posible. Tendrás {{ TOTAL_RONDAS }} rondas.
       </p>
       <ul class="lateralidad__instrucciones">
-        <li>Observa hacia dónde vuela el plato</li>
-        <li>Toca la mitad izquierda o derecha</li>
-        <li>Tienes {{ TIMEOUT_MS / 1000 }} s por ronda</li>
+        <li><i class="bi bi-eye"></i> Observa hacia dónde vuela el plato</li>
+        <li><i class="bi bi-hand-index"></i> Toca la mitad izquierda o derecha</li>
+        <li><i class="bi bi-clock"></i> Tienes {{ TIMEOUT_MS / 1000 }} s por ronda</li>
       </ul>
       <button class="lateralidad__btn-primario" (click)="empezar()">
-        Empezar
+        <i class="bi bi-play-fill"></i> Empezar
       </button>
       <button class="lateralidad__btn-secundario" (click)="volver()">
         Volver
@@ -108,11 +110,15 @@
 @if (fase() === 'resultado') {
   <div class="lateralidad__resultado">
     <div class="lateralidad__resultado-card">
-      <div class="lateralidad__icono">↔️</div>
-      <h2 class="lateralidad__resultado-titulo">¡Partida terminada!</h2>
+      <div class="lateralidad__resultado-header">
+        <div class="lateralidad__icono-wrap lateralidad__icono-wrap--small">
+          <i class="bi bi-arrow-left-right lateralidad__icono-svg"></i>
+        </div>
+        <h2 class="lateralidad__resultado-titulo">¡Partida terminada!</h2>
+      </div>
 
       <div class="lateralidad__media-bloque">
-        <span class="lateralidad__media-label">Tu tiempo medio</span>
+        <span class="lateralidad__media-label">Tiempo medio de reacción</span>
         @if (mediaMs() !== null) {
           <span class="lateralidad__media-valor">{{ mediaMs() }}<small>ms</small></span>
         } @else {
@@ -122,50 +128,47 @@
 
       <div class="lateralidad__stats">
         <div class="lateralidad__stat">
+          <i class="bi bi-check-circle-fill lateralidad__stat-icon lateralidad__stat-icon--ok"></i>
+          <span class="lateralidad__stat-valor lateralidad__stat-valor--ok">{{ aciertos() }}</span>
           <span class="lateralidad__stat-label">Aciertos</span>
-          <span class="lateralidad__stat-valor lateralidad__stat-valor--ok">
-            {{ aciertos() }}
-          </span>
         </div>
         <div class="lateralidad__stat">
+          <i class="bi bi-x-circle-fill lateralidad__stat-icon lateralidad__stat-icon--fail"></i>
+          <span class="lateralidad__stat-valor lateralidad__stat-valor--fail">{{ fallos() }}</span>
           <span class="lateralidad__stat-label">Fallos</span>
-          <span class="lateralidad__stat-valor lateralidad__stat-valor--fail">
-            {{ fallos() }}
-          </span>
         </div>
         <div class="lateralidad__stat">
-          <span class="lateralidad__stat-label">Mejor</span>
+          <i class="bi bi-lightning-charge-fill lateralidad__stat-icon lateralidad__stat-icon--best"></i>
           <span class="lateralidad__stat-valor">
-            @if (mejorMs() !== null) {
-              {{ mejorMs() }}<small>ms</small>
-            } @else {
-              —
-            }
+            @if (mejorMs() !== null) { {{ mejorMs() }}<small>ms</small> } @else { — }
           </span>
+          <span class="lateralidad__stat-label">Mejor</span>
         </div>
       </div>
 
-      <div class="lateralidad__badge lateralidad__badge--precision">
-        <i class="bi bi-bullseye"></i>
-        Precisión: {{ precision() }}%
-      </div>
+      <div class="lateralidad__badges">
+        <div class="lateralidad__badge lateralidad__badge--precision">
+          <i class="bi bi-bullseye"></i>
+          Precisión {{ precision() }}%
+        </div>
 
-      @if (guardado() && posicionClub() !== null) {
-        <div class="lateralidad__badge lateralidad__badge--ranking">
-          <i class="bi bi-trophy-fill"></i>
-          Posición en el club: #{{ posicionClub() }}
-        </div>
-      }
-      @if (guardado() && posicionClub() === null) {
-        <div class="lateralidad__badge lateralidad__badge--ranking">
-          <i class="bi bi-star-fill"></i>
-          ¡Primera marca guardada!
-        </div>
-      }
+        @if (guardado() && posicionClub() !== null) {
+          <div class="lateralidad__badge lateralidad__badge--ranking">
+            <i class="bi bi-trophy-fill"></i>
+            Posición en el club: #{{ posicionClub() }}
+          </div>
+        }
+        @if (guardado() && posicionClub() === null) {
+          <div class="lateralidad__badge lateralidad__badge--ranking">
+            <i class="bi bi-star-fill"></i>
+            ¡Primera marca guardada!
+          </div>
+        }
+      </div>
 
       <div class="lateralidad__acciones">
         <button class="lateralidad__btn-primario" (click)="jugarDeNuevo()">
-          Jugar de nuevo
+          <i class="bi bi-arrow-repeat"></i> Jugar de nuevo
         </button>
         <button class="lateralidad__btn-secundario" (click)="volver()">
           Volver

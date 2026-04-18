@@ -37,11 +37,31 @@ $alto-juego: calc(100dvh - 54px - 52px);
 }
 
 .lateralidad__intro-card {
-  @apply bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center gap-4 w-full max-w-sm;
+  @apply bg-white rounded-2xl shadow-lg flex flex-col items-center w-full max-w-sm;
+  padding: 28px 20px;
+  gap: 16px;
 }
 
-.lateralidad__icono {
-  @apply text-6xl;
+.lateralidad__icono-wrap {
+  @apply flex items-center justify-center rounded-full;
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, #FFAE00 0%, #F59E0B 100%);
+  box-shadow: 0 4px 16px rgba(255, 174, 0, 0.4);
+
+  &--small {
+    width: 44px;
+    height: 44px;
+
+    .lateralidad__icono-svg {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+.lateralidad__icono-svg {
+  font-size: 2rem;
+  color: white;
 }
 
 .lateralidad__titulo {
@@ -53,7 +73,28 @@ $alto-juego: calc(100dvh - 54px - 52px);
 }
 
 .lateralidad__instrucciones {
-  @apply text-left text-sm text-gray-500 list-disc list-inside space-y-1 w-full;
+  @apply text-left text-sm text-gray-600 w-full;
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #fafafa;
+    border-radius: 10px;
+    border: 1px solid #f0f0f0;
+
+    i {
+      color: #FFAE00;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+  }
 }
 
 // ─── Cielo (gameplay) ──────────────────────────────────────────────────────
@@ -226,7 +267,13 @@ $alto-juego: calc(100dvh - 54px - 52px);
 }
 
 .lateralidad__resultado-card {
-  @apply bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center gap-5 w-full max-w-sm;
+  @apply bg-white rounded-2xl shadow-lg flex flex-col items-center w-full max-w-sm;
+  padding: 24px 20px;
+  gap: 20px;
+}
+
+.lateralidad__resultado-header {
+  @apply flex items-center gap-3;
 }
 
 .lateralidad__resultado-titulo {
@@ -234,57 +281,85 @@ $alto-juego: calc(100dvh - 54px - 52px);
 }
 
 .lateralidad__media-bloque {
-  @apply flex flex-col items-center gap-1;
+  @apply flex flex-col items-center w-full;
+  gap: 4px;
+  padding: 16px 0;
+  border-top: 1px solid #f5f5f5;
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .lateralidad__media-label {
-  @apply text-sm text-gray-500 uppercase tracking-wide font-semibold;
+  @apply text-xs text-gray-500 uppercase tracking-wide font-semibold;
 }
 
 .lateralidad__media-valor {
-  @apply text-5xl font-extrabold text-gray-800;
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #FFAE00;
+  line-height: 1;
 
   small {
-    @apply text-2xl font-semibold text-gray-500 ml-1;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #b0b0b0;
+    margin-left: 4px;
   }
 }
 
 .lateralidad__stats {
-  @apply grid grid-cols-3 gap-3 w-full;
+  @apply grid grid-cols-3 gap-2 w-full;
 }
 
 .lateralidad__stat {
-  @apply flex flex-col items-center bg-gray-50 rounded-xl py-3 px-2 gap-1;
+  @apply flex flex-col items-center rounded-2xl py-3 px-2;
+  gap: 4px;
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+}
+
+.lateralidad__stat-icon {
+  font-size: 1.1rem;
+  margin-bottom: 2px;
+
+  &--ok   { color: #10B981; }
+  &--fail { color: #EF4444; }
+  &--best { color: #FFAE00; }
 }
 
 .lateralidad__stat-label {
-  @apply text-xs text-gray-500 font-semibold uppercase tracking-wide;
+  @apply text-xs text-gray-400 font-semibold uppercase tracking-wide;
 }
 
 .lateralidad__stat-valor {
   @apply text-xl font-bold text-gray-800;
 
   small {
-    @apply text-sm font-normal text-gray-500;
+    @apply text-xs font-normal text-gray-400;
   }
 
   &--ok   { color: #10B981; }
   &--fail { color: #EF4444; }
 }
 
+.lateralidad__badges {
+  @apply flex flex-col items-center gap-2 w-full;
+}
+
 .lateralidad__badge {
-  @apply flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full;
+  @apply flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full w-full justify-center;
 
   &--precision {
-    background-color: #DBEAFE;
-    color: #1E40AF;
+    background-color: #FFF8E7;
+    color: #B45309;
+    border: 1px solid #FDE68A;
 
-    i { color: #2563EB; }
+    i { color: #FFAE00; }
   }
 
   &--ranking {
-    background-color: #FFF3D0;
+    background-color: #FFF8E7;
     color: #92400E;
+    border: 1px solid #FDE68A;
 
     i { color: #FFAE00; }
   }
@@ -295,14 +370,18 @@ $alto-juego: calc(100dvh - 54px - 52px);
 }
 
 .lateralidad__btn-primario {
-  @apply w-full py-3 rounded-xl font-bold text-white text-base tracking-wide transition-opacity;
-  background-color: #1a1a2e;
+  @apply w-full py-3 rounded-xl font-bold text-white text-base tracking-wide transition-all;
+  background-color: #FFAE00;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
-  &:active { @apply opacity-80; }
+  &:active { background-color: #e09d00; }
 }
 
 .lateralidad__btn-secundario {
-  @apply w-full py-3 rounded-xl font-bold text-gray-700 text-base tracking-wide bg-gray-100 transition-opacity;
+  @apply w-full py-3 rounded-xl font-bold text-gray-600 text-base tracking-wide bg-gray-100 transition-opacity;
 
-  &:active { @apply opacity-80; }
+  &:active { @apply opacity-70; }
 }
