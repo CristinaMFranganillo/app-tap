@@ -229,7 +229,7 @@ export class MetricasComponent {
   private calcularMediasMensuales(list: ResultadoEntrenamientoConFecha[]): (number | null)[] {
     const buckets = Array.from({ length: 12 }, () => [] as number[]);
     for (const r of list) {
-      const mes = new Date(r.fecha).getMonth();
+      const mes = parseInt(r.fecha.substring(5, 7), 10) - 1; // evita desfase por zona horaria
       buckets[mes].push(r.platosRotos);
     }
     return buckets.map(arr =>

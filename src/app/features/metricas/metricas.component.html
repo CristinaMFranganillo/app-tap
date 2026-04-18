@@ -156,10 +156,10 @@
     <div class="metricas-card">
       <h3 class="metricas-card__title">Fallos por plato</h3>
 
-      <!-- Cabecera de puestos -->
+      <!-- Cabecera: rangos de platos por columna -->
       <div class="metricas-fallos__cabecera">
-        @for (p of [1,2,3,4,5]; track p) {
-          <span>P{{ p }}</span>
+        @for (rango of ['1-5','6-10','11-15','16-20','21-25']; track rango) {
+          <span>{{ rango }}</span>
         }
       </div>
 
