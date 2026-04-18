@@ -1,0 +1,69 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">{{ isEdit ? 'Editar' : 'Nueva' }} Notificación</h1>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-notif">
+
+    <div class="form-field">
+      <label class="form-label">Título *</label>
+      <input formControlName="titulo" type="text" class="form-input" placeholder="Ej. Recordatorio cuota 2026" />
+    </div>
+
+    <div class="form-field">
+      <label class="form-label">Tipo *</label>
+      <select formControlName="tipo" class="form-input">
+        @for (t of tipos; track t) {
+          <option [value]="t">{{ t | titlecase }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-field">
+      <label class="form-label">Mensaje *</label>
+      <textarea formControlName="cuerpo" class="form-input" rows="4" placeholder="Texto del aviso..."></textarea>
+    </div>
+
+    <div class="form-field">
+      <label class="form-label">Destinatarios</label>
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" [checked]="destinatariosTodos()" (change)="toggleDestinatarios(true)" />
+          Todos los socios
+        </label>
+        <label class="radio-option">
+          <input type="radio" [checked]="!destinatariosTodos()" (change)="toggleDestinatarios(false)" />
+          Socios específicos
+        </label>
+      </div>
+
+      @if (!destinatariosTodos()) {
+        <div class="socios-lista">
+          @for (s of socios(); track s.id) {
+            <label class="socio-check">
+              <input
+                type="checkbox"
+                [checked]="isSocioSeleccionado(s.id)"
+                (change)="toggleSocio(s.id)"
+              />
+              {{ s.nombre }} {{ s.apellidos }}
+            </label>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="form-field">
+      <label class="form-label">Fecha de expiración (opcional)</label>
+      <input formControlName="fechaExpiracion" type="date" class="form-input" />
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">
+        {{ isEdit ? 'Guardar cambios' : 'Enviar notificación' }}
+      </button>
+    </div>
+
+  </form>
+</div>
