@@ -5,10 +5,15 @@ $success: #10B981;
 $error: #EF4444;
 $text-muted: #94A3B8;
 
+// El shell-main ya gestiona pt-[54px] y pb-[52px], el host debe ser block
+:host {
+  display: block;
+}
+
 // ── Barra selector de año ───────────────────────────────────────
 .metricas-anio-bar {
   position: sticky;
-  top: 54px; // altura del header principal de la app
+  top: 0; // relativo al scroll del shell-main, que ya empieza bajo el header
   z-index: 10;
   background: #fff;
   border-bottom: 1px solid #e5e7eb;
@@ -46,7 +51,6 @@ $text-muted: #94A3B8;
   gap: 1rem;
   max-width: 600px;
   margin: 0 auto;
-  padding-bottom: 5rem; // espacio para bottom-nav
 }
 
 // ── Card base ───────────────────────────────────────────────────
