@@ -33,8 +33,12 @@
       </div>
       <div class="metricas-kpi">
         <span class="metricas-kpi__label">Mejor resultado</span>
-        <span class="metricas-kpi__valor">{{ mejorResultado() }} <small>/25</small></span>
-        <span class="metricas-kpi__sub text-gray-500">{{ formatFecha(fechaMejorResultado()) }}</span>
+        @if (mejorResultado() !== null) {
+          <span class="metricas-kpi__valor">{{ mejorResultado() }} <small>/25</small></span>
+          <span class="metricas-kpi__sub text-gray-500">{{ formatFecha(fechaMejorResultado()) }}</span>
+        } @else {
+          <span class="metricas-kpi__valor">—</span>
+        }
       </div>
       <div class="metricas-kpi">
         <span class="metricas-kpi__label">Posición club</span>
@@ -173,9 +177,6 @@
         @if (platosMasFallados().length === 0) {
           <p class="text-green-600 font-medium">¡Sin fallos registrados este año!</p>
         } @else {
-          @if (puestoMasDebil() !== null) {
-            <p>Tu punto más débil: <strong>puesto {{ puestoMasDebil() }}</strong></p>
-          }
           <p>Platos con más fallos: <strong>{{ platosMasFallados().join(', ') }}</strong></p>
         }
       </div>

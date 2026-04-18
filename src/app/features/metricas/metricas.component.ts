@@ -106,16 +106,17 @@ export class MetricasComponent {
     return Math.round((list.reduce((a, r) => a + r.platosRotos, 0) / list.length) * 10) / 10;
   });
 
-  mejorResultado = computed(() =>
-    this.misEntrenamientos().reduce((max, r) => Math.max(max, r.platosRotos), 0)
-  );
+  mejorResultado = computed(() => {
+    const list = this.misEntrenamientos();
+    if (list.length === 0) return null;
+    return list.reduce((max, r) => Math.max(max, r.platosRotos), 0);
+  });
 
   fechaMejorResultado = computed(() => {
     const list = this.misEntrenamientos();
     const mejor = this.mejorResultado();
-    if (mejor === 0) return null;
-    const entry = list.find(r => r.platosRotos === mejor);
-    return entry?.fecha ?? null;
+    if (mejor === null) return null;
+    return list.find(r => r.platosRotos === mejor)?.fecha ?? null;
   });
 
   posicionClub = computed(() => {
@@ -132,13 +133,13 @@ export class MetricasComponent {
     return Math.round((ranking.reduce((a, r) => a + r.mediaPlatos, 0) / ranking.length) * 10) / 10;
   });
 
-  // ── Heatmap esquemas (1–10) ──────────────────────────────────────
+  // ── Heatmap esquemas (1–12, según migración 025) ────────────────
   heatmapEsquemas = computed(() => {
     const list = this.misEntrenamientos();
     const buckets = new Map<number, number[]>();
-    for (let e = 1; e <= 10; e++) buckets.set(e, []);
+    for (let e = 1; e <= 12; e++) buckets.set(e, []);
     for (const r of list) {
-      if (r.esquema && r.esquema >= 1 && r.esquema <= 10) {
+      if (r.esquema && r.esquema >= 1 && r.esquema <= 12) {
         buckets.get(r.esquema)!.push(r.platosRotos);
       }
     }
@@ -192,17 +193,11 @@ export class MetricasComponent {
       .map(c => c.plato)
   );
 
-  puestoMasDebil = computed(() => {
-    const analisis = this.analisisPuestos();
-    const conDatos = analisis.filter(p => p.fallos > 0);
-    if (conDatos.length === 0) return null;
-    return conDatos.reduce((max, p) => p.fallos > max.fallos ? p : max).puesto;
-  });
-
-  // ── Análisis por puesto (1–6) ────────────────────────────────────
+  // ── Análisis por puesto (1–6) — media de platos rotos por puesto ─
+  // Nota: "puesto" aquí es el campo resultados_entrenamiento.puesto (1-6),
+  // que registra en qué posición de tiro estaba el tirador en esa escuadra.
   analisisPuestos = computed(() => {
     const resultados = this.entrenamientosFiltrados();
-    const fallos = this.fallosFiltrados();
 
     const platosMap = new Map<number, number[]>();
     for (let p = 1; p <= 6; p++) platosMap.set(p, []);
@@ -210,18 +205,11 @@ export class MetricasComponent {
       if (r.puesto >= 1 && r.puesto <= 6) platosMap.get(r.puesto)!.push(r.platosRotos);
     }
 
-    const fallosMap = new Map<number, number>();
-    for (let p = 1; p <= 6; p++) fallosMap.set(p, 0);
-    for (const f of fallos) {
-      const puesto = Math.ceil(f.numeroPlato / 5);
-      if (puesto >= 1 && puesto <= 6) fallosMap.set(puesto, (fallosMap.get(puesto) ?? 0) + 1);
-    }
-
     return Array.from({ length: 6 }, (_, i) => {
       const puesto = i + 1;
       const arr = platosMap.get(puesto)!;
       const media = arr.length === 0 ? null : Math.round((arr.reduce((a, b) => a + b, 0) / arr.length) * 10) / 10;
-      return { puesto, media, fallos: fallosMap.get(puesto) ?? 0, sesiones: arr.length };
+      return { puesto, media, sesiones: arr.length };
     });
   });
 

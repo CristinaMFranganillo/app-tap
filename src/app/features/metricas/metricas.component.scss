@@ -175,7 +175,7 @@ $text-muted: #94A3B8;
 // ── Heatmap esquemas ─────────────────────────────────────────────
 .metricas-esquema__grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 0.35rem;
 }
 
