@@ -133,13 +133,13 @@ export class MetricasComponent {
     return Math.round((ranking.reduce((a, r) => a + r.mediaPlatos, 0) / ranking.length) * 10) / 10;
   });
 
-  // ── Heatmap esquemas (1–12, según migración 025) ────────────────
+  // ── Heatmap esquemas (1–10) ──────────────────────────────────────
   heatmapEsquemas = computed(() => {
     const list = this.misEntrenamientos();
     const buckets = new Map<number, number[]>();
-    for (let e = 1; e <= 12; e++) buckets.set(e, []);
+    for (let e = 1; e <= 10; e++) buckets.set(e, []);
     for (const r of list) {
-      if (r.esquema && r.esquema >= 1 && r.esquema <= 12) {
+      if (r.esquema && r.esquema >= 1 && r.esquema <= 10) {
         buckets.get(r.esquema)!.push(r.platosRotos);
       }
     }
