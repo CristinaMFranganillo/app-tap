@@ -24,6 +24,8 @@ export class CoachComponent implements OnInit, AfterViewChecked {
   informe = signal<string | null>(null);
   fechaInforme = signal<string | null>(null);
 
+  informeExpandido = signal(false);
+
   mensajes = signal<MensajeChat[]>([]);
   enviando = signal(false);
   inputUsuario = '';

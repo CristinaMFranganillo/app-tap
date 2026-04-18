@@ -1,50 +1,59 @@
-<div class="coach-page flex flex-col h-full overflow-hidden">
+<div class="coach-page">
 
-  <!-- INFORME AUTOMÁTICO -->
-  <section class="coach-informe flex-shrink-0 p-4 border-b border-gray-100">
-    <div class="flex items-center gap-2 mb-3">
-      <span class="text-lg">📋</span>
-      <h2 class="text-sm font-bold uppercase tracking-wide text-gray-500">Análisis de tu temporada</h2>
+  <!-- TARJETA ANÁLISIS COMPACTA -->
+  <div class="coach-card">
+    <div class="coach-card__header">
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="text-lg flex-shrink-0">🏆</span>
+        <div class="min-w-0">
+          @if (cargandoInforme()) {
+            <p class="text-xs text-gray-400 italic">Preparando tu análisis...</p>
+          } @else if (informe()) {
+            <p class="text-sm font-semibold text-gray-700">Tu análisis de temporada está listo</p>
+            <p class="text-xs text-gray-400">{{ formatearFecha(fechaInforme()) }}</p>
+          } @else {
+            <p class="text-sm text-gray-500">Sin análisis disponible</p>
+          }
+        </div>
+      </div>
+      <div class="flex items-center gap-2 flex-shrink-0 ml-3">
+        @if (informe() && !cargandoInforme()) {
+          <button
+            (click)="informeExpandido.set(!informeExpandido())"
+            class="coach-card__btn-ver"
+          >
+            {{ informeExpandido() ? 'Cerrar' : 'Ver análisis' }}
+          </button>
+        }
+        <button
+          (click)="actualizarInforme()"
+          [disabled]="cargandoInforme()"
+          class="text-gray-300 hover:text-amber-500 transition-colors disabled:opacity-40"
+          title="Actualizar"
+        >
+          <i class="bi bi-arrow-clockwise text-sm"></i>
+        </button>
+      </div>
     </div>
 
-    @if (cargandoInforme()) {
-      <div class="flex items-center gap-3 py-4">
-        <div class="coach-spinner"></div>
-        <span class="text-sm text-gray-500">Analizando tus entrenamientos...</span>
+    @if (informeExpandido() && informe()) {
+      <div class="coach-card__body">
+        <div class="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{{ informe() }}</div>
+        <div class="flex items-center justify-between mt-3 pt-2 border-t border-gray-100">
+          <span class="text-xs text-gray-400">{{ formatearFecha(fechaInforme()) }}</span>
+        </div>
       </div>
     }
 
     @if (errorInforme()) {
-      <div class="text-sm text-red-500 py-2">{{ errorInforme() }}</div>
+      <div class="px-3 pb-2 text-xs text-red-500">{{ errorInforme() }}</div>
     }
-
-    @if (informe() && !cargandoInforme()) {
-      <div class="coach-informe__texto text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
-        {{ informe() }}
-      </div>
-      <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
-        <span class="text-xs text-gray-400">{{ formatearFecha(fechaInforme()) }}</span>
-        <button
-          (click)="actualizarInforme()"
-          class="text-xs text-amber-500 font-semibold hover:text-amber-600 transition-colors"
-        >
-          Actualizar análisis ↺
-        </button>
-      </div>
-    }
-  </section>
+  </div>
 
   <!-- CHAT -->
-  <section class="flex flex-col flex-1 min-h-0 overflow-hidden">
-    <div class="px-4 py-2 border-b border-gray-100">
-      <div class="flex items-center gap-2">
-        <span class="text-lg">💬</span>
-        <h2 class="text-sm font-bold uppercase tracking-wide text-gray-500">Pregúntame lo que quieras</h2>
-      </div>
-    </div>
-
+  <div class="coach-chat">
     <!-- Burbujas -->
-    <div #chatScroll class="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-3">
+    <div #chatScroll class="coach-chat__scroll">
       @if (mensajes().length === 0 && informe()) {
         <div class="coach-burbuja coach-burbuja--model">
           <p class="text-sm">¿Tienes alguna duda sobre tu análisis o quieres que te explique algo con más detalle? ¡Aquí estoy! 🎯</p>
@@ -65,7 +74,7 @@
     </div>
 
     <!-- Input -->
-    <div class="px-4 py-3 border-t border-gray-100 flex gap-2">
+    <div class="coach-chat__input">
       <textarea
         [(ngModel)]="inputUsuario"
         (keydown)="onKeydown($event)"
@@ -82,5 +91,6 @@
         <i class="bi bi-send-fill text-sm"></i>
       </button>
     </div>
-  </section>
+  </div>
+
 </div>

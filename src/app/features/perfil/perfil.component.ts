@@ -335,9 +335,10 @@ export class PerfilComponent {
   });
 
   platoMenosFallado = computed(() => {
-    const con = this.heatmapFallos().filter(c => c.veces > 0);
-    if (con.length <= 1) return null;
-    return con.reduce((min, c) => c.veces < min.veces ? c : min);
+    const todos = this.heatmapFallos();
+    const conFallos = todos.filter(c => c.veces > 0);
+    if (conFallos.length === 0) return null;
+    return conFallos.reduce((min, c) => c.veces < min.veces ? c : min);
   });
 
   platosMasFallados = computed(() => {
@@ -346,23 +347,41 @@ export class PerfilComponent {
   });
 
   platosMenosFallados = computed(() => {
-    const con = this.heatmapFallos().filter(c => c.veces > 0);
-    if (con.length <= 1) return [] as number[];
-    return con.sort((a, b) => a.veces - b.veces).slice(0, 3).map(c => c.plato);
+    const todos = this.heatmapFallos();
+    const conFallos = todos.filter(c => c.veces > 0);
+    if (conFallos.length === 0) return [] as number[];
+    const min = conFallos.reduce((m, c) => c.veces < m.veces ? c : m).veces;
+    // Si existen platos sin fallos, esos son los "menos fallados"; si no, los del mínimo
+    const hayCeros = todos.some(c => c.veces === 0);
+    if (hayCeros) return todos.filter(c => c.veces === 0).slice(0, 3).map(c => c.plato);
+    return conFallos.filter(c => c.veces === min).slice(0, 3).map(c => c.plato);
   });
 
   claseCeldaFallo(celda: { plato: number; veces: number; maxVeces: number }): string {
     const classes: string[] = ['perfil-fallos__celda'];
-    const { veces, maxVeces } = celda;
+    const todos = this.heatmapFallos();
+    const conFallos = todos.filter(c => c.veces > 0);
+    const hayCeros = todos.some(c => c.veces === 0);
 
-    const peor = this.platoMasFallado();
-    const mejor = this.platoMenosFallado();
-
-    if (veces === 0) {
+    if (conFallos.length === 0) {
       classes.push('bg-neutral-100');
-    } else if (peor && celda.plato === peor.plato) {
+      return classes.join(' ');
+    }
+
+    const maxFallos = conFallos.reduce((m, c) => c.veces > m ? c.veces : m, 0);
+    const minFallos = conFallos.reduce((m, c) => c.veces < m ? c.veces : m, Infinity);
+    // Verde: 0 fallos si existen; si no, los del mínimo
+    const esVerde = hayCeros ? celda.veces === 0 : celda.veces === minFallos;
+    // Rojo: máximo de fallos (solo platos con fallos)
+    const esRojo = celda.veces === maxFallos;
+
+    if (celda.veces === 0 && !hayCeros) {
+      classes.push('bg-neutral-100');
+    } else if (celda.veces === 0) {
+      classes.push('perfil-fallos__celda--mejor');
+    } else if (esRojo) {
       classes.push('perfil-fallos__celda--peor');
-    } else if (mejor && celda.plato === mejor.plato) {
+    } else if (esVerde) {
       classes.push('perfil-fallos__celda--mejor');
     } else {
       classes.push('perfil-fallos__celda--normal');
